@@ -5,6 +5,7 @@ import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
 import Header from "@/components/layout/header/header";
 import Footer from "@/components/layout/footer/footer";
+import Providers from "@/store/providers";
 
 const cairo = Cairo({
   variable: "--font-cairo",
@@ -30,11 +31,13 @@ export default async function RootLayout({
   return (
     <html lang={locale} dir={locale == "ar" ? "rtl" : "ltr"}>
       <body className={`${cairo.variable} antialiased`}>
-        <NextIntlClientProvider messages={messages}>
-          <Header/>
-          {children}
-          <Footer/>
-        </NextIntlClientProvider>
+        <Providers>
+          <NextIntlClientProvider messages={messages}>
+            <Header/>
+            {children}
+            <Footer/>
+          </NextIntlClientProvider>
+        </Providers>
       </body>
     </html>
   );
