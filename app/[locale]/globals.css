@@ -124,3 +124,22 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+.swiper-pagination-bullet-active {
+  outline: 1px solid white !important;
+  outline-offset: 4px !important;
+  background-color: white !important;
+}
+.swiper-pagination-bullet {
+  background-color: white !important;
+  opacity: 1 !important;
+  width: 9px !important;
+  height: 9px !important;
+}
+.swiper-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  bottom: 20px !important;
+}

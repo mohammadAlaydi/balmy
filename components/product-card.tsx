@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 import React, { useState } from "react";
 import { Badge } from "./ui/badge";
@@ -7,7 +9,13 @@ import { MdOutlineShoppingCart } from "react-icons/md";
 import { IoHeartCircle } from "react-icons/io5";
 import { toast } from "sonner";
 
-export default function ProductCard({product}: {product: any}) {
+export default function ProductCard({
+  product,
+  width,
+}: {
+  product: any;
+  width?: string;
+}) {
   const [selectedImage, setSelectedImage] = useState(0);
   const images = product.images || [
     "/assets/images/product-card.jpg",
@@ -16,7 +24,9 @@ export default function ProductCard({product}: {product: any}) {
   ];
 
   return (
-    <Card className="w-56 shadow-[0px_6px_20px_rgba(149,157,165,0.1)] py-0 h-fit border-none gap-0 group">
+    <Card
+      className={`w-56 shadow-[0px_6px_20px_rgba(149,157,165,0.1)] py-0 h-fit border-none gap-0 group relative ${width}`}
+    >
       <CardHeader className="p-0 relative group">
         <div className="absolute top-2 ltr:left-2 rtl:right-2 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
           <IoHeartCircle className="text-3xl cursor-pointer text-black drop-shadow-lg hidden md:flex" />
@@ -52,7 +62,7 @@ export default function ProductCard({product}: {product: any}) {
             <div key={index} className="relative">
               <Image
                 width={35}
-                height={35}   
+                height={35}
                 src={image}
                 alt="product-card"
                 className={`cursor-pointer transition-all duration-200 rounded-sm ${

@@ -21,7 +21,7 @@ import Image from "next/image";
 import Link from "next/link";
 import SocialMediaIcons from "@/components/social-media-icons";
 import DrawerComponent from "../drawer/drawer-component";
-import { CONTACT_INFO, NAV_LINKS } from "@/static-data/static-data";
+import { CONTACT_INFO, NAV_LINKS, products } from "@/static-data/static-data";
 import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/dialog";
 import SearchPopup from "@/components/search-popup";
 
@@ -50,7 +50,7 @@ const ActionIcons = () => (
         <IoSearch className="text-xl cursor-pointer" />
       </DialogTrigger>
       <DialogContent>
-        <SearchPopup />
+        <SearchPopup products={products} />
       </DialogContent>
     </Dialog>
     <FaRegUser className="text-xl cursor-pointer hidden lg:block" />
