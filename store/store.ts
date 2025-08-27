@@ -1,7 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit';
 
-// Simple example reducer - you can replace this with your actual slices
-const exampleReducer = (state = { count: 0 }, action: any) => {
+// Example reducer - replace with your actual slices
+interface ExampleState {
+  count: number;
+}
+
+const initialState: ExampleState = { count: 0 };
+
+const exampleReducer = (state = initialState, action: { type: string }) => {
   switch (action.type) {
     case 'INCREMENT':
       return { count: state.count + 1 };
@@ -13,7 +19,7 @@ const exampleReducer = (state = { count: 0 }, action: any) => {
 };
 
 export const store = configureStore({
-  reducer: { 
+  reducer: {
     example: exampleReducer,
   },
   // Enable Redux DevTools in development

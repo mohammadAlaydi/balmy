@@ -7,113 +7,177 @@ import {
   NavigationMenuLink,
   NavigationMenuList,
   NavigationMenuTrigger,
-  NavigationMenuViewport,
 } from "@/components/ui/navigation-menu";
-import { FaFacebookF } from "react-icons/fa";
-import { FaWhatsapp } from "react-icons/fa";
-import { FaXTwitter } from "react-icons/fa6";
-import { FaInstagram } from "react-icons/fa6";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { IoSearch } from "react-icons/io5";
-import { FaRegUser } from "react-icons/fa";
-import { FaRegHeart } from "react-icons/fa";
+import { FaBars, FaRegUser, FaRegHeart } from "react-icons/fa";
 import { MdOutlineShoppingCart } from "react-icons/md";
 import Image from "next/image";
-import { NavConfig } from "@/types/types";
 import Link from "next/link";
+import SocialMediaIcons from "@/components/social-media-icons";
+import DrawerComponent from "../drawer/drawer-component";
+import { CONTACT_INFO, NAV_LINKS } from "@/static-data/static-data";
+import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/dialog";
+import SearchPopup from "@/components/search-popup";
 
-export default function Header() {
-  const navLinks: NavConfig = [
-    { title: "Home", path: "/" },
-    {
-      title: "Docs",
-      links: [
-        { title: "Getting Started", path: "/docs/getting-started" },
-        { title: "Routing", path: "/docs/routing" },
-        { title: "API", path: "/docs/api" },
-      ],
-    },
-    {
-      title: "Guides",
-      links: [
-        { title: "Auth", path: "/guides/auth" },
-        { title: "Styling", path: "/guides/styling" },
-      ],
-    },
-    { title: "Changelog", path: "/changelog" },
-  ];
+// Components
+const TopBar = () => (
+  <div className="flex justify-center md:justify-between xl:justify-around items-center gap-5 py-0.5 px-3 lg:px-5 bg-black w-full">
+    <div className="flex items-center">
+      <Badge className="bg-transparent text-sm lg:text-base hidden md:inline-block">
+        {CONTACT_INFO.phone}
+      </Badge>
+      <Badge className="bg-transparent text-sm lg:text-base hidden md:inline-block">
+        {CONTACT_INFO.callToAction}
+      </Badge>
+    </div>
+    <Badge className="bg-transparent text-sm lg:text-base">
+      {CONTACT_INFO.discount}
+    </Badge>
+    <SocialMediaIcons iconStyle="text-white" containerStyle="hidden md:flex" />
+  </div>
+);
 
-  return (
-    <div className="w-full">
-      {/* offers and contact info section */}
-      <div className="flex justify-between xl:justify-around items-center gap-5 py-0.5 px-3 lg:px-5 bg-black w-full">
-        <div className="flex items-center">
-          <Badge className="bg-transparent text-sm lg:text-base">
-            01097352356
-          </Badge>
-          <Badge className="bg-transparent text-sm lg:text-base hidden md:inline-block">
-            إتصل بنا اليوم
-          </Badge>
-        </div>
-        <Badge className="bg-transparent text-sm lg:text-base">
-          خصومات تصل إلى 50
-        </Badge>
-        <div className="flex items-center gap-3">
-          <FaFacebookF className="text-xl cursor-pointer text-white" />
-          <FaWhatsapp className="text-xl cursor-pointer text-white" />
-          <FaXTwitter className="text-xl cursor-pointer text-white" />
-          <FaInstagram className="text-xl cursor-pointer text-white" />
+const ActionIcons = () => (
+  <div className="flex items-center gap-3">
+    <Dialog>
+      <DialogTrigger>
+        <IoSearch className="text-xl cursor-pointer" />
+      </DialogTrigger>
+      <DialogContent>
+        <SearchPopup />
+      </DialogContent>
+    </Dialog>
+    <FaRegUser className="text-xl cursor-pointer hidden lg:block" />
+    <FaRegHeart className="text-xl cursor-pointer hidden lg:block" />
+    <MdOutlineShoppingCart className="text-xl cursor-pointer hidden lg:block" />
+  </div>
+);
+
+const NavigationLinks = () => (
+  <NavigationMenu className="hidden lg:block">
+    <NavigationMenuList>
+      {NAV_LINKS.map((link) => (
+        <NavigationMenuItem key={link.title}>
+          <NavigationMenuTrigger
+            className="cursor-pointer"
+            chevronDownIcon={!!link.links}
+          >
+            {link.title}
+          </NavigationMenuTrigger>
+          {link.links && (
+            <NavigationMenuContent navigationMenuContent={true}>
+              <ul className="grid gap-1 p-2 min-w-[200px]">
+                {link.links.map((nested) => (
+                  <li key={nested.path}>
+                    <NavigationMenuLink asChild>
+                      <Link
+                        href={nested.path}
+                        className="block rounded-md px-2 py-1.5 text-sm hover:bg-accent hover:text-accent-foreground"
+                      >
+                        {nested.title}
+                      </Link>
+                    </NavigationMenuLink>
+                  </li>
+                ))}
+              </ul>
+              <NavigationMenuIndicator />
+            </NavigationMenuContent>
+          )}
+        </NavigationMenuItem>
+      ))}
+    </NavigationMenuList>
+  </NavigationMenu>
+);
+
+const Logo = () => (
+  <Image
+    src="/assets/images/logo.svg"
+    alt="logo"
+    className="lg:w-[180px]"
+    width={140}
+    height={120}
+  />
+);
+
+const MobileMenu = () => (
+  <DrawerComponent
+    trigger={
+      <div className="lg:hidden">
+        <FaBars className="text-xl cursor-pointer" />
+      </div>
+    }
+  >
+    <div className="flex flex-col h-full">
+      <h2 className="text-xl font-semibold mb-6 text-center flex-shrink-0">
+        Menu
+      </h2>
+      {/* Mobile Navigation Links */}
+      <Accordion
+        type="single"
+        collapsible
+        className="w-full flex-1 overflow-y-auto"
+      >
+        {NAV_LINKS.map((link, index) => (
+          <AccordionItem key={link.title} value={`item-${index}`}>
+            {link.links ? (
+              <AccordionTrigger className="text-left py-3 hover:bg-gray-50 rounded-md px-3">
+                {link.title}
+              </AccordionTrigger>
+            ) : (
+              <Link
+                href={link.path!}
+                className="flex items-center py-3 px-3 hover:bg-gray-50 rounded-md text-left w-full"
+              >
+                {link.title}
+              </Link>
+            )}
+            {link.links && (
+              <AccordionContent>
+                <div className="pl-4 space-y-2">
+                  {link.links.map((nested) => (
+                    <Link
+                      key={nested.path}
+                      href={nested.path}
+                      className="block py-2 px-3 hover:bg-gray-50 rounded-md text-sm text-gray-700 hover:text-gray-900 transition-colors"
+                    >
+                      {nested.title}
+                    </Link>
+                  ))}
+                </div>
+              </AccordionContent>
+            )}
+          </AccordionItem>
+        ))}
+      </Accordion>
+
+      {/* Mobile Action Icons */}
+      <div className="pt-6 border-t border-gray-200 flex-shrink-0">
+        <div className="flex items-center justify-center gap-6">
+          <IoSearch className="text-xl cursor-pointer text-gray-600 hover:text-gray-900" />
+          <FaRegUser className="text-xl cursor-pointer text-gray-600 hover:text-gray-900" />
+          <FaRegHeart className="text-xl cursor-pointer text-gray-600 hover:text-gray-900" />
+          <MdOutlineShoppingCart className="text-xl cursor-pointer text-gray-600 hover:text-gray-900" />
         </div>
       </div>
-      {/* navbar section */}
-      <div className="flex justify-between items-center gap-3 py-2 px-10 shadow-[0px_6px_20px_rgba(149,157,165,0.1)] transition-shadow duration-200">
-        {/* icons section */}
-        <div className="flex items-center gap-3">
-          <IoSearch className="text-xl cursor-pointer" />
-          <FaRegUser className="text-xl cursor-pointer" />
-          <FaRegHeart className="text-xl cursor-pointer" />
-          <MdOutlineShoppingCart className="text-xl cursor-pointer" />
-        </div>
-        {/* links section */}
-        <NavigationMenu>
-          <NavigationMenuList>
-            {navLinks?.map((link) => (
-              <NavigationMenuItem key={link.title}>
-                <NavigationMenuTrigger
-                  className="cursor-pointer"
-                  chevronDownIcon={link?.links}
-                >
-                  {link.title}
-                </NavigationMenuTrigger>
-                {link.links && (
-                  <NavigationMenuContent navigationMenuContent={link.links}>
-                    <ul className="grid gap-1 p-2 min-w-[200px]">
-                      {link.links.map((nested) => (
-                        <li key={nested.path}>
-                          <NavigationMenuLink asChild>
-                            <Link
-                              href={nested.path}
-                              className="block rounded-md px-2 py-1.5 text-sm hover:bg-accent hover:text-accent-foreground"
-                            >
-                              {nested.title}
-                            </Link>
-                          </NavigationMenuLink>
-                        </li>
-                      ))}
-                    </ul>
-                    <NavigationMenuIndicator />
-                  </NavigationMenuContent>
-                )}
-              </NavigationMenuItem>
-            ))}
-          </NavigationMenuList>
-        </NavigationMenu>
-        {/* logo section */}
-        <Image
-          src="/assets/images/logo.png"
-          alt="logo"
-          width={120}
-          height={60}
-        />
+    </div>
+  </DrawerComponent>
+);
+
+export default function Header() {
+  return (
+    <div className="w-full">
+      <TopBar />
+      <div className="flex justify-between items-center gap-3 py-5 px-3 lg:px-5 shadow-[0px_6px_20px_rgba(149,157,165,0.1)] transition-shadow duration-200">
+        <ActionIcons />
+        <NavigationLinks />
+        <Logo />
+        <MobileMenu />
       </div>
     </div>
   );

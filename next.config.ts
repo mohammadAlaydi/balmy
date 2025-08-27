@@ -1,7 +1,12 @@
-import {NextConfig} from 'next';
+import { NextConfig } from 'next';
 import createNextIntlPlugin from 'next-intl/plugin';
- 
-const nextConfig: NextConfig = {};
- 
+
+const nextConfig: NextConfig = {
+  // Add your Next.js configuration options here
+  reactStrictMode: true,
+  swcMinify: true,
+};
+
 const withNextIntl = createNextIntlPlugin();
+
 export default withNextIntl(nextConfig);
