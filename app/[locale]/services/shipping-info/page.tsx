@@ -29,17 +29,17 @@ export default function ShippingInfoPage() {
                 مدة التسليم
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="bg-blue-50 p-4 rounded-lg text-center">
-                  <h3 className="font-semibold text-blue-800 mb-2">الرياض</h3>
-                  <p className="text-blue-600">1-2 أيام عمل</p>
+                <div className="bg-gray-50 p-4 rounded-lg text-center">
+                  <h3 className="font-semibold text-gray-800 mb-2">الرياض</h3>
+                  <p className="text-gray-600">1-2 أيام عمل</p>
                 </div>
-                <div className="bg-green-50 p-4 rounded-lg text-center">
-                  <h3 className="font-semibold text-green-800 mb-2">المدن الرئيسية</h3>
-                  <p className="text-green-600">2-3 أيام عمل</p>
+                <div className="bg-gray-50 p-4 rounded-lg text-center">
+                  <h3 className="font-semibold text-gray-800 mb-2">المدن الرئيسية</h3>
+                  <p className="text-gray-600">2-3 أيام عمل</p>
                 </div>
-                <div className="bg-purple-50 p-4 rounded-lg text-center">
-                  <h3 className="font-semibold text-purple-800 mb-2">المناطق النائية</h3>
-                  <p className="text-purple-600">3-5 أيام عمل</p>
+                <div className="bg-gray-50 p-4 rounded-lg text-center">
+                  <h3 className="font-semibold text-gray-800 mb-2">المناطق النائية</h3>
+                  <p className="text-gray-600">3-5 أيام عمل</p>
                 </div>
               </div>
             </section>
@@ -64,7 +64,7 @@ export default function ShippingInfoPage() {
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-gray-700">الطلبات فوق 200 ريال:</span>
-                    <span className="font-semibold text-green-600">شحن مجاني</span>
+                    <span className="font-semibold text-gray-600">شحن مجاني</span>
                   </div>
                 </div>
               </div>
@@ -80,21 +80,21 @@ export default function ShippingInfoPage() {
                   <p className="text-gray-600 text-sm mb-2">
                     توصيل خلال 24 ساعة للمناطق القريبة من الرياض
                   </p>
-                  <span className="bg-red-100 text-red-800 text-xs px-2 py-1 rounded">تكلفة إضافية</span>
+                  <span className="bg-gray-100 text-gray-800 text-xs px-2 py-1 rounded">تكلفة إضافية</span>
                 </div>
                 <div className="border border-gray-200 rounded-lg p-4">
                   <h3 className="font-semibold text-gray-800 mb-2">الشحن العادي</h3>
                   <p className="text-gray-600 text-sm mb-2">
                     الشحن القياسي لجميع المناطق
                   </p>
-                  <span className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded">متضمن</span>
+                  <span className="bg-gray-100 text-gray-800 text-xs px-2 py-1 rounded">متضمن</span>
                 </div>
                 <div className="border border-gray-200 rounded-lg p-4">
                   <h3 className="font-semibold text-gray-800 mb-2">الاستلام من المتجر</h3>
                   <p className="text-gray-600 text-sm mb-2">
                     استلام الطلب من متجرنا في الرياض
                   </p>
-                  <span className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">مجاناً</span>
+                  <span className="bg-gray-100 text-gray-800 text-xs px-2 py-1 rounded">مجاناً</span>
                 </div>
               </div>
             </section>
@@ -114,19 +114,19 @@ export default function ShippingInfoPage() {
               </h2>
               <div className="space-y-3">
                 <div className="flex items-start space-x-2 space-x-reverse">
-                  <div className="w-2 h-2 bg-blue-500 rounded-full mt-2"></div>
+                  <div className="w-2 h-2 bg-gray-600 rounded-full mt-2"></div>
                   <span className="text-gray-600">يتم الشحن من الأحد إلى الخميس من الساعة 9:00 صباحاً إلى 6:00 مساءً</span>
                 </div>
                 <div className="flex items-start space-x-2 space-x-reverse">
-                  <div className="w-2 h-2 bg-blue-500 rounded-full mt-2"></div>
+                  <div className="w-2 h-2 bg-gray-600 rounded-full mt-2"></div>
                   <span className="text-gray-600">في حالة عدم وجودك في المنزل، سيتم ترك الطلب مع الجار أو إعادة المحاولة</span>
                 </div>
                 <div className="flex items-start space-x-2 space-x-reverse">
-                  <div className="w-2 h-2 bg-blue-500 rounded-full mt-2"></div>
+                  <div className="w-2 h-2 bg-gray-600 rounded-full mt-2"></div>
                   <span className="text-gray-600">يمكنك تحديد موعد تسليم مخصص عند إتمام الطلب</span>
                 </div>
                 <div className="flex items-start space-x-2 space-x-reverse">
-                  <div className="w-2 h-2 bg-blue-500 rounded-full mt-2"></div>
+                  <div className="w-2 h-2 bg-gray-600 rounded-full mt-2"></div>
                   <span className="text-gray-600">نقدم تأمين على الشحن لجميع الطلبات</span>
                 </div>
               </div>
@@ -148,8 +148,8 @@ export default function ShippingInfoPage() {
               <p className="text-gray-600 leading-relaxed">
                 إذا كان لديك أي استفسارات حول الشحن أو تريد تحديث معلومات التوصيل، يمكنك التواصل معنا:
               </p>
-              <div className="mt-4 p-4 bg-blue-50 rounded-lg">
-                <p className="text-blue-800">
+              <div className="mt-4 p-4 bg-gray-50 rounded-lg">
+                <p className="text-gray-800">
                   <strong>الهاتف:</strong> +966-55-766-5585<br/>
                   <strong>البريد الإلكتروني:</strong> shipping@farada.com<br/>
                   <strong>ساعات العمل:</strong> الأحد - الخميس، 9:00 ص - 6:00 م
@@ -157,9 +157,9 @@ export default function ShippingInfoPage() {
               </div>
             </section>
 
-            <div className="mt-8 p-4 bg-gradient-to-r from-green-50 to-blue-50 rounded-lg text-center">
-              <h3 className="font-semibold text-green-800 mb-2">نضمن وصول طلبك بأمان</h3>
-              <p className="text-green-700 text-sm">
+            <div className="mt-8 p-4 bg-gray-50 rounded-lg text-center">
+              <h3 className="font-semibold text-gray-800 mb-2">نضمن وصول طلبك بأمان</h3>
+              <p className="text-gray-700 text-sm">
                 نستخدم أفضل شركات الشحن ونطبق أعلى معايير الجودة لضمان وصول طلبك في حالة ممتازة
               </p>
             </div>

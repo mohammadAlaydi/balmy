@@ -78,8 +78,8 @@ export default function SaleTermsPage() {
               </p>
             </section>
 
-            <div className="mt-8 p-4 bg-green-50 rounded-lg">
-              <p className="text-green-800 text-sm">
+            <div className="mt-8 p-4 bg-gray-50 rounded-lg">
+              <p className="text-gray-800 text-sm">
                 لاستفسارات إضافية حول شروط البيع، يرجى التواصل معنا على الرقم: +966-55-766-5585
               </p>
             </div>

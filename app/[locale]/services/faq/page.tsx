@@ -247,7 +247,7 @@ export default function FAQPage() {
               </div>
             </section>
 
-            <div className="mt-8 p-6 bg-gradient-to-r from-blue-50 to-green-50 rounded-lg text-center">
+            <div className="mt-8 p-6 bg-gray-50 rounded-lg text-center">
               <h3 className="text-lg font-semibold text-gray-800 mb-2">
                 لم تجد إجابة لسؤالك؟
               </h3>
@@ -255,10 +255,10 @@ export default function FAQPage() {
                 فريق خدمة العملاء لدينا متاح لمساعدتك في أي استفسار آخر
               </p>
               <div className="space-x-4 space-x-reverse">
-                <span className="inline-block bg-blue-600 text-white px-4 py-2 rounded-md">
+                <span className="inline-block bg-gray-700 text-white px-4 py-2 rounded-md">
                   الهاتف: +966-55-766-5585
                 </span>
-                <span className="inline-block bg-green-600 text-white px-4 py-2 rounded-md">
+                <span className="inline-block bg-gray-700 text-white px-4 py-2 rounded-md">
                   البريد: info@farada.com
                 </span>
               </div>

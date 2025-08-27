@@ -96,8 +96,8 @@ export default function PrivacyPage() {
               </p>
             </section>
 
-            <div className="mt-8 p-4 bg-blue-50 rounded-lg">
-              <p className="text-blue-800 text-sm">
+            <div className="mt-8 p-4 bg-gray-50 rounded-lg">
+              <p className="text-gray-800 text-sm">
                 آخر تحديث: {new Date().toLocaleDateString('ar-SA')}
               </p>
             </div>

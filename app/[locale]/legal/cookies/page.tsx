@@ -81,9 +81,9 @@ export default function CookiesPage() {
               <h2 className="text-xl font-semibold text-gray-800 mb-4">
                 كيفية تعطيل ملفات تعريف الارتباط
               </h2>
-              <div className="bg-yellow-50 p-4 rounded-lg">
-                <h3 className="font-semibold text-yellow-800 mb-2">تعليمات المتصفحات الشائعة:</h3>
-                <ul className="text-yellow-700 text-sm space-y-1">
+              <div className="bg-gray-50 p-4 rounded-lg">
+                <h3 className="font-semibold text-gray-800 mb-2">تعليمات المتصفحات الشائعة:</h3>
+                <ul className="text-gray-700 text-sm space-y-1">
                   <li>• Chrome: الإعدادات → الخصوصية والأمان → ملفات تعريف الارتباط</li>
                   <li>• Firefox: الخيارات → الخصوصية والأمان → ملفات تعريف الارتباط</li>
                   <li>• Safari: التفضيلات → الخصوصية → ملفات تعريف الارتباط</li>
@@ -110,8 +110,8 @@ export default function CookiesPage() {
               </p>
             </section>
 
-            <div className="mt-8 p-4 bg-green-50 rounded-lg">
-              <p className="text-green-800 text-sm">
+            <div className="mt-8 p-4 bg-gray-50 rounded-lg">
+              <p className="text-gray-800 text-sm">
                 آخر تحديث: {new Date().toLocaleDateString('ar-SA')}
               </p>
             </div>
