@@ -5,7 +5,8 @@ import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
 import Header from "@/components/layout/header/header";
 import Footer from "@/components/layout/footer/footer";
-import Providers from "@/store/providers";
+import ReduxProvider from "@/store/redux-provider";
+import { Toaster } from "@/components/ui/sonner"
 
 const cairo = Cairo({
   variable: "--font-cairo",
@@ -31,13 +32,14 @@ export default async function RootLayout({
   return (
     <html lang={locale} dir={locale == "ar" ? "rtl" : "ltr"}>
       <body className={`${cairo.variable} antialiased`}>
-        <Providers>
+        <ReduxProvider>
           <NextIntlClientProvider messages={messages}>
             <Header/>
             {children}
             <Footer/>
+            <Toaster />
           </NextIntlClientProvider>
-        </Providers>
+        </ReduxProvider>
       </body>
     </html>
   );
