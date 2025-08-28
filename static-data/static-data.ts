@@ -1,31 +1,30 @@
-import { NavConfig } from "@/types/types";
-
+import { NavConfig, ToastOptions } from "@/types/types";
 // Constants
 export const NAV_LINKS: NavConfig = [
-    { title: "Home", path: "/" },
-    {
-      title: "Docs",
-      links: [
-        { title: "Getting Started", path: "/docs/getting-started" },
-        { title: "Routing", path: "/docs/routing" },
-        { title: "API", path: "/docs/api" },
-      ],
-    },
-    {
-      title: "Guides",
-      links: [
-        { title: "Auth", path: "/guides/auth" },
-        { title: "Styling", path: "/guides/styling" },
-      ],
-    },
-    { title: "Changelog", path: "/changelog" },
-  ];
-  
- export const CONTACT_INFO = {
-    phone: "01097352356",
-    callToAction: "إتصل بنا اليوم",
-    discount: "خصومات تصل إلى 50",
-  };
+  { title: "Home", path: "/" },
+  {
+    title: "Docs",
+    links: [
+      { title: "Getting Started", path: "/docs/getting-started" },
+      { title: "Routing", path: "/docs/routing" },
+      { title: "API", path: "/docs/api" },
+    ],
+  },
+  {
+    title: "Guides",
+    links: [
+      { title: "Auth", path: "/guides/auth" },
+      { title: "Styling", path: "/guides/styling" },
+    ],
+  },
+  { title: "Changelog", path: "/changelog" },
+];
+
+export const CONTACT_INFO = {
+  phone: "01097352356",
+  callToAction: "إتصل بنا اليوم",
+  discount: "خصومات تصل إلى 50",
+};
 
 export const products = [
   {
@@ -38,12 +37,12 @@ export const products = [
     images: [
       "/assets/images/product-card.jpg",
       "/assets/images/hover-product-card.jpg",
-      "/assets/images/product-card.jpg"
+      "/assets/images/product-card.jpg",
     ],
     category: "footwear",
     inStock: true,
     rating: 4.5,
-    reviews: 128
+    reviews: 128,
   },
   {
     id: 2,
@@ -55,12 +54,12 @@ export const products = [
     images: [
       "/assets/images/product-card.jpg",
       "/assets/images/hover-product-card.jpg",
-      "/assets/images/product-card.jpg"
+      "/assets/images/product-card.jpg",
     ],
     category: "footwear",
     inStock: true,
     rating: 4.8,
-    reviews: 95
+    reviews: 95,
   },
   {
     id: 3,
@@ -72,12 +71,12 @@ export const products = [
     images: [
       "/assets/images/product-card.jpg",
       "/assets/images/hover-product-card.jpg",
-      "/assets/images/product-card.jpg"
+      "/assets/images/product-card.jpg",
     ],
     category: "bags",
     inStock: true,
     rating: 4.6,
-    reviews: 73
+    reviews: 73,
   },
   {
     id: 4,
@@ -89,12 +88,12 @@ export const products = [
     images: [
       "/assets/images/product-card.jpg",
       "/assets/images/hover-product-card.jpg",
-      "/assets/images/product-card.jpg"
+      "/assets/images/product-card.jpg",
     ],
     category: "accessories",
     inStock: true,
     rating: 4.9,
-    reviews: 156
+    reviews: 156,
   },
   {
     id: 5,
@@ -106,12 +105,12 @@ export const products = [
     images: [
       "/assets/images/product-card.jpg",
       "/assets/images/hover-product-card.jpg",
-      "/assets/images/product-card.jpg"
+      "/assets/images/product-card.jpg",
     ],
     category: "clothing",
     inStock: true,
     rating: 4.4,
-    reviews: 89
+    reviews: 89,
   },
   {
     id: 6,
@@ -123,12 +122,12 @@ export const products = [
     images: [
       "/assets/images/product-card.jpg",
       "/assets/images/hover-product-card.jpg",
-      "/assets/images/product-card.jpg"
+      "/assets/images/product-card.jpg",
     ],
     category: "clothing",
     inStock: true,
     rating: 4.7,
-    reviews: 112
+    reviews: 112,
   },
   {
     id: 7,
@@ -140,12 +139,12 @@ export const products = [
     images: [
       "/assets/images/product-card.jpg",
       "/assets/images/hover-product-card.jpg",
-      "/assets/images/product-card.jpg"
+      "/assets/images/product-card.jpg",
     ],
     category: "accessories",
     inStock: true,
     rating: 4.3,
-    reviews: 67
+    reviews: 67,
   },
   {
     id: 8,
@@ -157,12 +156,12 @@ export const products = [
     images: [
       "/assets/images/product-card.jpg",
       "/assets/images/hover-product-card.jpg",
-      "/assets/images/product-card.jpg"
+      "/assets/images/product-card.jpg",
     ],
     category: "accessories",
     inStock: true,
     rating: 4.5,
-    reviews: 134
+    reviews: 134,
   },
   {
     id: 9,
@@ -174,12 +173,12 @@ export const products = [
     images: [
       "/assets/images/product-card.jpg",
       "/assets/images/hover-product-card.jpg",
-      "/assets/images/product-card.jpg"
+      "/assets/images/product-card.jpg",
     ],
     category: "clothing",
     inStock: true,
     rating: 4.9,
-    reviews: 89
+    reviews: 89,
   },
   {
     id: 10,
@@ -191,12 +190,12 @@ export const products = [
     images: [
       "/assets/images/product-card.jpg",
       "/assets/images/hover-product-card.jpg",
-      "/assets/images/product-card.jpg"
+      "/assets/images/product-card.jpg",
     ],
     category: "footwear",
     inStock: true,
     rating: 4.6,
-    reviews: 156
+    reviews: 156,
   },
   {
     id: 11,
@@ -208,12 +207,12 @@ export const products = [
     images: [
       "/assets/images/product-card.jpg",
       "/assets/images/hover-product-card.jpg",
-      "/assets/images/product-card.jpg"
+      "/assets/images/product-card.jpg",
     ],
     category: "bags",
     inStock: true,
     rating: 4.4,
-    reviews: 78
+    reviews: 78,
   },
   {
     id: 12,
@@ -225,19 +224,113 @@ export const products = [
     images: [
       "/assets/images/product-card.jpg",
       "/assets/images/hover-product-card.jpg",
-      "/assets/images/product-card.jpg"
+      "/assets/images/product-card.jpg",
     ],
     category: "accessories",
     inStock: true,
     rating: 4.2,
-    reviews: 92
-  }
+    reviews: 92,
+  },
 ];
 
 export const categories = [
   { id: "footwear", name: "أحذية", nameEn: "Footwear", count: 3 },
   { id: "clothing", name: "ملابس", nameEn: "Clothing", count: 3 },
   { id: "bags", name: "حقائب", nameEn: "Bags", count: 2 },
-  { id: "accessories", name: "إكسسوارات", nameEn: "Accessories", count: 4 }
+  { id: "accessories", name: "إكسسوارات", nameEn: "Accessories", count: 4 },
 ];
-  
+
+export const toastStyles: ToastOptions = {
+  success: {
+    duration: 3000,
+    position: "top-right",
+    style: {
+      background: "linear-gradient(135deg, #000, #000)",
+      color: "white",
+      border: "none",
+      borderRadius: "5px",
+      fontFamily: "var(--font-cairo), sans-serif",
+      fontSize: "14px",
+      fontWeight: "600",
+      boxShadow: "0 8px 32px rgba(102, 126, 234, 0.3)",
+      position: "relative",
+      overflow: "hidden",
+    },
+    className: "toast-with-contained-close",
+  },
+};
+
+export const quickCartProducts = [
+  {
+    id: 1,
+    category: "تصنيف 1",
+    name: "منتج 1",
+    image: "/assets/images/product-card.jpg",
+    variant: {
+      color: "Red",
+      size: "M",
+      thickness: "1mm",
+    },
+    price: 100,
+    quantity: 1,
+  },
+  {
+    id: 2,
+    category: "2 تصنيف",
+    name: "منتج 2",
+    image: "/assets/images/product-card.jpg",
+    variant: {
+      color: "Red",
+      size: "M",
+      thickness: "1mm",
+    },
+    price: 100,
+    quantity: 1,
+  },
+  {
+    id: 3,
+    category: "تصنيف 3",
+    name: "منتج 3",
+    image: "/assets/images/product-card.jpg",
+    variant: {
+      color: "Red",
+      size: "M",
+      thickness: "1mm",
+    },
+    price: 100,
+    quantity: 1,
+  },
+];
+export const LEGAL_TERMS = [
+  { title: "الشروط والأحكام", path: "/terms-and-conditions" },
+  { title: "سياسة الخصوصية", path: "/privacy-policy" },
+  { title: "سياسة التوصيل", path: "/delivery-policy" },
+  { title: "سياسة الدفع", path: "/payment-policy" },
+  { title: "سياسة الإسترجاع", path: "/refund-policy" },
+];
+
+export const KNOW_US_MORE = [
+  { title: "من نحن", path: "/about-us" },
+  { title: "خدماتنا", path: "/services" },
+];
+
+export const SERVICES = [
+  { title: "تواصل معنا", path: "/contact-us" },
+  { title: "معلومات الشحن", path: "/shipping-information" },
+  { title: "FAQ", path: "/faq" },
+];
+
+export const WORK_HOURS = {
+  title: "ساعات العمل",
+  schedule: [ 
+    "طوال أيام الأسبوع",
+    "من 9 ص - إلي 11:30 ص",
+    "من 3:30 م - إلي 11:30 م",
+  ],
+};
+
+export const LOCATION_INFO = {
+  title: "كيف تصل الينا",
+  address: "طريق أنس ابن مالك، الصحافة، الرياض 13321",
+  phone: "+966-55-766-5585",
+};

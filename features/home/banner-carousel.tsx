@@ -9,6 +9,8 @@ export default function BannerCarousel() {
       containerClassName="w-full h-[70vh]"
       spaceBetween={30}
       slidesPerView={1}
+      pagination={true}
+      autoPlay={true}
     >
       {Array.from({ length: 3 }).map((_, index) => (
         <SwiperSlide key={index}>

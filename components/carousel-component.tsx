@@ -2,9 +2,11 @@
 
 import React from "react";
 import { Swiper } from "swiper/react";
-import { Pagination } from "swiper/modules";
+import { Pagination, Navigation, Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
+import "swiper/css/navigation";
+import "swiper/css/autoplay";
 
 export default function CarouselComponent({
   spaceBetween,
@@ -12,23 +14,36 @@ export default function CarouselComponent({
   children,
   containerClassName,
   breakpoints,
+  pagination,
+  navigation,
+  autoPlay,
 }: {
   spaceBetween: number;
   slidesPerView: number;
   children: React.ReactNode;
   containerClassName: string;
   breakpoints?: any;
+  pagination?: boolean;
+  navigation?: boolean;
+  autoPlay?: boolean;
 }) {
+  const modules = [];
+  if (pagination) modules.push(Pagination);
+  if (navigation) modules.push(Navigation);
+  if (autoPlay) modules.push(Autoplay);
+
   return (
     <div className={`${containerClassName}`}>
       <Swiper
-        pagination={{ clickable: true }}
-        modules={[Pagination]}
+        pagination={pagination ? { clickable: true } : false}
+        navigation={navigation}
+        modules={modules}
         className="mySwiper h-full"
         spaceBetween={spaceBetween || 30}
         slidesPerView={slidesPerView || 1}
         breakpoints={breakpoints}
-      >
+        autoplay={autoPlay ? { delay: 3000, disableOnInteraction: false } : false}
+      > 
         {children}
       </Swiper>
     </div>

@@ -7,26 +7,30 @@ import { SwiperSlide } from "swiper/react";
 export default function ProductsCarousel() {
   return (
     <CarouselComponent
-      containerClassName="w-full h-[70vh]"
-      spaceBetween={15}
+      containerClassName="w-full h-fit py-5"
+      spaceBetween={10}
       slidesPerView={1}
       breakpoints={{
         300: {
           slidesPerView: 1,
         },
-        301: {
+        350: {
           slidesPerView: 2,
+        },
+        700 :{
+          slidesPerView: 3,
         },
         992: {
           slidesPerView: 4,
         },
-        1024: {
+        1500: {
           slidesPerView: 6,
         },
         1660: {
           slidesPerView: 7,
         },
       }}
+      autoPlay={true}
     >
       {products?.map((product, index) => (
         <SwiperSlide key={index}>

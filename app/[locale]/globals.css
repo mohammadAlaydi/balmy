@@ -45,6 +45,8 @@ body {
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+  --color-gray-color: var(--gray-color);
+  --color-red-color: var(--red-color);
 }
 
 :root {
@@ -80,6 +82,8 @@ body {
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+  --gray-color: #6c757d;
+  --red-color: #f02e41;
 }
 
 .dark {
@@ -114,6 +118,8 @@ body {
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
+  --gray-color: #6c757d;
+  --red-color: #f02e41;
 }
 
 @layer base {
@@ -142,4 +148,50 @@ body {
   justify-content: center;
   gap: 12px;
   bottom: 20px !important;
+}
+.cross-body .left-section:hover img,
+.cross-body .right-section img:hover {
+  scale: 1.04;
+}
+.cross-body .left-section img,
+.cross-body .right-section img {
+  filter: brightness(70%);
+}
+
+/* Toast Styles */
+.toaster {
+  --toast-bg: var(--popover);
+  --toast-border: var(--border);
+  --toast-text: var(--popover-foreground);
+}
+
+/* Toast close button positioning for RTL/LTR */
+.toast-with-contained-close [data-close-button] {
+  display: none !important;
+}
+.swiper-button-prev:after,
+.swiper-rtl .swiper-button-next:after {
+  color: black !important;
+  font-size: 15px !important;
+  font-weight: bold;
+}
+.swiper-button-next:after,
+.swiper-rtl .swiper-button-prev:after {
+  color: black !important;
+  font-size: 15px !important;
+  font-weight: bold;
+}
+.swiper-button-next {
+  background-color: white;
+  border-radius: 100%;
+  width: 25px !important;
+  height: 25px !important;
+  padding: 20px;
+}
+.swiper-button-prev {
+  background-color: white;
+  border-radius: 100%;
+  width: 25px !important;
+  height: 25px !important;
+  padding: 20px
 }

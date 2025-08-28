@@ -18,12 +18,13 @@ import { IoSearch } from "react-icons/io5";
 import { FaBars, FaRegUser, FaRegHeart } from "react-icons/fa";
 import { MdOutlineShoppingCart } from "react-icons/md";
 import Image from "next/image";
-import Link from "next/link";
 import SocialMediaIcons from "@/components/social-media-icons";
 import DrawerComponent from "../drawer/drawer-component";
 import { CONTACT_INFO, NAV_LINKS, products } from "@/static-data/static-data";
 import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/dialog";
-import SearchPopup from "@/components/search-popup";
+import SearchComponent from "@/components/search-component";
+import QuickCart from "@/components/quick-cart";
+import Link from "next/link";
 
 // Components
 const TopBar = () => (
@@ -44,19 +45,32 @@ const TopBar = () => (
 );
 
 const ActionIcons = () => (
-  <div className="flex items-center gap-3">
-    <Dialog>
-      <DialogTrigger>
-        <IoSearch className="text-xl cursor-pointer" />
-      </DialogTrigger>
-      <DialogContent>
-        <SearchPopup products={products} />
-      </DialogContent>
-    </Dialog>
-    <FaRegUser className="text-xl cursor-pointer hidden lg:block" />
-    <FaRegHeart className="text-xl cursor-pointer hidden lg:block" />
-    <MdOutlineShoppingCart className="text-xl cursor-pointer hidden lg:block" />
-  </div>
+  <>
+    <div className="items-center gap-3 hidden lg:flex">
+      <Dialog>
+        <DialogTrigger>
+          <IoSearch className="text-xl cursor-pointer" />
+        </DialogTrigger>
+        <DialogContent>
+          <SearchComponent products={products} />
+        </DialogContent>
+      </Dialog>
+      <FaRegUser className="text-xl cursor-pointer hidden lg:block" />
+      <Link href="/favorites">
+        <FaRegHeart className="text-xl cursor-pointer hidden lg:block" />
+      </Link>
+      <DrawerComponent
+        trigger={
+          <MdOutlineShoppingCart className="cursor-pointer hidden lg:block text-black text-xl" />
+        }
+      >
+        <QuickCart />
+      </DrawerComponent>
+    </div>
+    <Link href="/user-profile" className="block lg:hidden">
+      <FaRegUser className="text-xl cursor-pointer text-black" />
+    </Link>
+  </>
 );
 
 const NavigationLinks = () => (
@@ -96,22 +110,25 @@ const NavigationLinks = () => (
 );
 
 const Logo = () => (
-  <Image
-    src="/assets/images/logo.svg"
-    alt="logo"
-    className="lg:w-[180px]"
-    width={140}
-    height={120}
-  />
+  <Link href="/home">
+    <Image
+      src="/assets/images/logo.svg"
+      alt="logo"
+      className="lg:w-[180px]"
+      width={140}
+      height={120}
+    />
+  </Link>
 );
 
 const MobileMenu = () => (
   <DrawerComponent
     trigger={
       <div className="lg:hidden">
-        <FaBars className="text-xl cursor-pointer" />
+        <FaBars className="text-xl cursor-pointer text-black" />
       </div>
     }
+    containerClassName="lg:hidden"
   >
     <div className="flex flex-col h-full">
       <h2 className="text-xl font-semibold mb-6 text-center flex-shrink-0">
@@ -159,10 +176,22 @@ const MobileMenu = () => (
       {/* Mobile Action Icons */}
       <div className="pt-6 border-t border-gray-200 flex-shrink-0">
         <div className="flex items-center justify-center gap-6">
-          <IoSearch className="text-xl cursor-pointer text-gray-600 hover:text-gray-900" />
-          <FaRegUser className="text-xl cursor-pointer text-gray-600 hover:text-gray-900" />
-          <FaRegHeart className="text-xl cursor-pointer text-gray-600 hover:text-gray-900" />
-          <MdOutlineShoppingCart className="text-xl cursor-pointer text-gray-600 hover:text-gray-900" />
+          <Link href="/search">
+            <IoSearch className="text-xl cursor-pointer text-gray-600 hover:text-gray-900" />
+          </Link>
+          <Link href="/user-profile">
+            <FaRegUser className="text-xl cursor-pointer text-gray-600 hover:text-gray-900" />
+          </Link>
+          <Link href="/favorites">
+            <FaRegHeart className="text-xl cursor-pointer text-gray-600 hover:text-gray-900" />
+          </Link>
+          <DrawerComponent
+            trigger={
+              <MdOutlineShoppingCart className="text-xl cursor-pointer text-gray-600 hover:text-gray-900" />
+            }
+          >
+            <QuickCart />
+          </DrawerComponent>
         </div>
       </div>
     </div>

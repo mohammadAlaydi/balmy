@@ -8,19 +8,21 @@ import { X } from "lucide-react";
 interface DrawerComponentProps {
   children?: React.ReactNode;
   trigger?: React.ReactNode;
+  containerClassName?: string;
 }
 
 export default function DrawerComponent({
   children,
   trigger,
+  containerClassName,
 }: DrawerComponentProps) {
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="lg:hidden">
+    <div className={`${containerClassName}`}>
       <Drawer open={open} onOpenChange={setOpen} direction="right">
         <DrawerTrigger asChild>
-          <Button variant="outline">{trigger}</Button>
+            {trigger}
         </DrawerTrigger>
         <DrawerContent>
           <div className="relative h-full">
