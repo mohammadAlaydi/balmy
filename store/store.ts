@@ -1,29 +1,18 @@
 import { configureStore } from '@reduxjs/toolkit';
-
-// Example reducer - replace with your actual slices
-interface ExampleState {
-  count: number;
-}
-
-const initialState: ExampleState = { count: 0 };
-
-const exampleReducer = (state = initialState, action: { type: string }) => {
-  switch (action.type) {
-    case 'INCREMENT':
-      return { count: state.count + 1 };
-    case 'DECREMENT':
-      return { count: state.count - 1 };
-    default:
-      return state;
-  }
-};
+import authReducer from './features/auth-slice';
 
 export const store = configureStore({
   reducer: {
-    example: exampleReducer,
+    auth: authReducer,
   },
   // Enable Redux DevTools in development
   devTools: process.env.NODE_ENV !== 'production',
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: ['persist/PERSIST', 'persist/REHYDRATE'],
+      },
+    }),
 });
 
 export type RootState = ReturnType<typeof store.getState>;

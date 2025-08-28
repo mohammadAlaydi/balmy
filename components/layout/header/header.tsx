@@ -1,3 +1,5 @@
+'use client';
+
 import { Badge } from "@/components/ui/badge";
 import {
   NavigationMenu,
@@ -24,6 +26,8 @@ import DrawerComponent from "../drawer/drawer-component";
 import { CONTACT_INFO, NAV_LINKS, products } from "@/static-data/static-data";
 import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/dialog";
 import SearchPopup from "@/components/search-popup";
+import UserMenu from "./user-menu";
+import { useParams } from "next/navigation";
 
 // Components
 const TopBar = () => (
@@ -53,7 +57,7 @@ const ActionIcons = () => (
         <SearchPopup products={products} />
       </DialogContent>
     </Dialog>
-    <FaRegUser className="text-xl cursor-pointer hidden lg:block" />
+    <UserMenu />
     <FaRegHeart className="text-xl cursor-pointer hidden lg:block" />
     <MdOutlineShoppingCart className="text-xl cursor-pointer hidden lg:block" />
   </div>
@@ -105,14 +109,18 @@ const Logo = () => (
   />
 );
 
-const MobileMenu = () => (
-  <DrawerComponent
-    trigger={
-      <div className="lg:hidden">
-        <FaBars className="text-xl cursor-pointer" />
-      </div>
-    }
-  >
+const MobileMenu = () => {
+  const params = useParams();
+  const locale = params.locale as string || 'ar';
+  
+  return (
+    <DrawerComponent
+      trigger={
+        <div className="lg:hidden">
+          <FaBars className="text-xl cursor-pointer" />
+        </div>
+      }
+    >
     <div className="flex flex-col h-full">
       <h2 className="text-xl font-semibold mb-6 text-center flex-shrink-0">
         Menu
@@ -156,18 +164,29 @@ const MobileMenu = () => (
         ))}
       </Accordion>
 
+      {/* Mobile Profile Link */}
+      <div className="pt-4 border-t border-gray-200 flex-shrink-0">
+        <Link
+          href={`/${locale}/profile`}
+          className="flex items-center py-3 px-3 hover:bg-gray-50 rounded-md text-left w-full text-gray-700 hover:text-gray-900 transition-colors"
+        >
+          <FaRegUser className="mr-3 h-5 w-5" />
+          Profile
+        </Link>
+      </div>
+
       {/* Mobile Action Icons */}
       <div className="pt-6 border-t border-gray-200 flex-shrink-0">
         <div className="flex items-center justify-center gap-6">
           <IoSearch className="text-xl cursor-pointer text-gray-600 hover:text-gray-900" />
-          <FaRegUser className="text-xl cursor-pointer text-gray-600 hover:text-gray-900" />
           <FaRegHeart className="text-xl cursor-pointer text-gray-600 hover:text-gray-900" />
           <MdOutlineShoppingCart className="text-xl cursor-pointer text-gray-600 hover:text-gray-900" />
         </div>
       </div>
-    </div>
-  </DrawerComponent>
-);
+      </div>
+    </DrawerComponent>
+  );
+};
 
 export default function Header() {
   return (

@@ -81,6 +81,24 @@
     "joinUsCoffeeDesc": "Discover a world of distinctive flavors and exceptional service with Farada",
     "learnMore": "Learn More About Us"
   },
+  "profile": {
+    "title": "Profile",
+    "subtitle": "Edit your personal information",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "email": "Email",
+    "phone": "Phone Number",
+    "country": "Country",
+    "city": "City",
+    "address": "Detailed Address",
+    "saveChanges": "Save Changes",
+    "changesSaved": "Changes saved successfully",
+    "errorSaving": "Error saving changes"
+  },
+  "buttons": {
+    "select-option": "Select an option",
+    "no-options": "No options available"
+  },
   "contactUs": {
     "title": "Contact Us",
     "subtitle": "We're here to help you and answer all your questions. Our customer service team is always available to serve you",
