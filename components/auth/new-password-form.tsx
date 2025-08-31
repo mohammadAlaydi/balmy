@@ -4,6 +4,9 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '@/store/store';
+import { resetPassword, clearError } from '@/store/features/auth-slice';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -29,6 +32,8 @@ interface NewPasswordFormProps {
 
 export default function NewPasswordForm({ email, code, onBackToCodeVerification, onPasswordReset }: NewPasswordFormProps) {
   const [isLoading, setIsLoading] = useState(false);
+  const dispatch = useDispatch<AppDispatch>();
+  const { error } = useSelector((state: RootState) => state.auth);
 
   const {
     register,
@@ -40,29 +45,23 @@ export default function NewPasswordForm({ email, code, onBackToCodeVerification,
 
   const onSubmit = async (data: NewPasswordFormData) => {
     setIsLoading(true);
+    dispatch(clearError());
     
     try {
-      // TODO: Replace with actual API call
-      const response = await fetch('/api/auth/reset-password', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ 
-          email,
-          code,
-          newPassword: data.password 
-        }),
-      });
-
-      if (response.ok) {
+      const result = await dispatch(resetPassword({
+        email,
+        code,
+        newPassword: data.password
+      }));
+      
+      if (resetPassword.fulfilled.match(result)) {
         toast.success('Password reset successfully! You can now login with your new password.');
         onPasswordReset();
       } else {
-        const errorData = await response.json();
-        toast.error(errorData.message || 'Failed to reset password');
+        toast.error(result.payload as string || 'Failed to reset password');
       }
     } catch (error) {
+      console.error('Password reset error:', error);
       toast.error('An unexpected error occurred');
     } finally {
       setIsLoading(false);
@@ -102,6 +101,10 @@ export default function NewPasswordForm({ email, code, onBackToCodeVerification,
               <p className="text-red-500 text-sm mt-1">{errors.confirmPassword.message}</p>
             )}
           </div>
+
+          {error && (
+            <div className="text-red-500 text-sm text-center">{error}</div>
+          )}
 
           <Button
             type="submit"

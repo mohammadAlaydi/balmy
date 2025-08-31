@@ -60,6 +60,37 @@ export interface AuthResponse {
   user: User;
   accessToken: string;
   refreshToken: string;
+  message?: string;
+}
+
+// New types for external API integration
+export interface ForgotPasswordRequest {
+  email: string;
+}
+
+export interface ResetPasswordRequest {
+  email: string;
+  code: string;
+  newPassword: string;
+}
+
+export interface UpdateProfileRequest {
+  firstName?: string;
+  lastName?: string;
+  phone?: string;
+  country?: string;
+  city?: string;
+  address?: string;
+}
+
+// API Response types
+export interface ApiResponse<T = any> {
+  success?: boolean;
+  message?: string;
+  data?: T;
+  user?: User;
+  accessToken?: string;
+  refreshToken?: string;
 }
 
 // Product types

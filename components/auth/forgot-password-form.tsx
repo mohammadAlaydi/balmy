@@ -4,6 +4,9 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '@/store/store';
+import { forgotPassword, clearError } from '@/store/features/auth-slice';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -11,7 +14,7 @@ import { toast } from 'sonner';
 import { IoArrowBack } from 'react-icons/io5';
 
 const forgotPasswordSchema = z.object({
-  email: z.string().email('Please enter a valid email address'),
+  email: z.string().email('Invalid email address'),
 });
 
 type ForgotPasswordFormData = z.infer<typeof forgotPasswordSchema>;
@@ -23,6 +26,8 @@ interface ForgotPasswordFormProps {
 
 export default function ForgotPasswordForm({ onBackToLogin, onEmailSent }: ForgotPasswordFormProps) {
   const [isLoading, setIsLoading] = useState(false);
+  const dispatch = useDispatch<AppDispatch>();
+  const { error } = useSelector((state: RootState) => state.auth);
 
   const {
     register,
@@ -34,36 +39,19 @@ export default function ForgotPasswordForm({ onBackToLogin, onEmailSent }: Forgo
 
   const onSubmit = async (data: ForgotPasswordFormData) => {
     setIsLoading(true);
+    dispatch(clearError());
     
     try {
-      // TODO: Replace with actual API call
-      const response = await fetch('/api/auth/forgot-password', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email: data.email }),
-      });
-
-      if (response.ok) {
+      const result = await dispatch(forgotPassword(data.email));
+      if (forgotPassword.fulfilled.match(result)) {
         toast.success('Password reset email sent! Check your inbox.');
         onEmailSent(data.email);
       } else {
-        const errorData = await response.json();
-        if (response.status === 404) {
-          toast.error('No account found with this email address. Please check your email or create a new account.');
-        } else {
-          toast.error(errorData.message || 'Failed to send reset email');
-        }
+        toast.error(result.payload as string || 'Failed to send reset email');
       }
     } catch (error) {
       console.error('Forgot password error:', error);
-      // Check if it's a network error (API endpoint doesn't exist)
-      if (error instanceof TypeError && error.message.includes('fetch')) {
-        toast.error('Service temporarily unavailable. Please try again later.');
-      } else {
-        toast.error('An unexpected error occurred. Please try again.');
-      }
+      toast.error('An unexpected error occurred. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -74,7 +62,7 @@ export default function ForgotPasswordForm({ onBackToLogin, onEmailSent }: Forgo
       <CardHeader className="text-center">
         <CardTitle className="text-2xl font-bold">Forgot Password</CardTitle>
         <p className="text-muted-foreground">
-          Enter your email address and we'll send you a code to reset your password.
+          Enter your email address and we'll send you a reset code.
         </p>
       </CardHeader>
       <CardContent>
@@ -83,13 +71,17 @@ export default function ForgotPasswordForm({ onBackToLogin, onEmailSent }: Forgo
             <Input
               {...register('email')}
               type="email"
-              placeholder="Enter your email address"
+              placeholder="Email address"
               className={errors.email ? 'border-red-500' : ''}
             />
             {errors.email && (
               <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
             )}
           </div>
+
+          {error && (
+            <div className="text-red-500 text-sm text-center">{error}</div>
+          )}
 
           <Button
             type="submit"
@@ -105,7 +97,7 @@ export default function ForgotPasswordForm({ onBackToLogin, onEmailSent }: Forgo
               onClick={onBackToLogin}
               className="text-primary hover:underline text-sm flex items-center justify-center gap-2 mx-auto"
             >
-              <IoArrowBack className="text-sm" />
+              <IoArrowBack />
               Back to Login
             </button>
           </div>
