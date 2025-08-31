@@ -198,6 +198,8 @@ const MobileMenu = () => (
   </DrawerComponent>
 );
 
+
+
 export default function Header() {
   return (
     <div className="w-full">

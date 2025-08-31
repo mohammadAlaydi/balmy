@@ -5,8 +5,8 @@ import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
 import Header from "@/components/layout/header/header";
 import Footer from "@/components/layout/footer/footer";
-import ReduxProvider from "@/store/redux-provider";
 import { Toaster } from "@/components/ui/sonner";
+import ReduxProvider from "@/store/redux-provider";
 
 const cairo = Cairo({
   variable: "--font-cairo",
