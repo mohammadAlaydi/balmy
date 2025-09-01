@@ -1,3 +1,5 @@
+"use client";
+
 import { Badge } from "@/components/ui/badge";
 import {
   NavigationMenu,
@@ -25,6 +27,8 @@ import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/dialog";
 import SearchComponent from "@/components/search-component";
 import QuickCart from "@/components/quick-cart";
 import Link from "next/link";
+import { useEffect, useState } from "react";
+import { useFetcher } from "@/app/helpers/fetchers";
 
 // Components
 const TopBar = () => (
@@ -73,38 +77,53 @@ const ActionIcons = () => (
   </>
 );
 
-const NavigationLinks = () => (
+const NavigationLinks = ({ navbarCategories }: { navbarCategories: any }) => (
   <NavigationMenu className="hidden lg:block">
     <NavigationMenuList>
-      {NAV_LINKS.map((link) => (
-        <NavigationMenuItem key={link.title}>
-          <NavigationMenuTrigger
-            className="cursor-pointer"
-            chevronDownIcon={!!link.links}
-          >
-            {link.title}
-          </NavigationMenuTrigger>
-          {link.links && (
-            <NavigationMenuContent navigationMenuContent={true}>
-              <ul className="grid gap-1 p-2 min-w-[200px]">
-                {link.links.map((nested) => (
-                  <li key={nested.path}>
-                    <NavigationMenuLink asChild>
-                      <Link
-                        href={nested.path}
-                        className="block rounded-md px-2 py-1.5 text-sm hover:bg-accent hover:text-accent-foreground"
+      {navbarCategories && navbarCategories.length > 0 ? (
+        navbarCategories.map((link: any) => (
+          <NavigationMenuItem key={link?.name}>
+            <NavigationMenuTrigger
+              className="cursor-pointer hover:bg-transparent hover:text-red-color"
+              chevronDownIcon={!!link?.children?.length > 0}
+            >
+              <Link href={`/category/${link?.slug}/${link?.id}`}>
+                {link?.name}
+              </Link>
+            </NavigationMenuTrigger>
+            {link?.children && link?.children?.length > 0 && (
+              <NavigationMenuContent
+                navigationMenuContent={link?.children?.length > 0}
+              >
+                <ul className="grid gap-1 p-2 min-w-[200px]">
+                  {link?.children?.map((nested: any, index: number) => (
+                    <li key={index}>
+                      <NavigationMenuLink
+                        asChild
+                        className="cursor-pointer bg-transparent hover:bg-transparent hover:text-accent-foreground"
                       >
-                        {nested.title}
-                      </Link>
-                    </NavigationMenuLink>
-                  </li>
-                ))}
-              </ul>
-              <NavigationMenuIndicator />
-            </NavigationMenuContent>
-          )}
+                        <Link
+                          href={`/category/${link?.slug}/${nested?.slug}`}
+                          className="block rounded-md px-2 py-1.5 text-sm hover:bg-accent hover:text-accent-foreground text-end"
+                        >
+                          {nested.name}
+                        </Link>
+                      </NavigationMenuLink>
+                    </li>
+                  ))}
+                </ul>
+                <NavigationMenuIndicator />
+              </NavigationMenuContent>
+            )}
+          </NavigationMenuItem>
+        ))
+      ) : (
+        <NavigationMenuItem>
+          <div className="px-4 py-2 text-sm text-gray-500">
+            No categories found.
+          </div>
         </NavigationMenuItem>
-      ))}
+      )}
     </NavigationMenuList>
   </NavigationMenu>
 );
@@ -121,92 +140,127 @@ const Logo = () => (
   </Link>
 );
 
-const MobileMenu = () => (
-  <DrawerComponent
-    trigger={
-      <div className="lg:hidden">
-        <FaBars className="text-xl cursor-pointer text-black" />
-      </div>
-    }
-    containerClassName="lg:hidden"
-  >
-    <div className="flex flex-col h-full">
-      <h2 className="text-xl font-semibold mb-6 text-center flex-shrink-0">
-        Menu
-      </h2>
-      {/* Mobile Navigation Links */}
-      <Accordion
-        type="single"
-        collapsible
-        className="w-full flex-1 overflow-y-auto"
-      >
-        {NAV_LINKS.map((link, index) => (
-          <AccordionItem key={link.title} value={`item-${index}`}>
-            {link.links ? (
-              <AccordionTrigger className="text-left py-3 hover:bg-gray-50 rounded-md px-3">
-                {link.title}
-              </AccordionTrigger>
-            ) : (
-              <Link
-                href={link.path!}
-                className="flex items-center py-3 px-3 hover:bg-gray-50 rounded-md text-left w-full"
-              >
-                {link.title}
-              </Link>
-            )}
-            {link.links && (
-              <AccordionContent>
-                <div className="pl-4 space-y-2">
-                  {link.links.map((nested) => (
-                    <Link
-                      key={nested.path}
-                      href={nested.path}
-                      className="block py-2 px-3 hover:bg-gray-50 rounded-md text-sm text-gray-700 hover:text-gray-900 transition-colors"
-                    >
-                      {nested.title}
-                    </Link>
-                  ))}
-                </div>
-              </AccordionContent>
-            )}
-          </AccordionItem>
-        ))}
-      </Accordion>
+const MobileMenu = () => {
+  const locale = "en"; // Default locale, you might want to get this from context or props
 
-      {/* Mobile Action Icons */}
-      <div className="pt-6 border-t border-gray-200 flex-shrink-0">
-        <div className="flex items-center justify-center gap-6">
-          <Link href="/search">
-            <IoSearch className="text-xl cursor-pointer text-gray-600 hover:text-gray-900" />
-          </Link>
-          <Link href="/user-profile">
-            <FaRegUser className="text-xl cursor-pointer text-gray-600 hover:text-gray-900" />
-          </Link>
-          <Link href="/favorites">
-            <FaRegHeart className="text-xl cursor-pointer text-gray-600 hover:text-gray-900" />
-          </Link>
-          <DrawerComponent
-            trigger={
-              <MdOutlineShoppingCart className="text-xl cursor-pointer text-gray-600 hover:text-gray-900" />
-            }
+  return (
+    <DrawerComponent
+      trigger={
+        <div className="lg:hidden">
+          <FaBars className="text-xl cursor-pointer text-black" />
+        </div>
+      }
+      containerClassName="lg:hidden"
+    >
+      <div className="flex flex-col h-full">
+        <h2 className="text-xl font-semibold mb-6 text-center flex-shrink-0">
+          Menu
+        </h2>
+        {/* Mobile Navigation Links */}
+        <Accordion
+          type="single"
+          collapsible
+          className="w-full flex-1 overflow-y-auto"
+        >
+          {NAV_LINKS.map((link, index) => (
+            <AccordionItem key={link.title} value={`item-${index}`}>
+              {link.links ? (
+                <AccordionTrigger className="text-left py-3 hover:bg-gray-50 rounded-md px-3">
+                  {link.title}
+                </AccordionTrigger>
+              ) : (
+                <Link
+                  href={link.path!}
+                  className="flex items-center py-3 px-3 hover:bg-gray-50 rounded-md text-left w-full"
+                >
+                  {link.title}
+                </Link>
+              )}
+              {link.links && (
+                <AccordionContent>
+                  <div className="pl-4 space-y-2">
+                    {link.links.map((nested) => (
+                      <Link
+                        key={nested.path}
+                        href={nested.path}
+                        className="block py-2 px-3 hover:bg-gray-50 rounded-md text-sm text-gray-700 hover:text-gray-900 transition-colors"
+                      >
+                        {nested.title}
+                      </Link>
+                    ))}
+                  </div>
+                </AccordionContent>
+              )}
+            </AccordionItem>
+          ))}
+        </Accordion>
+
+        {/* Mobile Profile Link */}
+        <div className="pt-4 border-t border-gray-200 flex-shrink-0">
+          <Link
+            href={`/${locale}/profile`}
+            className="flex items-center py-3 px-3 hover:bg-gray-50 rounded-md text-left w-full text-gray-700 hover:text-gray-900 transition-colors"
           >
-            <QuickCart />
-          </DrawerComponent>
+            <FaRegUser className="mr-3 h-5 w-5" />
+            Profile
+          </Link>
+        </div>
+
+        {/* Mobile Action Icons */}
+        <div className="pt-6 border-t border-gray-200 flex-shrink-0">
+          <div className="flex items-center justify-center gap-6">
+            <Link href="/search">
+              <IoSearch className="text-xl cursor-pointer text-gray-600 hover:text-gray-900" />
+            </Link>
+            <Link href="/user-profile">
+              <FaRegUser className="text-xl cursor-pointer text-gray-600 hover:text-gray-900" />
+            </Link>
+            <Link href="/favorites">
+              <FaRegHeart className="text-xl cursor-pointer text-gray-600 hover:text-gray-900" />
+            </Link>
+            <DrawerComponent
+              trigger={
+                <MdOutlineShoppingCart className="text-xl cursor-pointer text-gray-600 hover:text-gray-900" />
+              }
+            >
+              <QuickCart />
+            </DrawerComponent>
+          </div>
         </div>
       </div>
-    </div>
-  </DrawerComponent>
-);
-
-
+    </DrawerComponent>
+  );
+};
 
 export default function Header() {
+  const API_KEY = process.env.NEXT_PUBLIC_API_KEY;
+  const [token, setToken] = useState<string | null>(null);
+
+  // Get token from localStorage after component mounts (client-side only)
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setToken(localStorage.getItem("token"));
+    }
+  }, []);
+
+  const { data: categoriesData } = useFetcher(
+    token ? `${API_KEY}/v1/categories` : null,
+    {
+      method: "GET",
+      headers: {
+        Authorization: token ? `Bearer ${token}` : "",
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    }
+  );
+
   return (
     <div className="w-full">
       <TopBar />
       <div className="flex justify-between items-center gap-3 py-5 px-3 lg:px-5 shadow-[0px_6px_20px_rgba(149,157,165,0.1)] transition-shadow duration-200">
         <ActionIcons />
-        <NavigationLinks />
+        <NavigationLinks navbarCategories={categoriesData?.categories || []} />
         <Logo />
         <MobileMenu />
       </div>

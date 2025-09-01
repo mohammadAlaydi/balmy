@@ -3,6 +3,64 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* Custom color utilities */
+.text-navy-blue-color {
+  color: var(--navy-blue-color);
+}
+
+/* RTL and LTR text direction utilities */
+.rtl {
+  direction: rtl;
+  text-align: right;
+}
+
+.ltr {
+  direction: ltr;
+  text-align: left;
+}
+
+/* RTL input and select styling */
+.rtl input,
+.rtl select {
+  text-align: right;
+}
+
+.ltr input,
+.ltr select {
+  text-align: left;
+}
+
+/* RTL form layout support */
+.rtl .grid {
+  direction: rtl;
+}
+
+.rtl .space-y-6 > * + * {
+  margin-top: 1.5rem;
+}
+
+/* RTL button alignment */
+.rtl .flex.justify-center {
+  justify-content: center;
+}
+
+/* RTL select dropdown alignment */
+.rtl [data-radix-popper-content-wrapper] {
+  direction: rtl;
+}
+
+.bg-navy-blue-color {
+  background-color: var(--navy-blue-color);
+}
+
+.text-orange-color {
+  color: var(--orange-color);
+}
+
+.bg-orange-color {
+  background-color: var(--orange-color);
+}
+
 body {
   font-family: var(--font-cairo), sans-serif !important;
 }
@@ -85,7 +143,6 @@ body {
   --gray-color: #6c757d;
   --red-color: #f02e41;
 }
-
 .dark {
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);

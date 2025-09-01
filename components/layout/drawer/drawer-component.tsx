@@ -21,9 +21,7 @@ export default function DrawerComponent({
   return (
     <div className={`${containerClassName}`}>
       <Drawer open={open} onOpenChange={setOpen} direction="right">
-        <DrawerTrigger asChild>
-            {trigger}
-        </DrawerTrigger>
+        <DrawerTrigger asChild>{trigger}</DrawerTrigger>
         <DrawerContent>
           <div className="relative h-full">
             <div className="px-4 py-6 pt-16 h-full">{children}</div>

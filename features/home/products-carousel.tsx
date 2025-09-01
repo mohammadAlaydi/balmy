@@ -1,10 +1,10 @@
 import CarouselComponent from "@/components/carousel-component";
 import ProductCard from "@/components/product-card";
-import { products } from "@/static-data/static-data";
 import React from "react";
 import { SwiperSlide } from "swiper/react";
 
-export default function ProductsCarousel() {
+export default function ProductsCarousel({ products }: { products: any }) {
+  console.log(products);
   return (
     <CarouselComponent
       containerClassName="w-full h-fit py-5"
@@ -17,7 +17,7 @@ export default function ProductsCarousel() {
         350: {
           slidesPerView: 2,
         },
-        700 :{
+        700: {
           slidesPerView: 3,
         },
         992: {
@@ -32,7 +32,7 @@ export default function ProductsCarousel() {
       }}
       autoPlay={true}
     >
-      {products?.map((product, index) => (
+      {products?.map((product: any, index: number) => (
         <SwiperSlide key={index}>
           <ProductCard product={product} width="w-full" />
         </SwiperSlide>

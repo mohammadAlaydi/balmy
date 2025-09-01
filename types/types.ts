@@ -33,25 +33,49 @@ export interface ToastStyle {
 export interface ToastOptions {
   success?: {
     duration?: number;
-    position?: "top-left" | "top-center" | "top-right" | "bottom-left" | "bottom-center" | "bottom-right";
+    position?:
+      | "top-left"
+      | "top-center"
+      | "top-right"
+      | "bottom-left"
+      | "bottom-center"
+      | "bottom-right";
     style?: ToastStyle;
     className?: string;
   };
   error?: {
     duration?: number;
-    position?: "top-left" | "top-center" | "top-right" | "bottom-left" | "bottom-center" | "bottom-right";
+    position?:
+      | "top-left"
+      | "top-center"
+      | "top-right"
+      | "bottom-left"
+      | "bottom-center"
+      | "bottom-right";
     style?: ToastStyle;
     className?: string;
   };
   warning?: {
     duration?: number;
-    position?: "top-left" | "top-center" | "top-right" | "bottom-left" | "bottom-center" | "bottom-right";
+    position?:
+      | "top-left"
+      | "top-center"
+      | "top-right"
+      | "bottom-left"
+      | "bottom-center"
+      | "bottom-right";
     style?: ToastStyle;
     className?: string;
   };
   info?: {
     duration?: number;
-    position?: "top-left" | "top-center" | "top-right" | "bottom-left" | "bottom-center" | "bottom-right";
+    position?:
+      | "top-left"
+      | "top-center"
+      | "top-right"
+      | "bottom-left"
+      | "bottom-center"
+      | "bottom-right";
     style?: ToastStyle;
     className?: string;
   };
@@ -71,8 +95,8 @@ export interface TabbyPaymentRequest {
     reference_id: string;
     items: TabbyOrderItem[];
   };
-  payment_type: 'installments' | 'pay_later';
-  lang: 'ar' | 'en';
+  payment_type: "installments" | "pay_later";
+  lang: "ar" | "en";
 }
 
 export interface TabbyOrderItem {
@@ -108,5 +132,147 @@ export interface CheckoutFormData {
   city: string;
   postalCode: string;
   country: string;
-  paymentMethod: 'tabby_installments' | 'tabby_pay_later' | 'credit_card';
+  paymentMethod: "tabby_installments" | "tabby_pay_later" | "credit_card";
+}
+// Authentication types
+export interface User {
+  id: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  phone?: string;
+  country?: string;
+  city?: string;
+  address?: string;
+  avatar?: string;
+  role: "user" | "admin";
+  isEmailVerified: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface AuthState {
+  user: User | null;
+  accessToken: string | null;
+  refreshToken: string | null;
+  isAuthenticated: boolean;
+  isLoading: boolean;
+  error: string | null;
+}
+
+export interface LoginCredentials {
+  email: string;
+  password: string;
+}
+
+export interface RegisterCredentials {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+  phone?: string;
+}
+
+export interface AuthResponse {
+  user: User;
+  accessToken: string;
+  refreshToken: string;
+  message?: string;
+}
+
+// New types for external API integration
+export interface ForgotPasswordRequest {
+  email: string;
+}
+
+export interface ResetPasswordRequest {
+  email: string;
+  code: string;
+  newPassword: string;
+}
+
+export interface UpdateProfileRequest {
+  firstName?: string;
+  lastName?: string;
+  phone?: string;
+  country?: string;
+  city?: string;
+  address?: string;
+}
+
+// API Response types
+export interface ApiResponse<T = any> {
+  success?: boolean;
+  message?: string;
+  data?: T;
+  user?: User;
+  accessToken?: string;
+  refreshToken?: string;
+}
+
+// Product types
+export interface Product {
+  id: number;
+  name: string;
+  nameEn: string;
+  price: number;
+  priceEn: string;
+  code: string;
+  images: string[];
+  category: string;
+  inStock: boolean;
+  rating: number;
+  reviews: number;
+  description?: string;
+  specifications?: Record<string, string>;
+}
+
+export interface CartItem {
+  product: Product;
+  quantity: number;
+}
+
+export interface CartState {
+  items: CartItem[];
+  total: number;
+  isLoading: boolean;
+}
+
+// Form types
+export interface InputInterFace {
+  containerStyle?: string;
+  containerColSpan?: string;
+  labelColSpan?: string;
+  inputColSpan?: string;
+  inputStyle?: string;
+  inputPlaceholder?: string;
+  fieldName: string;
+  inputType?: string;
+  labelText?: string;
+  labelStyle?: string;
+  inputId?: string;
+  control?: any;
+}
+
+export interface SelectInterFace {
+  selectOptions: Array<{ label: string; value: string }>;
+  containerStyle?: string;
+  containerColSpan?: string;
+  labelColSpan?: string;
+  selectColSpan?: string;
+  selectStyle?: string;
+  fieldName: string;
+  labelText?: string;
+  labelStyle?: string;
+  control?: any;
+}
+export interface CheckBoxOrRadioInterFace {
+  inputId?: string;
+  containerStyle?: string;
+  checboxStyle?: string;
+  fieldName: string;
+  labelText?: string;
+  labelStyle?: string;
+  control?: object;
 }

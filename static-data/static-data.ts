@@ -322,7 +322,7 @@ export const SERVICES = [
 
 export const WORK_HOURS = {
   title: "ساعات العمل",
-  schedule: [ 
+  schedule: [
     "طوال أيام الأسبوع",
     "من 9 ص - إلي 11:30 ص",
     "من 3:30 م - إلي 11:30 م",
