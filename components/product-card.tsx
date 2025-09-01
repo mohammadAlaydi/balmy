@@ -47,7 +47,10 @@ interface ProductCardProps {
   cardColSpan?: string;
 }
 
-export default function ProductCard({ product, cardColSpan }: ProductCardProps) {
+export default function ProductCard({
+  product,
+  cardColSpan,
+}: ProductCardProps) {
   const [selectedImage, setSelectedImage] = useState<number | null>(null); // null = base image, 1+ = variant images
   const [isHovered, setIsHovered] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -94,7 +97,7 @@ export default function ProductCard({ product, cardColSpan }: ProductCardProps) 
       ref={ref}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className={` shadow-[0px_6px_20px_rgba(149,157,165,0.1)] py-0 h-fit gap-0 group relative rounded-t-lg ${
+      className={`shadow-[0px_6px_20px_rgba(149,157,165,0.1)] py-0 h-fit gap-0 group relative rounded-t-lg ${
         cardColSpan || "col-span-6  sm:col-span-4 md:col-span-3  xl:col-span-2"
       } border border-gray-200 rounded-lg`}
     >

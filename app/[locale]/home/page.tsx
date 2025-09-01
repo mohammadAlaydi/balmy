@@ -7,19 +7,21 @@ import CrossBody from "@/features/home/cross-body";
 import Services from "@/features/home/services";
 import Categories from "@/features/home/categories";
 import PagePadding from "@/components/page-padding";
+import { products } from "@/static-data/static-data";
 
 export default function page() {
+  
   const t = useTranslations("header");
 
   return (
     <div className="min-h-[100vh]">
-      <BannerCarousel  />
+      <BannerCarousel />
       <PagePadding>
         <Services />
         <Categories />
-        <ProductsCarousel />
+        <ProductsCarousel products={products} />
         <CrossBody />
-        <ProductsCarousel />
+        <ProductsCarousel products={products} />
       </PagePadding>
     </div>
   );

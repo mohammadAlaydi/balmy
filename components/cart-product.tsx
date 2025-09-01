@@ -8,10 +8,14 @@ import { TiMinus } from "react-icons/ti";
 
 import DeleteProductComponent from "@/components/delete-product-component";
 
-export default function CartProducts() {
+export default function CartProduct({ maxHeight }: { maxHeight?: string }) {
   const [count, setCount] = React.useState(1);
   return (
-    <div className="flex flex-col gap-3 xl:col-span-6 col-span-9">
+    <div
+      className={`flex flex-col gap-3 xl:col-span-6 col-span-9 overflow-y-auto ${
+        maxHeight || "h-full"
+      }`}
+    >
       {" "}
       {products.map((product) => (
         <div
@@ -42,13 +46,13 @@ export default function CartProducts() {
             <DeleteProductComponent />
             <div className="flex items-center gap-2">
               <FaPlus
-                className="text-sm cursor-pointer"
+                className="text-2xl cursor-pointer border border-gray-200 rounded-full p-1"
                 onClick={() => setCount(count + 1)}
               />
               <span className="text-base font-[550]">{count}</span>
 
               <TiMinus
-                className="text-sm cursor-pointer"
+                className="text-2xl cursor-pointer border border-gray-200 rounded-full p-1"
                 onClick={() => setCount(Math.max(0, count - 1))}
               />
             </div>

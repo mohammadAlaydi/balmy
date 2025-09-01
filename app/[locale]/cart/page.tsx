@@ -1,5 +1,5 @@
 import PagePadding from "@/components/page-padding";
-import CartProducts from "@/features/cart/cart-products";
+import CartProducts from "@/components/cart-product";
 import OrderSummary from "@/features/cart/order-Summary";
 
 export default function CartPage() {

@@ -56,7 +56,7 @@ const ActionIcons = () => (
           <IoSearch className="text-xl cursor-pointer" />
         </DialogTrigger>
         <DialogContent>
-          <SearchComponent products={products} />
+          <SearchComponent products={products} maxHeight="max-h-[85vh]" />
         </DialogContent>
       </Dialog>
       <FaRegUser className="text-xl cursor-pointer hidden lg:block" />
