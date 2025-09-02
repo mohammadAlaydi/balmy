@@ -1,7 +1,7 @@
 import { useThunk } from "@/app/helpers/thunk";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
-const API_KEY = process.env.NEXT_PUBLIC_API_KEY;
+const API_KEY = process.env.NEXT_PUBLIC_API_URL;
 
 const getCartProducts = useThunk("cart/products", `${API_KEY}/cart`, {
   method: "GET",

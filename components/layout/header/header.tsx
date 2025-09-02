@@ -22,13 +22,29 @@ import { MdOutlineShoppingCart } from "react-icons/md";
 import Image from "next/image";
 import SocialMediaIcons from "@/components/social-media-icons";
 import DrawerComponent from "../drawer/drawer-component";
-import { CONTACT_INFO, NAV_LINKS, products } from "@/static-data/static-data";
+import {
+  CONTACT_INFO,
+  LANGUAGES,
+  NAV_LINKS,
+  products,
+} from "@/static-data/static-data";
 import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/dialog";
 import SearchComponent from "@/components/search-component";
 import QuickCart from "@/components/quick-cart";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useFetcher } from "@/app/helpers/fetchers";
+import {
+  DropdownMenu,
+  DropdownMenuSeparator,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+  DropdownMenuGroup,
+} from "@radix-ui/react-dropdown-menu";
+import { MdLanguage } from "react-icons/md";
+import { usePathname, useRouter } from "next/navigation";
 
 // Components
 const TopBar = () => (
@@ -48,7 +64,11 @@ const TopBar = () => (
   </div>
 );
 
-const ActionIcons = () => (
+const ActionIcons = ({
+  languageItems,
+}: {
+  languageItems: { title: string; onClick: () => void; className: string }[];
+}) => (
   <>
     <div className="items-center gap-3 hidden lg:flex">
       <Dialog>
@@ -70,6 +90,26 @@ const ActionIcons = () => (
       >
         <QuickCart />
       </DrawerComponent>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <MdLanguage className="text-2xl cursor-pointer text-black" />
+        </DropdownMenuTrigger>
+        <DropdownMenuContent className="w-40 bg-white overflow-hidden  h-fit z-50 shadow-[0px_6px_20px_rgba(149,157,165,0.1)] rounded-lg">
+          <DropdownMenuLabel className="p-2">Language</DropdownMenuLabel>
+          <DropdownMenuSeparator className="border border-gray-200" />
+          <DropdownMenuGroup>
+            {languageItems.map((item) => (
+              <DropdownMenuItem
+                key={item.title}
+                onClick={item.onClick}
+                className={`${item.className} p-2 cursor-pointer hover:bg-accent hover:text-accent-foreground`}
+              >
+                {item.title}
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuGroup>
+        </DropdownMenuContent>
+      </DropdownMenu>
     </div>
     <Link href="/user-profile" className="block lg:hidden">
       <FaRegUser className="text-xl cursor-pointer text-black" />
@@ -140,7 +180,7 @@ const Logo = () => (
   </Link>
 );
 
-const MobileMenu = () => {
+const MobileMenu = ({ languageItems }: { languageItems: { title: string; onClick: () => void; className: string }[] }) => {
   const locale = "en"; // Default locale, you might want to get this from context or props
 
   return (
@@ -158,7 +198,7 @@ const MobileMenu = () => {
         </h2>
         {/* Mobile Navigation Links */}
         <Accordion
-          type="single"
+          defaultValue="item-0"
           collapsible
           className="w-full flex-1 overflow-y-auto"
         >
@@ -195,17 +235,6 @@ const MobileMenu = () => {
           ))}
         </Accordion>
 
-        {/* Mobile Profile Link */}
-        <div className="pt-4 border-t border-gray-200 flex-shrink-0">
-          <Link
-            href={`/${locale}/profile`}
-            className="flex items-center py-3 px-3 hover:bg-gray-50 rounded-md text-left w-full text-gray-700 hover:text-gray-900 transition-colors"
-          >
-            <FaRegUser className="mr-3 h-5 w-5" />
-            Profile
-          </Link>
-        </div>
-
         {/* Mobile Action Icons */}
         <div className="pt-6 border-t border-gray-200 flex-shrink-0">
           <div className="flex items-center justify-center gap-6">
@@ -218,6 +247,28 @@ const MobileMenu = () => {
             <Link href="/favorites">
               <FaRegHeart className="text-xl cursor-pointer text-gray-600 hover:text-gray-900" />
             </Link>
+            <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <MdLanguage className="text-2xl cursor-pointer text-gray-600 hover:text-gray-900" />
+        </DropdownMenuTrigger>
+                 <DropdownMenuContent
+           className="w-40 bg-white overflow-hidden  h-fit z-50 shadow-[0px_6px_20px_rgba(149,157,165,0.1)] rounded-lg"
+         >
+          <DropdownMenuLabel className="p-2">Language</DropdownMenuLabel>
+          <DropdownMenuSeparator className="border border-gray-200" />
+          <DropdownMenuGroup>
+            {languageItems.map((item) => (
+              <DropdownMenuItem
+                key={item.title}
+                onClick={item.onClick}
+                className={`${item.className} p-2 cursor-pointer hover:bg-accent hover:text-accent-foreground`}
+              >
+                {item.title}
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuGroup>
+        </DropdownMenuContent>
+      </DropdownMenu>
             <DrawerComponent
               trigger={
                 <MdOutlineShoppingCart className="text-xl cursor-pointer text-gray-600 hover:text-gray-900" />
@@ -233,7 +284,7 @@ const MobileMenu = () => {
 };
 
 export default function Header() {
-  const API_KEY = process.env.NEXT_PUBLIC_API_KEY;
+  const API_KEY = process.env.NEXT_PUBLIC_API_URL;
   const [token, setToken] = useState<string | null>(null);
 
   // Get token from localStorage after component mounts (client-side only)
@@ -254,15 +305,32 @@ export default function Header() {
       },
     }
   );
+  const router = useRouter();
+  const pathname = usePathname();
+  const currentLocale = pathname.split("/")[1];
+  const languageItems = LANGUAGES.map(
+    (lang: { code: string; title: string }) => {
+      const segments = pathname.split("/");
+      segments[1] = lang.code;
+      const newPath = segments.join("/");
+
+      return {
+        title: lang.title,
+        onClick: () => router.push(newPath),
+        className:
+          lang.code === currentLocale ? "opacity-50 pointer-events-none" : "",
+      };
+    }
+  );
 
   return (
     <div className="w-full">
       <TopBar />
       <div className="flex justify-between items-center gap-3 py-5 px-3 lg:px-5 shadow-[0px_6px_20px_rgba(149,157,165,0.1)] transition-shadow duration-200">
-        <ActionIcons />
+        <ActionIcons languageItems={languageItems} />
         <NavigationLinks navbarCategories={categoriesData?.categories || []} />
         <Logo />
-        <MobileMenu />
+        <MobileMenu languageItems={languageItems} />
       </div>
     </div>
   );

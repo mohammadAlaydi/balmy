@@ -71,8 +71,6 @@ const FooterAccordion = ({
   defaultValue: string;
 }) => (
   <Accordion
-    type="single"
-    collapsible
     className="col-span-12 lg:col-span-3"
     defaultValue={defaultValue}
   >

@@ -23,7 +23,7 @@ export default function CategoryPage({
   const [token, setToken] = useState<string | null>(null);
   console.log(slug);
 
-  const API_KEY = process.env.NEXT_PUBLIC_API_KEY;
+  const API_KEY = process.env.NEXT_PUBLIC_API_URL;
 
   // Get token from localStorage after component mounts (client-side only)
   useEffect(() => {

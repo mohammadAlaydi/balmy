@@ -334,3 +334,13 @@ export const LOCATION_INFO = {
   address: "طريق أنس ابن مالك، الصحافة، الرياض 13321",
   phone: "+966-55-766-5585",
 };
+export const LANGUAGES: { code: string; title: string; }[] = [
+  {
+    code: 'ar',
+    title: 'عربي',
+  },
+  {
+    code: 'en',
+    title: 'English',
+  },
+];
