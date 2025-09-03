@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState, AppDispatch } from '@/store/store';
-import { getCurrentUser, refreshToken } from '@/store/features/auth-slice';
+import { getCurrentUser, refreshToken } from '@/store/slices/auth-slice';
 
 export const useAuth = () => {
   const dispatch = useDispatch<AppDispatch>();

@@ -236,6 +236,7 @@
     "open": "فتح",
     "save": "حفظ",
     "delete": "حذف",
+    "delete-confirmation": "هل أنت متأكد من حذف هذا المنتج؟",
     "edit": "تعديل",
     "add": "إضافة",
     "remove": "إزالة",
@@ -427,5 +428,8 @@
     "proxy-test-failed": "فشل اختبار البروكسي",
     "network-error-occurred": "حدث خطأ في الشبكة",
     "unknown-error": "خطأ غير معروف"
+  },
+  "toast": {
+    "product-deleted": "تم حذف المنتج بنجاح"
   }
 }

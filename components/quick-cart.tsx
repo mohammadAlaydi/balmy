@@ -8,6 +8,7 @@ import { getCartProducts } from "@/store/slices/cart-slice";
 import { useTranslations } from "next-intl";
 
 export default function QuickCart() {
+  
   const t = useTranslations("cart");
   const dispatch = useDispatch();
   const { data } = useSelector((state: any) => state.cart);

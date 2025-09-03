@@ -16,6 +16,7 @@ import { addToCart } from "@/store/slices/cart-slice";
 import { getProductDetails } from "@/store/slices/product-details-slice";
 import { useSelector } from "react-redux";
 import { useTranslations } from "next-intl";
+import ReactStars from "./react-stars";
 
 // Define proper types for product variants and images
 interface ProductImage {
@@ -82,7 +83,7 @@ export default function ProductCard({
 
   const handleAddToFavorites = () => {
     toast.success(
-              `${t("added-to-favorites")} ${product?.name || t("product")} - ${
+      `${t("added-to-favorites")} ${product?.name || t("product")} - ${
         product?.sku || ""
       }`,
       {
@@ -91,12 +92,13 @@ export default function ProductCard({
       }
     );
   };
+
   const { productDetails } = useSelector((state: any) => state.productDetails);
   const handleAddToCart = ({ productId }: { productId: number }) => {
     dispatch(addToCart({ productId }));
     dispatch(getProductDetails({ id: productId }));
   };
-
+  console.log(product, "😁😁😁😁");
   return (
     <Card
       ref={ref}
@@ -125,54 +127,59 @@ export default function ProductCard({
             width={224}
             height={224}
             src={hoverImageUrl}
-            alt={`${product?.name || t("product")} hover - ${product?.sku || ""}`}
+            alt={`${product?.name || t("product")} hover - ${
+              product?.sku || ""
+            }`}
             className="absolute inset-0 rounded-t-lg w-full h-full aspect-square object-cover transition-all duration-300 opacity-0 group-hover:opacity-100"
           />
         )}
-        {isHovered && (
-          <DrawerComponent
-            trigger={
-              <motion.div
-                initial={{ y: 20, opacity: 0 }}
-                animate={
-                  isHovered
-                    ? {
-                        y: 0,
-                        opacity: 1,
-                      }
-                    : {
-                        y: 20,
-                        opacity: 0,
-                      }
-                }
-                transition={{
-                  duration: 0.3,
-                  ease: "easeOut",
-                  delay: 0.1,
-                }}
-                className="absolute bottom-5 left-[5%] w-[90%] mx-auto hidden md:flex"
+        <DrawerComponent
+          hoverDelay={800} // Increased delay to 800ms
+          autoCloseDelay={1000} // Increased auto-close delay to 1 second
+          trigger={
+            <motion.div
+              initial={{ y: 20, opacity: 0 }}
+              animate={
+                isHovered
+                  ? {
+                      y: 0,
+                      opacity: 1,
+                    }
+                  : {
+                      y: 20,
+                      opacity: 0,
+                    }
+              }
+              transition={{
+                duration: 0.3,
+                ease: "easeOut",
+                delay: 0.1,
+              }}
+              className="absolute bottom-5 left-[5%] w-[90%] mx-auto hidden md:flex"
+            >
+              <Button
+                onClick={() => handleAddToCart({ productId: product?.id })}
+                className="rounded-none bg-black/85 text-white w-full rounded-full"
               >
-                <Button
-                  onClick={() => handleAddToCart({ productId: product?.id })}
-                  className="rounded-none bg-black/85 text-white w-full rounded-full"
-                >
-                  {t("add-to-cart")} <MdOutlineShoppingCart className="text-xl" />
-                </Button>
-              </motion.div>
-            }
-          >
-            <QuickProductDetails product={productDetails?.data} />
-          </DrawerComponent>
-        )}
+                {t("add-to-cart")} <MdOutlineShoppingCart className="text-xl" />
+              </Button>
+            </motion.div>
+          }
+        >
+          <QuickProductDetails product={productDetails?.data} />
+        </DrawerComponent>
       </CardHeader>
       <CardContent className="px-2 pt-4 flex flex-col gap-3 justify-start ">
-        <p className="font-[650] text-sm overflow-hidden text-ellipsis whitespace-nowrap">
-          {product?.name || t("product-name")}
-        </p>
-        <p className="font-[650] text-sm overflow-hidden text-ellipsis whitespace-nowrap">
-          {" "}
-          {product?.sku || t("not-available")}
-        </p>
+        <div className="flex justify-between gap-1">
+          <p className="font-[650] text-sm overflow-hidden text-ellipsis whitespace-nowrap">
+            {product?.name || t("product-name")}
+          </p>
+          <p className="font-[650] text-sm overflow-hidden text-ellipsis whitespace-nowrap">
+            {" "}
+            {product?.sku || t("not-available")}
+          </p>
+        </div>
+        <ReactStars />
         <p className={`text-sm ${!product?.variants?.length ? "mb-3" : ""}`}>
           {product?.price || "0"} {t("currency")}
         </p>
@@ -211,7 +218,9 @@ export default function ProductCard({
                       product?.base_image?.original_image_url ||
                       "/assets/images/product-card.jpg"
                     }
-                    alt={`${product?.name || t("product")} ${t("variant-image")} ${index + 1}`}
+                    alt={`${product?.name || t("product")} ${t(
+                      "variant-image"
+                    )} ${index + 1}`}
                     className={`cursor-pointer transition-all duration-200 rounded-sm ${
                       selectedImage === index + 1
                         ? "ring-2 ring-gray-400 scale-110"

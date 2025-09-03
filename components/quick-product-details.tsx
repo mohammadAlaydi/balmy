@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import CarouselComponent from "./carousel-component";
 import Image from "next/image";
 import { SwiperSlide } from "swiper/react";
@@ -10,17 +10,47 @@ import { useSelector } from "react-redux";
 import Loading from "./loading";
 
 export default function QuickProductDetails({ product }: { product: any }) {
-
   const [selectedImage, setSelectedImage] = useState<number | null>(null);
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [isInteracting, setIsInteracting] = useState(false);
   const isLoading = useSelector((state: any) => state.productDetails.isLoading);
+
+  // Set loaded state after a short delay to prevent premature closing
+  useEffect(() => {
+    if (product && !isLoading) {
+      const timer = setTimeout(() => {
+        setIsLoaded(true);
+      }, 300);
+      return () => clearTimeout(timer);
+    }
+  }, [product, isLoading]);
+
+  // Handle user interaction to prevent auto-close
+  const handleInteraction = () => {
+    setIsInteracting(true);
+    // Reset interaction state after 2 seconds
+    setTimeout(() => setIsInteracting(false), 2000);
+  };
 
   if (isLoading) {
     return <Loading fullScreen={true} variant="spinner" size="xl" />;
   }
-  
+
+  if (!product) {
+    return (
+      <div className="flex flex-col gap-4 h-full items-center justify-center">
+        <p className="text-gray-500">No product details available</p>
+      </div>
+    );
+  }
+
   return (
-    <div className="flex flex-col gap-4 h-full items-center">
-      {" "}
+    <div 
+      className="flex flex-col gap-4 h-full items-center"
+      onMouseEnter={handleInteraction}
+      onMouseLeave={handleInteraction}
+      onClick={handleInteraction}
+    >
       <CarouselComponent
         slidesPerView={1}
         spaceBetween={10}
@@ -69,7 +99,7 @@ export default function QuickProductDetails({ product }: { product: any }) {
                       />
                     </div>
                     {/* Variant images */}
-                    {product.variants.slice(0, 3).map((variant, index) => (
+                    {product.variants.slice(0, 3).map((variant: any, index: number) => (
                       <div key={variant.id || index} className="relative mb-3">
                         <Image
                           width={32}

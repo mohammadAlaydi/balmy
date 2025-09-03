@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState, AppDispatch } from '@/store/store';
-import { logoutUser } from '@/store/features/auth-slice';
+import { logoutUser } from '@/store/slices/auth-slice';
 import { Button } from '@/components/ui/button';
 import { FaRegUser, FaSignOutAlt, FaUser, FaHeart, FaShoppingCart, FaSignInAlt } from 'react-icons/fa';
 import Link from 'next/link';

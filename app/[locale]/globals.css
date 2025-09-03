@@ -3,6 +3,11 @@
 
 @custom-variant dark (&:is(.dark *));
 
+@theme {
+  --font-family-sans: var(--font-cairo), system-ui, sans-serif;
+  --font-family-cairo: var(--font-cairo), system-ui, sans-serif;
+}
+
 /* Custom color utilities */
 .text-navy-blue-color {
   color: var(--navy-blue-color);
@@ -115,6 +120,8 @@ body {
   --radius: 0.625rem;
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
+  --navy-blue-color: #1e3a8a;
+  --orange-color: #f97316;
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
@@ -150,6 +157,8 @@ body {
 .dark {
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
+  --navy-blue-color: #1e3a8a;
+  --orange-color: #f97316;
   --card: oklch(0.205 0 0);
   --card-foreground: oklch(0.985 0 0);
   --popover: oklch(0.205 0 0);

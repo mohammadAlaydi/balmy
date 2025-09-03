@@ -57,18 +57,18 @@ export default function LabelAndRadio<T extends Record<string, any>>({
                 return (
                   <div
                     key={opt.value}
-                    className={`flex items-center gap-3 ${itemClassName} w-full`}
+                    className={`flex items-center gap-3 ${itemClassName} w-full ltr:justify-start rtl:justify-end`}
                   >
                     <RadioGroupItem
                       id={id}
                       value={opt.value}
-                      className="peer order-2 cursor-pointer "
+                      className="peer order-2 cursor-pointer  ltr:order-1 rtl:order-2 "
                       onClick={opt?.action}
                     />
                     <Label
                       onClick={opt?.action}
                       htmlFor={id}
-                      className={`${labelStyle} text-navy-blue-color text-end text-nowrap cursor-pointer`}
+                      className={`${labelStyle} text-navy-blue-color text-end text-nowrap cursor-pointer ltr:order-2 rtl:order-1`}
                     >
                       {opt.label}
                     </Label>

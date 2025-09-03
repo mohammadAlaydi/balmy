@@ -2,7 +2,7 @@ import Image from "next/image";
 
 export default function CrossBody() {
   return (
-    <div className="cross-body flex flex-col md:flex-row justify-between m-auto gap-3 px-3 md:px-0  max-w-[1250px] py-[20px] md:py-[30px]">
+    <div className="cross-body flex flex-col md:flex-row justify-between m-auto gap-3 px-3 md:px-0  w-full  xl:max-w-[75%] py-[20px] md:py-[30px]">
       <div className="left-section flex-1  relative h-full overflow-hidden cursor-pointer">
         <Image
           width={400}
@@ -13,7 +13,7 @@ export default function CrossBody() {
           quality={100}
         />
         <div className="absolute h-full w-full  flex flex-col gap-3 justify-center items-center top-0 left-0">
-          <h2 className="text-white text-xl lg:text-2xl xl:text-3xl hover:text-white/70 transition-all duration-500 cursor-pointer">
+          <h2 className="text-white text-base sm:text-xl md:text-2xl xl:text-3xl hover:text-white/70 transition-all duration-500 cursor-pointer px-3 text-center">
             كن أنت الرمز , دع أناقتك تتحدث عنك
           </h2>
         </div>
@@ -28,7 +28,7 @@ export default function CrossBody() {
           quality={100}
         />
         <div className="flex flex-col gap-3 justify-center items-center">
-          <h2 className="text-lg lg:text-2xl xl:text-3xl text-center">تميز بأسلوبك ... تألق بفخامتك</h2>
+          <h2 className="text-base sm:text-xl md:text-2xl xl:text-3xl text-center">تميز بأسلوبك ... تألق بفخامتك</h2>
           <p className="text-center">خطواتك مع فرادا...راحة وأناقة
           </p>
         </div>

@@ -6,11 +6,11 @@ import Image from "next/image";
 export default function BannerCarousel() {
   return (
     <CarouselComponent
-      containerClassName="w-full h-[70vh]"
+      containerClassName="w-full h-[40vh] sm:h-[50vh] md:h-[55vh] lg:h-[65vh] xl:h-[70vh]"
       spaceBetween={30}
       slidesPerView={1}
       pagination={true}
-      autoPlay={true}
+      autoPlay={false}
     >
       {Array.from({ length: 3 }).map((_, index) => (
         <SwiperSlide key={index}>

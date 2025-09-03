@@ -17,7 +17,7 @@ const getCartProducts = createAsyncThunk("cart/products", async () => {
 // add to cart
 const addToCart = createAsyncThunk(
   "cart/add",
-  async (payload: { productId: number }) => {
+  async (payload: { productId: number; productQTY?: string | number }) => {
     try {
       const response = await fetch(
         `${API_KEY}/v1/customer/cart/add/${payload.productId}`,
@@ -27,6 +27,9 @@ const addToCart = createAsyncThunk(
             accept: "application/json",
             Authorization: `Bearer ${localStorage?.getItem("token")}`,
           },
+          body: JSON.stringify({
+            quantity: payload?.productQTY ? payload?.productQTY : 1,
+          }),
         }
       );
       if (!response.ok) {
@@ -59,6 +62,7 @@ const cartSlice = createSlice({
     data: [],
     isLoading: false,
     error: null,
+    status: null,
   },
   reducers: {},
   extraReducers(builder) {
@@ -91,6 +95,8 @@ const cartSlice = createSlice({
     // Remove from cart
     builder.addCase(removeFromCart.pending, (state) => {
       state.isLoading = true;
+      state.status = "success";
+
     });
     builder.addCase(removeFromCart.fulfilled, (state, action) => {
       state.isLoading = false;

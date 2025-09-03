@@ -1,9 +1,10 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
 import { Button } from "@/components/ui/button";
 import { X } from "lucide-react";
+import { usePathname } from "next/navigation";
 
 interface DrawerComponentProps {
   children?: React.ReactNode;
@@ -16,11 +17,22 @@ export default function DrawerComponent({
   trigger,
   containerClassName,
 }: DrawerComponentProps) {
+  
   const [open, setOpen] = useState(false);
+  const [direction, setDirection] = useState("right");
+  const pathname = usePathname();
+  const currentLocale = pathname.split("/")[1];
+  useEffect(() => {
+    if (currentLocale === "ar") {
+      setDirection("right");
+    } else {
+      setDirection("left");
+    }
+  }, [currentLocale]);
 
   return (
     <div className={`${containerClassName}`}>
-      <Drawer open={open} onOpenChange={setOpen} direction="right">
+      <Drawer open={open} onOpenChange={setOpen} direction={direction}>
         <DrawerTrigger asChild>{trigger}</DrawerTrigger>
         <DrawerContent>
           <div className="relative h-full">

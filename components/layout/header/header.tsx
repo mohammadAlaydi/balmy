@@ -141,32 +141,30 @@ const NavigationLinks = ({ navbarCategories }: { navbarCategories: any }) => {
     <NavigationMenu className="hidden lg:block">
       <NavigationMenuList>
         {navbarCategories && navbarCategories.length > 0 ? (
-          navbarCategories.map((link: any) => (
-            <NavigationMenuItem key={link?.name}>
-              <NavigationMenuTrigger
-                className="cursor-pointer hover:bg-transparent hover:text-red-color"
-                chevronDownIcon={
-                  !!(link?.children?.length && link?.children?.length > 0)
-                }
-              >
-                <Link href={`/category/${link?.slug}/${link?.id}`}>
-                  {link?.name}
-                </Link>
-              </NavigationMenuTrigger>
-              {link?.children && link?.children?.length > 0 && (
-                <NavigationMenuContent
-                  navigationMenuContent={link?.children?.length > 0}
+          navbarCategories.map((link: any) => {
+            const hasChildren = link?.children && link?.children?.length > 0;
+            return hasChildren ? (
+              <NavigationMenuItem key={link?.name}>
+                <NavigationMenuTrigger
+                  className="cursor-pointer hover:bg-transparent hover:text-red-color"
+                  chevronDownIcon={true}
+                  className="relative"
                 >
-                  <ul className="grid gap-1 p-2 min-w-[200px]">
+                  <Link href={`/category/${link?.slug}/${link?.id}`}>
+                    {link?.name}
+                  </Link>
+                </NavigationMenuTrigger>
+                <NavigationMenuContent navigationMenuContent={true}>
+                  <ul className="grid gap-1 p-1">
                     {link?.children?.map((nested: any, index: number) => (
                       <li key={index}>
                         <NavigationMenuLink
                           asChild
-                          className="cursor-pointer bg-transparent hover:bg-transparent hover:text-accent-foreground"
+                          className="cursor-pointer bg-transparent hover:bg-accent hover:text-accent-foreground"
                         >
                           <Link
                             href={`/category/${link?.slug}/${nested?.slug}`}
-                            className="block rounded-md px-2 py-1.5 text-sm hover:bg-accent hover:text-accent-foreground text-end"
+                            className="block rounded-md px-1.5 py-1 text-sm hover:bg-accent hover:text-accent-foreground text-end"
                           >
                             {nested.name}
                           </Link>
@@ -176,9 +174,20 @@ const NavigationLinks = ({ navbarCategories }: { navbarCategories: any }) => {
                   </ul>
                   <NavigationMenuIndicator />
                 </NavigationMenuContent>
-              )}
-            </NavigationMenuItem>
-          ))
+              </NavigationMenuItem>
+            ) : (
+              <NavigationMenuItem key={link?.name}>
+                <NavigationMenuLink asChild>
+                  <Link
+                    href={`/category/${link?.slug}/${link?.id}`}
+                    className="cursor-pointer hover:bg-transparent hover:text-red-color px-4 py-2 text-sm font-medium"
+                  >
+                    {link?.name}
+                  </Link>
+                </NavigationMenuLink>
+              </NavigationMenuItem>
+            );
+          })
         ) : (
           <NavigationMenuItem>
             <div className="px-4 py-2 text-sm text-gray-500">

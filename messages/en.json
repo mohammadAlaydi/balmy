@@ -231,11 +231,12 @@
     "success": "Success",
     "failed": "Failed",
     "submit": "Submit",
-    "cancel": "Cancel",
     "close": "Close",
     "open": "Open",
     "save": "Save",
     "delete": "Delete",
+    "delete-confirmation": "Are you sure you want to delete this product?",
+    "cancel": "Cancel",
     "edit": "Edit",
     "add": "Add",
     "remove": "Remove",
@@ -427,5 +428,8 @@
     "proxy-test-failed": "Proxy test failed",
     "network-error-occurred": "Network error occurred",
     "unknown-error": "Unknown error"
+  },
+  "toast": {
+    "product-deleted": "Product deleted successfully"
   }
 }

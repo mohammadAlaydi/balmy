@@ -3,7 +3,7 @@
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '@/store/store';
-import { getCurrentUser, initializeFromStorage } from '@/store/features/auth-slice';
+import { getCurrentUser, initializeFromStorage } from '@/store/slices/auth-slice';
 
 export default function AuthInitializer() {
   const dispatch = useDispatch<AppDispatch>();
