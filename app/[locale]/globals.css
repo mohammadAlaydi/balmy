@@ -62,7 +62,11 @@
 }
 
 body {
-  font-family: var(--font-cairo), sans-serif !important;
+  font-family: var(--font-cairo), system-ui, sans-serif;
+}
+
+.font-cairo {
+  font-family: var(--font-cairo), system-ui, sans-serif;
 }
 
 @theme inline {

@@ -7,13 +7,13 @@ import Header from "@/components/layout/header/header";
 import Footer from "@/components/layout/footer/footer";
 import { Toaster } from "@/components/ui/sonner";
 import ReduxProvider from "@/store/redux-provider";
-import Loading from "@/components/loading";
 
 const cairo = Cairo({
   variable: "--font-cairo",
   subsets: ["arabic", "latin"],
   display: "swap",
   weight: ["400", "500", "600", "700"],
+  preload: true,
 });
 
 export const metadata: Metadata = {
@@ -40,7 +40,7 @@ export default async function RootLayout({
 
   return (
     <html lang={locale} dir={locale == "ar" ? "rtl" : "ltr"}>
-      <body className={`${cairo.variable} antialiased`}>
+      <body className={`${cairo.variable} font-cairo`}>
         <ReduxProvider>
           <NextIntlClientProvider messages={messages}>
             <Header />
