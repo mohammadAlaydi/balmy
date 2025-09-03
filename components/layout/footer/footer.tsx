@@ -1,3 +1,5 @@
+"use client";
+
 import SectionTitle from "@/components/section-title";
 import SocialMediaIcons from "@/components/social-media-icons";
 import {
