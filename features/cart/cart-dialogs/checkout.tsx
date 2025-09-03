@@ -4,6 +4,7 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { defineStepper } from "@/components/ui/stepper";
 import ShippingForm from "./shipping-form";
+import { useTranslations } from "next-intl";
 
 const { Stepper } = defineStepper(
   { id: "shipping", title: "Shipping" },
@@ -11,6 +12,7 @@ const { Stepper } = defineStepper(
 );
 
 export default function Checkout() {
+  const t = useTranslations("cart");
   return (
     <div className="w-full xl:w-2/3 mx-auto">
       <Stepper.Provider className="space-y-4 my-5">
@@ -21,14 +23,14 @@ export default function Checkout() {
                 of="shipping"
                 onClick={() => params.methods.goTo("shipping")}
               >
-                <Stepper.Title>الشحن</Stepper.Title>
+                <Stepper.Title>{t("shipping")}</Stepper.Title>
               </Stepper.Step>
 
               <Stepper.Step
                 of="payment"
                 onClick={() => params.methods.goTo("payment")}
               >
-                <Stepper.Title>الدفع</Stepper.Title>
+                <Stepper.Title>{t("payment")}</Stepper.Title>
               </Stepper.Step>
             </Stepper.Navigation>
 
@@ -41,7 +43,7 @@ export default function Checkout() {
               payment: () => (
                 <Stepper.Panel>
                   <div className="p-4 border rounded-md">
-                    Payment options go here.
+                    {t("payment-options")}
                   </div>
                 </Stepper.Panel>
               ),
@@ -49,9 +51,9 @@ export default function Checkout() {
 
             <Stepper.Controls className="pt-2">
               <Button variant="secondary" onClick={() => params.methods.prev()}>
-                Back
+                {t("back")}
               </Button>
-              <Button onClick={() => params.methods.next()}>Next</Button>
+              <Button onClick={() => params.methods.next()}>{t("next")}</Button>
             </Stepper.Controls>
           </>
         )}

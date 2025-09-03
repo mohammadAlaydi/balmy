@@ -13,6 +13,9 @@ import DrawerComponent from "./layout/drawer/drawer-component";
 import QuickProductDetails from "./quick-product-details";
 import { useAppDispatch } from "@/store/hooks";
 import { addToCart } from "@/store/slices/cart-slice";
+import { getProductDetails } from "@/store/slices/product-details-slice";
+import { useSelector } from "react-redux";
+import { useTranslations } from "next-intl";
 
 // Define proper types for product variants and images
 interface ProductImage {
@@ -56,6 +59,7 @@ export default function ProductCard({
   const ref = useRef<HTMLDivElement>(null);
   const ref2 = useRef<HTMLDivElement>(null);
   const dispatch = useAppDispatch();
+  const t = useTranslations("products");
 
   // Get the current main image based on selection
   const getCurrentMainImage = () => {
@@ -78,18 +82,19 @@ export default function ProductCard({
 
   const handleAddToFavorites = () => {
     toast.success(
-      `تم إضافة ${product?.name || "المنتج"} - ${
+              `${t("added-to-favorites")} ${product?.name || t("product")} - ${
         product?.sku || ""
-      } للمفضلة بنجاح`,
+      }`,
       {
         duration: 3000,
         position: "top-right",
       }
     );
   };
-
+  const { productDetails } = useSelector((state: any) => state.productDetails);
   const handleAddToCart = ({ productId }: { productId: number }) => {
     dispatch(addToCart({ productId }));
+    dispatch(getProductDetails({ id: productId }));
   };
 
   return (
@@ -112,7 +117,7 @@ export default function ProductCard({
           width={224}
           height={224}
           src={baseImageUrl}
-          alt={`${product?.name || "Product"} - ${product?.sku || ""}`}
+          alt={`${product?.name || t("product")} - ${product?.sku || ""}`}
           className="rounded-t-lg w-full h-full aspect-square  transition-all duration-300"
         />
         {hoverImageUrl !== baseImageUrl && (
@@ -120,7 +125,7 @@ export default function ProductCard({
             width={224}
             height={224}
             src={hoverImageUrl}
-            alt={`${product?.name || "Product"} hover - ${product?.sku || ""}`}
+            alt={`${product?.name || t("product")} hover - ${product?.sku || ""}`}
             className="absolute inset-0 rounded-t-lg w-full h-full aspect-square object-cover transition-all duration-300 opacity-0 group-hover:opacity-100"
           />
         )}
@@ -151,25 +156,25 @@ export default function ProductCard({
                   onClick={() => handleAddToCart({ productId: product?.id })}
                   className="rounded-none bg-black/85 text-white w-full rounded-full"
                 >
-                  أضف للسلة <MdOutlineShoppingCart className="text-xl" />
+                  {t("add-to-cart")} <MdOutlineShoppingCart className="text-xl" />
                 </Button>
               </motion.div>
             }
           >
-            <QuickProductDetails product={product} />
+            <QuickProductDetails product={productDetails?.data} />
           </DrawerComponent>
         )}
       </CardHeader>
       <CardContent className="px-2 pt-4 flex flex-col gap-3 justify-start ">
         <p className="font-[650] text-sm overflow-hidden text-ellipsis whitespace-nowrap">
-          {product?.name || "Product Name"}
+          {product?.name || t("product-name")}
         </p>
         <p className="font-[650] text-sm overflow-hidden text-ellipsis whitespace-nowrap">
           {" "}
-          {product?.sku || "N/A"}
+          {product?.sku || t("not-available")}
         </p>
         <p className={`text-sm ${!product?.variants?.length ? "mb-3" : ""}`}>
-          {product?.price || "0"} ج.م
+          {product?.price || "0"} {t("currency")}
         </p>
         <div ref={ref2}>
           {product?.variants && product?.variants?.length > 0 && (
@@ -186,7 +191,7 @@ export default function ProductCard({
                     product?.base_image?.original_image_url ||
                     "/assets/images/product-card.jpg"
                   }
-                  alt={`${product?.name || "Product"} base`}
+                  alt={`${product?.name || t("product")} ${t("base-image")}`}
                   className={`cursor-pointer transition-all duration-200 rounded-sm ${
                     selectedImage === null
                       ? "ring-2 ring-gray-400 scale-110"
@@ -206,7 +211,7 @@ export default function ProductCard({
                       product?.base_image?.original_image_url ||
                       "/assets/images/product-card.jpg"
                     }
-                    alt={`${product?.name || "Product"} variant ${index + 1}`}
+                    alt={`${product?.name || t("product")} ${t("variant-image")} ${index + 1}`}
                     className={`cursor-pointer transition-all duration-200 rounded-sm ${
                       selectedImage === index + 1
                         ? "ring-2 ring-gray-400 scale-110"
@@ -218,7 +223,7 @@ export default function ProductCard({
               ))}
               {product.variants.length > 3 && (
                 <Badge className="bg-transparent text-primary w-[32px] h-[32px] flex items-center justify-center shadow-[inset_0_2px_4px_rgba(0,0,0,0.1)] text-xs">
-                  +{product.variants.length - 3}
+                  {t("more-variants")}
                 </Badge>
               )}
             </div>

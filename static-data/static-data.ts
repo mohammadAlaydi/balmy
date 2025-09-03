@@ -1,35 +1,35 @@
 import { NavConfig, ToastOptions } from "@/types/types";
 // Constants
 export const NAV_LINKS: NavConfig = [
-  { title: "Home", path: "/" },
+  { title: "navigation.home", path: "/" },
   {
-    title: "Docs",
+    title: "navigation.docs",
     links: [
-      { title: "Getting Started", path: "/docs/getting-started" },
-      { title: "Routing", path: "/docs/routing" },
-      { title: "API", path: "/docs/api" },
+      { title: "navigation.getting-started", path: "/docs/getting-started" },
+      { title: "navigation.routing", path: "/docs/routing" },
+      { title: "navigation.api", path: "/docs/api" },
     ],
   },
   {
-    title: "Guides",
+    title: "navigation.guides",
     links: [
-      { title: "Auth", path: "/guides/auth" },
-      { title: "Styling", path: "/guides/styling" },
+      { title: "navigation.auth", path: "/guides/auth" },
+      { title: "navigation.styling", path: "/guides/styling" },
     ],
   },
-  { title: "Changelog", path: "/changelog" },
+  { title: "navigation.changelog", path: "/changelog" },
 ];
 
 export const CONTACT_INFO = {
-  phone: "01097352356",
-  callToAction: "إتصل بنا اليوم",
-  discount: "خصومات تصل إلى 50",
+  phone: "contact.phone",
+  callToAction: "contact.call-to-action",
+  discount: "contact.discount",
 };
 
 export const products = [
   {
     id: 1,
-    name: "نعال جلدي أسود",
+    name: "products.black-leather-slippers",
     nameEn: "Black Leather Slippers",
     price: 1000,
     priceEn: "1000 EGP",
@@ -46,7 +46,7 @@ export const products = [
   },
   {
     id: 2,
-    name: "حذاء رياضي أبيض",
+    name: "products.white-sports-shoes",
     nameEn: "White Sports Shoes",
     price: 2500,
     priceEn: "2500 EGP",
@@ -63,7 +63,7 @@ export const products = [
   },
   {
     id: 3,
-    name: "حقيبة جلدية بنية",
+    name: "products.brown-leather-bag",
     nameEn: "Brown Leather Bag",
     price: 1800,
     priceEn: "1800 EGP",
@@ -80,7 +80,7 @@ export const products = [
   },
   {
     id: 4,
-    name: "ساعة يد كلاسيكية",
+    name: "products.classic-wristwatch",
     nameEn: "Classic Wristwatch",
     price: 3200,
     priceEn: "3200 EGP",
@@ -97,7 +97,7 @@ export const products = [
   },
   {
     id: 5,
-    name: "قميص قطني أزرق",
+    name: "products.blue-cotton-shirt",
     nameEn: "Blue Cotton Shirt",
     price: 800,
     priceEn: "800 EGP",
@@ -114,7 +114,7 @@ export const products = [
   },
   {
     id: 6,
-    name: "بنطلون جينز كلاسيك",
+    name: "products.classic-denim-jeans",
     nameEn: "Classic Denim Jeans",
     price: 1200,
     priceEn: "1200 EGP",
@@ -131,7 +131,7 @@ export const products = [
   },
   {
     id: 7,
-    name: "نظارة شمسية عصرية",
+    name: "products.modern-sunglasses",
     nameEn: "Modern Sunglasses",
     price: 600,
     priceEn: "600 EGP",
@@ -148,7 +148,7 @@ export const products = [
   },
   {
     id: 8,
-    name: "محفظة جلدية سوداء",
+    name: "products.black-leather-wallet",
     nameEn: "Black Leather Wallet",
     price: 450,
     priceEn: "450 EGP",
@@ -165,7 +165,7 @@ export const products = [
   },
   {
     id: 9,
-    name: "جاكيت جلد طبيعي",
+    name: "products.natural-leather-jacket",
     nameEn: "Natural Leather Jacket",
     price: 4500,
     priceEn: "4500 EGP",
@@ -182,7 +182,7 @@ export const products = [
   },
   {
     id: 10,
-    name: "حذاء رسمي أسود",
+    name: "products.black-formal-shoes",
     nameEn: "Black Formal Shoes",
     price: 2800,
     priceEn: "2800 EGP",
@@ -199,7 +199,7 @@ export const products = [
   },
   {
     id: 11,
-    name: "شنطة ظهر عصرية",
+    name: "products.modern-backpack",
     nameEn: "Modern Backpack",
     price: 950,
     priceEn: "950 EGP",
@@ -216,7 +216,7 @@ export const products = [
   },
   {
     id: 12,
-    name: "قبعة بيسبول كلاسيكية",
+    name: "products.classic-baseball-cap",
     nameEn: "Classic Baseball Cap",
     price: 350,
     priceEn: "350 EGP",
@@ -234,10 +234,15 @@ export const products = [
 ];
 
 export const categories = [
-  { id: "footwear", name: "أحذية", nameEn: "Footwear", count: 3 },
-  { id: "clothing", name: "ملابس", nameEn: "Clothing", count: 3 },
-  { id: "bags", name: "حقائب", nameEn: "Bags", count: 2 },
-  { id: "accessories", name: "إكسسوارات", nameEn: "Accessories", count: 4 },
+  { id: "footwear", name: "categories.footwear", nameEn: "Footwear", count: 3 },
+  { id: "clothing", name: "categories.clothing", nameEn: "Clothing", count: 3 },
+  { id: "bags", name: "categories.bags", nameEn: "Bags", count: 2 },
+  {
+    id: "accessories",
+    name: "categories.accessories",
+    nameEn: "Accessories",
+    count: 4,
+  },
 ];
 
 export const toastStyles: ToastOptions = {
@@ -263,8 +268,8 @@ export const toastStyles: ToastOptions = {
 export const quickCartProducts = [
   {
     id: 1,
-    category: "تصنيف 1",
-    name: "منتج 1",
+    category: "cart.category",
+    name: "cart.product",
     image: "/assets/images/product-card.jpg",
     variant: {
       color: "Red",
@@ -276,8 +281,8 @@ export const quickCartProducts = [
   },
   {
     id: 2,
-    category: "2 تصنيف",
-    name: "منتج 2",
+    category: "cart.category",
+    name: "cart.product",
     image: "/assets/images/product-card.jpg",
     variant: {
       color: "Red",
@@ -289,8 +294,8 @@ export const quickCartProducts = [
   },
   {
     id: 3,
-    category: "تصنيف 3",
-    name: "منتج 3",
+    category: "cart.category",
+    name: "cart.product",
     image: "/assets/images/product-card.jpg",
     variant: {
       color: "Red",
@@ -302,45 +307,45 @@ export const quickCartProducts = [
   },
 ];
 export const LEGAL_TERMS = [
-  { title: "الشروط والأحكام", path: "/terms-and-conditions" },
-  { title: "سياسة الخصوصية", path: "/privacy-policy" },
-  { title: "سياسة التوصيل", path: "/delivery-policy" },
-  { title: "سياسة الدفع", path: "/payment-policy" },
-  { title: "سياسة الإسترجاع", path: "/refund-policy" },
+  { title: "legal.terms-and-conditions", path: "/terms-and-conditions" },
+  { title: "legal.privacy-policy", path: "/privacy-policy" },
+  { title: "legal.delivery-policy", path: "/delivery-policy" },
+  { title: "legal.payment-policy", path: "/payment-policy" },
+  { title: "legal.return-policy", path: "/services/return-policy" },
 ];
 
 export const KNOW_US_MORE = [
-  { title: "من نحن", path: "/about-us" },
-  { title: "خدماتنا", path: "/services" },
+  { title: "about.who-we-are", path: "/about-us" },
+  { title: "about.our-services", path: "/services" },
 ];
 
 export const SERVICES = [
-  { title: "تواصل معنا", path: "/contact-us" },
-  { title: "معلومات الشحن", path: "/shipping-information" },
-  { title: "FAQ", path: "/faq" },
+  { title: "services.contact-us", path: "/contact-us" },
+  { title: "services.shipping-info", path: "/services/shipping-info" },
+  { title: "services.faq", path: "/services/faq" },
 ];
 
 export const WORK_HOURS = {
-  title: "ساعات العمل",
+  title: "working-hours",
   schedule: [
-    "طوال أيام الأسبوع",
-    "من 9 ص - إلي 11:30 ص",
-    "من 3:30 م - إلي 11:30 م",
+          "all-week",
+          "from-9am-to-1130am",
+          "from-330pm-to-1130pm",
   ],
 };
 
 export const LOCATION_INFO = {
-  title: "كيف تصل الينا",
-  address: "طريق أنس ابن مالك، الصحافة، الرياض 13321",
-  phone: "+966-55-766-5585",
+  title: "footer.how-to-reach-us",
+  address: "contact.address",
+  phone: "contact.phone-number",
 };
-export const LANGUAGES: { code: string; title: string; }[] = [
+export const LANGUAGES: { code: string; title: string }[] = [
   {
-    code: 'ar',
-    title: 'عربي',
+    code: "ar",
+    title: "عربي",
   },
   {
-    code: 'en',
-    title: 'English',
+    code: "en",
+    title: "English",
   },
 ];

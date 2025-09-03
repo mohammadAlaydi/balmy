@@ -9,6 +9,7 @@ import React, { useState, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import Checkout from "./cart-dialogs/checkout";
+import { useTranslations } from "next-intl";
 
 interface CouponFormData {
   coupon: string;
@@ -21,7 +22,8 @@ interface CartItem {
   quantity: number;
 }
 
-export default function OrderSummary() {
+export default function OrderSummary({ data }: { data: any }) {
+  const t = useTranslations("cart");
   const [cartItems, setCartItems] = useState<CartItem[]>([
     { id: 1, name: "نعال جلدي أسود", price: 1000, quantity: 1 },
     { id: 2, name: "حذاء رياضي أبيض", price: 2500, quantity: 1 },
@@ -49,48 +51,44 @@ export default function OrderSummary() {
 
   const onSubmit = (data: CouponFormData) => {
     if (!data.coupon.trim()) {
-      toast.error("Please enter a coupon code");
+              toast.error(t("please-enter-coupon-code"));
       return;
     }
 
     // Simulate coupon validation
     if (data.coupon.toUpperCase() === "SAVE20") {
-      toast.success("Coupon applied successfully! 20% discount added.");
+              toast.success(t("coupon-applied-success"));
       form.reset();
     } else {
-      toast.error("Invalid coupon code");
+              toast.error(t("invalid-coupon-code"));
     }
   };
 
   const handleCheckout = () => {
     if (cartItems.length === 0) {
-      toast.error("Your cart is empty");
+              toast.error(t("cart-empty"));
       return;
     }
     // Add checkout logic here
   };
 
-  const formatCurrency = (amount: number) => {
-    return `EGP ${amount.toFixed(2)}`;
-  };
-
   return (
     <div className="xl:col-span-3 col-span-9 p-6 rounded-lg border border-gray-200 h-fit flex flex-col gap-6 mx-auto bg-white shadow-sm">
-      <h2 className="text-xl font-bold text-gray-900">Order Summary</h2>
+              <h2 className="text-xl font-bold text-gray-900">{t("order-summary")}</h2>
       {/* Coupon Form */}
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="relative">
           <Input
-            placeholder="Enter your coupon code"
+            placeholder={t("enter-coupon-code")}
             {...form.register("coupon", {
-              required: "Coupon code is required",
+                              required: t("coupon-code-required"),
             })}
           />
           <Button
             type="submit"
             className="absolute rtl:left-0 ltr:right-0 top-0 h-full px-4 bg-black text-white hover:bg-gray-800 transition-colors"
           >
-            Apply
+            {t("apply")}
           </Button>
         </form>
       </Form>
@@ -102,28 +100,29 @@ export default function OrderSummary() {
             variant="outline"
             className="text-base bg-transparent text-gray-color border-gray-200"
           >
-            {formatCurrency(subtotal)}
+            {Number(data?.data?.sub_total)?.toFixed(2) || 0} ر.س
           </Badge>
           <Badge
             variant="outline"
             className="text-base bg-transparent text-gray-color border-gray-200"
           >
-            Subtotal ({itemCount} {itemCount === 1 ? "item" : "items"})
+            {t("subtotal")} ({data?.data?.items?.length}{" "}
+            {data?.data?.items?.length === 1 ? t("item") : t("items")})
           </Badge>
         </div>
-        {/* VAT */}
+        {/* TAX */}
         <div className="flex justify-between items-center gap-5">
           <Badge
             variant="outline"
             className="text-base bg-transparent text-gray-color border-gray-200"
           >
-            {formatCurrency(subtotal * 0.14)}
+            {Number(data?.data?.base_tax_total)?.toFixed(2)} ر.س
           </Badge>
           <Badge
             variant="outline"
             className="text-base bg-transparent text-gray-color border-gray-200"
           >
-            VAT (14%)
+            {t("taxes")}
           </Badge>
         </div>
         <hr className="border-gray-200" />
@@ -133,13 +132,13 @@ export default function OrderSummary() {
             variant="outline"
             className="text-lg font-semibold bg-transparent text-gray-color border-gray-200"
           >
-            {formatCurrency(total)}
+            {Number(data?.data?.grand_total)?.toFixed(2)} ر.س
           </Badge>
           <Badge
             variant="outline"
             className="text-lg font-semibold bg-transparent text-gray-color border-gray-200"
           >
-            Total (Inclusive of VAT)
+            {t("total-inclusive-vat")}
           </Badge>
         </div>
       </div>
@@ -147,7 +146,7 @@ export default function OrderSummary() {
       <Dialog>
         <DialogTrigger>
           <Button className="w-full bg-black text-white hover:bg-gray-800 transition-colors py-3 text-base font-semibold">
-            Proceed to Checkout
+            {t("proceed-to-checkout")}
           </Button>
         </DialogTrigger>
         <DialogContent>
@@ -157,7 +156,7 @@ export default function OrderSummary() {
 
       {/* Additional Info */}
       <div className="text-xs text-gray-500 text-center">
-        Free shipping on orders over EGP 1000
+        {t("free-shipping-over")}
       </div>
     </div>
   );

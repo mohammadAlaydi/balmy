@@ -51,7 +51,7 @@ export default function ProtectedRoute({ children, fallback }: ProtectedRoutePro
     }
 
     return (
-      <div className="flex items-center justify-center min-h-[400px]">
+      <div className="flex items-center justify-center min-h-[65vh]">
         <Card className="w-full max-w-md">
           <CardHeader className="text-center">
             <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-muted">
@@ -64,7 +64,7 @@ export default function ProtectedRoute({ children, fallback }: ProtectedRoutePro
           </CardHeader>
           <CardContent className="text-center">
             <Link href={`/${locale}/auth/login`}>
-              <Button className="w-full bg-navy-blue-color hover:bg-navy-blue-color/90 text-white px-8 py-3">
+              <Button className="w-full bg-black hover:bg-black/85 text-white px-8 py-3">
                 Log In
               </Button>
             </Link>

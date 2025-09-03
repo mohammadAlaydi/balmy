@@ -5,28 +5,30 @@ import { TbArrowBack } from "react-icons/tb";
 import { BiSupport } from "react-icons/bi";
 import { PiSealCheck } from "react-icons/pi";
 import { SwiperSlide } from "swiper/react";
+import { useTranslations } from "next-intl";
 
 export default function Services() {
+  const t = useTranslations("home");
   let benfits = [
     {
       icon: <TbArrowBack className="text-4xl" />,
-      h2: "الاستبدال و الاسترجاع",
-      p: "تقدر تسترجع أو تستبدل خلال 14 يوم بدون قلق",
+              h2: t("return-and-exchange"),
+        p: t("return-and-exchange-desc"),
     },
     {
       icon: <MdOutlineLocalShipping className="text-4xl" />,
-      h2: " شحن مجاني",
-      p: "أو الإستلام من اقرب فرع",
+              h2: t("free-shipping"),
+        p: t("free-shipping-desc"),
     },
     {
       icon: <BiSupport className="text-4xl" />,
-      h2: " معك لحظة بلحظة",
-      p: " خدمة عملاء متواصلة - تواصل معنا 24/7",
+              h2: t("always-with-you"),
+        p: t("always-with-you-desc"),
     },
     {
       icon: <PiSealCheck className="text-4xl" />,
-      h2: "عضويتك ذهب",
-      p: ".خصومات ونقاط حصرية بانتظارك",
+              h2: t("gold-membership"),
+        p: t("gold-membership-desc"),
     },
   ];
   return (

@@ -3,13 +3,16 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 const API_KEY = process.env.NEXT_PUBLIC_API_URL;
 
-const getCartProducts = useThunk("cart/products", `${API_KEY}/cart`, {
-  method: "GET",
-  headers: {
-    Authorization: `Bearer ${localStorage?.getItem("token")}`,
-  },
+const getCartProducts = createAsyncThunk("cart/products", async () => {
+  const response = await fetch(`${API_KEY}/v1/customer/cart`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${localStorage?.getItem("token")}`,
+    },
+  });
+  const data = await response.json();
+  return data;
 });
-console.log(API_KEY, "API_KEY ❓❓❓❓");
 
 // add to cart
 const addToCart = createAsyncThunk(
@@ -21,6 +24,7 @@ const addToCart = createAsyncThunk(
         {
           method: "POST",
           headers: {
+            accept: "application/json",
             Authorization: `Bearer ${localStorage?.getItem("token")}`,
           },
         }
@@ -33,6 +37,20 @@ const addToCart = createAsyncThunk(
     } catch (error) {
       console.log(error, "error");
     }
+  }
+);
+const removeFromCart = createAsyncThunk(
+  "cart/remove",
+  async (payload: { productId: number }) => {
+    const response = await fetch(
+      `${API_KEY}/v1/customer/cart/remove/${payload.productId}`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${localStorage?.getItem("token")}`,
+        },
+      }
+    );
   }
 );
 const cartSlice = createSlice({
@@ -51,6 +69,7 @@ const cartSlice = createSlice({
     builder.addCase(getCartProducts?.fulfilled, (state, action) => {
       state.data = action.payload;
       state.isLoading = false;
+      console.log("Cart Data:", action.payload);
     });
     builder.addCase(getCartProducts.rejected, (state: any, action) => {
       state.error = action.error.message || null;
@@ -68,8 +87,20 @@ const cartSlice = createSlice({
       state.error = action.error.message || null;
       state.isLoading = false;
     });
+
+    // Remove from cart
+    builder.addCase(removeFromCart.pending, (state) => {
+      state.isLoading = true;
+    });
+    builder.addCase(removeFromCart.fulfilled, (state, action) => {
+      state.isLoading = false;
+    });
+    builder.addCase(removeFromCart.rejected, (state: any, action) => {
+      state.error = action.error.message || null;
+      state.isLoading = false;
+    });
   },
 });
 
-export { getCartProducts, addToCart };
+export { getCartProducts, addToCart, removeFromCart };
 export const cartReducer = cartSlice.reducer;

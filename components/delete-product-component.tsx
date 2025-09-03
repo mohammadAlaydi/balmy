@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 
 import { Button } from "./ui/button";
@@ -9,8 +11,16 @@ import {
   DialogTrigger,
 } from "./ui/dialog";
 import { MdDeleteSweep } from "react-icons/md";
+import { useAppDispatch } from "@/store/hooks";
+import { removeFromCart } from "@/store/slices/cart-slice";
 
-export default function DeleteProductComponent() {
+export default function DeleteProductComponent({
+  productId,
+}: {
+  productId: number;
+}) {
+  const dispatch = useAppDispatch();
+
   return (
     <Dialog>
       <DialogTrigger>
@@ -26,7 +36,12 @@ export default function DeleteProductComponent() {
           <DialogClose asChild>
             <Button variant="outline">إلغاء</Button>
           </DialogClose>
-          <Button type="submit">حذف</Button>
+          <Button
+            type="submit"
+            onClick={() => dispatch(removeFromCart({ productId }))}
+          >
+            حذف
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

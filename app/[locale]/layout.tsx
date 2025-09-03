@@ -7,6 +7,7 @@ import Header from "@/components/layout/header/header";
 import Footer from "@/components/layout/footer/footer";
 import { Toaster } from "@/components/ui/sonner";
 import ReduxProvider from "@/store/redux-provider";
+import Loading from "@/components/loading";
 
 const cairo = Cairo({
   variable: "--font-cairo",
@@ -36,14 +37,15 @@ export default async function RootLayout({
 }>) {
   const { locale } = await params;
   const messages = await getMessages({ locale });
+
   return (
     <html lang={locale} dir={locale == "ar" ? "rtl" : "ltr"}>
       <body className={`${cairo.variable} antialiased`}>
         <ReduxProvider>
           <NextIntlClientProvider messages={messages}>
-            <Header/>
+            <Header />
             {children}
-            <Footer/>
+            <Footer />
             <Toaster />
           </NextIntlClientProvider>
         </ReduxProvider>

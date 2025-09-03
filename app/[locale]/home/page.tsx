@@ -10,8 +10,7 @@ import PagePadding from "@/components/page-padding";
 import { products } from "@/static-data/static-data";
 
 export default function page() {
-  
-  const t = useTranslations("header");
+  const t = useTranslations("home");
 
   return (
     <div className="min-h-[100vh]">

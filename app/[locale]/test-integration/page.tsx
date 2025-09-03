@@ -4,8 +4,10 @@ import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { toast } from 'sonner';
+import { useTranslations } from 'next-intl';
 
 export default function TestIntegrationPage() {
+  const t = useTranslations("test");
   const [isLoading, setIsLoading] = useState(false);
   const [testResults, setTestResults] = useState<any>(null);
   const [accessToken, setAccessToken] = useState<string | null>(null);
@@ -25,14 +27,14 @@ export default function TestIntegrationPage() {
       setTestResults(data);
       
       if (response.ok) {
-        toast.success('API connectivity test completed!');
+        toast.success(t("connectivity-test-completed"));
       } else {
-        toast.error('API connectivity test failed!');
+        toast.error(t("connectivity-test-failed"));
       }
     } catch (error) {
       console.error('Test error:', error);
-      toast.error('Test failed with error');
-      setTestResults({ error: 'Network error occurred' });
+              toast.error(t("test-failed-with-error"));
+              setTestResults({ error: t("network-error-occurred") });
     } finally {
       setIsLoading(false);
     }
@@ -61,17 +63,17 @@ export default function TestIntegrationPage() {
       });
       
       if (response.ok) {
-        toast.success('External API test successful!');
+        toast.success(t("external-api-test-successful"));
       } else {
-        toast.error(`External API test failed with status: ${response.status}`);
+        toast.error(t("external-api-test-failed"));
       }
     } catch (error) {
       console.error('External API test error:', error);
-      toast.error('External API test failed');
-      setTestResults({ 
-        error: 'External API test failed',
-        message: error instanceof Error ? error.message : 'Unknown error'
-      });
+              toast.error(t("external-api-test-failed"));
+              setTestResults({ 
+          error: t("external-api-test-failed"),
+          message: error instanceof Error ? error.message : t("unknown-error")
+        });
     } finally {
       setIsLoading(false);
     }
@@ -108,17 +110,17 @@ export default function TestIntegrationPage() {
       });
       
       if (getResponse.ok && postResponse.ok) {
-        toast.success('Proxy route tests successful!');
+        toast.success(t("proxy-tests-successful"));
       } else {
-        toast.error('Some proxy tests failed');
+        toast.error(t("some-proxy-tests-failed"));
       }
     } catch (error) {
       console.error('Proxy test error:', error);
-      toast.error('Proxy test failed');
-      setTestResults({ 
-        error: 'Proxy test failed',
-        message: error instanceof Error ? error.message : 'Unknown error'
-      });
+              toast.error(t("proxy-test-failed"));
+              setTestResults({ 
+          error: t("proxy-test-failed"),
+          message: error instanceof Error ? error.message : t("unknown-error")
+        });
     } finally {
       setIsLoading(false);
     }
@@ -212,12 +214,12 @@ export default function TestIntegrationPage() {
 
   return (
     <div className="container mx-auto p-6 max-w-6xl">
-      <h1 className="text-3xl font-bold mb-6">API Integration Test Page</h1>
+      <h1 className="text-3xl font-bold mb-6">{t("title")}</h1>
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
         <Card>
           <CardHeader>
-            <CardTitle className="text-sm">Test Local Route</CardTitle>
+            <CardTitle className="text-sm">{t("test-connectivity")}</CardTitle>
           </CardHeader>
           <CardContent>
             <Button 
@@ -226,14 +228,14 @@ export default function TestIntegrationPage() {
               className="w-full text-xs"
               size="sm"
             >
-              {isLoading ? 'Testing...' : 'Test Local'}
+                              {isLoading ? t("buttons.loading") : t("test-connectivity")}
             </Button>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader>
-            <CardTitle className="text-sm">Test External API</CardTitle>
+            <CardTitle className="text-sm">{t("test-external-api")}</CardTitle>
           </CardHeader>
           <CardContent>
             <Button 
@@ -243,14 +245,14 @@ export default function TestIntegrationPage() {
               className="w-full text-xs"
               size="sm"
             >
-              {isLoading ? 'Testing...' : 'Test External'}
+                              {isLoading ? t("buttons.loading") : t("test-external-api")}
             </Button>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader>
-            <CardTitle className="text-sm">Test Proxy Route</CardTitle>
+            <CardTitle className="text-sm">{t("test-proxy")}</CardTitle>
           </CardHeader>
           <CardContent>
             <Button 
@@ -260,7 +262,7 @@ export default function TestIntegrationPage() {
               className="w-full text-xs"
               size="sm"
             >
-              {isLoading ? 'Testing...' : 'Test Proxy'}
+                              {isLoading ? t("buttons.loading") : t("test-proxy")}
             </Button>
           </CardContent>
         </Card>

@@ -36,7 +36,7 @@ export default function TermsPage() {
                   {t("acceptance")}
                 </h2>
                 <p className="text-base sm:text-lg text-gray-600 leading-relaxed">
-                  {t("acceptanceDesc")}
+                  {t("acceptance-desc")}
                 </p>
               </div>
             </div>
@@ -52,10 +52,10 @@ export default function TermsPage() {
               </div>
               <div>
                 <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-3 sm:mb-4">
-                  {t("websiteUse")}
+                  {t("website-use")}
                 </h2>
                 <p className="text-base sm:text-lg text-gray-600 leading-relaxed">
-                  {t("websiteUseDesc")}
+                  {t("website-use-desc")}
                 </p>
               </div>
             </div>
@@ -71,10 +71,10 @@ export default function TermsPage() {
               </div>
               <div>
                 <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-3 sm:mb-4">
-                  {t("intellectualProperty")}
+                  {t("intellectual-property")}
                 </h2>
                 <p className="text-base sm:text-lg text-gray-600 leading-relaxed">
-                  {t("intellectualPropertyDesc")}
+                  {t("intellectual-property-desc")}
                 </p>
               </div>
             </div>

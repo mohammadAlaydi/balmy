@@ -1,4 +1,7 @@
+"use client";
+
 import { createAsyncThunk } from "@reduxjs/toolkit";
+import { useFetcher } from "./fetchers";
 
 // Helper function to create async thunks for API calls
 export const useThunk = (
@@ -6,23 +9,5 @@ export const useThunk = (
   url: string,
   options: RequestInit = {}
 ) => {
-  return createAsyncThunk(
-    name,
-    async (_, { rejectWithValue }) => {
-      try {
-        const response = await fetch(url, options);
-        
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        
-        const data = await response.json();
-        return data;
-      } catch (error) {
-        return rejectWithValue(
-          error instanceof Error ? error.message : 'An unknown error occurred'
-        );
-      }
-    }
-  );
+  return createAsyncThunk(name, (_, { rejectWithValue }) => useFetcher(url, options));
 };

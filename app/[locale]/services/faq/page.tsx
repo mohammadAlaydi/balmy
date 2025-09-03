@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "الأسئلة الأكثر شيوعاً - فرادا",
@@ -7,8 +8,8 @@ export const metadata: Metadata = {
 
 export default function FAQPage() {
   return (
-    <div className="min-h-screen bg-gray-50 py-12">
-      <div className="container mx-auto px-4 max-w-4xl">
+    <div className="min-h-[65vh] bg-gray-50 py-12">
+      <div className="container mx-auto px-4 max-w-5xl">
         <div className="bg-white rounded-lg shadow-lg p-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-8 text-center">
             الأسئلة الأكثر شيوعاً (FAQ)
@@ -254,13 +255,13 @@ export default function FAQPage() {
               <p className="text-gray-600 mb-4">
                 فريق خدمة العملاء لدينا متاح لمساعدتك في أي استفسار آخر
               </p>
-              <div className="space-x-4 space-x-reverse">
-                <span className="inline-block bg-gray-700 text-white px-4 py-2 rounded-md">
-                  الهاتف: +966-55-766-5585
-                </span>
-                <span className="inline-block bg-gray-700 text-white px-4 py-2 rounded-md">
-                  البريد: info@farada.com
-                </span>
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-5">
+                <Link href="tel:+966557665585" className="inline-block bg-gray-700 text-white px-4 py-2 rounded-md w-full">
+                  الهاتف : +966-55-766-5585
+                </Link>
+                <Link href="mailto:info@farada.com" className="inline-block bg-gray-700 text-white px-4 py-2 rounded-md w-full">
+                  البريد الإلكتروني : info@farada.com
+                </Link>
               </div>
             </div>
           </div>

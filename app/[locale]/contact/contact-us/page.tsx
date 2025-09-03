@@ -27,7 +27,7 @@ export default function ContactUsPage() {
           <div className="space-y-6 sm:space-y-8">
             <section className="bg-white rounded-xl sm:rounded-2xl shadow-lg sm:shadow-xl p-6 sm:p-8 lg:p-10 border border-gray-200">
               <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-4 sm:mb-6">
-                {t("contactInfo")}
+                {t("contact-info")}
               </h2>
               <div className="space-y-4 sm:space-y-6">
                 <div className="flex items-start space-x-3 sm:space-x-4 rtl:space-x-reverse">
@@ -39,7 +39,7 @@ export default function ContactUsPage() {
                   <div>
                     <h3 className="font-semibold text-gray-800 text-sm sm:text-base">{t("phone")}</h3>
                     <p className="text-gray-600 text-sm sm:text-base">+966-55-766-5585</p>
-                    <p className="text-gray-500 text-xs sm:text-sm">{t("phoneAvailable")}</p>
+                    <p className="text-gray-500 text-xs sm:text-sm">{t("phone-available")}</p>
                   </div>
                 </div>
 
@@ -52,7 +52,7 @@ export default function ContactUsPage() {
                   <div>
                     <h3 className="font-semibold text-gray-800 text-sm sm:text-base">{t("email")}</h3>
                     <p className="text-gray-600 text-sm sm:text-base">info@farada.com</p>
-                    <p className="text-gray-500 text-xs sm:text-sm">{t("emailResponse")}</p>
+                    <p className="text-gray-500 text-xs sm:text-sm">{t("email-response")}</p>
                   </div>
                 </div>
 
@@ -66,7 +66,7 @@ export default function ContactUsPage() {
                   <div>
                     <h3 className="font-semibold text-gray-800 text-sm sm:text-base">{t("address")}</h3>
                     <p className="text-gray-600 text-sm sm:text-base">طريق أنس ابن مالك، الصحافة، الرياض 13321</p>
-                    <p className="text-gray-500 text-xs sm:text-sm">{t("addressCountry")}</p>
+                    <p className="text-gray-500 text-xs sm:text-sm">{t("address-country")}</p>
                   </div>
                 </div>
               </div>
@@ -74,11 +74,11 @@ export default function ContactUsPage() {
 
             <section className="bg-white rounded-xl sm:rounded-2xl shadow-lg sm:shadow-xl p-6 sm:p-8 lg:p-10 border border-gray-200">
               <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-4 sm:mb-6">
-                {t("workingHours")}
+                {t("working-hours")}
               </h2>
               <div className="space-y-2 sm:space-y-3">
                 <div className="flex justify-between items-center">
-                  <span className="text-gray-700 text-sm sm:text-base">{t("sundayThursday")}</span>
+                  <span className="text-gray-700 text-sm sm:text-base">{t("sunday-thursday")}</span>
                   <span className="text-gray-900 font-semibold text-sm sm:text-base">9:00 ص - 6:00 م</span>
                 </div>
                 <div className="flex justify-between items-center">
@@ -94,24 +94,24 @@ export default function ContactUsPage() {
 
             <section className="bg-white rounded-xl sm:rounded-2xl shadow-lg sm:shadow-xl p-6 sm:p-8 lg:p-10 border border-gray-200">
               <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-4 sm:mb-6">
-                {t("servicesWeProvide")}
+                {t("services-we-provide")}
               </h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                 <div className="flex items-center space-x-2 sm:space-x-3 rtl:space-x-reverse">
                   <div className="w-2 h-2 sm:w-3 sm:h-3 bg-gray-600 rounded-full"></div>
-                  <span className="text-gray-700 text-sm sm:text-base">{t("coffeeSales")}</span>
+                  <span className="text-gray-700 text-sm sm:text-base">{t("coffee-sales")}</span>
                 </div>
                 <div className="flex items-center space-x-2 sm:space-x-3 rtl:space-x-reverse">
                   <div className="w-2 h-2 sm:w-3 sm:h-3 bg-gray-600 rounded-full"></div>
-                  <span className="text-gray-700 text-sm sm:text-base">{t("customerService")}</span>
+                  <span className="text-gray-700 text-sm sm:text-base">{t("customer-service")}</span>
                 </div>
                 <div className="flex items-center space-x-2 sm:space-x-3 rtl:space-x-reverse">
                   <div className="w-2 h-2 sm:w-3 sm:h-3 bg-gray-600 rounded-full"></div>
-                  <span className="text-gray-700 text-sm sm:text-base">{t("productConsultation")}</span>
+                  <span className="text-gray-700 text-sm sm:text-base">{t("product-consultation")}</span>
                 </div>
                 <div className="flex items-center space-x-2 sm:space-x-3 rtl:space-x-reverse">
                   <div className="w-2 h-2 sm:w-3 sm:h-3 bg-gray-600 rounded-full"></div>
-                  <span className="text-gray-700 text-sm sm:text-base">{t("problemSolving")}</span>
+                  <span className="text-gray-700 text-sm sm:text-base">{t("problem-solving")}</span>
                 </div>
               </div>
             </section>
@@ -120,32 +120,32 @@ export default function ContactUsPage() {
           {/* Contact Form */}
           <section className="bg-white rounded-xl sm:rounded-2xl shadow-lg sm:shadow-xl p-6 sm:p-8 lg:p-10 border border-gray-200">
             <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-4 sm:mb-6">
-              {t("sendMessage")}
+                              {t("send-message")}
             </h2>
             <form className="space-y-4 sm:space-y-6">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                 <div>
                   <label htmlFor="firstName" className="block text-sm sm:text-base font-medium text-gray-700 mb-2">
-                    {t("firstName")}
+                    {t("first-name")}
                   </label>
                   <input
                     type="text"
                     id="firstName"
                     name="firstName"
-                    placeholder={t("firstNamePlaceholder")}
+                                          placeholder={t("first-name-placeholder")}
                     className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-transparent transition-colors duration-200 text-sm sm:text-base"
                     required
                   />
                 </div>
                 <div>
                   <label htmlFor="lastName" className="block text-sm sm:text-base font-medium text-gray-700 mb-2">
-                    {t("lastName")}
+                    {t("last-name")}
                   </label>
                   <input
                     type="text"
                     id="lastName"
                     name="lastName"
-                    placeholder={t("lastNamePlaceholder")}
+                                          placeholder={t("last-name-placeholder")}
                     className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-transparent transition-colors duration-200 text-sm sm:text-base"
                     required
                   />
@@ -160,7 +160,7 @@ export default function ContactUsPage() {
                   type="email"
                   id="email"
                   name="email"
-                  placeholder={t("emailPlaceholder")}
+                                        placeholder={t("email-placeholder")}
                   className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-transparent transition-colors duration-200 text-sm sm:text-base"
                   required
                 />
@@ -174,7 +174,7 @@ export default function ContactUsPage() {
                   type="tel"
                   id="phone"
                   name="phone"
-                  placeholder={t("phonePlaceholder")}
+                                        placeholder={t("phone-placeholder")}
                   className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-transparent transition-colors duration-200 text-sm sm:text-base"
                 />
               </div>
@@ -189,10 +189,10 @@ export default function ContactUsPage() {
                   className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-transparent transition-colors duration-200 text-sm sm:text-base"
                   required
                 >
-                  <option value="">{t("chooseSubject")}</option>
-                  <option value="general">{t("generalInquiry")}</option>
-                  <option value="order">{t("orderInquiry")}</option>
-                  <option value="product">{t("productInquiry")}</option>
+                  <option value="">{t("choose-subject")}</option>
+                                      <option value="general">{t("general-inquiry")}</option>
+                                      <option value="order">{t("order-inquiry")}</option>
+                                      <option value="product">{t("product-inquiry")}</option>
                   <option value="complaint">{t("complaint")}</option>
                   <option value="suggestion">{t("suggestion")}</option>
                 </select>
@@ -206,7 +206,7 @@ export default function ContactUsPage() {
                   id="message"
                   name="message"
                   rows={5}
-                  placeholder={t("messagePlaceholder")}
+                                        placeholder={t("message-placeholder")}
                   className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-transparent transition-colors duration-200 text-sm sm:text-base resize-vertical"
                   required
                 ></textarea>
@@ -216,7 +216,7 @@ export default function ContactUsPage() {
                 type="submit"
                 className="w-full bg-gray-800 text-white py-3 sm:py-4 px-6 sm:px-8 rounded-lg font-semibold text-base sm:text-lg hover:bg-gray-700 transition-all duration-200 transform hover:scale-105 focus:ring-4 focus:ring-gray-300"
               >
-                {t("sendMessageButton")}
+                {t("send-message-button")}
               </button>
             </form>
           </section>
@@ -226,10 +226,10 @@ export default function ContactUsPage() {
         <div className="mt-12 sm:mt-16 lg:mt-20 text-center">
           <div className="bg-gray-50 rounded-xl sm:rounded-2xl p-6 sm:p-8 lg:p-10 border border-gray-200">
             <h3 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-3 sm:mb-4">
-              {t("weAreHereToHelp")}
+                              {t("we-are-here-to-help")}
             </h3>
             <p className="text-base sm:text-lg lg:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-              {t("weAreHereToHelpDesc")}
+                              {t("we-are-here-to-help-desc")}
             </p>
           </div>
         </div>

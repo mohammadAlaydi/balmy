@@ -5,25 +5,38 @@ import { Search, X } from "lucide-react";
 import { Input } from "./ui/input";
 import ProductCard from "./product-card";
 import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { getSearchProducts } from "@/store/slices/search-products-slice";
+import { useSelector } from "react-redux";
+import { useTranslations } from "next-intl";
 
 const SearchComponent = ({
-  products,
   maxHeight,
 }: {
-  products: any[];
   maxHeight?: string;
 }) => {
+  const t = useTranslations("search");
   const [categoryIndex, setCategoryIndex] = useState<number | null>(null);
-  const suggestions = ["نعال", "حذاء", "شماغ"];
+  const { products, isLoading, error } = useSelector(
+    (state: any) => state.searchProducts
+  );
+  const suggestions = ["نعال", "حذاء", "شماغ"]; // Using hardcoded suggestions for now
   const [search, setSearch] = useState("");
-  const [filteredProducts, setFilteredProducts] = useState(products);
-
+  const [filteredProducts, setFilteredProducts] = useState(
+    products?.data || []
+  );
+  const dispatch = useDispatch();
+  
   useEffect(() => {
     setFilteredProducts(
-      products.filter((product) =>
+      products?.data?.filter((product: any) =>
         product.name.toLowerCase().includes(search.toLowerCase())
       )
     );
+  }, [search, categoryIndex]);
+
+  useEffect(() => {
+    dispatch(getSearchProducts() as any);
   }, [search, categoryIndex]);
   return (
     <div
@@ -34,14 +47,14 @@ const SearchComponent = ({
       <div className="w-full relative mt-4">
         <Input
           type="text"
-          placeholder="ابحث عن منتج"
+          placeholder={t("search-placeholder")}
           className="w-full"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
         <Search className="cursor-pointer absolute ltr:right-2 rtl:left-2 top-1/2 transform -translate-y-1/2 text-sm" />
       </div>
-      <p>كلمات مقترحة</p>
+              <p>{t("suggested-words")}</p>
       <div className="flex flex-wrap gap-2">
         {suggestions?.map((suggestion: string, index: number) => (
           <Badge
@@ -59,7 +72,7 @@ const SearchComponent = ({
         ))}
       </div>
       <div className="w-full h-full grid grid-cols-12 gap-2 overflow-y-auto justify-center ">
-        {filteredProducts?.map((product, index) => (
+        {filteredProducts?.map((product: any, index: number) => (
           <ProductCard
             key={index}
             product={product}
