@@ -276,3 +276,39 @@ export interface CheckBoxOrRadioInterFace {
   labelStyle?: string;
   control?: object;
 }
+interface ProductImage {
+  original_image_url: string;
+}
+
+export interface ProductVariant {
+  id: number;
+  base_image?: ProductImage;
+  hovered_image?: ProductImage;
+}
+
+export interface ApiProduct {
+  id: number;
+  name: string;
+  nameEn?: string;
+  price: number | string;
+  priceEn?: string;
+  sku: string;
+  code?: string;
+  base_image?: ProductImage;
+  hovered_image?: ProductImage;
+  variants?: ProductVariant[];
+  category?: string;
+  in_stock?: boolean;
+  inStock?: boolean;
+  rating?: number;
+  reviews?: {
+    total?: number;
+  };
+  new?: boolean;
+  featured?: boolean;
+}
+
+export interface ProductCardProps {
+  product: ApiProduct;
+  cardColSpan?: string;
+}

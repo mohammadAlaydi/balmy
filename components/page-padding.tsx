@@ -8,9 +8,7 @@ export default function PagePadding({
   containerClassName?: string;
 }) {
   return (
-    <div
-      className={`px-3 md:px-5 lg:px-10 py-10 gap-10 ${containerClassName}`}
-    >
+    <div className={`px-3 md:px-5 lg:px-10 py-10 ${containerClassName}`}>
       {children}
     </div>
   );

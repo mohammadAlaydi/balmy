@@ -10,9 +10,8 @@ import { useSelector } from "react-redux";
 export default function CategoryPage({
   params,
 }: {
-  params: Promise<{ slug: string[] }>; 
+  params: Promise<{ slug: string[] }>;
 }) {
-
   const API_KEY = process.env.NEXT_PUBLIC_API_URL;
   const { slug } = use(params);
   const [categorySlug, categoryId] = slug;
@@ -46,7 +45,7 @@ export default function CategoryPage({
   // }
 
   return (
-    <PagePadding containerClassName="grid grid-cols-12 gap-5 flex-wrap min-h-[65vh]">
+    <PagePadding containerClassName="grid grid-cols-12 gap-2 md:gap-3 xl:gap-5 flex-wrap min-h-[65vh]">
       {categoryData?.data?.map((product: any, index: number) => (
         <ProductCard key={index} product={product} />
       ))}

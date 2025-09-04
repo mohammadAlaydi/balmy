@@ -15,7 +15,7 @@ export default function page() {
   return (
     <div className="min-h-[100vh]">
       <BannerCarousel />
-      <PagePadding>
+      <PagePadding containerClassName="gap-10">
         <Services />
         <Categories />
         <ProductsCarousel products={products} />

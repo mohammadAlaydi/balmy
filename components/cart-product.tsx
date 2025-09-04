@@ -41,7 +41,7 @@ export default function CartProduct({
                 <h2 className="text-sm font-bold ltr:text-end rtl:text-start">
                   {item?.product?.name}
                 </h2>
-                <ReactStars />
+                <ReactStars rating={item?.product?.reviews?.total || 0} edit={false} />
                 <p className="text-sm text-gray-color ltr:text-end rtl:text-start">
                   {item?.product?.price} ر.س
                 </p>
