@@ -327,11 +327,7 @@ export const SERVICES = [
 
 export const WORK_HOURS = {
   title: "working-hours",
-  schedule: [
-          "all-week",
-          "from-9am-to-1130am",
-          "from-330pm-to-1130pm",
-  ],
+  schedule: ["all-week", "from-9am-to-1130am", "from-330pm-to-1130pm"],
 };
 
 export const LOCATION_INFO = {
@@ -349,3 +345,41 @@ export const LANGUAGES: { code: string; title: string }[] = [
     title: "English",
   },
 ];
+export const getCurrentMainImage = (
+  product: any,
+  selectedVariantIndex: number
+): string => {
+  if (product?.variants && product.variants.length > 0) {
+    const variantIndex = selectedVariantIndex ?? 0;
+    const variant = product.variants[variantIndex];
+    return (
+      variant?.base_image?.original_image_url || "/assets/images/no-image.webp"
+    );
+  }
+  return (
+    product?.base_image?.original_image_url || "/assets/images/no-image.webp"
+  );
+};
+export const getHoverImage = (product: any, selectedVariantIndex: number): string => {
+  if (product?.variants && product.variants.length > 0) {
+    const variantIndex = selectedVariantIndex ?? 0;
+    const variant = product.variants[variantIndex];
+    return (
+      variant?.hovered_image?.original_image_url || getCurrentMainImage(product, selectedVariantIndex)
+    );
+  }
+  return product?.hovered_image?.original_image_url || getCurrentMainImage(product, selectedVariantIndex);
+};
+export const SUCCESS_MESSAGES = {
+  TITLE: 'Shipping Successful',
+  DESCRIPTION: 'Your order has been successfully shipped! You will receive tracking information via email and can monitor your delivery status.',
+  GO_HOME: 'Go Home',
+} as const;
+
+export const ORDER_INFO_LABELS = {
+  ORDER_NUMBER: 'Order Number',
+  ORDER_STATUS: 'Order Status',
+  SHIPPING_METHOD: 'Shipping Method',
+  SHIPPING_AMOUNT: 'Shipping Amount',
+  PAYMENT_TITLE: 'Payment Title',
+} as const;

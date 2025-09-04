@@ -16,3 +16,4 @@ declare module 'react-stars' {
 
   export default ReactStars;
 }
+

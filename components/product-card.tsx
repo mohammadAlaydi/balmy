@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Badge } from "./ui/badge";
 import { Card, CardContent, CardHeader } from "./ui/card";
 import { Button } from "./ui/button";
@@ -19,6 +19,8 @@ import { useTranslations } from "next-intl";
 import ReactStars from "./react-stars";
 import { FaRegEye } from "react-icons/fa";
 import { ProductCardProps } from "@/types/types";
+import { getCurrentMainImage, getHoverImage } from "@/static-data/static-data";
+import { PuffLoader } from "react-spinners";
 
 export default function ProductCard({
   product,
@@ -28,40 +30,18 @@ export default function ProductCard({
     number | null
   >(null);
   const [isHovered, setIsHovered] = useState(false);
+  const [isAddingToCart, setIsAddingToCart] = useState(false);
+
   const dispatch = useAppDispatch();
   const t = useTranslations("products");
 
   const { productDetails } = useSelector((state: any) => state.productDetails);
+  const { isLoading: isAddCartLoading } = useSelector(
+    (state: any) => state.cart
+  );
 
-  // Get the current main image based on selected variant
-  const getCurrentMainImage = (): string => {
-    if (product?.variants && product.variants.length > 0) {
-      const variantIndex = selectedVariantIndex ?? 0;
-      const variant = product.variants[variantIndex];
-      return (
-        variant?.base_image?.original_image_url ||
-        "/assets/images/no-image.webp"
-      );
-    }
-    return (
-      product?.base_image?.original_image_url || "/assets/images/no-image.webp"
-    );
-  };
-
-  // Get the hover image based on selected variant
-  const getHoverImage = (): string => {
-    if (product?.variants && product.variants.length > 0) {
-      const variantIndex = selectedVariantIndex ?? 0;
-      const variant = product.variants[variantIndex];
-      return (
-        variant?.hovered_image?.original_image_url || getCurrentMainImage()
-      );
-    }
-    return product?.hovered_image?.original_image_url || getCurrentMainImage();
-  };
-
-  const baseImageUrl = getCurrentMainImage();
-  const hoverImageUrl = getHoverImage();
+  const baseImageUrl = getCurrentMainImage(product, selectedVariantIndex ?? 0);
+  const hoverImageUrl = getHoverImage(product, selectedVariantIndex ?? 0);
   const isInStock = product?.in_stock ?? product?.inStock ?? false;
 
   const handleAddToFavorites = () => {
@@ -87,6 +67,13 @@ export default function ProductCard({
   const handleVariantSelect = (index: number) => {
     setSelectedVariantIndex(index);
   };
+
+  // Reset loading state when cart operation completes
+  useEffect(() => {
+    if (!isAddCartLoading && isAddingToCart) {
+      setIsAddingToCart(false);
+    }
+  }, [isAddCartLoading, isAddingToCart]);
 
   return (
     <Card
@@ -185,10 +172,21 @@ export default function ProductCard({
           className="absolute bottom-3 left-[5%] w-[90%] mx-auto hidden md:flex"
         >
           <Button
-            onClick={handleAddToCart}
+            onClick={() => {
+              setIsAddingToCart(true);
+              handleAddToCart();
+            }}
+            disabled={isAddingToCart}
             className="rounded-none bg-black/85 text-white w-full rounded-full"
           >
-            {t("add-to-cart")} <MdOutlineShoppingCart className="text-xl" />
+            {isAddingToCart ? (
+              <PuffLoader color="#ffffff" size={30} />
+            ) : (
+              <div className="flex items-center gap-2">
+                {t("add-to-cart")}{" "}
+                <MdOutlineShoppingCart className="text-xl " />
+              </div>
+            )}
           </Button>
         </motion.div>
       </CardHeader>
@@ -199,7 +197,7 @@ export default function ProductCard({
             {product?.name || t("product-name")}
           </p>
           <p className="font-[600] md:font-[650] md:text-sm text-xs">
-            {product?.sku || t("not-available")}
+            {product?.sku}
           </p>
         </div>
         {/* Stars */}
@@ -209,7 +207,7 @@ export default function ProductCard({
         {/* Stock status */}
         <div className="flex justify-between gap-1 items-center">
           <p
-            className={`text-xs md:text-sm  ${
+            className={`text-xs md:text-sm mb-2 ${
               isInStock ? "text-green-600" : "text-red-color"
             }`}
           >
@@ -223,7 +221,7 @@ export default function ProductCard({
         {/* Variant images and price */}
         <div className="flex justify-between gap-1 items-center">
           {product?.variants && product.variants.length > 0 ? (
-            <div className="flex items-center gap-2 hidden md:flex transition-all duration-300">
+            <div className="flex items-center gap-3 hidden md:flex transition-all duration-300">
               {/* Variant images */}
               {product.variants.slice(0, 3).map((variant, index) => (
                 <div key={variant.id} className="relative mb-3">
@@ -237,7 +235,7 @@ export default function ProductCard({
                     alt={`${product?.name || t("product")} ${t(
                       "variant-image"
                     )} ${index + 1}`}
-                    className={`cursor-pointer transition-all duration-200 rounded-full ${
+                    className={`cursor-pointer transition-all duration-200 rounded-full h-[32px] w-[32px] ${
                       selectedVariantIndex === index ||
                       selectedVariantIndex === null
                         ? "ring-2 ring-gray-300 scale-110"
@@ -248,13 +246,13 @@ export default function ProductCard({
                 </div>
               ))}
               {product.variants.length > 3 && (
-                <Badge className="bg-transparent text-primary w-[32px] h-[32px] flex items-center justify-center shadow-[inset_0_2px_4px_rgba(0,0,0,0.1)] text-xs">
-                  {t("more-variants")}
+                <Badge className="bg-transparent text-primary  mb-3 ring-2 ring-gray-300 scale-110 w-[32px] h-[32px]  p-0 flex items-center rounded-full justify-center shadow-[inset_0_2px_4px_rgba(0,0,0,0.1)] text-xs">
+                  +{product.variants.length - 3}
                 </Badge>
               )}
             </div>
           ) : (
-            <div className="flex justify-between items-center gap-2 w-full hidden md:flex">
+            <div className="flex justify-between items-center gap-3 w-full hidden md:flex">
               <div className="relative mb-3">
                 <Image
                   width={32}
@@ -266,7 +264,7 @@ export default function ProductCard({
                   alt={`${product?.name || t("product")} ${t(
                     "variant-image"
                   )} 1`}
-                  className="cursor-pointer transition-all duration-200 rounded-full ring-2 ring-gray-300 scale-110"
+                  className="cursor-pointer transition-all duration-200 rounded-full ring-2 ring-gray-300 scale-110 h-[32px] w-[32px]"
                 />
               </div>
             </div>

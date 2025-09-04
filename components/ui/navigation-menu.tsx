@@ -98,13 +98,8 @@ function NavigationMenuTrigger({
 }
 function NavigationMenuContent({
   className,
-  navigationMenuContent,
   ...props
-}: React.ComponentProps<typeof NavigationMenuPrimitive.Content> & {
-  navigationMenuContent: boolean;
-}) {
-  if (!navigationMenuContent) return; // early-return when hidden
-
+}: React.ComponentProps<typeof NavigationMenuPrimitive.Content>) {
   return (
     <NavigationMenuPrimitive.Content
       data-slot="navigation-menu-content"

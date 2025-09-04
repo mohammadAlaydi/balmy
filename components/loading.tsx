@@ -1,5 +1,6 @@
 import React from "react";
 import { Loader2 } from "lucide-react";
+import { PuffLoader } from "react-spinners";
 
 interface LoadingProps {
   size?: "sm" | "md" | "lg" | "xl";
@@ -83,8 +84,8 @@ const Loading: React.FC<LoadingProps> = ({
 
   if (fullScreen) {
     return (
-      <div className="fixed inset-0 bg-white bg-opacity-90 flex items-center justify-center z-50">
-        {content}
+      <div className="fixed inset-0 bg-white flex items-center justify-center z-50">
+        <PuffLoader />
       </div>
     );
   }

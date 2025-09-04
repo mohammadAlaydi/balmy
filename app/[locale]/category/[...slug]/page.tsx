@@ -40,9 +40,9 @@ export default function CategoryPage({
     }
   );
 
-  // if (isLoading) {
-  //   return <Loading fullScreen={true} variant="spinner" size="xl" />;
-  // }
+  if (isLoading) {
+    return <Loading fullScreen={true} variant="spinner" size="xl" />;
+  }
 
   return (
     <PagePadding containerClassName="grid grid-cols-12 gap-2 md:gap-3 xl:gap-5 flex-wrap min-h-[65vh]">

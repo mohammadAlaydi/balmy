@@ -253,6 +253,7 @@ export interface InputInterFace {
   labelStyle?: string;
   inputId?: string;
   control?: any;
+  value?: any;
 }
 
 export interface SelectInterFace {
@@ -311,4 +312,22 @@ export interface ApiProduct {
 export interface ProductCardProps {
   product: ApiProduct;
   cardColSpan?: string;
+}
+
+export interface OrderData {
+  id: string;
+  status: string;
+  shipping_method: string;
+  shipping_amount: string;
+  payment_title: string;
+}
+
+export interface SuccessData {
+  data: {
+    order: OrderData;
+  };
+}
+
+export interface SuccessProps {
+  data: SuccessData;
 }

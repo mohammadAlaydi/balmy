@@ -227,6 +227,7 @@
     "select-option": "Select an option",
     "no-options": "No options available",
     "loading": "Loading...",
+    "submitting": "Submitting...",
     "error": "Error",
     "success": "Success",
     "failed": "Failed",

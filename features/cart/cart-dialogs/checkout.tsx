@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { defineStepper } from "@/components/ui/stepper";
 import ShippingForm from "./shipping-form";
@@ -62,7 +62,7 @@ export default function Checkout() {
     body: JSON.stringify(defaultFormValues),
   });
 
-  const { data, loading, error, refetch } = useFetcher(
+  const { data, loading, error, refetch, status } = useFetcher(
     `${API_KEY}/v1/customer/checkout/save-order`,
     options
   );
@@ -77,6 +77,7 @@ export default function Checkout() {
     }
   }, [sameAsBilling, form]);
   const onSubmit = (values: CheckoutFormValues) => {
+    console.log(values);
     setOptions({
       ...options,
       body: JSON.stringify(values),
@@ -139,7 +140,7 @@ export default function Checkout() {
         noValidate
         className="flex flex-col gap-4 mt-5 "
       >
-        <ShippingForm form={form} />
+        <ShippingForm form={form} isSubmitting={loading} status={status} data={data || null}   />
       </form>
     </Form>
   );

@@ -1,8 +1,14 @@
-'use client';
+"use client";
 
-import { InputInterFace } from '@/types/types';
-import { FormControl, FormField, FormItem, FormLabel, FormMessage } from './ui/form';
-import { Input } from './ui/input';
+import { InputInterFace } from "@/types/types";
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "./ui/form";
+import { Input } from "./ui/input";
 
 export default function LabelAndInput({
   containerStyle,
@@ -12,21 +18,24 @@ export default function LabelAndInput({
   inputStyle,
   inputPlaceholder,
   fieldName,
-  inputType = 'text',
+  inputType = "text",
   labelText,
   labelStyle,
   inputId,
   control,
+  value,
 }: InputInterFace) {
   return (
     <FormField
       control={control}
       name={fieldName}
       render={({ field }) => (
-        <FormItem className={`relative grid gap-3 ${containerStyle} ${containerColSpan}`}>
+        <FormItem
+          className={`relative grid gap-3 ${containerStyle} ${containerColSpan}`}
+        >
           {labelText && (
             <FormLabel
-              className={`text-navy-blue-color text-sm text-nowrap md:text-base ${labelStyle} ${labelColSpan}`}
+              className={` text-sm text-nowrap md:text-base ${labelStyle} ${labelColSpan}`}
             >
               {labelText}
             </FormLabel>
@@ -37,6 +46,7 @@ export default function LabelAndInput({
               type={inputType}
               placeholder={inputPlaceholder}
               className={inputStyle}
+              value={value? value : field.value || ""}
               {...field}
             />
           </FormControl>

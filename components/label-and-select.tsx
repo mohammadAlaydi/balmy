@@ -1,7 +1,13 @@
-'use client';
+"use client";
 
-import { useTranslations } from 'next-intl';
-import { FormControl, FormField, FormItem, FormLabel, FormMessage } from './ui/form';
+import { useTranslations } from "next-intl";
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "./ui/form";
 import {
   Select,
   SelectContent,
@@ -9,8 +15,8 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from './ui/select';
-import { SelectInterFace } from '@/types/types';
+} from "./ui/select";
+import { SelectInterFace } from "@/types/types";
 
 export default function LabelAndSelect({
   selectOptions,
@@ -24,17 +30,19 @@ export default function LabelAndSelect({
   labelStyle,
   control,
 }: SelectInterFace) {
-  const t = useTranslations('buttons');
+  const t = useTranslations("buttons");
 
   return (
     <FormField
       control={control}
       name={fieldName}
       render={({ field }) => (
-        <FormItem className={`relative grid gap-3 ${containerStyle} ${containerColSpan}`}>
+        <FormItem
+          className={`relative grid gap-3 ${containerStyle} ${containerColSpan}`}
+        >
           {labelText && (
             <FormLabel
-              className={`text-navy-blue-color text-sm text-nowrap md:text-base ${labelStyle} ${labelColSpan}`}
+              className={` text-sm text-nowrap md:text-base ${labelStyle} ${labelColSpan}`}
             >
               {labelText}
             </FormLabel>
@@ -42,8 +50,8 @@ export default function LabelAndSelect({
           <FormControl className={`${selectColSpan} w-full`}>
             <div>
               <Select value={field.value} onValueChange={field.onChange}>
-                <SelectTrigger className={`text-navy-blue-color w-full ${selectStyle}`}>
-                  <SelectValue placeholder={t('select-option')} />
+                <SelectTrigger className={` w-full ${selectStyle}`}>
+                  <SelectValue placeholder={t("select-option")} />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectGroup>
@@ -52,14 +60,18 @@ export default function LabelAndSelect({
                         <SelectItem
                           key={option.value}
                           value={option.value}
-                          className={`text-navy-blue-color ${selectStyle}`}
+                          className={` ${selectStyle}`}
                         >
                           {option.label}
                         </SelectItem>
                       ))
                     ) : (
-                      <SelectItem disabled value="" className={`text-center opacity-50 ${selectStyle}`}>
-                        {t('no-options')}
+                      <SelectItem
+                        disabled
+                        value=""
+                        className={`text-center opacity-50 ${selectStyle}`}
+                      >
+                        {t("no-options")}
                       </SelectItem>
                     )}
                   </SelectGroup>

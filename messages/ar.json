@@ -227,6 +227,7 @@
     "select-option": "اختر خياراً",
     "no-options": "لا توجد خيارات متاحة",
     "loading": "جاري التحميل...",
+    "submitting": "جاري الإرسال...",
     "error": "خطأ",
     "success": "نجح",
     "failed": "فشل",

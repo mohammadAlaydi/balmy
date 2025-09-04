@@ -9,22 +9,38 @@ import LabelAndRadio from "@/components/label-and-radio";
 import SectionTitle from "@/components/section-title";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
+import { PuffLoader } from "react-spinners";
+import { useEffect } from "react";
+import Success from "./success";
+import Failed from "./failed";
 
 export default function ShippingForm({
-  submitLabel = "طلب الشحن",
-  isSubmitting = false,
+  isSubmitting,
   form,
+  status,
+  data,
 }: {
   submitLabel?: string;
   isSubmitting?: boolean;
   form: any;
+  status: boolean | null;
+  data: any;
 }) {
   const t = useTranslations("cart");
   const tButtons = useTranslations("buttons");
 
+  useEffect(() => {
+    if (status) {
+      form.reset();
+    }
+  }, [status]);
   return (
     <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
-      <Card className="w-full xl:max-w-3xl mx-auto max-h-[80vh] overflow-y-auto">
+      <Card
+        className={`w-full xl:max-w-3xl mx-auto max-h-[80vh] overflow-y-auto shadow-none ${
+          status ? "hidden" : ""
+        }`}
+      >
         <CardContent>
           {/* Billing Information */}
           <div className="my-6">
@@ -185,9 +201,20 @@ export default function ShippingForm({
               />
             </div>
           </div>
-          <Button type="submit" disabled={isSubmitting} className="w-fit mt-3">{tButtons("submit")}</Button>
+          <Button type="submit" disabled={isSubmitting} className="w-fit mt-3">
+            {isSubmitting ? (
+              <div className="flex items-center gap-2">
+                <PuffLoader color="#ffffff" size={20} />
+                <span>{tButtons("submitting")}</span>
+              </div>
+            ) : (
+              tButtons("submit")
+            )}
+          </Button>
         </CardContent>
       </Card>
+      {status && <Success data={data} />}
+      {status != null && status === false && <Failed />}
     </motion.div>
   );
 }

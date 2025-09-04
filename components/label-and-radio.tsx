@@ -68,7 +68,7 @@ export default function LabelAndRadio<T extends Record<string, any>>({
                     <Label
                       onClick={opt?.action}
                       htmlFor={id}
-                      className={`${labelStyle} text-navy-blue-color text-end text-nowrap cursor-pointer ltr:order-2 rtl:order-1`}
+                      className={`${labelStyle} text-end text-nowrap cursor-pointer ltr:order-2 rtl:order-1`}
                     >
                       {opt.label}
                     </Label>

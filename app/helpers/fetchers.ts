@@ -6,6 +6,7 @@ export const useFetcher = (url: string | null, options: RequestInit) => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
+  const [status, setStatus] = useState<boolean | null>(null);
 
   const fetchData = async () => {
     if (!url) return;
@@ -18,7 +19,7 @@ export const useFetcher = (url: string | null, options: RequestInit) => {
       if (response.ok) {
         const result = await response.json();
         setData(result);
-        console.log(result, "result");
+        setStatus(response.ok);
       } else {
         throw new Error(response.statusText);
       }
@@ -34,5 +35,5 @@ export const useFetcher = (url: string | null, options: RequestInit) => {
     fetchData();
   }, [url]);
 
-  return { data, loading, error, refetch: fetchData };
+  return { data, loading, error, refetch: fetchData, status };
 };

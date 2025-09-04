@@ -138,23 +138,22 @@ const NavigationLinks = ({ navbarCategories }: { navbarCategories: any }) => {
   const t = useTranslations("navigation");
 
   return (
-    <NavigationMenu className="hidden lg:block">
+    <NavigationMenu className="hidden lg:block ">
       <NavigationMenuList>
         {navbarCategories && navbarCategories.length > 0 ? (
           navbarCategories.map((link: any) => {
             const hasChildren = link?.children && link?.children?.length > 0;
             return hasChildren ? (
-              <NavigationMenuItem key={link?.name}>
+              <NavigationMenuItem key={link?.name} className="relative">
                 <NavigationMenuTrigger
                   className="cursor-pointer hover:bg-transparent hover:text-red-color"
                   chevronDownIcon={true}
-                  className="relative"
                 >
                   <Link href={`/category/${link?.slug}/${link?.id}`}>
                     {link?.name}
                   </Link>
                 </NavigationMenuTrigger>
-                <NavigationMenuContent navigationMenuContent={true}>
+                <NavigationMenuContent>
                   <ul className="grid gap-1 p-1">
                     {link?.children?.map((nested: any, index: number) => (
                       <li key={index}>
