@@ -386,7 +386,7 @@
     "gold-membership-desc": "خصومات ونقاط حصرية بانتظارك"
   },
   "search": {
-    "search-placeholder": "البحث عن المنتجات...",
+    "search-placeholder": "البحث عن المنتجات بالاسم او الباركود...",
     "no-results": "لم يتم العثور على نتائج",
     "search-results": "نتائج البحث",
     "suggested-words": "كلمات مقترحة",

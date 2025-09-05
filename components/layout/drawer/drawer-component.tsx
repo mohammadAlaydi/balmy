@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
+import { Drawer, DrawerContent, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer";
 import { Button } from "@/components/ui/button";
 import { X } from "lucide-react";
 import { usePathname } from "next/navigation";
@@ -33,6 +33,7 @@ export default function DrawerComponent({
   return (
     <div className={`${containerClassName}`}>
       <Drawer open={open} onOpenChange={setOpen} direction={direction}>
+        <DrawerTitle className="hidden"></DrawerTitle>
         <DrawerTrigger asChild>{trigger}</DrawerTrigger>
         <DrawerContent>
           <div className="relative h-full">

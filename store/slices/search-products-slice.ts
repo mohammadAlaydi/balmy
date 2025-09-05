@@ -20,6 +20,7 @@ const searchProductsSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(getSearchProducts.fulfilled, (state, action) => {
       state.products = action.payload;
+      state.isLoading = false
     });
     builder.addCase(getSearchProducts.pending, (state) => {
       state.isLoading = true;

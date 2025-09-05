@@ -6,11 +6,11 @@ import OrderSummary from "@/features/cart/order-Summary";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { getCartProducts } from "@/store/slices/cart-slice";
-import Loading from "@/components/loading";
 
 export default function CartPage() {
+
   const dispatch = useDispatch();
-  const { data, isLoading } = useSelector((state: any) => state.cart);
+  const { data } = useSelector((state: any) => state.cart);
 
   useEffect(() => {
     dispatch(getCartProducts() as any);

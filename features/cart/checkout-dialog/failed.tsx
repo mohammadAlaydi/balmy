@@ -7,23 +7,14 @@ interface ActionConfig {
 }
 
 interface RequestFailedProps {
-  /** The title displayed in the error dialog */
   title?: string;
-  /** The error message displayed below the title */
   message?: string;
-  /** Primary action button configuration */
   primaryAction?: ActionConfig;
-  /** Secondary action button configuration */
   secondaryAction?: ActionConfig;
-  /** Whether to show the "Go Home" button */
   showHomeButton?: boolean;
 }
 
-/**
- * RequestFailed component displays an error state with customizable actions
- * Used for showing failed requests, errors, or unsuccessful operations
- */
-export default function RequestFailed({
+export default function Failed({
   title = "Request Failed",
   message = "We're sorry, but your request was unsuccessful. Please try again.",
   primaryAction,
@@ -41,31 +32,26 @@ export default function RequestFailed({
   };
 
   const handleGoHome = () => {
-    router.push("/");
+    router.push("/home");
   };
 
   return (
     <div className="flex flex-col items-center justify-center bg-background px-4 py-12 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-md text-center">
         <CircleXIcon className="mx-auto h-12 w-12 text-red-500" />
-
         <h1 className="mt-4 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
           {title}
         </h1>
-
         <p className="mt-4 text-muted-foreground">{message}</p>
-
         <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-center">
           <Button onClick={handleTryAgain}>
             {primaryAction?.label || "Try Again"}
           </Button>
-
           {secondaryAction && (
             <Button variant="outline" onClick={handleSecondaryAction}>
               {secondaryAction.label}
             </Button>
           )}
-
           {showHomeButton && (
             <Button variant="ghost" onClick={handleGoHome}>
               Go Home

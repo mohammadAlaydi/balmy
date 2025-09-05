@@ -1,16 +1,14 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
 import { defineStepper } from "@/components/ui/stepper";
-import ShippingForm from "./shipping-form";
-import { useTranslations } from "next-intl";
 import z from "zod";
-import { formSchema } from "../schemas";
+import { formSchema } from "./schemas";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useFetcher } from "@/app/helpers/fetchers";
 import { Form } from "@/components/ui/form";
+import ShippingForm from "./shipping-form";
+import { useDispatch, useSelector } from "react-redux";
+import { saveOrder } from "@/store/slices/cart-slice";
 
 const { Stepper } = defineStepper(
   { id: "shipping", title: "Shipping" },
@@ -46,48 +44,18 @@ const defaultFormValues: CheckoutFormValues = {
   shipping_method: "flatrate_flatrate" as const,
   same_as_billing: true,
 };
+
 export default function Checkout() {
   const form = useForm<CheckoutFormValues>({
     resolver: zodResolver(formSchema),
     mode: "onChange",
     defaultValues: defaultFormValues,
   });
-  const API_KEY = process.env.NEXT_PUBLIC_API_URL;
-  const [options, setOptions] = React.useState<RequestInit>({
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${localStorage?.getItem("token")}`,
-    },
-    body: JSON.stringify(defaultFormValues),
-  });
-
-  const { data, loading, error, refetch, status } = useFetcher(
-    `${API_KEY}/v1/customer/checkout/save-order`,
-    options
-  );
-  const sameAsBilling = form.watch("same_as_billing");
-  // Auto-fill shipping when "same as billing" is checked
-  React.useEffect(() => {
-    if (sameAsBilling) {
-      const billingValues = form.getValues("billing");
-      form.setValue("shipping.address1", billingValues.address1);
-      form.setValue("shipping.city", billingValues.city);
-      form.setValue("shipping.phone", billingValues.phone);
-    }
-  }, [sameAsBilling, form]);
+  const dispatch = useDispatch()
+  const { saveOrderData, isLoading, status } = useSelector((state: any) => state.cart)
   const onSubmit = (values: CheckoutFormValues) => {
-    console.log(values);
-    setOptions({
-      ...options,
-      body: JSON.stringify(values),
-    });
+    dispatch(saveOrder(values) as any)
   };
-  useEffect(() => {
-    if (options.body !== JSON.stringify(defaultFormValues)) {
-      refetch();
-    }
-  }, [options]);
   return (
     // <div className="w-full xl:w-2/3 mx-auto">
     //   {/* <Stepper.Provider className="space-y-4 my-5">
@@ -140,7 +108,7 @@ export default function Checkout() {
         noValidate
         className="flex flex-col gap-4 mt-5 "
       >
-        <ShippingForm form={form} isSubmitting={loading} status={status} data={data || null}   />
+        <ShippingForm form={form} isSubmitting={isLoading} status={status} data={saveOrderData || null} />
       </form>
     </Form>
   );

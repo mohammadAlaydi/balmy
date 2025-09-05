@@ -386,7 +386,7 @@
     "gold-membership-desc": "Exclusive discounts and points await you"
   },
   "search": {
-    "search-placeholder": "Search for products...",
+    "search-placeholder": "Search for products with name or barcode...",
     "no-results": "No results found",
     "search-results": "Search Results",
     "suggested-words": "Suggested Words",

@@ -16,8 +16,8 @@ export default function CartProduct({
   maxHeight?: string;
   data: any;
 }) {
+
   const [count, setCount] = React.useState(1);
-  console.log(data, "😁😁😁😁");
   const dispatch = useAppDispatch();
 
   return (

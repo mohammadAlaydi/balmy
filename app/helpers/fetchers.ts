@@ -20,6 +20,10 @@ export const useFetcher = (url: string | null, options: RequestInit) => {
         const result = await response.json();
         setData(result);
         setStatus(response.ok);
+      }
+      else if (response.ok == false) {
+        setStatus(false)
+
       } else {
         throw new Error(response.statusText);
       }

@@ -4,6 +4,7 @@ import { SuccessProps } from "@/types/types";
 import { ORDER_INFO_LABELS, SUCCESS_MESSAGES } from "@/static-data/static-data";
 
 export default function Success({ data }: SuccessProps) {
+  
   const { order } = data.data;
 
   const orderInfoItems = [
@@ -52,7 +53,7 @@ function OrderInfoSection({ orderInfoItems }: OrderInfoSectionProps) {
   return (
     <div className="bg-gray-100 dark:bg-gray-800 px-6 py-4 border-t border-gray-200 dark:border-gray-700 flex flex-col gap-4">
       {orderInfoItems.map((item, index) => (
-        <div className="flex justify-between gap-3 items-center">
+        <div className="flex justify-between gap-3 items-center" key={index}>
           <p className="text-gray-900 dark:text-gray-50 font-medium">
             {item.value}
           </p>

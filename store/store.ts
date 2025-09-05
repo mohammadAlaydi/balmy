@@ -4,6 +4,8 @@ import { cartReducer } from "./slices/cart-slice";
 import authReducer from './slices/auth-slice';
 import { searchProductsReducer } from "./slices/search-products-slice";
 import { productDetailsReducer } from "./slices/product-details-slice";
+import { categoryProductsSliceReducer } from "./slices/category-products-slice";
+import { categoriesSliceReducer } from "./slices/categories-slice";
 
 export const store = configureStore({
   reducer: {
@@ -11,6 +13,8 @@ export const store = configureStore({
     cart: cartReducer,
     searchProducts: searchProductsReducer,
     productDetails: productDetailsReducer,
+    categories : categoriesSliceReducer,
+    categoryProducts : categoryProductsSliceReducer
   },
   // Enable Redux DevTools in development
   devTools: process.env.NODE_ENV !== 'production',

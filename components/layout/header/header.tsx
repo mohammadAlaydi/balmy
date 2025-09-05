@@ -47,6 +47,8 @@ import { MdLanguage } from "react-icons/md";
 import { usePathname, useRouter } from "next/navigation";
 import Loading from "@/components/loading";
 import { useTranslations } from "next-intl";
+import { useDispatch, useSelector } from "react-redux";
+import { getCategories } from "@/store/slices/categories-slice";
 
 // Components
 const TopBar = () => {
@@ -318,27 +320,15 @@ const MobileMenu = ({
 };
 
 export default function Header() {
-  const API_KEY = process.env.NEXT_PUBLIC_API_URL;
-  const [token, setToken] = useState<string | null>(null);
 
-  // Get token from localStorage after component mounts (client-side only)
+  const dispatch = useDispatch()
+  const categories = useSelector((state: any) => state.categories);
+  const loading = useSelector((state: any) => state.categories.loading);
+
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      setToken(localStorage.getItem("token"));
-    }
+    dispatch(getCategories() as any)
   }, []);
 
-  const { data: categoriesData, loading } = useFetcher(
-    token ? `${API_KEY}/v1/categories` : null,
-    {
-      method: "GET",
-      headers: {
-        Authorization: token ? `Bearer ${token}` : "",
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-    }
-  );
   const router = useRouter();
   const pathname = usePathname();
   const currentLocale = pathname.split("/")[1];
@@ -366,7 +356,7 @@ export default function Header() {
       <div className="flex justify-between items-center gap-3 py-5 px-3 lg:px-5 shadow-[0px_6px_20px_rgba(149,157,165,0.1)] transition-shadow duration-200">
         <ActionIcons languageItems={languageItems} />
         <NavigationLinks
-          navbarCategories={(categoriesData as any)?.categories || []}
+          navbarCategories={(categories as any)?.categories?.categories || []}
         />
         <Logo />
         <MobileMenu languageItems={languageItems} />

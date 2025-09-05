@@ -7,7 +7,7 @@
   --font-family-cairo: var(--font-cairo), system-ui, sans-serif;
 }
 body {
-  font-family: var(--font-cairo), system-ui, sans-serif;
+  font-family: var(--font-cairo), system-ui, sans-serif !important;
 }
 
 /* Custom color utilities */

@@ -12,7 +12,7 @@ import { motion } from "framer-motion";
 import DrawerComponent from "./layout/drawer/drawer-component";
 import QuickProductDetails from "./quick-product-details";
 import { useAppDispatch } from "@/store/hooks";
-import { addToCart } from "@/store/slices/cart-slice";
+import { addToCart, getCartProducts } from "@/store/slices/cart-slice";
 import { getProductDetails } from "@/store/slices/product-details-slice";
 import { useSelector } from "react-redux";
 import { useTranslations } from "next-intl";
@@ -21,6 +21,7 @@ import { FaRegEye } from "react-icons/fa";
 import { ProductCardProps } from "@/types/types";
 import { getCurrentMainImage, getHoverImage } from "@/static-data/static-data";
 import { PuffLoader } from "react-spinners";
+import ZeroQuantity from "./zero-quantity";
 
 export default function ProductCard({
   product,
@@ -46,8 +47,7 @@ export default function ProductCard({
 
   const handleAddToFavorites = () => {
     toast.success(
-      `${t("added-to-favorites")} ${product?.name || t("product")} - ${
-        product?.sku || ""
+      `${t("added-to-favorites")} ${product?.name || t("product")} - ${product?.sku || ""
       }`,
       {
         duration: 3000,
@@ -58,6 +58,7 @@ export default function ProductCard({
 
   const handleAddToCart = () => {
     dispatch(addToCart({ productId: product.id }));
+
   };
 
   const handleViewProduct = () => {
@@ -77,25 +78,25 @@ export default function ProductCard({
 
   return (
     <Card
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      className={`product-card shadow-none hover:shadow-[0px_6px_20px_rgba(149,157,165,0.1)] py-0 h-fit gap-0 group relative rounded-t-lg ${
-        cardColSpan || "col-span-6  xl:col-span-2"
-      } border border-gray-200 rounded-lg`}
+      onMouseEnter={() => product?.in_stock ? setIsHovered(true) : undefined}
+      onMouseLeave={() => product?.in_stock ? setIsHovered(false) : undefined}
+      className={`product-card shadow-none hover:shadow-[0px_6px_20px_rgba(149,157,165,0.1)] py-0 h-fit gap-0 ${product?.in_stock ? "group" : ""} relative rounded-t-lg ${cardColSpan || "col-span-6  xl:col-span-2"
+        } border border-gray-200 hover:border-red-color rounded-lg`}
     >
+      {!product?.in_stock && <ZeroQuantity />}
       <CardHeader className="p-0 relative group overflow-hidden rounded-t-lg gap-0">
         <motion.div
           initial={{ x: 10, opacity: 0 }}
           animate={
             isHovered
               ? {
-                  x: 0,
-                  opacity: 1,
-                }
+                x: 0,
+                opacity: 1,
+              }
               : {
-                  x: 10,
-                  opacity: 0,
-                }
+                x: 10,
+                opacity: 0,
+              }
           }
           transition={{
             duration: 0.3,
@@ -105,9 +106,8 @@ export default function ProductCard({
         >
           <div className="absolute top-2 ltr:left-2 rtl:right-2 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
             <IoHeartCircle
-              className={`text-3xl cursor-pointer ${
-                product?.featured ? "text-black" : "text-white"
-              } drop-shadow-lg hidden md:flex`}
+              className={`text-3xl cursor-pointer ${product?.featured ? "text-black" : "text-white"
+                } drop-shadow-lg hidden md:flex`}
               onClick={handleAddToFavorites}
             />
             <DrawerComponent
@@ -144,9 +144,8 @@ export default function ProductCard({
             width={224}
             height={224}
             src={hoverImageUrl}
-            alt={`${product?.name || t("product")} hover - ${
-              product?.sku || ""
-            }`}
+            alt={`${product?.name || t("product")} hover - ${product?.sku || ""
+              }`}
             className="absolute inset-0 rounded-t-lg w-full h-full aspect-square object-cover transition-all duration-300 opacity-0 group-hover:opacity-100"
           />
         )}
@@ -156,13 +155,13 @@ export default function ProductCard({
           animate={
             isHovered
               ? {
-                  y: 0,
-                  opacity: 1,
-                }
+                y: 0,
+                opacity: 1,
+              }
               : {
-                  y: 10,
-                  opacity: 0,
-                }
+                y: 10,
+                opacity: 0,
+              }
           }
           transition={{
             duration: 0.3,
@@ -207,9 +206,8 @@ export default function ProductCard({
         {/* Stock status */}
         <div className="flex justify-between gap-1 items-center">
           <p
-            className={`text-xs md:text-sm mb-2 ${
-              isInStock ? "text-green-600" : "text-red-color"
-            }`}
+            className={`text-xs md:text-sm mb-2 ${isInStock ? "text-green-600" : "text-red-color"
+              }`}
           >
             {isInStock ? "متوفر" : "غير متوفر"}
           </p>
@@ -235,12 +233,11 @@ export default function ProductCard({
                     alt={`${product?.name || t("product")} ${t(
                       "variant-image"
                     )} ${index + 1}`}
-                    className={`cursor-pointer transition-all duration-200 rounded-full h-[32px] w-[32px] ${
-                      selectedVariantIndex === index ||
+                    className={`cursor-pointer transition-all duration-200 rounded-full h-[32px] w-[32px] ${selectedVariantIndex === index ||
                       selectedVariantIndex === null
-                        ? "ring-2 ring-gray-300 scale-110"
-                        : "hover:scale-105"
-                    }`}
+                      ? "ring-2 ring-gray-300 scale-110"
+                      : "hover:scale-105"
+                      }`}
                     onClick={() => handleVariantSelect(index)}
                   />
                 </div>

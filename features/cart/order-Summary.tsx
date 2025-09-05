@@ -2,14 +2,16 @@
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTrigger, DialogTitle } from "@/components/ui/dialog";
 import { Form } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import React, { useState, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import Checkout from "./cart-dialogs/checkout";
 import { useTranslations } from "next-intl";
+import Checkout from "./checkout-dialog/checkout";
+import { useDispatch, useSelector } from "react-redux";
+import { getCartProducts, resetStatus } from "@/store/slices/cart-slice";
+import { useEffect } from "react";
 
 interface CouponFormData {
   coupon: string;
@@ -24,6 +26,8 @@ interface CartItem {
 
 export default function OrderSummary({ data }: { data: any }) {
   const t = useTranslations("cart");
+  const dispatch = useDispatch()
+  const { status } = useSelector((state: any) => state.cart)
 
   const form = useForm<CouponFormData>({
     defaultValues: {
@@ -31,7 +35,11 @@ export default function OrderSummary({ data }: { data: any }) {
     },
   });
 
-  // Calculate totals
+  useEffect(() => {
+    if (status == null) {
+      dispatch(getCartProducts() as any)
+    }
+  }, [status])
 
   const onSubmit = (data: CouponFormData) => {
     if (!data.coupon.trim()) {
@@ -119,17 +127,15 @@ export default function OrderSummary({ data }: { data: any }) {
         </div>
       </div>
       {/* Checkout Button */}
-      <Dialog>
-        <DialogTrigger>
-          <Button className="w-full bg-black text-white hover:bg-gray-800 transition-colors py-3 text-base font-semibold">
-            {t("proceed-to-checkout")}
-          </Button>
+      <Dialog onOpenChange={() => dispatch(resetStatus())}>
+        <DialogTitle className="hidden"></DialogTitle>
+        <DialogTrigger className="w-full bg-black text-white hover:bg-gray-800 transition-colors py-2 cursor-pointer text-base font-semibold rounded-md">
+          {t("proceed-to-checkout")}
         </DialogTrigger>
         <DialogContent>
           <Checkout />
         </DialogContent>
       </Dialog>
-
       {/* Additional Info */}
       <div className="text-sm  text-gray-500 text-center">
         {t("free-shipping-over")}

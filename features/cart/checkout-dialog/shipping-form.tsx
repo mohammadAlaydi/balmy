@@ -1,6 +1,5 @@
 "use client";
 
-import * as React from "react";
 import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import LabelAndInput from "@/components/label-and-input";
@@ -10,7 +9,6 @@ import SectionTitle from "@/components/section-title";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { PuffLoader } from "react-spinners";
-import { useEffect } from "react";
 import Success from "./success";
 import Failed from "./failed";
 
@@ -23,23 +21,18 @@ export default function ShippingForm({
   submitLabel?: string;
   isSubmitting?: boolean;
   form: any;
-  status: boolean | null;
+  status: string | null;
   data: any;
 }) {
+
   const t = useTranslations("cart");
   const tButtons = useTranslations("buttons");
 
-  useEffect(() => {
-    if (status) {
-      form.reset();
-    }
-  }, [status]);
   return (
     <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
       <Card
-        className={`w-full xl:max-w-3xl mx-auto max-h-[80vh] overflow-y-auto shadow-none ${
-          status ? "hidden" : ""
-        }`}
+        className={`w-full xl:max-w-3xl mx-auto max-h-[80vh] overflow-y-auto shadow-none ${(status == "success" || status == "failed") ? "hidden" : ""
+          }`}
       >
         <CardContent>
           {/* Billing Information */}
@@ -157,17 +150,17 @@ export default function ShippingForm({
                   {
                     value: "flatrate_flatrate",
                     label: t("normal-shipping"),
-                    customerTypeTrigger: () => {},
+                    customerTypeTrigger: () => { },
                   },
                   {
                     value: "freeshipping_freeshipping",
                     label: t("free-shipping"),
-                    customerTypeTrigger: () => {},
+                    customerTypeTrigger: () => { },
                   },
                   {
                     value: "tablerate_bestway",
                     label: t("express-shipping"),
-                    customerTypeTrigger: () => {},
+                    customerTypeTrigger: () => { },
                   },
                 ]}
                 itemClassName="justify-end"
@@ -184,17 +177,17 @@ export default function ShippingForm({
                   {
                     value: "cashondelivery",
                     label: t("cash-on-delivery"),
-                    customerTypeTrigger: () => {},
+                    customerTypeTrigger: () => { },
                   },
                   {
                     value: "creditcard",
                     label: t("credit-card"),
-                    customerTypeTrigger: () => {},
+                    customerTypeTrigger: () => { },
                   },
                   {
                     value: "paypal",
                     label: t("paypal"),
-                    customerTypeTrigger: () => {},
+                    customerTypeTrigger: () => { },
                   },
                 ]}
                 itemClassName="justify-end"
@@ -213,8 +206,8 @@ export default function ShippingForm({
           </Button>
         </CardContent>
       </Card>
-      {status && <Success data={data} />}
-      {status != null && status === false && <Failed />}
+      {(status == "success") && <Success data={data} />}
+      {(status === "failed") && <Failed />}
     </motion.div>
   );
 }

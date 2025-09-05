@@ -4,41 +4,27 @@ import { useFetcher } from "@/app/helpers/fetchers";
 import Loading from "@/components/loading";
 import PagePadding from "@/components/page-padding";
 import ProductCard from "@/components/product-card";
+import { getCategoryProducts } from "@/store/slices/category-products-slice";
 import { use, useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function CategoryPage({
   params,
 }: {
   params: Promise<{ slug: string[] }>;
 }) {
-  const API_KEY = process.env.NEXT_PUBLIC_API_URL;
   const { slug } = use(params);
   const [categorySlug, categoryId] = slug;
-  const [token, setToken] = useState<string | null>(null);
-  const isLoading = useSelector((state: any) => state.productDetails.isLoading);
+  const categoryProducts = useSelector((state: any) => state.categoryProducts)
+  const isLoading = useSelector((state: any) => state.categoryProducts.isLoading)
+  const dispatch = useDispatch()
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      setToken(localStorage.getItem("token"));
+    if (categoryId) {
+      dispatch(getCategoryProducts({ categoryId }))
     }
-  }, []);
+  }, [dispatch, categoryId]);
 
-  const {
-    data: categoryData,
-    loading,
-    error,
-  } = useFetcher(
-    token ? `${API_KEY}/v1/category-products/${categoryId}` : null,
-    {
-      method: "GET",
-      headers: {
-        Authorization: token ? `Bearer ${token}` : "",
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-    }
-  );
 
   if (isLoading) {
     return <Loading fullScreen={true} variant="spinner" size="xl" />;
@@ -46,7 +32,7 @@ export default function CategoryPage({
 
   return (
     <PagePadding containerClassName="grid grid-cols-12 gap-2 md:gap-3 xl:gap-5 flex-wrap min-h-[65vh]">
-      {categoryData?.data?.map((product: any, index: number) => (
+      {categoryProducts?.products?.data?.map((product: any, index: number) => (
         <ProductCard key={index} product={product} />
       ))}
     </PagePadding>
