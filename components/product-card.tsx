@@ -32,7 +32,7 @@ export default function ProductCard({
   >(null);
   const [isHovered, setIsHovered] = useState(false);
   const [isAddingToCart, setIsAddingToCart] = useState(false);
-
+  const [choosenVarianrID, setChoosenVarianrID] = useState(null)
   const dispatch = useAppDispatch();
   const t = useTranslations("products");
 
@@ -56,11 +56,10 @@ export default function ProductCard({
     );
   };
 
-  const handleAddToCart = () => {
-    dispatch(addToCart({ productId: product.id }));
+  const handleAddToCart = (id: string | number) => {
+    dispatch(addToCart({ productId: id }));
 
   };
-
   const handleViewProduct = () => {
     dispatch(getProductDetails({ id: product.id }));
   };
@@ -173,10 +172,10 @@ export default function ProductCard({
           <Button
             onClick={() => {
               setIsAddingToCart(true);
-              handleAddToCart();
+              handleAddToCart(product?.variants ? choosenVarianrID || product?.variants[0].id : product.id);
             }}
             disabled={isAddingToCart}
-            className="rounded-none bg-black/85 text-white w-full rounded-full"
+            className="bg-black/85 text-white w-full rounded-full"
           >
             {isAddingToCart ? (
               <PuffLoader color="#ffffff" size={30} />
@@ -219,10 +218,10 @@ export default function ProductCard({
         {/* Variant images and price */}
         <div className="flex justify-between gap-1 items-center">
           {product?.variants && product.variants.length > 0 ? (
-            <div className="flex items-center gap-3 hidden md:flex transition-all duration-300">
+            <div className="items-center gap-3 hidden md:flex transition-all duration-300">
               {/* Variant images */}
               {product.variants.slice(0, 3).map((variant, index) => (
-                <div key={variant.id} className="relative mb-3">
+                <div key={variant.id} className="relative mb-3" onClick={() => { setChoosenVarianrID(variant?.id) }}>
                   <Image
                     width={32}
                     height={32}
@@ -249,7 +248,7 @@ export default function ProductCard({
               )}
             </div>
           ) : (
-            <div className="flex justify-between items-center gap-3 w-full hidden md:flex">
+            <div className="justify-between items-center gap-3 w-full hidden md:flex">
               <div className="relative mb-3">
                 <Image
                   width={32}

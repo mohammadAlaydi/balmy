@@ -84,13 +84,14 @@ const cartSlice = createSlice({
   name: "cart",
   initialState: {
     data: [],
+    increaseOrDecreaseQTYResponse: {},
     saveOrderData: {},
     isLoading: false,
     error: null,
     status: null,
   },
   reducers: {
-     resetStatus: (state) => {
+    resetStatus: (state) => {
       state.status = null;
     },
   },
@@ -113,6 +114,7 @@ const cartSlice = createSlice({
       state.isLoading = true;
     });
     builder.addCase(addToCart.fulfilled, (state, action) => {
+      state.increaseOrDecreaseQTYResponse = action.payload
       state.isLoading = false;
     });
     builder.addCase(addToCart.rejected, (state: any, action) => {

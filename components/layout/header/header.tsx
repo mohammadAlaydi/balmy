@@ -32,8 +32,7 @@ import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/dialog";
 import SearchComponent from "@/components/search-component";
 import QuickCart from "@/components/quick-cart";
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import { useFetcher } from "@/app/helpers/fetchers";
+import { useEffect } from "react";
 import {
   DropdownMenu,
   DropdownMenuSeparator,
@@ -52,6 +51,7 @@ import { getCategories } from "@/store/slices/categories-slice";
 
 // Components
 const TopBar = () => {
+
   const t = useTranslations("contact");
 
   return (
@@ -99,11 +99,7 @@ const ActionIcons = ({
         <Link href="/favorites">
           <FaRegHeart className="text-xl cursor-pointer hidden lg:block" />
         </Link>
-        <DrawerComponent
-          trigger={
-            <MdOutlineShoppingCart className="cursor-pointer hidden lg:block text-black text-xl" />
-          }
-        >
+        <DrawerComponent trigger={<MdOutlineShoppingCart className="cursor-pointer hidden lg:block text-black text-xl" />}>
           <QuickCart />
         </DrawerComponent>
         <DropdownMenu>
@@ -137,25 +133,25 @@ const ActionIcons = ({
 };
 
 const NavigationLinks = ({ navbarCategories }: { navbarCategories: any }) => {
+
   const t = useTranslations("navigation");
 
   return (
-    <NavigationMenu className="hidden lg:block ">
+    <NavigationMenu viewport={false} className="hidden lg:block">
       <NavigationMenuList>
         {navbarCategories && navbarCategories.length > 0 ? (
           navbarCategories.map((link: any) => {
             const hasChildren = link?.children && link?.children?.length > 0;
             return hasChildren ? (
-              <NavigationMenuItem key={link?.name} className="relative">
+              <NavigationMenuItem key={link?.name}>
                 <NavigationMenuTrigger
                   className="cursor-pointer hover:bg-transparent hover:text-red-color"
-                  chevronDownIcon={true}
                 >
                   <Link href={`/category/${link?.slug}/${link?.id}`}>
                     {link?.name}
                   </Link>
                 </NavigationMenuTrigger>
-                <NavigationMenuContent>
+                <NavigationMenuContent className="overflow-hidden min-w-[100px]">
                   <ul className="grid gap-1 p-1">
                     {link?.children?.map((nested: any, index: number) => (
                       <li key={index}>
@@ -173,7 +169,6 @@ const NavigationLinks = ({ navbarCategories }: { navbarCategories: any }) => {
                       </li>
                     ))}
                   </ul>
-                  <NavigationMenuIndicator />
                 </NavigationMenuContent>
               </NavigationMenuItem>
             ) : (
