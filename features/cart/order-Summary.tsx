@@ -90,7 +90,7 @@ export default function OrderSummary({ data }: { data: any }) {
             variant="outline"
             className="text-sm  bg-transparent text-gray-color border-gray-200"
           >
-            {t("subtotal")} ({data?.data?.items?.length}{" "}
+            {data?.data?.items?.length}{" "}
             {data?.data?.items?.length === 1 ? t("item") : t("items")})
           </Badge>
         </div>

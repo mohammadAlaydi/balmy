@@ -12,7 +12,7 @@ import { motion } from "framer-motion";
 import DrawerComponent from "./layout/drawer/drawer-component";
 import QuickProductDetails from "./quick-product-details";
 import { useAppDispatch } from "@/store/hooks";
-import { addToCart, getCartProducts } from "@/store/slices/cart-slice";
+import { addToCart } from "@/store/slices/cart-slice";
 import { getProductDetails } from "@/store/slices/product-details-slice";
 import { useSelector } from "react-redux";
 import { useTranslations } from "next-intl";
@@ -129,7 +129,6 @@ export default function ProductCard({
             New
           </Badge>
         )}
-
         <Image
           width={224}
           height={224}
@@ -137,7 +136,6 @@ export default function ProductCard({
           alt={`${product?.name || t("product")} - ${product?.sku || ""}`}
           className="rounded-t-lg w-full h-full aspect-square transition-all duration-300"
         />
-
         {hoverImageUrl !== baseImageUrl && (
           <Image
             width={224}
@@ -217,7 +215,7 @@ export default function ProductCard({
         </div>
         {/* Variant images and price */}
         <div className="flex justify-between gap-1 items-center">
-          {product?.variants && product.variants.length > 0 ? (
+          {product?.variants && product.variants.length > 3 ? (
             <div className="items-center gap-3 hidden md:flex transition-all duration-300">
               {/* Variant images */}
               {product.variants.slice(0, 3).map((variant, index) => (
@@ -233,7 +231,7 @@ export default function ProductCard({
                       "variant-image"
                     )} ${index + 1}`}
                     className={`cursor-pointer transition-all duration-200 rounded-full h-[32px] w-[32px] ${selectedVariantIndex === index ||
-                      selectedVariantIndex === null
+                      selectedVariantIndex === null && index == 0
                       ? "ring-2 ring-gray-300 scale-110"
                       : "hover:scale-105"
                       }`}
@@ -248,22 +246,24 @@ export default function ProductCard({
               )}
             </div>
           ) : (
-            <div className="justify-between items-center gap-3 w-full hidden md:flex">
-              <div className="relative mb-3">
-                <Image
-                  width={32}
-                  height={32}
-                  src={
-                    product?.base_image?.original_image_url ||
-                    "/assets/images/no-image.webp"
-                  }
-                  alt={`${product?.name || t("product")} ${t(
-                    "variant-image"
-                  )} 1`}
-                  className="cursor-pointer transition-all duration-200 rounded-full ring-2 ring-gray-300 scale-110 h-[32px] w-[32px]"
-                />
+            product?.variants?.map((variant, index) =>
+              <div key={index} className="justify-between items-center gap-3 w-full hidden md:flex">
+                <div className="relative mb-3">
+                  <Image
+                    width={32}
+                    height={32}
+                    src={
+                      variant?.base_image?.original_image_url ||
+                      "/assets/images/no-image.webp"
+                    }
+                    alt={`${product?.name || t("product")} ${t(
+                      "variant-image"
+                    )} 1`}
+                    className="cursor-pointer transition-all duration-200 rounded-full ring-2 ring-gray-300 scale-110 h-[32px] w-[32px]"
+                  />
+                </div>
               </div>
-            </div>
+            )
           )}
           {/* Price */}
           <p className="text-xs md:text-sm mb-3 text-nowrap hidden md:flex">

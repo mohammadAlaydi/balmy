@@ -4,7 +4,6 @@ import { Badge } from "@/components/ui/badge";
 import {
   NavigationMenu,
   NavigationMenuContent,
-  NavigationMenuIndicator,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
@@ -23,10 +22,8 @@ import Image from "next/image";
 import SocialMediaIcons from "@/components/social-media-icons";
 import DrawerComponent from "../drawer/drawer-component";
 import {
-  CONTACT_INFO,
   LANGUAGES,
   NAV_LINKS,
-  products,
 } from "@/static-data/static-data";
 import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/dialog";
 import SearchComponent from "@/components/search-component";
@@ -210,8 +207,10 @@ const Logo = () => (
 
 const MobileMenu = ({
   languageItems,
+  navbarCategories,
 }: {
   languageItems: { title: string; onClick: () => void; className: string }[];
+  navbarCategories: any;
 }) => {
   const t = useTranslations("navigation");
 
@@ -228,45 +227,48 @@ const MobileMenu = ({
         <h2 className="text-xl font-semibold mb-6 text-center flex-shrink-0">
           {t("menu")}
         </h2>
-        {/* Mobile Navigation Links */}
+
+        {/* ✅ Mobile Navigation Links */}
         <Accordion
-          defaultValue="item-0"
+          type="single"
+          collapsible
           className="w-full flex-1 overflow-y-auto"
         >
-          {NAV_LINKS.map((link, index) => (
-            <AccordionItem key={link.title} value={`item-${index}`}>
-              {link.links ? (
-                <AccordionTrigger className="text-left py-3 hover:bg-gray-50 rounded-md px-3">
-                  {link.title}
-                </AccordionTrigger>
+          {navbarCategories?.map((category: any, index: number) => (
+            <AccordionItem key={category.id} value={`item-${index}`}>
+              {category.children && category.children.length > 0 ? (
+                <>
+                  <AccordionTrigger className="text-left py-3 hover:bg-gray-50 rounded-md px-3">
+                    {category.name}
+                  </AccordionTrigger>
+                  <AccordionContent>
+                    <ul className="grid gap-1 p-1">
+                      {category.children.map((nested: any) => (
+                        <li key={nested.id}>
+                          <Link
+                            href={`/category/${nested.slug}/${nested.id}`}
+                            className="block rounded-md px-1.5 py-1 text-sm hover:bg-accent hover:text-accent-foreground"
+                          >
+                            {nested.name}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  </AccordionContent>
+                </>
               ) : (
                 <Link
-                  href={link.path!}
+                  href={`/category/${category.slug}/${category.id}`}
                   className="flex items-center py-3 px-3 hover:bg-gray-50 rounded-md text-left w-full"
                 >
-                  {link.title}
+                  {category.name}
                 </Link>
-              )}
-              {link.links && (
-                <AccordionContent>
-                  <div className="pl-4 space-y-2">
-                    {link.links.map((nested) => (
-                      <Link
-                        key={nested.path}
-                        href={nested.path}
-                        className="block py-2 px-3 hover:bg-gray-50 rounded-md text-sm text-gray-700 hover:text-gray-900 transition-colors"
-                      >
-                        {nested.title}
-                      </Link>
-                    ))}
-                  </div>
-                </AccordionContent>
               )}
             </AccordionItem>
           ))}
         </Accordion>
 
-        {/* Mobile Action Icons */}
+        {/* ✅ Mobile Action Icons */}
         <div className="pt-6 border-t border-gray-200 flex-shrink-0">
           <div className="flex items-center justify-center gap-6">
             <Link href="/search">
@@ -282,7 +284,7 @@ const MobileMenu = ({
               <DropdownMenuTrigger asChild>
                 <MdLanguage className="text-2xl cursor-pointer text-gray-600 hover:text-gray-900" />
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-40 bg-white overflow-hidden  h-fit z-50 shadow-[0px_6px_20px_rgba(149,157,165,0.1)] rounded-lg">
+              <DropdownMenuContent className="w-40 bg-white overflow-hidden h-fit z-50 shadow-[0px_6px_20px_rgba(149,157,165,0.1)] rounded-lg">
                 <DropdownMenuLabel className="p-2">
                   {t("language")}
                 </DropdownMenuLabel>
@@ -354,7 +356,7 @@ export default function Header() {
           navbarCategories={(categories as any)?.categories?.categories || []}
         />
         <Logo />
-        <MobileMenu languageItems={languageItems} />
+        <MobileMenu navbarCategories={(categories as any)?.categories?.categories || []}  languageItems={languageItems} />
       </div>
     </div>
   );

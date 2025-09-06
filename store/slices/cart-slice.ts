@@ -119,6 +119,7 @@ const cartSlice = createSlice({
     builder.addCase(addToCart.fulfilled, (state, action) => {
       state.increaseOrDecreaseLoading = false;
       state.increaseOrDecreaseResponse = action.payload
+      state.status = "success"
     });
     builder.addCase(addToCart.rejected, (state: any, action) => {
       state.error = action.error.message || null;

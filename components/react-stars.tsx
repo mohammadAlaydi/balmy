@@ -61,7 +61,7 @@ export default function StarRating({
       edit={edit}
     />
   ) : (
-    <div className="react-stars w-full flex justify-start">
+    <div className="react-stars w-full flex rtl:justify-end ltr:justify-start">
       <ReactStars
         count={count}
         value={rating}

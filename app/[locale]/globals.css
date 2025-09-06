@@ -6,6 +6,7 @@
 @theme {
   --font-family-cairo: var(--font-cairo), system-ui, sans-serif;
 }
+
 body {
   font-family: var(--font-cairo), system-ui, sans-serif !important;
 }
@@ -39,7 +40,7 @@ body {
   direction: rtl;
 }
 
-.rtl .space-y-6 > * + * {
+.rtl .space-y-6>*+* {
   margin-top: 1.5rem;
 }
 
@@ -153,6 +154,7 @@ body {
   --gray-color: #6c757d;
   --red-color: #f02e41;
 }
+
 .dark {
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
@@ -195,6 +197,7 @@ body {
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
   }
@@ -205,12 +208,14 @@ body {
   outline-offset: 4px !important;
   background-color: white !important;
 }
+
 .swiper-pagination-bullet {
   background-color: white !important;
   opacity: 1 !important;
   width: 9px !important;
   height: 9px !important;
 }
+
 .swiper-pagination {
   display: flex;
   align-items: center;
@@ -218,10 +223,12 @@ body {
   gap: 12px;
   bottom: 20px !important;
 }
+
 .cross-body .left-section:hover img,
 .cross-body .right-section img:hover {
   scale: 1.04;
 }
+
 .cross-body .left-section img,
 .cross-body .right-section img {
   filter: brightness(70%);
@@ -238,18 +245,21 @@ body {
 .toast-with-contained-close [data-close-button] {
   display: none !important;
 }
+
 .swiper-button-prev:after,
 .swiper-rtl .swiper-button-next:after {
   color: black !important;
   font-size: 15px !important;
   font-weight: bold;
 }
+
 .swiper-button-next:after,
 .swiper-rtl .swiper-button-prev:after {
   color: black !important;
   font-size: 15px !important;
   font-weight: bold;
 }
+
 .swiper-button-next {
   background-color: white;
   border-radius: 100%;
@@ -257,6 +267,7 @@ body {
   height: 25px !important;
   padding: 20px;
 }
+
 .swiper-button-prev {
   background-color: white;
   border-radius: 100%;
@@ -274,5 +285,15 @@ body {
 @media (max-width: 640px) {
   .react-stars {
     transform: scale(0.8);
+  }
+}
+
+@media only screen and (min-width :380px) {
+  .cart-poroduct .photo {
+    @apply h-28 w-28;
+  }
+
+  .cart-poroduct .image-and-info-container {
+    @apply flex-row
   }
 }

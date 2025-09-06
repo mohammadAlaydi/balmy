@@ -6,7 +6,6 @@ import Image from "next/image";
 import { SwiperSlide } from "swiper/react";
 import { useSelector } from "react-redux";
 import { useTranslations } from "next-intl";
-
 import CarouselComponent from "./carousel-component";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
@@ -14,9 +13,9 @@ import Loading from "./loading";
 import { getCurrentMainImage } from "@/static-data/static-data";
 import { addToCart } from "@/store/slices/cart-slice";
 import { useAppDispatch } from "@/store/hooks";
-
-// Types
 import { ApiProduct } from "@/types/types";
+import LoadingSpinner from "./ui/loading-spinner";
+import { toast } from "sonner";
 
 interface QuickProductDetailsProps {
   product: ApiProduct;
@@ -34,14 +33,17 @@ const MAX_VISIBLE_VARIANTS = 3;
 export default function QuickProductDetails({
   product,
 }: QuickProductDetailsProps) {
-  const [selectedImage, setSelectedImage] = useState<number | null>(null);
+  const [selectedVariantIndex, setSelectedVariantIndex] = useState<
+    number | null
+  >(null);
+  const [choosenVarianrID, setChoosenVarianrID] = useState(null)
   const t = useTranslations("products");
   const dispatch = useAppDispatch();
 
-  const isLoading = useSelector((state: any) => state.productDetails.isLoading);
+  const { isLoading } = useSelector((state: any) => state.productDetails);
+  const { increaseOrDecreaseLoading: cartLoading, status } = useSelector((state: any) => state.cart);
   const baseImageUrl = getCurrentMainImage(product, 0);
 
-  // Early returns
   if (isLoading) {
     return <Loading fullScreen={true} variant="spinner" size="xl" />;
   }
@@ -53,15 +55,22 @@ export default function QuickProductDetails({
       </div>
     );
   }
+  const handleAddToCart = async () => {
+    const productId = product?.variants
+      ? choosenVarianrID || product?.variants[0]?.id
+      : product?.id;
 
-  // Handlers
-  const handleAddToCart = () => {
-    dispatch(addToCart({ productId: product.id }));
+    if (!productId) return;
+    await dispatch(addToCart({ productId }));
+    if (status == "success") {
+      toast.success("تم اضافة المنتج بنجاح")
+    }
+
+  };
+  const handleVariantSelect = (index: number) => {
+    setSelectedVariantIndex(index);
   };
 
-  const handleImageSelect = (index: number | null) => {
-    setSelectedImage(index);
-  };
 
   // Helper functions
   const renderProductImages = () => {
@@ -115,9 +124,8 @@ export default function QuickProductDetails({
   const renderStockAndPrice = () => (
     <div className="flex justify-between gap-2">
       <p
-        className={`text-xs md:text-sm ${
-          product.in_stock ? "text-green-600" : "text-red-color"
-        }`}
+        className={`text-xs md:text-sm ${product.in_stock ? "text-green-600" : "text-red-color"
+          }`}
       >
         {product.in_stock ? "متوفر" : "غير متوفر"}
       </p>
@@ -135,33 +143,62 @@ export default function QuickProductDetails({
         <h2 className="font-[600] md:font-[650] md:text-sm text-xs">
           اختر لون المنتج
         </h2>
-        <div className="flex items-center gap-2 my-1 transition-all duration-300">
+        <div className="flex items-center gap-3 my-1 transition-all duration-300">
           {/* Base image option */}
-          <div className="relative mb-3">
-            <Image
-              width={IMAGE_SIZES.thumbnail.width}
-              height={IMAGE_SIZES.thumbnail.height}
-              src={baseImageUrl || IMAGE_SIZES.fallback}
-              alt={`${product.name} base`}
-              className={`cursor-pointer transition-all duration-200 rounded-full ${
-                selectedImage === null
-                  ? "ring-2 ring-gray-400 scale-110"
-                  : "hover:scale-105"
-              }`}
-              onClick={() => handleImageSelect(null)}
-            />
-          </div>
-          {product.variants.length > MAX_VISIBLE_VARIANTS && (
-            <Badge className="bg-transparent text-primary w-[32px] h-[32px] flex items-center justify-center shadow-[inset_0_2px_4px_rgba(0,0,0,0.1)] text-xs">
-              +{product.variants.length - MAX_VISIBLE_VARIANTS}
-            </Badge>
+          {product?.variants && product.variants.length > 3 ? (
+            <div className="items-center gap-3 hidden md:flex transition-all duration-300">
+              {/* Variant images */}
+              {product.variants.slice(0, 3).map((variant, index) => (
+                <div key={variant.id} className="relative mb-3" onClick={() => { setChoosenVarianrID(variant?.id) }}>
+                  <Image
+                    width={32}
+                    height={32}
+                    src={
+                      variant.base_image?.original_image_url ||
+                      "/assets/images/no-image.webp"
+                    }
+                    alt={`${product?.name || t("product")} ${t(
+                      "variant-image"
+                    )} ${index + 1}`}
+                    className={`cursor-pointer transition-all duration-200 rounded-full h-[32px] w-[32px] ${selectedVariantIndex === index ||
+                      selectedVariantIndex === null && index == 0
+                      ? "ring-2 ring-gray-300 scale-110"
+                      : "hover:scale-105"
+                      }`}
+                    onClick={() => handleVariantSelect(index)}
+                  />
+                </div>
+              ))}
+              {product.variants.length > 3 && (
+                <Badge className="bg-transparent text-primary  mb-3 ring-2 ring-gray-300 scale-110 w-[32px] h-[32px]  p-0 flex items-center rounded-full justify-center shadow-[inset_0_2px_4px_rgba(0,0,0,0.1)] text-xs">
+                  +{product.variants.length - 3}
+                </Badge>
+              )}
+            </div>
+          ) : (
+            product?.variants?.map((variant, index) =>
+              <div key={index} className="justify-between items-center gap-3 w-full hidden md:flex">
+                <div className="relative mb-3">
+                  <Image
+                    width={32}
+                    height={32}
+                    src={
+                      variant?.base_image?.original_image_url ||
+                      "/assets/images/no-image.webp"
+                    }
+                    alt={`${product?.name || t("product")} ${t(
+                      "variant-image"
+                    )} 1`}
+                    className="cursor-pointer transition-all duration-200 rounded-full ring-2 ring-gray-300 scale-110 h-[32px] w-[32px]"
+                  />
+                </div>
+              </div>
+            )
           )}
         </div>
       </div>
     );
   };
-
-
 
   const renderActionButtons = () => (
     <>
@@ -170,7 +207,7 @@ export default function QuickProductDetails({
           onClick={handleAddToCart}
           className="text-nowrap md:text-sm text-xs bg-black text-white px-4 py-2 rounded-md hover:bg-white border border-black hover:text-black transition-all duration-300"
         >
-          اضف للسلة
+          {cartLoading ? <LoadingSpinner size="sm" /> : "إضف للسلة"}
         </Button>
         <Link
           href="/favourits"

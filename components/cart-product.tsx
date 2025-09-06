@@ -41,7 +41,7 @@ export default function CartProduct({ maxHeight, data }: CartProductProps) {
 
   return (
     <div
-      className={`col-span-12 lg:col-span-7 xl:col-span-8 flex flex-col gap-3 overflow-y-auto items-end ${
+      className={`cart-poroduct col-span-12 lg:col-span-7 xl:col-span-8 flex flex-col gap-3 overflow-y-auto items-end ${
         maxHeight || "h-full"
       }`}
     >
@@ -61,19 +61,19 @@ export default function CartProduct({ maxHeight, data }: CartProductProps) {
               className="flex flex-col gap-3 w-full rounded-md border border-gray-200 p-4"
             >
               {/* Product Info */}
-              <div className="flex gap-3 w-full justify-end">
+              <div className="image-and-info-container flex flex-col-reverse gap-3 w-full justify-end">
                 <div className="flex flex-col gap-2 flex-1">
                   <p className="text-sm text-gray-color ltr:text-end rtl:text-start">
                     {product?.category}
                   </p>
-                  <h2 className="text-sm font-bold ltr:text-end rtl:text-start">
+                  <h2 className="text-sm font-bold ltr:text-start rtl:text-end">
                     {product?.name}
                   </h2>
                   <ReactStars
                     rating={product?.reviews?.total || 0}
                     edit={false}
                   />
-                  <p className="text-sm text-gray-color ltr:text-end rtl:text-start">
+                  <p className="text-sm text-gray-color ltr:text-start rtl:text-end">
                     {product?.price} ر.س
                   </p>
                 </div>
@@ -82,7 +82,7 @@ export default function CartProduct({ maxHeight, data }: CartProductProps) {
                   alt={product?.name}
                   width={120}
                   height={120}
-                  className="rounded-md object-cover h-26 w-26 border border-red-color"
+                  className="photo rounded-md object-cover w-full aspect-squareh-28 sm:w-28  border border-red-color"
                 />
               </div>
 
