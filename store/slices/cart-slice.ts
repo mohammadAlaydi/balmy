@@ -26,6 +26,7 @@ const addToCart = createAsyncThunk(
           method: "POST",
           headers: {
             accept: "application/json",
+            "Content-Type": "application/json",
             Authorization: `Bearer ${localStorage?.getItem("token")}`,
           },
           body: JSON.stringify({
@@ -80,12 +81,14 @@ const saveOrder = createAsyncThunk("save-order", async (payload: any) => {
   const data = await response.json();
   return data;
 })
+
 const cartSlice = createSlice({
   name: "cart",
   initialState: {
     data: [],
-    increaseOrDecreaseQTYResponse: {},
     saveOrderData: {},
+    increaseOrDecreaseLoading : false,
+    increaseOrDecreaseResponse : {},
     isLoading: false,
     error: null,
     status: null,
@@ -111,15 +114,15 @@ const cartSlice = createSlice({
 
     // Add to cart
     builder.addCase(addToCart.pending, (state) => {
-      state.isLoading = true;
+      state.increaseOrDecreaseLoading = true;
     });
     builder.addCase(addToCart.fulfilled, (state, action) => {
-      state.increaseOrDecreaseQTYResponse = action.payload
-      state.isLoading = false;
+      state.increaseOrDecreaseLoading = false;
+      state.increaseOrDecreaseResponse = action.payload
     });
     builder.addCase(addToCart.rejected, (state: any, action) => {
       state.error = action.error.message || null;
-      state.isLoading = false;
+      state.increaseOrDecreaseLoading = false;
     });
 
     // Remove from cart

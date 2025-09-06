@@ -42,6 +42,7 @@ export default function DeleteProductComponent({
       console.error("Failed to remove product from cart:", error);
     }
   };
+  
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger>

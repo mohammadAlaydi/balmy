@@ -10,6 +10,7 @@ import SectionTitle from "./section-title";
 import Loading from "./loading";
 
 export default function QuickCart() {
+
   const t = useTranslations("cart");
   const dispatch = useDispatch();
   const { data, isLoading } = useSelector((state: any) => state.cart);
@@ -18,9 +19,10 @@ export default function QuickCart() {
     dispatch(getCartProducts() as any);
   }, [dispatch]);
 
-  if (isLoading) {
+  if (isLoading ) {
     return <Loading fullScreen={true} variant="spinner" size="xl" />;
   }
+  
   return (
     <div className="flex flex-col gap-4 items-center justify-between h-full ">
       <div className="flex flex-col gap-4 flex-1 h-full w-full">
