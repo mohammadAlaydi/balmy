@@ -11,39 +11,7 @@ interface Category {
   link: string;
 }
 
-export default function Categories() {
-  let MY_CATEGORIES: Category[] = [
-    {
-      src: "/assets/images/category-01.webp",
-      h2: " النعال العربي",
-      p: "أصالة وأناقة مضمونة",
-      link: "/products/slippers",
-    },
-    {
-      src: "/assets/images/category-01.webp",
-      h2: "الزي السعودي",
-      p: "شموخ في التفاصيل",
-      link: "/products/saudi-dress",
-    },
-    {
-      src: "/assets/images/category-01.webp",
-      h2: "الملابس الشتوية",
-      p: "دفء بأسلوب راقٍ",
-      link: "/products/winter-supplies",
-    },
-    {
-      src: "/assets/images/category-01.webp",
-      h2: "الأحذية الرياضية",
-      p: "فخامة تليق بك",
-      link: "/products/sports-shoes",
-    },
-    {
-      src: "/assets/images/category-01.webp",
-      h2: "الاكسسوارات",
-      p: "لمسات تكمل طلتك",
-      link: "/products/accessories",
-    },
-  ];
+export default function Categories({ categories }: { categories: any }) {
   return (
     <CarouselComponent
       spaceBetween={20}
@@ -67,28 +35,23 @@ export default function Categories() {
         1201: { slidesPerView: 5, spaceBetween: 20 },
       }}
     >
-      {MY_CATEGORIES?.map((category: Category, index: number) => (
+      {categories && categories?.length > 0 && categories?.map((category: Category, index: number) => (
         <SwiperSlide key={index}>
-          <Link href={`${category.link}`}>
+          <Link href={`${category.link}`} prefetch={true}>
             <div className="overflow-hidden rounded-full cursor-pointer">
               <Image
-                src={category.src}
+                src={category?.image_url}
                 width={250}
                 height={250}
                 className="rounded-full m-auto transform hover:scale-[1.04] transition-all duration-1000"
-                alt={category.h2}
+                alt={category.name}
               />
             </div>
           </Link>
           <div>
             <h2 className="text-center text-lg md:text-xl font-semibold text-primary mt-2">
-              {category.h2}
+              {category.name}
             </h2>
-            {category.p && (
-              <p className="text-sm md:text-md text-center text-gray-color mt-1 text-nowrap">
-                {category.p}
-              </p>
-            )}
           </div>
         </SwiperSlide>
       ))}

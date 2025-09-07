@@ -63,7 +63,7 @@ export default function ProtectedRoute({ children, fallback }: ProtectedRoutePro
             </p>
           </CardHeader>
           <CardContent className="text-center">
-            <Link href={`/${locale}/auth/login`}>
+            <Link href={`/${locale}/auth/login`} prefetch={true}>
               <Button className="w-full bg-black hover:bg-black/85 text-white px-8 py-3">
                 Log In
               </Button>

@@ -45,7 +45,7 @@ const LocationSection = () => {
     <div className="col-span-12 lg:col-span-6 flex flex-col gap-2">
       <SectionTitle title={tFooter("how-to-reach-us")} titleStyle="text-white/65" />
       <p className="text-sm text-white">{t("address")}</p>
-              <Link href={`tel:${t("phone-number")}`} className="text-sm text-white">
+              <Link href={`tel:${t("phone-number")}`} prefetch={true} className="text-sm text-white">
           {t("phone-number")}
       </Link>
     </div>
@@ -108,6 +108,7 @@ const FooterAccordion = ({
               <Link
                 href={item.path}
                 key={item.title}
+                prefetch={true}
                 className="text-sm text-white text-end rtl:text-right ltr:text-left rtl:hover:mr-3 ltr:hover:ml-3 transition-all duration-300"
               >
                 {t(item?.title)}

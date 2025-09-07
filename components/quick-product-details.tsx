@@ -211,6 +211,7 @@ export default function QuickProductDetails({
         </Button>
         <Link
           href="/favourits"
+          prefetch={true}
           className="text-nowrap md:text-sm text-xs bg-black text-white px-4 py-2 rounded-md hover:bg-white border border-black hover:text-black transition-all duration-300"
         >
           الذهاب للمفضلة
@@ -218,6 +219,7 @@ export default function QuickProductDetails({
       </div>
       <Link
         href="/cart"
+        prefetch={true}
         className="text-nowrap md:text-sm text-xs bg-black text-white px-4 py-2 rounded-md hover:bg-white border border-black hover:text-black transition-all duration-300 text-center w-full"
       >
         عربة التسوق

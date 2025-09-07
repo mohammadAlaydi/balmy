@@ -6,9 +6,11 @@ import { searchProductsReducer } from "./slices/search-products-slice";
 import { productDetailsReducer } from "./slices/product-details-slice";
 import { categoryProductsSliceReducer } from "./slices/category-products-slice";
 import { categoriesSliceReducer } from "./slices/categories-slice";
+import { homeSliceReducer } from "./slices/home-slice";
 
 export const store = configureStore({
   reducer: {
+    home : homeSliceReducer,
     auth: authReducer,
     cart: cartReducer,
     searchProducts: searchProductsReducer,

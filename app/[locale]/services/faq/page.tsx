@@ -14,13 +14,13 @@ export default function FAQPage() {
           <h1 className="text-3xl font-bold text-gray-900 mb-8 text-center">
             الأسئلة الأكثر شيوعاً (FAQ)
           </h1>
-          
+
           <div className="space-y-6 text-right">
             <section>
               <h2 className="text-xl font-semibold text-gray-800 mb-4">
                 المنتجات والطلبات
               </h2>
-              
+
               <div className="space-y-4">
                 <div className="border border-gray-200 rounded-lg">
                   <details className="group">
@@ -76,7 +76,7 @@ export default function FAQPage() {
               <h2 className="text-xl font-semibold text-gray-800 mb-4">
                 الشحن والتسليم
               </h2>
-              
+
               <div className="space-y-4">
                 <div className="border border-gray-200 rounded-lg">
                   <details className="group">
@@ -132,7 +132,7 @@ export default function FAQPage() {
               <h2 className="text-xl font-semibold text-gray-800 mb-4">
                 الإرجاع والاستبدال
               </h2>
-              
+
               <div className="space-y-4">
                 <div className="border border-gray-200 rounded-lg">
                   <details className="group">
@@ -172,7 +172,7 @@ export default function FAQPage() {
               <h2 className="text-xl font-semibold text-gray-800 mb-4">
                 الحساب والخصوصية
               </h2>
-              
+
               <div className="space-y-4">
                 <div className="border border-gray-200 rounded-lg">
                   <details className="group">
@@ -212,7 +212,7 @@ export default function FAQPage() {
               <h2 className="text-xl font-semibold text-gray-800 mb-4">
                 الخدمة والدعم
               </h2>
-              
+
               <div className="space-y-4">
                 <div className="border border-gray-200 rounded-lg">
                   <details className="group">

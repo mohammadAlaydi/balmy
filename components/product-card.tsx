@@ -22,6 +22,7 @@ import { ProductCardProps } from "@/types/types";
 import { getCurrentMainImage, getHoverImage } from "@/static-data/static-data";
 import { PuffLoader } from "react-spinners";
 import ZeroQuantity from "./zero-quantity";
+import { FaCartArrowDown } from "react-icons/fa";
 
 export default function ProductCard({
   product,
@@ -106,7 +107,7 @@ export default function ProductCard({
           <div className="absolute top-2 ltr:left-2 rtl:right-2 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
             <IoHeartCircle
               className={`text-3xl cursor-pointer ${product?.featured ? "text-black" : "text-white"
-                } drop-shadow-lg hidden md:flex`}
+                } drop-shadow-lg`}
               onClick={handleAddToFavorites}
             />
             <DrawerComponent
@@ -146,7 +147,6 @@ export default function ProductCard({
             className="absolute inset-0 rounded-t-lg w-full h-full aspect-square object-cover transition-all duration-300 opacity-0 group-hover:opacity-100"
           />
         )}
-
         <motion.div
           initial={{ y: 10, opacity: 0 }}
           animate={
@@ -165,7 +165,7 @@ export default function ProductCard({
             ease: "easeOut",
             delay: 0.1,
           }}
-          className="absolute bottom-3 left-[5%] w-[90%] mx-auto hidden md:flex"
+          className="absolute bottom-1 md:bottom-3 left-[5%] w-[90%] mx-auto"
         >
           <Button
             onClick={() => {
@@ -173,18 +173,20 @@ export default function ProductCard({
               handleAddToCart(product?.variants ? choosenVarianrID || product?.variants[0].id : product.id);
             }}
             disabled={isAddingToCart}
-            className="bg-black/85 text-white w-full rounded-full"
+            className="bg-transparent hover:bg-transparent md:hover:bg-black/85 md:bg-black/85 text-white w-full rounded-full"
           >
             {isAddingToCart ? (
               <PuffLoader color="#ffffff" size={30} />
             ) : (
               <div className="flex items-center gap-2">
-                {t("add-to-cart")}{" "}
-                <MdOutlineShoppingCart className="text-xl " />
+                <span className="hidden md:flex"> {t("add-to-cart")}{" "}</span>
+                <FaCartArrowDown className="text-3xl text-black md:text-white flex md:hidden" />
+                <MdOutlineShoppingCart className="text-xl text-white hidden md:flex" />
               </div>
             )}
           </Button>
         </motion.div>
+
       </CardHeader>
       <CardContent className="px-2 pt-4 flex flex-col gap-2 justify-start">
         {/* Name and SKU */}
@@ -203,7 +205,7 @@ export default function ProductCard({
         {/* Stock status */}
         <div className="flex justify-between gap-1 items-center">
           <p
-            className={`text-xs md:text-sm mb-2 ${isInStock ? "text-green-600" : "text-red-color"
+            className={`text-xs md:text-sm mb-2 text-nowrap text-ellipsis overflow-hidden whitespace-nowrap ${isInStock ? "text-green-600" : "text-red-color"
               }`}
           >
             {isInStock ? "متوفر" : "غير متوفر"}

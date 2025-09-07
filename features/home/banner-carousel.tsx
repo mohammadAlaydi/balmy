@@ -3,7 +3,7 @@ import React from "react";
 import { SwiperSlide } from "swiper/react";
 import Image from "next/image";
 
-export default function BannerCarousel() {
+export default function BannerCarousel({ sliders }: { sliders: any }) {
   return (
     <CarouselComponent
       containerClassName="w-full h-[40vh] sm:h-[50vh] md:h-[55vh] lg:h-[65vh] xl:h-[70vh]"
@@ -12,11 +12,11 @@ export default function BannerCarousel() {
       pagination={true}
       autoPlay={false}
     >
-      {Array.from({ length: 3 }).map((_, index) => (
+      {sliders && sliders?.length > 0 && sliders?.map((slider: any, index: number) => (
         <SwiperSlide key={index}>
           <Image
-            src={"/assets/images/banner.jpg"}
-            alt="carousel"
+            src={slider?.image_url}
+            alt={slider?.title}
             fill
             className="object-cover"
           />

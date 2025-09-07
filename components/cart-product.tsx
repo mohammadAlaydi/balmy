@@ -17,7 +17,6 @@ interface CartProductProps {
 }
 
 export default function CartProduct({ maxHeight, data }: CartProductProps) {
-  const totalQTY = 3;
   const dispatch = useAppDispatch();
   const { increaseOrDecreaseResponse } = useSelector(
     (state: any) => state.cart
@@ -41,9 +40,8 @@ export default function CartProduct({ maxHeight, data }: CartProductProps) {
 
   return (
     <div
-      className={`cart-poroduct col-span-12 lg:col-span-7 xl:col-span-8 flex flex-col gap-3 overflow-y-auto items-end ${
-        maxHeight || "h-full"
-      }`}
+      className={`cart-poroduct col-span-12 lg:col-span-7 xl:col-span-8 flex flex-col gap-3 overflow-y-auto items-end ${maxHeight || "h-full"
+        }`}
     >
       {data?.data?.items?.length > 0 &&
         data.data.items.map((item: any) => {
@@ -92,32 +90,27 @@ export default function CartProduct({ maxHeight, data }: CartProductProps) {
                 <div className="flex items-center gap-2">
                   {/* Increase */}
                   <FaPlus
-                    className={`text-2xl cursor-pointer border border-gray-200 rounded-full p-1 ${
-                      isLoading || quantity === totalQTY ? "text-gray-400" : ""
-                    }`}
+                    className={`text-2xl cursor-pointer border border-gray-200 rounded-full p-1 ${isLoading ? "text-gray-400" : ""
+                      }`}
                     onClick={() => {
                       if (!isLoading) {
-                        if (quantity < totalQTY) {
-                          handleUpdateQuantity(product?.id, 1);
-                        } else {
-                          toast.success("لقد وصلت الحد الأقصى من هذا المنتج");
-                        }
+                        handleUpdateQuantity(product?.id, 1);
+                      } else {
+                        toast.success("لقد وصلت الحد الأقصى من هذا المنتج");
                       }
                     }}
                   />
                   {/* Quantity */}
                   <span
-                    className={`text-base font-[550] ${
-                      isLoading ? "text-gray-400" : ""
-                    }`}
+                    className={`text-base font-[550] ${isLoading ? "text-gray-400" : ""
+                      }`}
                   >
                     {quantity}
                   </span>
                   {/* Decrease */}
                   <TiMinus
-                    className={`text-2xl cursor-pointer border border-gray-200 rounded-full p-1 ${
-                      isLoading || quantity === 1 ? "text-gray-400" : ""
-                    }`}
+                    className={`text-2xl cursor-pointer border border-gray-200 rounded-full p-1 ${isLoading || quantity === 1 ? "text-gray-400" : ""
+                      }`}
                     onClick={() => {
                       if (!isLoading && quantity > 1) {
                         handleUpdateQuantity(product?.id, -1);

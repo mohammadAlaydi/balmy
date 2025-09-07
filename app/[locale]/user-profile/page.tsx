@@ -236,9 +236,8 @@ export default function ProfilePage() {
                       containerColSpan=""
                       labelColSpan=""
                       inputColSpan=""
-                      inputStyle={`w-full ${
-                        isRTL ? "text-right rtl" : "text-left ltr"
-                      }`}
+                      inputStyle={`w-full ${isRTL ? "text-right rtl" : "text-left ltr"
+                        }`}
                     />
 
                     {/* Country */}
@@ -265,9 +264,8 @@ export default function ProfilePage() {
                       containerColSpan=""
                       labelColSpan=""
                       selectColSpan=""
-                      selectStyle={`${
-                        isRTL ? "text-right rtl" : "text-left ltr"
-                      }`}
+                      selectStyle={`${isRTL ? "text-right rtl" : "text-left ltr"
+                        }`}
                     />
                   </div>
 

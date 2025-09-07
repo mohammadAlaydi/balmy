@@ -90,10 +90,10 @@ const ActionIcons = ({
             <SearchComponent maxHeight="max-h-[85vh]" />
           </DialogContent>
         </Dialog>
-        <Link href="/user-profile" className="hidden lg:block">
+        <Link href="/user-profile" className="hidden lg:block" prefetch={true}>
           <FaRegUser className="text-xl cursor-pointer text-black" />
         </Link>
-        <Link href="/favorites">
+        <Link href="/favorites" prefetch={true}>
           <FaRegHeart className="text-xl cursor-pointer hidden lg:block" />
         </Link>
         <DrawerComponent trigger={<MdOutlineShoppingCart className="cursor-pointer hidden lg:block text-black text-xl" />}>
@@ -122,7 +122,7 @@ const ActionIcons = ({
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-      <Link href="/user-profile" className="block lg:hidden">
+      <Link href="/user-profile" className="block lg:hidden" prefetch={true}>
         <FaRegUser className="text-xl cursor-pointer text-black" />
       </Link>
     </>
@@ -144,7 +144,7 @@ const NavigationLinks = ({ navbarCategories }: { navbarCategories: any }) => {
                 <NavigationMenuTrigger
                   className="cursor-pointer hover:bg-transparent hover:text-red-color"
                 >
-                  <Link href={`/category/${link?.slug}/${link?.id}`}>
+                  <Link href={`/category/${link?.slug}/${link?.id}`} prefetch={true}>
                     {link?.name}
                   </Link>
                 </NavigationMenuTrigger>
@@ -158,6 +158,7 @@ const NavigationLinks = ({ navbarCategories }: { navbarCategories: any }) => {
                         >
                           <Link
                             href={`/category/${link?.slug}/${nested?.slug}`}
+                            prefetch={true}
                             className="block rounded-md px-1.5 py-1 text-sm hover:bg-accent hover:text-accent-foreground text-end"
                           >
                             {nested.name}
@@ -173,6 +174,7 @@ const NavigationLinks = ({ navbarCategories }: { navbarCategories: any }) => {
                 <NavigationMenuLink asChild>
                   <Link
                     href={`/category/${link?.slug}/${link?.id}`}
+                    prefetch={true}
                     className="cursor-pointer hover:bg-transparent hover:text-red-color px-4 py-2 text-sm font-medium"
                   >
                     {link?.name}
@@ -194,7 +196,7 @@ const NavigationLinks = ({ navbarCategories }: { navbarCategories: any }) => {
 };
 
 const Logo = () => (
-  <Link href="/home">
+  <Link href="/home" prefetch={true}>
     <Image
       src="/assets/images/logo.svg"
       alt="logo"
@@ -246,6 +248,7 @@ const MobileMenu = ({
                       {category.children.map((nested: any) => (
                         <li key={nested.id}>
                           <Link
+                            prefetch={true}
                             href={`/category/${nested.slug}/${nested.id}`}
                             className="block rounded-md px-1.5 py-1 text-sm hover:bg-accent hover:text-accent-foreground"
                           >
@@ -258,6 +261,7 @@ const MobileMenu = ({
                 </>
               ) : (
                 <Link
+                  prefetch={true}
                   href={`/category/${category.slug}/${category.id}`}
                   className="flex items-center py-3 px-3 hover:bg-gray-50 rounded-md text-left w-full"
                 >
@@ -271,13 +275,13 @@ const MobileMenu = ({
         {/* ✅ Mobile Action Icons */}
         <div className="pt-6 border-t border-gray-200 flex-shrink-0">
           <div className="flex items-center justify-center gap-6">
-            <Link href="/search">
+            <Link href="/search" prefetch={true}>
               <IoSearch className="text-xl cursor-pointer text-gray-600 hover:text-gray-900" />
             </Link>
-            <Link href="/user-profile">
+            <Link href="/user-profile" prefetch={true}>
               <FaRegUser className="text-xl cursor-pointer text-gray-600 hover:text-gray-900" />
             </Link>
-            <Link href="/favorites">
+            <Link href="/favorites" prefetch={true}>
               <FaRegHeart className="text-xl cursor-pointer text-gray-600 hover:text-gray-900" />
             </Link>
             <DropdownMenu>
@@ -356,7 +360,7 @@ export default function Header() {
           navbarCategories={(categories as any)?.categories?.categories || []}
         />
         <Logo />
-        <MobileMenu navbarCategories={(categories as any)?.categories?.categories || []}  languageItems={languageItems} />
+        <MobileMenu navbarCategories={(categories as any)?.categories?.categories || []} languageItems={languageItems} />
       </div>
     </div>
   );

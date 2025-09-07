@@ -65,13 +65,13 @@ export default function UserMenu() {
           </div>
           <DropdownMenuSeparator />
           <DropdownMenuItem asChild>
-            <Link href={`/${locale}/auth/login`} className="flex items-center">
+            <Link href={`/${locale}/auth/login`} className="flex items-center" prefetch={true}>
               <FaSignInAlt className="mr-2 h-4 w-4" />
               <span>Sign In</span>
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
-            <Link href={`/${locale}/profile`} className="flex items-center">
+            <Link href={`/${locale}/profile`} className="flex items-center" prefetch={true}>
               <FaUser className="mr-2 h-4 w-4" />
               <span>Profile</span>
             </Link>
@@ -107,7 +107,7 @@ export default function UserMenu() {
         </div>
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild>
-          <Link href={`/${locale}/profile`} className="flex items-center">
+          <Link href={`/${locale}/profile`} className="flex items-center" prefetch={true}>
             <FaUser className="mr-2 h-4 w-4" />
             <span>Profile</span>
           </Link>
