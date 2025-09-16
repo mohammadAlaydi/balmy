@@ -1,71 +1,82 @@
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://envaglo-erp.envaglo.net';
 
 class ApiService {
   private baseURL: string;
-  private useProxy: boolean = true; // Force proxy mode by default
 
   constructor() {
     this.baseURL = API_BASE_URL || '';
     console.log('API Service initialized with base URL:', this.baseURL);
-    console.log('API Service: Using proxy mode by default');
   }
 
   private async request<T>(
     endpoint: string,
     options: RequestInit = {}
   ): Promise<T> {
-    // Skip direct API call and go straight to proxy
-    console.log('Skipping direct API call, using proxy directly');
-    return this.requestViaProxy(endpoint, options);
-  }
-
-  private async requestViaProxy<T>(
-    endpoint: string,
-    options: RequestInit = {}
-  ): Promise<T> {
-    console.log(`Making proxy request for: ${endpoint}`);
-    console.log('Proxy request options:', options);
+    console.log(`Making direct API request to: ${this.baseURL}${endpoint}`);
     
     try {
-      const proxyUrl = '/api/proxy';
-      const proxyBody = {
-        endpoint,
+      const url = `${this.baseURL}${endpoint}`;
+      const requestOptions: RequestInit = {
         method: options.method || 'GET',
-        data: options.body ? JSON.parse(options.body as string) : undefined,
-        headers: options.headers,
+        headers: {
+          'Accept': 'application/json',
+          ...options.headers,
+        },
+        ...options,
       };
 
-      console.log('Proxy request body:', proxyBody);
-
-      const response = await fetch(proxyUrl, {
-        method: 'POST',
-        headers: {
+      // Add Content-Type only for requests with body
+      if (requestOptions.body) {
+        requestOptions.headers = {
+          ...requestOptions.headers,
           'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(proxyBody),
-      });
+        };
+      }
 
-      console.log('Proxy response status:', response.status);
-      console.log('Proxy response headers:', response.headers);
+      console.log('Request URL:', url);
+
+      const response = await fetch(url, requestOptions);
+
+      console.log('Response status:', response.status);
 
       if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        console.error('Proxy error response:', errorData);
-        throw new Error(errorData.message || `Proxy request failed with status: ${response.status}`);
+        let errorMessage = `API request failed with status: ${response.status}`;
+        
+        try {
+          const errorData = await response.json();
+          console.error('API error response:', errorData);
+          
+          // Handle different error response formats
+          if (errorData.message) {
+            errorMessage = errorData.message;
+          } else if (errorData.error) {
+            errorMessage = errorData.error;
+          } else if (errorData.detail) {
+            errorMessage = errorData.detail;
+          } else if (typeof errorData === 'string') {
+            errorMessage = errorData;
+          }
+        } catch (parseError) {
+          // If we can't parse the error response, use status text
+          errorMessage = response.statusText || errorMessage;
+        }
+        
+        throw new Error(errorMessage);
       }
 
       const data = await response.json();
-      console.log('Proxy response data:', data);
+      console.log('API response data:', data);
       
-      if (data.success) {
-        return data.data;
-      } else {
-        console.error('Proxy returned success: false:', data);
-        throw new Error(data.message || 'Proxy request failed');
-      }
+      return data;
     } catch (error: any) {
-      console.error(`Proxy request failed for ${endpoint}:`, error);
-      throw new Error(`Proxy request failed: ${error.message}`);
+      console.error(`API request failed for ${endpoint}:`, error);
+      
+      // Handle network errors
+      if (error.name === 'TypeError' && error.message.includes('fetch')) {
+        throw new Error('Network error: Unable to connect to the server');
+      }
+      
+      throw new Error(`API request failed: ${error.message}`);
     }
   }
 
@@ -78,7 +89,7 @@ class ApiService {
     phone?: string;
   }) {
     console.log('Registering customer with data:', { ...data, password: '[HIDDEN]' });
-    return this.request('/api/v1/customer/register', {
+    return this.request('/v1/customer/register', {
       method: 'POST',
       body: JSON.stringify(data),
     });
@@ -87,7 +98,7 @@ class ApiService {
   // Customer Login
   async loginCustomer(data: { email: string; password: string }) {
     console.log('Logging in customer with email:', data.email);
-    return this.request('/api/v1/customer/login', {
+    return this.request('/v1/customer/login', {
       method: 'POST',
       body: JSON.stringify(data),
     });
@@ -96,7 +107,7 @@ class ApiService {
   // Customer Logout
   async logoutCustomer() {
     console.log('Logging out customer');
-    return this.request('/api/v1/customer/logout', {
+    return this.request('/v1/customer/logout', {
       method: 'POST',
     });
   }
@@ -104,13 +115,13 @@ class ApiService {
   // Get Customer Profile
   async getCustomerProfile() {
     console.log('Getting customer profile');
-    return this.request('/api/v1/customer/get');
+    return this.request('/v1/customer/get');
   }
 
   // Forgot Password
   async forgotPassword(email: string) {
     console.log('Sending forgot password request for email:', email);
-    return this.request('/api/v1/customer/forgot-password', {
+    return this.request('/v1/customer/forgot-password', {
       method: 'POST',
       body: JSON.stringify({ email }),
     });
@@ -119,7 +130,7 @@ class ApiService {
   // Reset Password
   async resetPassword(data: { email: string; code: string; newPassword: string }) {
     console.log('Resetting password for email:', data.email);
-    return this.request('/api/v1/customer/reset-password', {
+    return this.request('/v1/customer/reset-password', {
       method: 'POST',
       body: JSON.stringify(data),
     });
@@ -135,20 +146,38 @@ class ApiService {
     address: string;
   }>) {
     console.log('Updating customer profile with data:', data);
-    return this.request('/api/v1/customer/profile', {
+    return this.request('/v1/customer/profile', {
       method: 'POST',
       body: JSON.stringify(data),
     });
+  }
+
+  // Get Products
+  async getProducts() {
+    console.log('Fetching products...');
+    return this.request('/v1/products');
+  }
+
+  // Get Product by ID
+  async getProductById(id: number) {
+    console.log(`Fetching product with ID: ${id}`);
+    return this.request(`/v1/products/${id}`);
+  }
+
+  // Get Product Details by ID (new endpoint)
+  async getProductDetails(id: number) {
+    console.log(`Fetching product details with ID: ${id}`);
+    return this.request(`/v1/product-details/${id}`);
   }
 
   // Test connectivity method
   async testConnectivity() {
     console.log('Testing API connectivity...');
     try {
-      const response = await fetch(`${this.baseURL}/api/v1/customer/get`, {
+      const response = await fetch(`${this.baseURL}/v1/customer/get`, {
         method: 'GET',
         headers: {
-          'Content-Type': 'application/json',
+          'Accept': 'application/json',
         },
       });
       
@@ -156,27 +185,15 @@ class ApiService {
         success: true,
         status: response.status,
         statusText: response.statusText,
-        url: `${this.baseURL}/api/v1/customer/get`
+        url: `${this.baseURL}/v1/customer/get`
       };
     } catch (error: any) {
       return {
         success: false,
         error: error.message,
-        url: `${this.baseURL}/api/v1/customer/get`
+        url: `${this.baseURL}/v1/customer/get`
       };
     }
-  }
-
-  // Force proxy mode
-  forceProxyMode() {
-    this.useProxy = true;
-    console.log('API Service forced to use proxy mode');
-  }
-
-  // Reset to direct mode
-  resetToDirectMode() {
-    this.useProxy = false;
-    console.log('API Service reset to direct mode');
   }
 }
 

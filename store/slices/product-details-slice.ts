@@ -5,7 +5,13 @@ const API_KEY = process.env.NEXT_PUBLIC_API_URL;
 const getProductDetails = createAsyncThunk(
   "productDetails/getProductDetails",
   async (payload: { id: string | number }) => {
-    const response = await fetch(`${API_KEY}/v1/product-details/${payload.id}`);
+    const response = await fetch(`${API_KEY}/v1/product-details/${payload.id}`,{
+       headers: {
+        Authorization: `Bearer ${localStorage?.getItem("accessToken")}`,
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    });
     const data = await response.json();
     return data;
   }

@@ -12,11 +12,13 @@ interface Category {
 }
 
 export default function Categories({ categories }: { categories: any }) {
+  console.log(categories, "❤️❤️");
+  const image_base_url = process.env.NEXT_PUBLIC_IMAGE_BASE_URL;
   return (
     <CarouselComponent
       spaceBetween={20}
       slidesPerView={1}
-      containerClassName="categories-carousel h-fit"
+      containerClassName="categories-carousel h-fit mb-5"
       breakpoints={{
         300: {
           slidesPerView: 1,
@@ -35,26 +37,38 @@ export default function Categories({ categories }: { categories: any }) {
         1201: { slidesPerView: 5, spaceBetween: 20 },
       }}
     >
-      {categories && categories?.length > 0 && categories?.map((category: Category, index: number) => (
-        <SwiperSlide key={index}>
-          <Link href={`${category.link}`} prefetch={true}>
-            <div className="overflow-hidden rounded-full cursor-pointer">
-              <Image
-                src={category?.image_url}
-                width={250}
-                height={250}
-                className="rounded-full m-auto transform hover:scale-[1.04] transition-all duration-1000"
-                alt={category.name}
-              />
-            </div>
-          </Link>
-          <div>
-            <h2 className="text-center text-lg md:text-xl font-semibold text-primary mt-2">
-              {category.name}
-            </h2>
-          </div>
-        </SwiperSlide>
-      ))}
+      {categories &&
+        categories?.length > 0 &&
+        categories?.map(
+          (category: Category, index: number) =>
+            category?.name != "Root" && (
+              <SwiperSlide key={index}>
+                <Link
+                  href={`${category.link}`}
+                  prefetch={true}
+                  className="overflow-hidden cursor-pointer"
+                >
+                  <div>
+                    <Image
+                      src={`${image_base_url}/${category?.banner_url}`}
+                      width={250}
+                      height={250}
+                      className="rounded-full m-auto transform hover:scale-[1.03] transition-all duration-1000 overflow-hidden"
+                      alt={category.name}
+                    />
+                  </div>
+                </Link>
+                <div className="flex flex-col gap-1 md:gap-3">
+                  <h2 className="text-center text-lg md:text-xl font-semibold text-primary mt-2">
+                    {category.name}
+                  </h2>
+                  <p className="text-gray-400 text-sm text-center">
+                    {category?.meta_title}
+                  </p>
+                </div>
+              </SwiperSlide>
+            )
+        )}
     </CarouselComponent>
   );
 }

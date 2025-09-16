@@ -1,9 +1,11 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import {
   NavigationMenu,
   NavigationMenuContent,
+  NavigationMenuIndicator,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
@@ -21,15 +23,22 @@ import { MdOutlineShoppingCart } from "react-icons/md";
 import Image from "next/image";
 import SocialMediaIcons from "@/components/social-media-icons";
 import DrawerComponent from "../drawer/drawer-component";
+import { CONTACT_INFO, LANGUAGES, NAV_LINKS } from "@/lib/constants";
 import {
-  LANGUAGES,
-  NAV_LINKS,
-} from "@/static-data/static-data";
-import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/dialog";
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
 import SearchComponent from "@/components/search-component";
 import QuickCart from "@/components/quick-cart";
+import UserMenu from "./user-menu";
+import { useFavourites } from "@/hooks/use-favourites";
+import { useSelector, useDispatch } from "react-redux";
+import { RootState } from "@/store/store";
+import { getCartProducts } from "@/store/slices/cart-slice";
 import Link from "next/link";
-import { useEffect } from "react";
 import {
   DropdownMenu,
   DropdownMenuSeparator,
@@ -43,13 +52,14 @@ import { MdLanguage } from "react-icons/md";
 import { usePathname, useRouter } from "next/navigation";
 import Loading from "@/components/loading";
 import { useTranslations } from "next-intl";
-import { useDispatch, useSelector } from "react-redux";
+import ClientOnly from "@/components/ui/client-only";
 import { getCategories } from "@/store/slices/categories-slice";
 
 // Components
 const TopBar = () => {
-
   const t = useTranslations("contact");
+  const tAccessibility = useTranslations("accessibility");
+  const tSearch = useTranslations("search");
 
   return (
     <div className="flex justify-center md:justify-between xl:justify-around items-center gap-5 py-0.5 px-3 lg:px-5 bg-black w-full">
@@ -77,7 +87,46 @@ const ActionIcons = ({
 }: {
   languageItems: { title: string; onClick: () => void; className: string }[];
 }) => {
+  const { getFavouritesCount, fetchFavourites } = useFavourites();
+  const favouritesCount = getFavouritesCount();
   const t = useTranslations("navigation");
+  const tSearch = useTranslations("search");
+  const dispatch = useDispatch();
+
+  // Get cart count from Redux store
+  const cartData = useSelector((state: RootState) => state.cart.data);
+  const cartCount = cartData?.data?.items?.length || 0;
+
+  // Get authentication state from Redux
+  const { isAuthenticated, user } = useSelector(
+    (state: RootState) => state.auth
+  );
+
+  // Auto-fetch favourites and cart when component mounts if user is authenticated
+  useEffect(() => {
+    // Check both Redux state and localStorage for authentication
+    const hasValidToken =
+      typeof window !== "undefined" && !!localStorage.getItem("accessToken");
+    const isReduxAuthenticated = isAuthenticated && user;
+
+    if (isReduxAuthenticated || hasValidToken) {
+      // Fetch favourites if we have none loaded
+      if (favouritesCount === 0) {
+        fetchFavourites();
+      }
+      // Fetch cart data if we have none loaded
+      if (cartCount === 0) {
+        dispatch(getCartProducts() as any);
+      }
+    }
+  }, [
+    fetchFavourites,
+    favouritesCount,
+    cartCount,
+    isAuthenticated,
+    user,
+    dispatch,
+  ]);
 
   return (
     <>
@@ -87,16 +136,36 @@ const ActionIcons = ({
             <IoSearch className="text-xl cursor-pointer" />
           </DialogTrigger>
           <DialogContent>
+            <DialogTitle className="sr-only">
+              {tSearch("search-products")}
+            </DialogTitle>
+            <DialogDescription className="sr-only">
+              {tSearch("search-description")}
+            </DialogDescription>
             <SearchComponent maxHeight="max-h-[85vh]" />
           </DialogContent>
         </Dialog>
-        <Link href="/user-profile" className="hidden lg:block" prefetch={true}>
-          <FaRegUser className="text-xl cursor-pointer text-black" />
+        <UserMenu />
+        <Link href="/favourite" className="relative hidden lg:block" prefetch={true}>
+          <FaRegHeart className="text-xl cursor-pointer" />
+          {favouritesCount > 0 && (
+            <Badge className="absolute -top-2 -right-2 h-5 w-5 p-0 text-xs flex items-center justify-center bg-red-500 text-white">
+              {favouritesCount}
+            </Badge>
+          )}
         </Link>
-        <Link href="/favorites" prefetch={true}>
-          <FaRegHeart className="text-xl cursor-pointer hidden lg:block" />
-        </Link>
-        <DrawerComponent trigger={<MdOutlineShoppingCart className="cursor-pointer hidden lg:block text-black text-xl" />}>
+        <DrawerComponent
+          trigger={
+            <div className="relative hidden lg:block">
+              <MdOutlineShoppingCart className="cursor-pointer text-black text-xl" />
+              {cartCount > 0 && (
+                <Badge className="absolute -top-2 -right-2 h-5 w-5 p-0 text-xs flex items-center justify-center bg-blue-500 text-white">
+                  {cartCount}
+                </Badge>
+              )}
+            </div>
+          }
+        >
           <QuickCart />
         </DrawerComponent>
         <DropdownMenu>
@@ -122,7 +191,7 @@ const ActionIcons = ({
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-      <Link href="/user-profile" className="block lg:hidden" prefetch={true}>
+      <Link href="/user-profile" className="block lg:hidden"  prefetch={true}>
         <FaRegUser className="text-xl cursor-pointer text-black" />
       </Link>
     </>
@@ -195,16 +264,21 @@ const NavigationLinks = ({ navbarCategories }: { navbarCategories: any }) => {
   );
 };
 
+
 const Logo = () => (
-  <Link href="/home" prefetch={true}>
-    <Image
-      src="/assets/images/logo.svg"
-      alt="logo"
-      className="lg:w-[180px]"
-      width={140}
-      height={120}
-    />
-  </Link>
+  <ClientOnly>
+    <Link href="/home" prefetch={true}>
+      <Image
+        src="/assets/images/logo.svg"
+        alt="logo"
+        className="lg:w-[180px]"
+        width={140}
+        height={120}
+        priority
+        suppressHydrationWarning
+      />
+    </Link>
+  </ClientOnly>
 );
 
 const MobileMenu = ({
@@ -322,13 +396,13 @@ const MobileMenu = ({
 
 export default function Header() {
 
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const categories = useSelector((state: any) => state.categories);
   const loading = useSelector((state: any) => state.categories.loading);
 
   useEffect(() => {
-    dispatch(getCategories() as any)
-  }, []);
+    dispatch(getCategories() as any);
+  }, [dispatch]);
 
   const router = useRouter();
   const pathname = usePathname();
@@ -360,7 +434,10 @@ export default function Header() {
           navbarCategories={(categories as any)?.categories?.categories || []}
         />
         <Logo />
-        <MobileMenu navbarCategories={(categories as any)?.categories?.categories || []} languageItems={languageItems} />
+        <MobileMenu
+          navbarCategories={(categories as any)?.categories?.categories || []}
+          languageItems={languageItems}
+        />
       </div>
     </div>
   );

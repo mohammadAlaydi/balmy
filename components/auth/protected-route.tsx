@@ -1,78 +1,77 @@
-"use client";
+'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useAuth } from '@/hooks/use-auth';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { FaLock } from 'react-icons/fa';
-import Link from 'next/link';
-import { useParams } from 'next/navigation';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/store/store';
+
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
-  fallback?: React.ReactNode;
 }
 
-export default function ProtectedRoute({ children, fallback }: ProtectedRouteProps) {
-  const { isAuthenticated, isLoading, user, accessToken } = useAuth();
+export function ProtectedRoute({ children }: ProtectedRouteProps) {
   const router = useRouter();
-  const params = useParams();
-  const locale = params.locale as string || 'ar';
-  
-  // Debug logging
-  console.log('ProtectedRoute - isAuthenticated:', isAuthenticated);
-  console.log('ProtectedRoute - isLoading:', isLoading);
-  console.log('ProtectedRoute - user:', user);
-  console.log('ProtectedRoute - accessToken:', !!accessToken);
+  const { isAuthenticated, isLoading, user } = useSelector((state: RootState) => state.auth);
+  const [isChecking, setIsChecking] = useState(true);
 
   useEffect(() => {
-    if (!isLoading && !isAuthenticated) {
-      // Redirect to login or show fallback
-      if (fallback) {
+    // Check if we're on the client side
+    if (typeof window === 'undefined') return;
+
+    const checkAuth = () => {
+      const accessToken = localStorage.getItem('accessToken');
+      
+      if (!accessToken) {
+        router.push('/auth/login');
         return;
       }
-      // You can redirect to login page here if you have one
-      // router.push('/login');
-    }
-  }, [isAuthenticated, isLoading, router, fallback]);
 
-  if (isLoading) {
+      // Basic token validation (check if it's not too short)
+      if (accessToken.length < 10) {
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('refreshToken');
+        router.push('/auth/login');
+        return;
+      }
+
+      // If we have a valid token, allow access
+      // Don't wait for Redux state to be fully loaded
+      setIsChecking(false);
+    };
+
+    checkAuth();
+  }, [router]);
+
+  // Show loading while checking authentication
+  if (isChecking) {
     return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary"></div>
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-gray-600">Checking authentication...</p>
+        </div>
       </div>
     );
   }
 
-  if (!isAuthenticated) {
-    if (fallback) {
-      return <>{fallback}</>;
-    }
+  // Check both localStorage and Redux state
+  const hasValidToken = typeof window !== 'undefined' && !!localStorage.getItem('accessToken');
+  const isReduxAuthenticated = isAuthenticated && user;
 
-    return (
-      <div className="flex items-center justify-center min-h-[65vh]">
-        <Card className="w-full max-w-md">
-          <CardHeader className="text-center">
-            <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-muted">
-              <FaLock className="h-6 w-6" />
-            </div>
-            <CardTitle>Access Denied</CardTitle>
-            <p className="text-muted-foreground">
-              You need to be logged in to access this page.
-            </p>
-          </CardHeader>
-          <CardContent className="text-center">
-            <Link href={`/${locale}/auth/login`} prefetch={true}>
-              <Button className="w-full bg-black hover:bg-black/85 text-white px-8 py-3">
-                Log In
-              </Button>
-            </Link>
-          </CardContent>
-        </Card>
-      </div>
-    );
+  // If we have a valid token but Redux isn't ready yet, still allow access
+  if (hasValidToken && !isReduxAuthenticated && !isLoading) {
+    // User has valid token but Redux state isn't loaded yet
+    // This can happen during page refresh
+    return <>{children}</>;
   }
 
+  // If not authenticated in either place, redirect to login
+  if (!hasValidToken && !isReduxAuthenticated) {
+    router.push('/auth/login');
+    return null;
+  }
+
+  // If authenticated, render the protected content
   return <>{children}</>;
 }

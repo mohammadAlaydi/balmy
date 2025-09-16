@@ -256,10 +256,10 @@ export default function FAQPage() {
                 فريق خدمة العملاء لدينا متاح لمساعدتك في أي استفسار آخر
               </p>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-5">
-                <Link href="tel:+966557665585" className="inline-block bg-gray-700 text-white px-4 py-2 rounded-md w-full">
+                <Link  prefetch={true} href="tel:+966557665585" className="inline-block bg-gray-700 text-white px-4 py-2 rounded-md w-full">
                   الهاتف : +966-55-766-5585
                 </Link>
-                <Link href="mailto:info@farada.com" className="inline-block bg-gray-700 text-white px-4 py-2 rounded-md w-full">
+                <Link  prefetch={true} href="mailto:info@farada.com" className="inline-block bg-gray-700 text-white px-4 py-2 rounded-md w-full">
                   البريد الإلكتروني : info@farada.com
                 </Link>
               </div>

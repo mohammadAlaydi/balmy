@@ -6,7 +6,7 @@ import { Dialog, DialogContent, DialogTrigger, DialogTitle } from "@/components/
 import { Form } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
-import { toast } from "sonner";
+import toast from "react-hot-toast";
 import { useTranslations } from "next-intl";
 import Checkout from "./checkout-dialog/checkout";
 import { useDispatch, useSelector } from "react-redux";

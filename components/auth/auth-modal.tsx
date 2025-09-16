@@ -121,8 +121,7 @@ export default function AuthModal({ isOpen: externalIsOpen, onOpenChange: extern
         return <LoginForm onSwitchToRegister={handleSwitchToRegister} onForgotPassword={handleSwitchToForgotPassword} />;
     }
   };
-
-  return (
+return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       {!externalIsOpen && (
         <DialogTrigger asChild>

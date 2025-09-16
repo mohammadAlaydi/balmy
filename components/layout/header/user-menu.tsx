@@ -1,28 +1,37 @@
 "use client";
 
-import { useState, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { RootState, AppDispatch } from '@/store/store';
-import { logoutUser } from '@/store/slices/auth-slice';
-import { Button } from '@/components/ui/button';
-import { FaRegUser, FaSignOutAlt, FaUser, FaHeart, FaShoppingCart, FaSignInAlt } from 'react-icons/fa';
-import Link from 'next/link';
-import { useParams } from 'next/navigation';
+import { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { RootState, AppDispatch } from "@/store/store";
+import { logoutUser } from "@/store/slices/auth-slice";
+import { Button } from "@/components/ui/button";
+import {
+  FaRegUser,
+  FaSignOutAlt,
+  FaUser,
+  FaHeart,
+  FaShoppingCart,
+  FaSignInAlt,
+} from "react-icons/fa";
+import Link from "next/link";
+import { useParams } from "next/navigation";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { toast } from 'sonner';
+} from "@/components/ui/dropdown-menu";
+import toast from "react-hot-toast";
 
 export default function UserMenu() {
   const [isMounted, setIsMounted] = useState(false);
   const dispatch = useDispatch<AppDispatch>();
-  const { user, isAuthenticated } = useSelector((state: RootState) => state.auth);
+  const { user, isAuthenticated } = useSelector(
+    (state: RootState) => state.auth
+  );
   const params = useParams();
-  const locale = params.locale as string || 'ar';
+  const locale = (params.locale as string) || "ar";
 
   useEffect(() => {
     setIsMounted(true);
@@ -31,9 +40,9 @@ export default function UserMenu() {
   const handleLogout = async () => {
     try {
       await dispatch(logoutUser());
-      toast.success('Logged out successfully');
+      toast.success("Logged out successfully");
     } catch (error) {
-      toast.error('Logout failed');
+      toast.error("Logout failed");
     }
   };
 
@@ -65,13 +74,21 @@ export default function UserMenu() {
           </div>
           <DropdownMenuSeparator />
           <DropdownMenuItem asChild>
-            <Link href={`/${locale}/auth/login`} className="flex items-center" prefetch={true}>
+            <Link
+              href="/auth/login"
+              className="flex items-center"
+              prefetch={true}
+            >
               <FaSignInAlt className="mr-2 h-4 w-4" />
               <span>Sign In</span>
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
-            <Link href={`/${locale}/profile`} className="flex items-center" prefetch={true}>
+            <Link
+              href="/user-profile"
+              className="flex items-center"
+              prefetch={true}
+            >
               <FaUser className="mr-2 h-4 w-4" />
               <span>Profile</span>
             </Link>
@@ -99,7 +116,9 @@ export default function UserMenu() {
       <DropdownMenuContent align="end" className="w-56">
         <div className="flex items-center justify-start gap-2 p-2">
           <div className="flex flex-col space-y-1 leading-none">
-            <p className="font-medium">{user?.firstName} {user?.lastName}</p>
+            <p className="font-medium">
+              {user?.firstName} {user?.lastName}
+            </p>
             <p className="w-[200px] truncate text-sm text-muted-foreground">
               {user?.email}
             </p>
@@ -107,7 +126,11 @@ export default function UserMenu() {
         </div>
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild>
-          <Link href={`/${locale}/profile`} className="flex items-center" prefetch={true}>
+          <Link
+            href="/user-profile"
+            className="flex items-center"
+            prefetch={true}
+          >
             <FaUser className="mr-2 h-4 w-4" />
             <span>Profile</span>
           </Link>

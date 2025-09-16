@@ -15,7 +15,7 @@ import { addToCart } from "@/store/slices/cart-slice";
 import { useAppDispatch } from "@/store/hooks";
 import { ApiProduct } from "@/types/types";
 import LoadingSpinner from "./ui/loading-spinner";
-import { toast } from "sonner";
+import toast from "react-hot-toast";
 
 interface QuickProductDetailsProps {
   product: ApiProduct;
@@ -36,12 +36,14 @@ export default function QuickProductDetails({
   const [selectedVariantIndex, setSelectedVariantIndex] = useState<
     number | null
   >(null);
-  const [choosenVarianrID, setChoosenVarianrID] = useState(null)
+  const [choosenVarianrID, setChoosenVarianrID] = useState(null);
   const t = useTranslations("products");
   const dispatch = useAppDispatch();
 
   const { isLoading } = useSelector((state: any) => state.productDetails);
-  const { increaseOrDecreaseLoading: cartLoading, status } = useSelector((state: any) => state.cart);
+  const { increaseOrDecreaseLoading: cartLoading, status } = useSelector(
+    (state: any) => state.cart
+  );
   const baseImageUrl = getCurrentMainImage(product, 0);
 
   if (isLoading) {
@@ -63,14 +65,12 @@ export default function QuickProductDetails({
     if (!productId) return;
     await dispatch(addToCart({ productId }));
     if (status == "success") {
-      toast.success("تم اضافة المنتج بنجاح")
+      toast.success("تم اضافة المنتج بنجاح");
     }
-
   };
   const handleVariantSelect = (index: number) => {
     setSelectedVariantIndex(index);
   };
-
 
   // Helper functions
   const renderProductImages = () => {
@@ -124,8 +124,11 @@ export default function QuickProductDetails({
   const renderStockAndPrice = () => (
     <div className="flex justify-between gap-2">
       <p
-        className={`text-xs md:text-sm ${product.in_stock ? "text-green-600" : "text-red-color"
-          }`}
+        className={`text-sm px-3 py-1 rounded ${
+          product.in_stock
+            ? "bg-green-100 text-green-800 border-green-200"
+            : "bg-red-100 text-red-800 border-red-200"
+        }`}
       >
         {product.in_stock ? "متوفر" : "غير متوفر"}
       </p>
@@ -149,7 +152,13 @@ export default function QuickProductDetails({
             <div className="items-center gap-3 hidden md:flex transition-all duration-300">
               {/* Variant images */}
               {product.variants.slice(0, 3).map((variant, index) => (
-                <div key={variant.id} className="relative mb-3" onClick={() => { setChoosenVarianrID(variant?.id) }}>
+                <div
+                  key={variant.id}
+                  className="relative mb-3"
+                  onClick={() => {
+                    setChoosenVarianrID(variant?.id);
+                  }}
+                >
                   <Image
                     width={32}
                     height={32}
@@ -160,11 +169,12 @@ export default function QuickProductDetails({
                     alt={`${product?.name || t("product")} ${t(
                       "variant-image"
                     )} ${index + 1}`}
-                    className={`cursor-pointer transition-all duration-200 rounded-full h-[32px] w-[32px] ${selectedVariantIndex === index ||
-                      selectedVariantIndex === null && index == 0
-                      ? "ring-2 ring-gray-300 scale-110"
-                      : "hover:scale-105"
-                      }`}
+                    className={`cursor-pointer transition-all duration-200 rounded-full h-[32px] w-[32px] ${
+                      selectedVariantIndex === index ||
+                      (selectedVariantIndex === null && index == 0)
+                        ? "ring-2 ring-gray-300 scale-110"
+                        : "hover:scale-105"
+                    }`}
                     onClick={() => handleVariantSelect(index)}
                   />
                 </div>
@@ -176,8 +186,11 @@ export default function QuickProductDetails({
               )}
             </div>
           ) : (
-            product?.variants?.map((variant, index) =>
-              <div key={index} className="justify-between items-center gap-3 w-full hidden md:flex">
+            product?.variants?.map((variant, index) => (
+              <div
+                key={index}
+                className="justify-between items-center gap-3 w-full hidden md:flex"
+              >
                 <div className="relative mb-3">
                   <Image
                     width={32}
@@ -193,7 +206,7 @@ export default function QuickProductDetails({
                   />
                 </div>
               </div>
-            )
+            ))
           )}
         </div>
       </div>
@@ -210,6 +223,7 @@ export default function QuickProductDetails({
           {cartLoading ? <LoadingSpinner size="sm" /> : "إضف للسلة"}
         </Button>
         <Link
+          prefetch={true}
           href="/favourits"
           prefetch={true}
           className="text-nowrap md:text-sm text-xs bg-black text-white px-4 py-2 rounded-md hover:bg-white border border-black hover:text-black transition-all duration-300"

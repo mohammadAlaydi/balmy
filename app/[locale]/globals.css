@@ -297,3 +297,6 @@ body {
     @apply flex-row
   }
 }
+.categories-carousel .swiper-wrapper {
+  padding-block: 10px !important;
+}

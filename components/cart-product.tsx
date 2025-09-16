@@ -8,21 +8,35 @@ import { addToCart } from "@/store/slices/cart-slice";
 import { useAppDispatch } from "@/store/hooks";
 import ReactStars from "./react-stars";
 import { useSelector } from "react-redux";
-import { toast } from "sonner";
-import { useState } from "react";
+import toast from "react-hot-toast";
+import { useState, useMemo } from "react";
 
 interface CartProductProps {
-  maxHeight?: string;
-  data: any;
+  product: any;
+  quantity: number | string;
+  deletedProductId :  number | string
 }
 
-export default function CartProduct({ maxHeight, data }: CartProductProps) {
+export default function CartProduct({ product, quantity , deletedProductId }: CartProductProps) {
   const dispatch = useAppDispatch();
   const { increaseOrDecreaseResponse } = useSelector(
     (state: any) => state.cart
   );
 
   const [loadingProductId, setLoadingProductId] = useState<number | null>(null);
+  const isLoading = loadingProductId === product?.id;
+
+  // Derive current quantity from Redux (live) or fall back to prop
+  const currentQty: number = useMemo(() => {
+    const fromStore = increaseOrDecreaseResponse?.data?.items?.find(
+      (i: any) => i?.additional?.product_id === product?.id
+    )?.quantity;
+
+    const candidate = fromStore ?? quantity ?? 0;
+    const num =
+      typeof candidate === "string" ? parseInt(candidate, 10) : candidate;
+    return Number.isFinite(num) && num > 0 ? num : 0;
+  }, [increaseOrDecreaseResponse, product?.id, quantity]);
 
   const handleUpdateQuantity = async (productId: number, qtyChange: number) => {
     try {
@@ -39,89 +53,75 @@ export default function CartProduct({ maxHeight, data }: CartProductProps) {
   };
 
   return (
-    <div
-      className={`cart-poroduct col-span-12 lg:col-span-7 xl:col-span-8 flex flex-col gap-3 overflow-y-auto items-end ${maxHeight || "h-full"
-        }`}
-    >
-      {data?.data?.items?.length > 0 &&
-        data.data.items.map((item: any) => {
-          const product = item?.product;
-          const quantity =
-            increaseOrDecreaseResponse?.data?.items?.find(
-              (i: any) => i.additional.product_id === product?.id
-            )?.quantity ?? 0;
+    <div className="flex flex-col gap-3 w-full rounded-md border border-gray-200 p-4">
+      {/* Product Info */}
+      <div className="image-and-info-container flex flex-col-reverse gap-3 w-full justify-end">
+        <div className="flex flex-col gap-2 flex-1">
+          <p className="text-sm text-gray-color ltr:text-end rtl:text-start">
+            {typeof product?.category === "string"
+              ? product?.category
+              : product?.category?.name ?? ""}
+          </p>
+          <h2 className="text-sm font-bold ltr:text-start rtl:text-end">
+            {product?.name}
+          </h2>
+          <ReactStars rating={product?.reviews?.total || 0} edit={false} />
+          <p className="text-sm text-gray-color ltr:text-start rtl:text-end">
+            {typeof product?.price === "number"
+              ? `${product?.price} ر.س`
+              : product?.price?.formatted ?? ""}
+          </p>
+        </div>
+        <Image
+          src={product?.base_image?.original_image_url ?? "/placeholder.png"}
+          alt={product?.name ?? "product image"}
+          width={120}
+          height={120}
+          className="photo rounded-md object-cover w-full sm:w-28 aspect-square border border-red-color"
+        />
+      </div>
 
-          const isLoading = loadingProductId === product?.id;
+      {/* Actions */}
+      <div className="flex gap-3 w-full justify-between items-center">
+        <DeleteProductComponent productId={deletedProductId} />
+        {/* increment or decrement */}
+        <div className="flex items-center gap-2">
+          {/* Increase */}
+          <FaPlus
+            className={`text-2xl cursor-pointer border border-gray-200 rounded-full p-1 ${
+              isLoading ? "text-gray-400" : ""
+            }`}
+            onClick={() => {
+              if (!isLoading) {
+                handleUpdateQuantity(product?.id, 1);
+              } else {
+                toast.error("يتم تنفيذ العملية الآن، برجاء الانتظار");
+              }
+            }}
+          />
 
-          return (
-            <div
-              key={product?.id || item?.id}
-              className="flex flex-col gap-3 w-full rounded-md border border-gray-200 p-4"
-            >
-              {/* Product Info */}
-              <div className="image-and-info-container flex flex-col-reverse gap-3 w-full justify-end">
-                <div className="flex flex-col gap-2 flex-1">
-                  <p className="text-sm text-gray-color ltr:text-end rtl:text-start">
-                    {product?.category}
-                  </p>
-                  <h2 className="text-sm font-bold ltr:text-start rtl:text-end">
-                    {product?.name}
-                  </h2>
-                  <ReactStars
-                    rating={product?.reviews?.total || 0}
-                    edit={false}
-                  />
-                  <p className="text-sm text-gray-color ltr:text-start rtl:text-end">
-                    {product?.price} ر.س
-                  </p>
-                </div>
-                <Image
-                  src={product?.base_image?.original_image_url}
-                  alt={product?.name}
-                  width={120}
-                  height={120}
-                  className="photo rounded-md object-cover w-full aspect-squareh-28 sm:w-28  border border-red-color"
-                />
-              </div>
+          {/* Quantity */}
+          <span
+            className={`text-base font-[550] ${
+              isLoading ? "text-gray-400" : ""
+            }`}
+          >
+            {currentQty}
+          </span>
 
-              {/* Actions */}
-              <div className="flex gap-3 w-full justify-between items-center">
-                <DeleteProductComponent productId={item?.id} />
-                <div className="flex items-center gap-2">
-                  {/* Increase */}
-                  <FaPlus
-                    className={`text-2xl cursor-pointer border border-gray-200 rounded-full p-1 ${isLoading ? "text-gray-400" : ""
-                      }`}
-                    onClick={() => {
-                      if (!isLoading) {
-                        handleUpdateQuantity(product?.id, 1);
-                      } else {
-                        toast.success("لقد وصلت الحد الأقصى من هذا المنتج");
-                      }
-                    }}
-                  />
-                  {/* Quantity */}
-                  <span
-                    className={`text-base font-[550] ${isLoading ? "text-gray-400" : ""
-                      }`}
-                  >
-                    {quantity}
-                  </span>
-                  {/* Decrease */}
-                  <TiMinus
-                    className={`text-2xl cursor-pointer border border-gray-200 rounded-full p-1 ${isLoading || quantity === 1 ? "text-gray-400" : ""
-                      }`}
-                    onClick={() => {
-                      if (!isLoading && quantity > 1) {
-                        handleUpdateQuantity(product?.id, -1);
-                      }
-                    }}
-                  />
-                </div>
-              </div>
-            </div>
-          );
-        })}
+          {/* Decrease */}
+          <TiMinus
+            className={`text-2xl cursor-pointer border border-gray-200 rounded-full p-1 ${
+              isLoading || currentQty <= 1 ? "text-gray-400" : ""
+            }`}
+            onClick={() => {
+              if (!isLoading && currentQty > 1) {
+                handleUpdateQuantity(product?.id, -1);
+              }
+            }}
+          />
+        </div>
+      </div>
     </div>
   );
 }

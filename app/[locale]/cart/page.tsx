@@ -1,14 +1,13 @@
 "use client";
 
 import PagePadding from "@/components/page-padding";
-import CartProducts from "@/components/cart-product";
+import CartProduct from "@/components/cart-product";
 import OrderSummary from "@/features/cart/order-Summary";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { getCartProducts } from "@/store/slices/cart-slice";
 
 export default function CartPage() {
-
   const dispatch = useDispatch();
   const { data } = useSelector((state: any) => state.cart);
 
@@ -21,7 +20,20 @@ export default function CartPage() {
       {data && data?.data?.items?.length > 0 ? (
         <div className="grid grid-cols-12 xl:max-w-7xl mx-auto gap-5 justify-between">
           <OrderSummary data={data} />
-          <CartProducts data={data} />
+          <div
+            className={`cart-poroduct col-span-12 lg:col-span-7 xl:col-span-8 flex flex-col gap-3 overflow-y-auto items-end h-full`}
+          >
+            {data?.data?.items &&
+              data.data.items.length > 0 &&
+              data.data.items.map((item: any) => (
+                <CartProduct
+                  key={item?.product?.id}
+                  product={item?.product}
+                  quantity={item?.quantity}
+                  deletedProductId ={item?.id}
+                />
+              ))}
+          </div>
         </div>
       ) : (
         <div className="flex items-center justify-center h-full w-full min-h-[65vh]">

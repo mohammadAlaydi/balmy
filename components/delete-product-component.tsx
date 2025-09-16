@@ -15,12 +15,12 @@ import { getCartProducts, removeFromCart } from "@/store/slices/cart-slice";
 import LoadingSpinner from "./ui/loading-spinner";
 import { useSelector } from "react-redux";
 import { useTranslations } from "next-intl";
-import { toast } from "sonner";
+import toast from "react-hot-toast";
 
 export default function DeleteProductComponent({
   productId,
 }: {
-  productId: number;
+  productId: number | string;
 }) {
 
   const t = useTranslations("buttons");

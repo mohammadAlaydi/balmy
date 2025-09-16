@@ -1,11 +1,44 @@
-import { NextConfig } from 'next';
-import createNextIntlPlugin from 'next-intl/plugin';
+import { NextConfig } from "next";
+import createNextIntlPlugin from "next-intl/plugin";
 
 const nextConfig: NextConfig = {
   // Add your Next.js configuration options here
   reactStrictMode: true,
   images: {
-    domains: ['envaglo-erp.envaglo.net', '127.0.0.1'],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "erpv2.envaglo.net",
+        port: "",
+        pathname: "/**", // <-- match all paths
+      },
+      {
+        protocol: "http",
+        hostname: "erpv2.envaglo.net",
+        port: "",
+        pathname: "/**", // <-- match all paths
+      },
+      {
+        protocol: "https",
+        hostname: "envaglo-erp.envaglo.net",
+        port: "",
+        pathname: "/**", // <-- match all paths
+      },
+      {
+        protocol: "http",
+        hostname: "envaglo-erp.envaglo.net",
+        port: "",
+        pathname: "/**", // <-- match all paths
+      },
+      {
+        protocol: "http",
+        hostname: "127.0.0.1",
+        port: "",
+        pathname: "/**",
+      },
+    ],
+    // qualities is NOT a valid config option for next/image
+    // If you want to control quality, pass `quality` to <Image /> directly
   },
 };
 

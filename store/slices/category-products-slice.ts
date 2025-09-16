@@ -9,7 +9,7 @@ const getCategoryProducts = createAsyncThunk(
       const response = await fetch(`${API_KEY}/v1/category-products/${payload?.categoryId}`, {
         method: "GET",
         headers: {
-          Authorization: `Bearer ${localStorage?.getItem("token")}`,
+          Authorization: `Bearer ${localStorage?.getItem("accessToken")}`,
           Accept: "application/json",
           "Content-Type": "application/json",
         },

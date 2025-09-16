@@ -7,11 +7,11 @@ import { z } from 'zod';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { toast } from 'sonner';
+import toast from "react-hot-toast";
 import { IoArrowBack } from 'react-icons/io5';
 
 const resetCodeSchema = z.object({
-  code: z.string().min(1, 'Please enter the reset code'),
+  code: z.string().min(6, 'Please enter the 6-digit code').max(6, 'Please enter the 6-digit code'),
 });
 
 type ResetCodeFormData = z.infer<typeof resetCodeSchema>;
@@ -37,13 +37,21 @@ export default function ResetCodeForm({ email, onBackToForgotPassword, onCodeVer
     setIsLoading(true);
     
     try {
-      // Since your external API doesn't have a separate verify endpoint,
-      // we'll just validate the code format and proceed to the next step
-      if (data.code.trim().length > 0) {
-        toast.success('Code accepted! Please set your new password.');
+      // API call to verify reset code
+      const response = await fetch('/api/auth/verify-reset-code', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, code: data.code }),
+      });
+
+      if (response.ok) {
+        toast.success('Code verified successfully!');
         onCodeVerified(data.code);
       } else {
-        toast.error('Please enter a valid reset code');
+        const errorData = await response.json();
+        toast.error(errorData.message || 'Invalid code');
       }
     } catch (error) {
       toast.error('An unexpected error occurred');
@@ -57,7 +65,7 @@ export default function ResetCodeForm({ email, onBackToForgotPassword, onCodeVer
       <CardHeader className="text-center">
         <CardTitle className="text-2xl font-bold">Enter Reset Code</CardTitle>
         <p className="text-muted-foreground">
-          We've sent a reset code to <span className="font-medium">{email}</span>
+          We&apos;ve sent a 6-digit code to <span className="font-medium">{email}</span>
         </p>
         <p className="text-sm text-muted-foreground mt-2">
           Check your email and enter the code below
@@ -69,8 +77,9 @@ export default function ResetCodeForm({ email, onBackToForgotPassword, onCodeVer
             <Input
               {...register('code')}
               type="text"
-              placeholder="Enter reset code"
+              placeholder="Enter 6-digit code"
               className={errors.code ? 'border-red-500' : ''}
+              maxLength={6}
             />
             {errors.code && (
               <p className="text-red-500 text-sm mt-1">{errors.code.message}</p>
@@ -82,7 +91,7 @@ export default function ResetCodeForm({ email, onBackToForgotPassword, onCodeVer
             className="w-full"
             disabled={isLoading}
           >
-            {isLoading ? 'Verifying...' : 'Continue'}
+            {isLoading ? 'Verifying...' : 'Verify Code'}
           </Button>
 
           <div className="text-center space-y-2">
@@ -96,13 +105,13 @@ export default function ResetCodeForm({ email, onBackToForgotPassword, onCodeVer
             </button>
             
             <div className="text-sm text-muted-foreground">
-              Didn't receive the code?{' '}
+              Didn&apos;t receive the code?{' '}
               <button
                 type="button"
                 className="text-primary hover:underline"
                 onClick={() => {
-                  // TODO: Implement resend functionality using forgotPassword action
-                  toast.info('Resend functionality coming soon');
+                  // TODO: Implement resend functionality
+                  toast.error('Resend functionality coming soon');
                 }}
               >
                 Resend

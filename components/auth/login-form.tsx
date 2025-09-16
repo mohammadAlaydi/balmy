@@ -9,15 +9,10 @@ import { AppDispatch, RootState } from '@/store/store';
 import { loginUser, clearError } from '@/store/slices/auth-slice';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { PasswordInput } from '@/components/ui/password-input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { toast } from 'sonner';
-
-const loginSchema = z.object({
-  email: z.string().email('Invalid email address'),
-  password: z.string().min(1, 'Password is required'),
-});
-
-type LoginFormData = z.infer<typeof loginSchema>;
+import toast from "react-hot-toast";
+import { useTranslations } from 'next-intl';
 
 interface LoginFormProps {
   onSwitchToRegister: () => void;
@@ -25,9 +20,17 @@ interface LoginFormProps {
 }
 
 export default function LoginForm({ onSwitchToRegister, onForgotPassword }: LoginFormProps) {
+  const t = useTranslations("login");
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch<AppDispatch>();
   const { error } = useSelector((state: RootState) => state.auth);
+
+  const loginSchema = z.object({
+    email: z.string().email(t("invalid-email")),
+    password: z.string().min(1, t("password-required")),
+  });
+
+  type LoginFormData = z.infer<typeof loginSchema>;
 
   const {
     register,
@@ -44,13 +47,13 @@ export default function LoginForm({ onSwitchToRegister, onForgotPassword }: Logi
     try {
       const result = await dispatch(loginUser(data));
       if (loginUser.fulfilled.match(result)) {
-        toast.success('Login successful!');
+        toast.success(t("login-successful"));
         // Redirect or update UI as needed
       } else {
-        toast.error(result.payload as string || 'Login failed');
+        toast.error(result.payload as string || t("login-failed"));
       }
     } catch (error) {
-      toast.error('An unexpected error occurred');
+      toast.error(t("unexpected-error"));
     } finally {
       setIsLoading(false);
     }
@@ -59,9 +62,9 @@ export default function LoginForm({ onSwitchToRegister, onForgotPassword }: Logi
   return (
     <Card className="w-full max-w-md mx-auto">
       <CardHeader className="text-center">
-        <CardTitle className="text-2xl font-bold">Login</CardTitle>
+        <CardTitle className="text-2xl font-bold">{t("title")}</CardTitle>
         <p className="text-muted-foreground">
-          Welcome back! Please sign in to your account.
+          {t("welcome-back")}
         </p>
       </CardHeader>
       <CardContent>
@@ -70,7 +73,7 @@ export default function LoginForm({ onSwitchToRegister, onForgotPassword }: Logi
             <Input
               {...register('email')}
               type="email"
-              placeholder="Email address"
+              placeholder={t("email-placeholder")}
               className={errors.email ? 'border-red-500' : ''}
             />
             {errors.email && (
@@ -79,10 +82,9 @@ export default function LoginForm({ onSwitchToRegister, onForgotPassword }: Logi
           </div>
 
           <div>
-            <Input
+            <PasswordInput
               {...register('password')}
-              type="password"
-              placeholder="Password"
+              placeholder={t("password-placeholder")}
               className={errors.password ? 'border-red-500' : ''}
             />
             {errors.password && (
@@ -99,7 +101,7 @@ export default function LoginForm({ onSwitchToRegister, onForgotPassword }: Logi
             className="w-full"
             disabled={isLoading}
           >
-            {isLoading ? 'Signing in...' : 'Sign In'}
+            {isLoading ? t("signing-in") : t("sign-in")}
           </Button>
 
           <div className="text-center">
@@ -108,7 +110,7 @@ export default function LoginForm({ onSwitchToRegister, onForgotPassword }: Logi
               onClick={onSwitchToRegister}
               className="text-primary hover:underline text-sm"
             >
-              Don't have an account? Sign up
+              {t("dont-have-account")}
             </button>
           </div>
           <div>
@@ -117,7 +119,7 @@ export default function LoginForm({ onSwitchToRegister, onForgotPassword }: Logi
               className="text-primary hover:underline text-sm"
               onClick={onForgotPassword}
             >
-              Forgot your password?
+              {t("forgot-password")}
             </button>
           </div>
         </form>

@@ -39,7 +39,8 @@ export default function LoginPage() {
             Sign in to your account to continue
           </p>
         </div>
-        
+        TypeError: Cannot read properties of undefined (reading 'createFilename')
+
         <LoginForm 
           onSwitchToRegister={handleSwitchToRegister}
           onForgotPassword={handleForgotPassword}

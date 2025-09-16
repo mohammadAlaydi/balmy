@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import toast from "react-hot-toast";
 
 const API_KEY = process.env.NEXT_PUBLIC_API_URL;
 
@@ -8,7 +9,7 @@ const getCartProducts = createAsyncThunk("cart/products", async () => {
   const response = await fetch(`${API_KEY}/v1/customer/cart`, {
     method: "GET",
     headers: {
-      Authorization: `Bearer ${localStorage?.getItem("token")}`,
+      Authorization: `Bearer ${localStorage?.getItem("accessToken")}`,
     },
   });
   const data = await response.json();
@@ -27,7 +28,7 @@ const addToCart = createAsyncThunk(
           headers: {
             accept: "application/json",
             "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage?.getItem("token")}`,
+            Authorization: `Bearer ${localStorage?.getItem("accessToken")}`,
           },
           body: JSON.stringify({
             quantity: payload?.productQTY ? payload?.productQTY : 1,
@@ -54,7 +55,7 @@ const removeFromCart = createAsyncThunk(
       {
         method: "DELETE",
         headers: {
-          Authorization: `Bearer ${localStorage?.getItem("token")}`,
+          Authorization: `Bearer ${localStorage?.getItem("accessToken")}`,
         },
       }
     );
@@ -69,7 +70,7 @@ const saveOrder = createAsyncThunk("save-order", async (payload: any) => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage?.getItem("token")}`,
+        Authorization: `Bearer ${localStorage?.getItem("accessToken")}`,
       },
       body: JSON.stringify(payload),
     }
@@ -120,6 +121,8 @@ const cartSlice = createSlice({
       state.increaseOrDecreaseLoading = false;
       state.increaseOrDecreaseResponse = action.payload
       state.status = "success"
+      toast.success("تم تنفيذ العملية بنجاح")
+
     });
     builder.addCase(addToCart.rejected, (state: any, action) => {
       state.error = action.error.message || null;

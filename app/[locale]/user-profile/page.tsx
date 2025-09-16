@@ -17,8 +17,8 @@ import {
 } from "@/components/ui/card";
 import LabelAndInput from "@/components/label-and-input";
 import LabelAndSelect from "@/components/label-and-select";
-import { toast } from "sonner";
-import ProtectedRoute from "@/components/auth/protected-route";
+import toast from "react-hot-toast";
+import { ProtectedRoute } from "@/components/auth/protected-route";
 
 // Form validation schema
 const profileSchema = z.object({
@@ -54,7 +54,7 @@ const cityOptions = [
   { label: "الحدود الشمالية", value: "الحدود الشمالية" },
 ];
 
-export default function ProfilePage() {
+export default function page() {
   const t = useTranslations("profile");
   const params = useParams();
   const locale = params.locale as string;
@@ -186,8 +186,8 @@ export default function ProfilePage() {
                     <LabelAndInput
                       control={form.control}
                       fieldName="firstName"
-                      labelText={t("firstName")}
-                      inputPlaceholder={t("firstName")}
+                      labelText={t("first-name")}
+                      inputPlaceholder={t("first-name")}
                       inputId="firstName"
                       containerStyle=""
                       containerColSpan=""
@@ -200,8 +200,8 @@ export default function ProfilePage() {
                     <LabelAndInput
                       control={form.control}
                       fieldName="lastName"
-                      labelText={t("lastName")}
-                      inputPlaceholder={t("lastName")}
+                      labelText={t("last-name")}
+                      inputPlaceholder={t("last-name")}
                       inputId="lastName"
                       containerStyle=""
                       containerColSpan=""
@@ -294,7 +294,7 @@ export default function ProfilePage() {
                     >
                       {form.formState.isSubmitting
                         ? "جاري الحفظ..."
-                        : t("saveChanges")}
+                        : t("save-changes")}
                     </Button>
                   </div>
                 </form>

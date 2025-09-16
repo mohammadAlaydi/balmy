@@ -331,3 +331,9 @@ export interface SuccessData {
 export interface SuccessProps {
   data: SuccessData;
 }
+export interface ShadowLayerProps {
+  children: ReactNode;
+  layerStyle?: string;
+  bgColor?: string;
+  shadowStatus?: boolean;
+}

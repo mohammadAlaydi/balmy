@@ -4,7 +4,13 @@ const API_KEY = process.env.NEXT_PUBLIC_API_URL;
 const getSearchProducts = createAsyncThunk(
   "search-products/getSearchProducts",
   async () => {
-    const response = await fetch(`${API_KEY}/v1/categorysearch`);
+    const response = await fetch(`${API_KEY}/v1/categorysearch`, {
+      headers: {
+        Authorization: `Bearer ${localStorage?.getItem("accessToken")}`,
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    });
     const data = await response.json();
     return data;
   }
@@ -20,7 +26,7 @@ const searchProductsSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(getSearchProducts.fulfilled, (state, action) => {
       state.products = action.payload;
-      state.isLoading = false
+      state.isLoading = false;
     });
     builder.addCase(getSearchProducts.pending, (state) => {
       state.isLoading = true;
