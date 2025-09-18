@@ -7,6 +7,7 @@ import SingleProductDescription from "./single-product-description";
 import SingleProductReviews from "./single-product-reviews";
 import { ProductDetailsApiResponse } from "@/types/types";
 import SingleProductDetails from "./single-product-details";
+import { useProductVariants } from "@/hooks/use-product-variants";
 
 interface SingleProductCardProps {
   product: ProductDetailsApiResponse["data"];
@@ -14,6 +15,22 @@ interface SingleProductCardProps {
 }
 
 export default function SingleProductCard({ product, className }: SingleProductCardProps) {
+  const {
+    hasVariants,
+    colorVariants,
+    availableSizesForSelectedColor,
+    currentVariant,
+    selectedVariants,
+    handleColorChange,
+    handleSizeChange,
+  } = useProductVariants({ product });
+
+  const baseImage = currentVariant?.base_image || product.base_image;
+  const hoverImage = currentVariant?.hovered_image || product.hovered_image;
+  const galleryImages = (currentVariant?.gallary && currentVariant.gallary.length > 0)
+    ? currentVariant.gallary
+    : product.gallary;
+
   return (
     <div className={cn("w-full", className)}>
       {/* Main Product Section */}
@@ -23,16 +40,27 @@ export default function SingleProductCard({ product, className }: SingleProductC
           {/* Image Holder - 65% width on desktop, 100% on mobile */}
           <div className="w-full lg:w-[65%] order-1 lg:order-1">
             <SingleProductImageHolder 
-              baseImage={product.base_image}
-              hoverImage={product.hovered_image}
-              galleryImages={product.gallary}
+              baseImage={baseImage}
+              hoverImage={hoverImage}
+              galleryImages={galleryImages}
               productName={product.name}
             />
           </div>
           
           {/* Product Details - 35% width on desktop, 100% on mobile */}
           <div className="w-full lg:w-[35%] order-2 lg:order-2">
-            <SingleProductDetails product={product} />
+            <SingleProductDetails 
+              product={product}
+              variantProps={{
+                hasVariants,
+                colorVariants,
+                availableSizesForSelectedColor,
+                currentVariant,
+                selectedVariants,
+                handleColorChange,
+                handleSizeChange,
+              }}
+            />
           </div>
         </div>
       </div>

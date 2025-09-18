@@ -202,10 +202,16 @@ export default function ProductCard({
             {isInStock ? "متوفر" : "غير متوفر"}
           </p>
           <p className="text-xs md:text-sm text-nowrap flex md:hidden">
-            {Number.isFinite(Number(product?.price))
-              ? Number(product?.price).toFixed(2)
-              : "0"}{" "}
-            {t("currency")}
+            {(() => {
+              const pv = Array.isArray(product?.variants) ? product.variants : [];
+              const base = Number.isFinite(Number(product?.price)) ? Number(product?.price) : undefined;
+              const minVar = pv
+                .map((v: any) => (v?.special_price ?? v?.price))
+                .map((x: any) => (Number.isFinite(Number(x)) ? Number(x) : undefined))
+                .filter((n: any) => typeof n === 'number');
+              const price = base ?? (minVar.length ? Math.min(...(minVar as number[])) : 0);
+              return price.toFixed(2);
+            })()} {t("currency")}
           </p>
         </div>
 
@@ -262,10 +268,16 @@ export default function ProductCard({
           )}
 
           <p className="text-xs md:text-sm mb-3 text-nowrap hidden md:flex">
-            {Number.isFinite(Number(product?.price))
-              ? Number(product?.price).toFixed(2)
-              : "0"}{" "}
-            {t("currency")}
+            {(() => {
+              const pv = Array.isArray(product?.variants) ? product.variants : [];
+              const base = Number.isFinite(Number(product?.price)) ? Number(product?.price) : undefined;
+              const minVar = pv
+                .map((v: any) => (v?.special_price ?? v?.price))
+                .map((x: any) => (Number.isFinite(Number(x)) ? Number(x) : undefined))
+                .filter((n: any) => typeof n === 'number');
+              const price = base ?? (minVar.length ? Math.min(...(minVar as number[])) : 0);
+              return price.toFixed(2);
+            })()} {t("currency")}
           </p>
         </div>
       </CardContent>

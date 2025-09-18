@@ -283,8 +283,104 @@ interface ProductImage {
 
 export interface ProductVariant {
   id: number;
+  sku?: string;
+  name?: string;
+  type?: string;
+  slug?: string | null;
+  price?: string;
+  special_price?: string | null;
+  description?: string | null;
+  short_description?: string | null;
+  status?: number;
+  new?: boolean;
+  featured?: boolean;
+  locale?: string;
+  channel?: string;
+  size_label?: string;
+  color_label?: string;
+  size?: number;
+  color?: number;
   base_image?: ProductImage;
   hovered_image?: ProductImage;
+  gallary?: ProductImage[];
+  reviews?: {
+    total?: number;
+    total_rating?: number;
+    average_rating?: number | null;
+  };
+  in_stock?: boolean;
+  parent_id?: number | null;
+  total_quantity?: number;
+  is_cart?: boolean;
+  is_wishlist?: boolean;
+}
+
+export interface VariantSelection {
+  color: number | null;
+  size: number | null;
+  variantId: number | null;
+}
+
+export interface ColorVariant {
+  color: number;
+  color_label: string;
+  variants: ProductVariant[];
+  base_image: ProductImage;
+  in_stock: boolean;
+}
+
+export interface SizeVariant {
+  size: number;
+  size_label: string;
+  variants: ProductVariant[];
+  in_stock: boolean;
+}
+
+export interface ProductDetailsApiResponse {
+  data: {
+    id: number;
+    sku: string;
+    name: string;
+    type: 'simple' | 'configurable';
+    slug: string | null;
+    price: string | null;
+    special_price: string | null;
+    description: string | null;
+    short_description: string | null;
+    status: number;
+    new: boolean;
+    featured: boolean;
+    locale: string;
+    channel: string;
+    size_label: string | null;
+    color_label: string | null;
+    size: number | null;
+    color: number | null;
+    base_image: ProductImage;
+    hovered_image: ProductImage;
+    gallary: ProductImage[];
+    reviews: {
+      total: number;
+      total_rating: number;
+      average_rating: number | null;
+    };
+    in_stock: boolean;
+    parent_id: number | null;
+    total_quantity?: number;
+    is_cart?: boolean;
+    is_wishlist?: boolean;
+    variants?: ProductVariant[];
+    variants_labels?: {
+      variants: Array<{
+        variant_id: number;
+        options: Array<{
+          attribute: string; // e.g., 'color', 'size', 'brand'
+          value: string | null;
+        }>;
+      }>;
+      attributes: Record<string, Array<string | null>>; // { color: ['White'], size: ['L','XL'] }
+    };
+  };
 }
 
 export interface ApiProduct {

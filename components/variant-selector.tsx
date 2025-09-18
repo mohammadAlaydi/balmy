@@ -87,7 +87,7 @@ export default function VariantSelector({
       )}
 
              {/* Size Variants - Only show for selected color */}
-       {selectedColor !== null && hasSizeVariants && (
+      {hasSizeVariants && (
          <div>
            <div className="flex gap-2 flex-wrap">
              {availableSizesForSelectedColor.map((sizeVariant) => {

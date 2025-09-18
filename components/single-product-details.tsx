@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
 import { useAppDispatch } from "@/store/hooks";
 import { addToCart } from "@/store/slices/cart-slice";
@@ -22,11 +22,13 @@ import { TiMinus } from "react-icons/ti";
 interface SingleProductDetailsProps {
   product: ProductDetailsApiResponse["data"];
   className?: string;
+  variantProps?: ReturnType<typeof useProductVariants>;
 }
 
 export default function SingleProductDetails({
   product,
   className,
+  variantProps,
 }: SingleProductDetailsProps) {
   const t = useTranslations("product-details");
   const dispatch = useAppDispatch();
@@ -41,7 +43,7 @@ export default function SingleProductDetails({
     selectedVariants,
     handleColorChange,
     handleSizeChange,
-  } = useProductVariants({ product });
+  } = variantProps ?? useProductVariants({ product });
 
   const handleAddToCart = () => {
     const productIdToAdd = currentVariant?.id || product.id;
@@ -57,7 +59,7 @@ export default function SingleProductDetails({
       try {
         await navigator.share({
           title: product.name,
-          text: product.short_description,
+          text: product.short_description ?? undefined,
           url: window.location.href,
         });
       } catch (error) {
@@ -69,17 +71,36 @@ export default function SingleProductDetails({
     }
   };
 
-  const formatPrice = (price: string) => {
-    return parseFloat(price).toFixed(2);
+  const normalizePrice = (value: string | number | null | undefined): number | null => {
+    if (value === null || value === undefined) return null;
+    const n = typeof value === 'number' ? value : parseFloat(value);
+    return Number.isFinite(n) ? n : null;
   };
 
   // Use current variant price if available, otherwise use product price
-  const currentPrice = currentVariant?.price || product.price;
-  const currentSpecialPrice =
-    currentVariant?.special_price || product.special_price;
-  const hasDiscount =
-    currentSpecialPrice &&
-    parseFloat(currentSpecialPrice) < parseFloat(currentPrice);
+  // Pricing logic: prefer selected variant, otherwise derive from variants
+  const variantPrice = normalizePrice(currentVariant?.price ?? null);
+  const variantSpecial = normalizePrice(currentVariant?.special_price ?? null);
+  const productPrice = normalizePrice(product.price);
+  const productSpecial = normalizePrice(product.special_price);
+
+  // If configurable and product price is null, compute min price from variants
+  const minVariantPrice = useMemo(() => {
+    if (!product.variants || product.variants.length === 0) return null;
+    const prices = product.variants
+      .map(v => normalizePrice(v.special_price ?? v.price))
+      .filter((n): n is number => n !== null);
+    if (prices.length === 0) return null;
+    return Math.min(...prices);
+  }, [product.variants]);
+
+  const effectivePrice =
+    variantPrice ?? productPrice ?? minVariantPrice ?? 0;
+  const effectiveSpecial = (() => {
+    const sp = variantSpecial ?? productSpecial;
+    return sp !== null && sp < effectivePrice ? sp : null;
+  })();
+  const hasDiscount = effectiveSpecial !== null;
 
   return (
     <div className={`flex flex-col gap-6 ${className}`}>
@@ -97,12 +118,12 @@ export default function SingleProductDetails({
       <div className="border-y border-gray-200 py-4">
         <div className="flex items-center gap-3 flex-wrap">
           <div className="text-[28px] lg:text-[28px] md:text-[24px] font-[800] md:font-[500] text-[#D07A51] font-cairo">
-            {formatPrice(currentPrice)} {t("currency")}
+            {effectivePrice.toFixed(2)} {t("currency")}
           </div>
           {hasDiscount && (
             <>
               <div className="text-[20px] lg:text-[20px] md:text-[18px] text-gray-500 line-through font-cairo">
-                {formatPrice(currentPrice)} {t("currency")}
+                {effectivePrice.toFixed(2)} {t("currency")}
               </div>
               <Badge className="bg-[#D07A51] text-white text-xs px-2 py-1 rounded">
                 {t("discount")}
@@ -212,8 +233,8 @@ export default function SingleProductDetails({
               id: currentVariant?.id || product.id,
               name: product.name,
               nameEn: product.name,
-              price: parseFloat(currentPrice),
-              priceEn: `${currentPrice} ج.م`,
+              price: (effectiveSpecial ?? effectivePrice),
+              priceEn: `${(effectiveSpecial ?? effectivePrice).toFixed(2)} ج.م`,
               code: product.sku,
               images: [product.base_image.original_image_url],
               category: "",
