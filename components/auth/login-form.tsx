@@ -13,6 +13,7 @@ import { PasswordInput } from "@/components/ui/password-input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import toast from "react-hot-toast";
 import { useTranslations } from "next-intl";
+import { useRouter } from "next/navigation";
 import { Loader } from "lucide-react";
 import { Badge } from "../ui/badge";
 
@@ -26,6 +27,7 @@ export default function LoginForm({
   onForgotPassword,
 }: LoginFormProps) {
   const t = useTranslations("auth");
+  const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch<AppDispatch>();
   const { error } = useSelector((state: RootState) => state.auth);
@@ -53,7 +55,8 @@ export default function LoginForm({
       const result = await dispatch(loginUser(data));
       if (loginUser.fulfilled.match(result)) {
         toast.success(t("login-successful"));
-        // Redirect or update UI as needed
+        // Redirect to locale home; router base path includes locale from segment config
+        router.push("/home");
       } else {
         toast.error((result.payload as string) || t("login-failed"));
       }

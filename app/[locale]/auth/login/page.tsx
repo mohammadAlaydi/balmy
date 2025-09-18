@@ -7,28 +7,29 @@ import { RootState } from "@/store/store";
 import LoginForm from "@/components/auth/login-form";
 import { Button } from "@/components/ui/button";
 import { IoArrowBack } from "react-icons/io5";
+import Loading from "@/components/loading";
 
-export default function LoginPage() {
+export default function LoginPage({ params }: { params: { locale: string } }) {
   
   const router = useRouter();
-  const { isAuthenticated } = useSelector((state: RootState) => state.auth);
+  const { isAuthenticated, isLoading } = useSelector((state: RootState) => state.auth);
 
   useEffect(() => {
     if (isAuthenticated) {
-      router.push("/en/home");
+      router.replace("/home");
     }
   }, [isAuthenticated, router]);
 
   const handleSwitchToRegister = () => {
-    router.push("/en/auth/register");
+    router.push("/auth/register");
   };
 
   const handleForgotPassword = () => {
-    router.push("/en/auth/forgot-password");
+    router.push("/auth/forgot-password");
   };
 
-  if (isAuthenticated) {
-    return null;
+  if (isLoading || isAuthenticated) {
+    return <Loading fullScreen={true} variant="spinner" size="xl" />;
   }
 
   return (
@@ -47,7 +48,7 @@ export default function LoginPage() {
         <div className="text-center">
           <Button
             variant="ghost"
-            onClick={() => router.push("/en")}
+            onClick={() => router.push("/")}
             className="text-primary hover:underline text-sm flex items-center gap-2 mx-auto"
           >
             <IoArrowBack className="text-sm" />
