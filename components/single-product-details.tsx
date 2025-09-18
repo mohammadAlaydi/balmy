@@ -118,7 +118,7 @@ export default function SingleProductDetails({
       <div className="border-y border-gray-200 py-4">
         <div className="flex items-center gap-3 flex-wrap">
           <div className="text-[28px] lg:text-[28px] md:text-[24px] font-[800] md:font-[500] text-[#D07A51] font-cairo">
-            {effectivePrice.toFixed(2)} {t("currency")}
+            {(hasDiscount ? effectiveSpecial! : effectivePrice).toFixed(2)} {t("currency")}
           </div>
           {hasDiscount && (
             <>
