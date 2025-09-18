@@ -5,15 +5,25 @@ import CartProduct from "@/components/cart-product";
 import OrderSummary from "@/features/cart/order-Summary";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-import { getCartProducts } from "@/store/slices/cart-slice";
+import {
+  getCartProducts,
+  removeAllProductsFromCart,
+} from "@/store/slices/cart-slice";
+import { MdDeleteSweep } from "react-icons/md";
+import Loading from "@/components/loading";
 
 export default function CartPage() {
+  
   const dispatch = useDispatch();
-  const { data } = useSelector((state: any) => state.cart);
+  const { data, isLoading } = useSelector((state: any) => state.cart);
 
   useEffect(() => {
     dispatch(getCartProducts() as any);
   }, [dispatch]);
+
+  if (isLoading) {
+    return <Loading fullScreen={true} variant="spinner" size="xl" />;
+  }
 
   return (
     <PagePadding>
@@ -33,6 +43,12 @@ export default function CartPage() {
                   deletedProductId={item?.id}
                 />
               ))}
+            <div className="flex justify-end w-full cursor-pointer">
+              <MdDeleteSweep
+                className="text-red-color text-3xl"
+                onClick={() => dispatch(removeAllProductsFromCart() as any)}
+              />
+            </div>
           </div>
         </div>
       ) : (

@@ -62,34 +62,43 @@ const removeFromCart = createAsyncThunk(
   }
 );
 
-//save cart order
-const saveOrder = createAsyncThunk("save-order", async (payload: any) => {
-  const response = await fetch(
-    `${API_KEY}/v1/customer/checkout/save-order`,
-    {
-      method: "POST",
+// remove all products from cart
+const removeAllProductsFromCart = createAsyncThunk(
+  "cart/remove/all/products",
+  async () => {
+    const response = await fetch(`${API_KEY}/v1/customer/cart/remove`, {
+      method: "DELETE",
       headers: {
-        "Content-Type": "application/json",
         Authorization: `Bearer ${localStorage?.getItem("accessToken")}`,
       },
-      body: JSON.stringify(payload),
-    }
-  );
+    });
+  }
+);
+//save cart order
+const saveOrder = createAsyncThunk("save-order", async (payload: any) => {
+  const response = await fetch(`${API_KEY}/v1/customer/checkout/save-order`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${localStorage?.getItem("accessToken")}`,
+    },
+    body: JSON.stringify(payload),
+  });
   if (!response.ok) {
     throw new Error(`HTTP error! status: ${response.status}`);
   }
 
   const data = await response.json();
   return data;
-})
+});
 
 const cartSlice = createSlice({
   name: "cart",
   initialState: {
     data: [],
     saveOrderData: {},
-    increaseOrDecreaseLoading : false,
-    increaseOrDecreaseResponse : {},
+    increaseOrDecreaseLoading: false,
+    increaseOrDecreaseResponse: {},
     isLoading: false,
     error: null,
     status: null,
@@ -119,10 +128,9 @@ const cartSlice = createSlice({
     });
     builder.addCase(addToCart.fulfilled, (state, action) => {
       state.increaseOrDecreaseLoading = false;
-      state.increaseOrDecreaseResponse = action.payload
-      state.status = "success"
-      toast.success("تم تنفيذ العملية بنجاح")
-
+      state.increaseOrDecreaseResponse = action.payload;
+      state.status = "success";
+      toast.success("تم تنفيذ العملية بنجاح");
     });
     builder.addCase(addToCart.rejected, (state: any, action) => {
       state.error = action.error.message || null;
@@ -132,37 +140,57 @@ const cartSlice = createSlice({
     // Remove from cart
     builder.addCase(removeFromCart.pending, (state) => {
       state.isLoading = true;
-      state.status = "success";
-
     });
     builder.addCase(removeFromCart.fulfilled, (state, action) => {
       state.isLoading = false;
+      state.status = "success";
     });
     builder.addCase(removeFromCart.rejected, (state: any, action) => {
       state.error = action.error.message || null;
       state.isLoading = false;
-      state.status = "failed"
+      state.status = "failed";
     });
+
+    // Remove all products from cart
+    builder.addCase(removeAllProductsFromCart.pending, (state) => {
+      state.isLoading = true;
+    });
+    builder.addCase(removeAllProductsFromCart.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.status = "success";
+    });
+    builder.addCase(
+      removeAllProductsFromCart.rejected,
+      (state: any, action) => {
+        state.error = action.error.message || null;
+        state.isLoading = false;
+        state.status = "failed";
+      }
+    );
 
     // save order
     builder.addCase(saveOrder.pending, (state) => {
       state.isLoading = true;
     });
     builder.addCase(saveOrder.fulfilled, (state, action) => {
-      state.saveOrderData = action.payload
+      state.saveOrderData = action.payload;
       state.isLoading = false;
       state.status = "success";
-
     });
     builder.addCase(saveOrder.rejected, (state: any, action) => {
       state.error = action.error.message || null;
       state.isLoading = false;
-      state.status = "failed"
-
+      state.status = "failed";
     });
   },
 });
 
 export const { resetStatus } = cartSlice.actions;
-export { getCartProducts, addToCart, removeFromCart, saveOrder };
+export {
+  getCartProducts,
+  addToCart,
+  removeFromCart,
+  removeAllProductsFromCart,
+  saveOrder,
+};
 export const cartReducer = cartSlice.reducer;

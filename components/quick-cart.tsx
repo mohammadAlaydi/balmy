@@ -3,13 +3,18 @@
 import Link from "next/link";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getCartProducts } from "@/store/slices/cart-slice";
+import {
+  getCartProducts,
+  removeAllProductsFromCart,
+} from "@/store/slices/cart-slice";
 import { useTranslations } from "next-intl";
 import SectionTitle from "./section-title";
 import Loading from "./loading";
 import CartProduct from "./cart-product";
+import { MdDeleteSweep } from "react-icons/md";
 
 export default function QuickCart() {
+  
   const t = useTranslations("cart");
   const dispatch = useDispatch();
   const { data, isLoading } = useSelector((state: any) => state.cart);
@@ -49,14 +54,20 @@ export default function QuickCart() {
                 key={item?.product?.id}
                 product={item?.product}
                 quantity={item?.quantity}
-                deletedProductId ={item?.id}
+                deletedProductId={item?.id}
               />
             ))}
         </div>
       </div>
+      <div className="flex justify-start w-full cursor-pointer">
+        <MdDeleteSweep
+          className="text-red-color text-3xl"
+          onClick={() => dispatch(removeAllProductsFromCart() as any)}
+        />
+      </div>
       <div className="flex gap-2">
         <Link
-         prefetch={true}
+          prefetch={true}
           href="/cart"
           className="text-nowrap md:text-sm text-xs bg-black text-white px-4 py-2 rounded-md hover:bg-white border border-black hover:text-black transition-all duration-300"
         >
