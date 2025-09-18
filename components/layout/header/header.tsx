@@ -5,7 +5,6 @@ import { Badge } from "@/components/ui/badge";
 import {
   NavigationMenu,
   NavigationMenuContent,
-  NavigationMenuIndicator,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
@@ -23,7 +22,7 @@ import { MdOutlineShoppingCart } from "react-icons/md";
 import Image from "next/image";
 import SocialMediaIcons from "@/components/social-media-icons";
 import DrawerComponent from "../drawer/drawer-component";
-import { CONTACT_INFO, LANGUAGES, NAV_LINKS } from "@/lib/constants";
+import { LANGUAGES } from "@/lib/constants";
 import {
   Dialog,
   DialogTrigger,
@@ -146,7 +145,11 @@ const ActionIcons = ({
           </DialogContent>
         </Dialog>
         <UserMenu />
-        <Link href="/favourite" className="relative hidden lg:block" prefetch={true}>
+        <Link
+          href="/favourite"
+          className="relative hidden lg:block"
+          prefetch={true}
+        >
           <FaRegHeart className="text-xl cursor-pointer" />
           {favouritesCount > 0 && (
             <Badge className="absolute -top-2 -right-2 h-5 w-5 p-0 text-xs flex items-center justify-center bg-red-500 text-white">
@@ -191,7 +194,7 @@ const ActionIcons = ({
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-      <Link href="/user-profile" className="block lg:hidden"  prefetch={true}>
+      <Link href="/user-profile" className="block lg:hidden" prefetch={true}>
         <FaRegUser className="text-xl cursor-pointer text-black" />
       </Link>
     </>
@@ -199,7 +202,6 @@ const ActionIcons = ({
 };
 
 const NavigationLinks = ({ navbarCategories }: { navbarCategories: any }) => {
-
   const t = useTranslations("navigation");
 
   return (
@@ -210,10 +212,11 @@ const NavigationLinks = ({ navbarCategories }: { navbarCategories: any }) => {
             const hasChildren = link?.children && link?.children?.length > 0;
             return hasChildren ? (
               <NavigationMenuItem key={link?.name}>
-                <NavigationMenuTrigger
-                  className="cursor-pointer hover:bg-transparent hover:text-red-color"
-                >
-                  <Link href={`/category/${link?.slug}/${link?.id}`} prefetch={true}>
+                <NavigationMenuTrigger className="cursor-pointer hover:bg-transparent hover:text-red-color">
+                  <Link
+                    href={`/category/${link?.slug}/${link?.id}`}
+                    prefetch={true}
+                  >
                     {link?.name}
                   </Link>
                 </NavigationMenuTrigger>
@@ -263,7 +266,6 @@ const NavigationLinks = ({ navbarCategories }: { navbarCategories: any }) => {
     </NavigationMenu>
   );
 };
-
 
 const Logo = () => (
   <ClientOnly>
@@ -395,7 +397,6 @@ const MobileMenu = ({
 };
 
 export default function Header() {
-
   const dispatch = useDispatch();
   const categories = useSelector((state: any) => state.categories);
   const loading = useSelector((state: any) => state.categories.loading);

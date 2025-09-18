@@ -390,7 +390,9 @@
     "dont-have-account": "Don't have an account?",
     "already-have-account": "Already have an account?",
     "forgot-password-text": "Forgot your password?",
-    "back-to-login": "Back to Login"
+    "back-to-login": "Back to Login",
+    "welcome-back": "welcome back",
+    "sign-in": "sign in"
   },
   "test": {
     "title": "API Integration Test",
@@ -492,7 +494,7 @@
     "save-changes": "Save Changes",
     "changes-saved": "Changes saved successfully",
     "error-saving": "Error saving changes",
-    "select-gender" : "Select gender"
+    "select-gender": "Select gender"
   },
   "favourites": {
     "title": "My Favourites",

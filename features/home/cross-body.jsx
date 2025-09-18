@@ -1,6 +1,7 @@
 import Image from "next/image";
 
 export default function CrossBody() {
+  
   return (
     <div className="cross-body flex flex-col md:flex-row justify-between m-auto gap-3 px-3 md:px-0  w-full  xl:max-w-[75%] py-[20px] md:py-[30px]">
       <div className="left-section flex-1  relative h-full overflow-hidden cursor-pointer">
@@ -32,7 +33,6 @@ export default function CrossBody() {
           <p className="text-center">خطواتك مع فرادا...راحة وأناقة
           </p>
         </div>
-
       </div>
     </div>
   );

@@ -8,29 +8,31 @@ import { SwiperSlide } from "swiper/react";
 import { useTranslations } from "next-intl";
 
 export default function Services() {
+
   const t = useTranslations("home");
   let benfits = [
     {
       icon: <TbArrowBack className="text-4xl" />,
-              h2: t("return-and-exchange"),
-        p: t("return-and-exchange-desc"),
+      h2: t("return-and-exchange"),
+      p: t("return-and-exchange-desc"),
     },
     {
       icon: <MdOutlineLocalShipping className="text-4xl" />,
-              h2: t("free-shipping"),
-        p: t("free-shipping-desc"),
+      h2: t("free-shipping"),
+      p: t("free-shipping-desc"),
     },
     {
       icon: <BiSupport className="text-4xl" />,
-              h2: t("always-with-you"),
-        p: t("always-with-you-desc"),
+      h2: t("always-with-you"),
+      p: t("always-with-you-desc"),
     },
     {
       icon: <PiSealCheck className="text-4xl" />,
-              h2: t("gold-membership"),
-        p: t("gold-membership-desc"),
+      h2: t("gold-membership"),
+      p: t("gold-membership-desc"),
     },
   ];
+  
   return (
     <CarouselComponent
       spaceBetween={20}

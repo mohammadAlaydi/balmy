@@ -1,26 +1,31 @@
 "use client";
 
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
-import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from '@/store/store';
-import { loginUser, clearError } from '@/store/slices/auth-slice';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { PasswordInput } from '@/components/ui/password-input';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/store/store";
+import { loginUser, clearError } from "@/store/slices/auth-slice";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/ui/password-input";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import toast from "react-hot-toast";
-import { useTranslations } from 'next-intl';
+import { useTranslations } from "next-intl";
+import { Loader } from "lucide-react";
+import { Badge } from "../ui/badge";
 
 interface LoginFormProps {
   onSwitchToRegister: () => void;
   onForgotPassword: () => void;
 }
 
-export default function LoginForm({ onSwitchToRegister, onForgotPassword }: LoginFormProps) {
-  const t = useTranslations("login");
+export default function LoginForm({
+  onSwitchToRegister,
+  onForgotPassword,
+}: LoginFormProps) {
+  const t = useTranslations("auth");
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch<AppDispatch>();
   const { error } = useSelector((state: RootState) => state.auth);
@@ -43,14 +48,14 @@ export default function LoginForm({ onSwitchToRegister, onForgotPassword }: Logi
   const onSubmit = async (data: LoginFormData) => {
     setIsLoading(true);
     dispatch(clearError());
-    
+
     try {
       const result = await dispatch(loginUser(data));
       if (loginUser.fulfilled.match(result)) {
         toast.success(t("login-successful"));
         // Redirect or update UI as needed
       } else {
-        toast.error(result.payload as string || t("login-failed"));
+        toast.error((result.payload as string) || t("login-failed"));
       }
     } catch (error) {
       toast.error(t("unexpected-error"));
@@ -62,33 +67,35 @@ export default function LoginForm({ onSwitchToRegister, onForgotPassword }: Logi
   return (
     <Card className="w-full max-w-md mx-auto">
       <CardHeader className="text-center">
-        <CardTitle className="text-2xl font-bold">{t("title")}</CardTitle>
-        <p className="text-muted-foreground">
-          {t("welcome-back")}
-        </p>
+        <CardTitle className="text-2xl font-bold">{t("login")}</CardTitle>
+        <p className="text-muted-foreground">{t("welcome-back")}</p>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div>
             <Input
-              {...register('email')}
+              {...register("email")}
               type="email"
               placeholder={t("email-placeholder")}
-              className={errors.email ? 'border-red-500' : ''}
+              className={errors.email ? "border-red-500" : ""}
             />
             {errors.email && (
-              <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
+              <p className="text-red-500 text-sm mt-1">
+                {errors.email.message}
+              </p>
             )}
           </div>
 
           <div>
             <PasswordInput
-              {...register('password')}
+              {...register("password")}
               placeholder={t("password-placeholder")}
-              className={errors.password ? 'border-red-500' : ''}
+              className={errors.password ? "border-red-500" : ""}
             />
             {errors.password && (
-              <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>
+              <p className="text-red-500 text-sm mt-1">
+                {errors.password.message}
+              </p>
             )}
           </div>
 
@@ -96,12 +103,17 @@ export default function LoginForm({ onSwitchToRegister, onForgotPassword }: Logi
             <div className="text-red-500 text-sm text-center">{error}</div>
           )}
 
-          <Button
-            type="submit"
-            className="w-full"
-            disabled={isLoading}
-          >
-            {isLoading ? t("signing-in") : t("sign-in")}
+          <Button type="submit" className="w-full" disabled={isLoading}>
+            {isLoading ? (
+              <p className="flex items-center gap-2">
+                <Badge className="text-base bg-transparent text-white">
+                  {t("sign-in")}
+                </Badge>{" "}
+                <Loader />
+              </p>
+            ) : (
+              t("sign-in")
+            )}
           </Button>
 
           <div className="text-center">

@@ -48,7 +48,7 @@ const makeAuthenticatedRequest = async (url: string, options: RequestInit, dispa
   if (response.status === 401) {
     try {
       // Import the refresh token action dynamically to avoid circular dependency
-      const { refreshToken } = await import('./auth-slice');
+      const { refreshToken } = await import('../features/auth-slice');
       const refreshResult = await dispatch(refreshToken());
       
       if (refreshResult.meta.requestStatus === 'fulfilled') {
@@ -261,7 +261,7 @@ export const moveToCart = createAsyncThunk(
       }, dispatch);
       
       // After successfully moving to cart, refresh the cart data
-      const { getCartProducts } = await import('../slices/cart-slice');
+      const { getCartProducts } = await import('./cart-slice');
       dispatch(getCartProducts());
       
       return { wishlistId, cartData: data.data };

@@ -390,7 +390,9 @@
     "dont-have-account": "ليس لديك حساب؟",
     "already-have-account": "لديك حساب بالفعل؟",
     "forgot-password-text": "نسيت كلمة المرور؟",
-    "back-to-login": "العودة لتسجيل الدخول"
+    "back-to-login": "العودة لتسجيل الدخول",
+    "welcome-back": "مرحبا بالعودة",
+    "sign-in": "تسجيل الدخول"
   },
   "test": {
     "title": "اختبار تكامل API",
@@ -492,7 +494,7 @@
     "save-changes": "حفظ التغييرات",
     "changes-saved": "تم حفظ التغييرات بنجاح",
     "error-saving": "حدث خطأ أثناء حفظ التغييرات",
-    "select-gender" : "إختر النوع"
+    "select-gender": "إختر النوع"
   },
   "favourites": {
     "title": "المفضلة",

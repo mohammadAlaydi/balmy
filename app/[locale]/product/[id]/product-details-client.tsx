@@ -3,9 +3,8 @@
 import React from "react";
 import { useTranslations } from "next-intl";
 import SingleProductCard from "./../../../../components/single-product-card";
-import LoadingSpinner from "./../../../../components/ui/loading-spinner";
 import { ErrorBoundary } from "next/dist/client/components/error-boundary";
-import { useGetProductDetailsQuery } from "@/store/features/products-slice";
+import { useGetProductDetailsQuery } from "@/store/slices/products-slice";
 import Loading from "@/components/loading";
 
 interface ProductDetailsClientProps {
@@ -15,6 +14,7 @@ interface ProductDetailsClientProps {
 export default function ProductDetailsClient({
   productId,
 }: ProductDetailsClientProps) {
+
   const t = useTranslations("product-details");
   const { data, isLoading, error, refetch } =
     useGetProductDetailsQuery(productId);

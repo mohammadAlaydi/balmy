@@ -3,6 +3,7 @@
 import { useTranslations } from "next-intl";
 
 export default function TermsPage() {
+  
   const t = useTranslations("legal.terms");
 
   return (

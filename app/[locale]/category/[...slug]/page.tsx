@@ -1,6 +1,5 @@
 "use client";
 
-import { useFetcher } from "@/app/helpers/fetchers";
 import Loading from "@/components/loading";
 import PagePadding from "@/components/page-padding";
 import ProductCard from "@/components/product-card";
@@ -13,6 +12,7 @@ export default function CategoryPage({
 }: {
   params: Promise<{ slug: string[] }>;
 }) {
+
   const { slug } = use(params);
   const [categorySlug, categoryId] = slug;
   const categoryProducts = useSelector((state: any) => state.categoryProducts)

@@ -1,28 +1,35 @@
-import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import { AuthState, LoginCredentials, RegisterCredentials, AuthResponse, User, BackendAuthResponse } from '@/types/types';
-import { buildApiUrl, API_CONFIG } from '@/lib/config';
+import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
+import {
+  AuthState,
+  LoginCredentials,
+  RegisterCredentials,
+  AuthResponse,
+  User,
+  BackendAuthResponse,
+} from "@/types/types";
+import { buildApiUrl, API_CONFIG } from "@/lib/config";
 
 // Helper functions for local storage
 const saveTokens = (accessToken: string, refreshToken: string) => {
-  if (typeof window !== 'undefined') {
-    localStorage.setItem('accessToken', accessToken);
-    localStorage.setItem('refreshToken', refreshToken);
+  if (typeof window !== "undefined") {
+    localStorage.setItem("accessToken", accessToken);
+    localStorage.setItem("refreshToken", refreshToken);
   }
 };
 
 const clearTokens = () => {
-  if (typeof window !== 'undefined') {
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('refreshToken');
+  if (typeof window !== "undefined") {
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
   }
 };
 
 const getStoredTokens = () => {
-  if (typeof window === 'undefined') {
+  if (typeof window === "undefined") {
     return { accessToken: null, refreshToken: null };
   }
-  const accessToken = localStorage.getItem('accessToken');
-  const refreshToken = localStorage.getItem('refreshToken');
+  const accessToken = localStorage.getItem("accessToken");
+  const refreshToken = localStorage.getItem("refreshToken");
   return { accessToken, refreshToken };
 };
 
@@ -36,25 +43,28 @@ const isTokenExpired = (token: string): boolean => {
 
 // Async thunks
 export const loginUser = createAsyncThunk(
-  'auth/login',
+  "auth/login",
   async (credentials: LoginCredentials, { rejectWithValue }) => {
     try {
-      const response = await fetch(buildApiUrl(API_CONFIG.ENDPOINTS.AUTH.LOGIN), {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
-        body: JSON.stringify(credentials),
-      });
+      const response = await fetch(
+        buildApiUrl(API_CONFIG.ENDPOINTS.AUTH.LOGIN),
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          body: JSON.stringify(credentials),
+        }
+      );
 
       if (!response.ok) {
         const error = await response.json();
-        return rejectWithValue(error.message || 'Login failed');
+        return rejectWithValue(error.message || "Login failed");
       }
 
       const data: BackendAuthResponse = await response.json();
-      
+
       // Handle your backend's response structure
       const authData: AuthResponse = {
         user: {
@@ -67,12 +77,14 @@ export const loginUser = createAsyncThunk(
           gender: data.data.gender,
           dateOfBirth: data.data.date_of_birth,
           status: data.data.status,
-          group: data.data.group ? {
-            id: data.data.group.id,
-            name: data.data.group.name,
-            createdAt: data.data.group.created_at,
-            updatedAt: data.data.group.updated_at,
-          } : undefined,
+          group: data.data.group
+            ? {
+                id: data.data.group.id,
+                name: data.data.group.name,
+                createdAt: data.data.group.created_at,
+                updatedAt: data.data.group.updated_at,
+              }
+            : undefined,
           notes: data.data.notes,
           createdAt: data.data.created_at,
           updatedAt: data.data.updated_at,
@@ -80,36 +92,39 @@ export const loginUser = createAsyncThunk(
         accessToken: data.token,
         refreshToken: data.token,
       };
-      
+
       // Save tokens to local storage
       saveTokens(authData.accessToken, authData.refreshToken);
       return authData;
     } catch (error) {
-      return rejectWithValue('Network error occurred');
+      return rejectWithValue("Network error occurred");
     }
   }
 );
 
 export const registerUser = createAsyncThunk(
-  'auth/register',
+  "auth/register",
   async (credentials: RegisterCredentials, { rejectWithValue }) => {
     try {
-      const response = await fetch(buildApiUrl(API_CONFIG.ENDPOINTS.AUTH.REGISTER), {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
-        body: JSON.stringify(credentials),
-      });
+      const response = await fetch(
+        buildApiUrl(API_CONFIG.ENDPOINTS.AUTH.REGISTER),
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          body: JSON.stringify(credentials),
+        }
+      );
 
       if (!response.ok) {
         const error = await response.json();
-        return rejectWithValue(error.message || 'Registration failed');
+        return rejectWithValue(error.message || "Registration failed");
       }
 
       const data: BackendAuthResponse = await response.json();
-      
+
       // Handle your backend's response structure
       const authData: AuthResponse = {
         user: {
@@ -122,12 +137,14 @@ export const registerUser = createAsyncThunk(
           gender: data.data.gender,
           dateOfBirth: data.data.date_of_birth,
           status: data.data.status,
-          group: data.data.group ? {
-            id: data.data.group.id,
-            name: data.data.group.name,
-            createdAt: data.data.group.created_at,
-            updatedAt: data.data.group.updated_at,
-          } : undefined,
+          group: data.data.group
+            ? {
+                id: data.data.group.id,
+                name: data.data.group.name,
+                createdAt: data.data.group.created_at,
+                updatedAt: data.data.group.updated_at,
+              }
+            : undefined,
           notes: data.data.notes,
           createdAt: data.data.created_at,
           updatedAt: data.data.updated_at,
@@ -135,18 +152,18 @@ export const registerUser = createAsyncThunk(
         accessToken: data.token,
         refreshToken: data.token,
       };
-      
+
       // Save tokens to local storage
       saveTokens(authData.accessToken, authData.refreshToken);
       return authData;
     } catch (error) {
-      return rejectWithValue('Network error occurred');
+      return rejectWithValue("Network error occurred");
     }
   }
 );
 
 export const logoutUser = createAsyncThunk(
-  'auth/logout',
+  "auth/logout",
   async (_, { rejectWithValue, getState }) => {
     try {
       const state = getState() as { auth: AuthState };
@@ -154,69 +171,69 @@ export const logoutUser = createAsyncThunk(
 
       if (accessToken) {
         await fetch(buildApiUrl(API_CONFIG.ENDPOINTS.AUTH.LOGOUT), {
-          method: 'POST',
+          method: "POST",
           headers: {
-            'Authorization': `Bearer ${accessToken}`,
-            'Accept': 'application/json',
+            Authorization: `Bearer ${accessToken}`,
+            Accept: "application/json",
           },
         });
       }
-      
+
       // Clear tokens from local storage
       clearTokens();
       return true;
     } catch (error) {
       // Even if logout fails, clear local tokens
       clearTokens();
-      return rejectWithValue('Logout failed');
+      return rejectWithValue("Logout failed");
     }
   }
 );
 
 // Since backend doesn't support refresh tokens, we'll handle token expiration differently
 export const refreshToken = createAsyncThunk(
-  'auth/refresh',
+  "auth/refresh",
   async (_, { rejectWithValue }) => {
     // Return rejection since backend doesn't support refresh
-    return rejectWithValue('Refresh token not supported by backend');
+    return rejectWithValue("Refresh token not supported by backend");
   }
 );
 
 export const getCurrentUser = createAsyncThunk(
-  'auth/getCurrentUser',
+  "auth/getCurrentUser",
   async (_, { rejectWithValue, getState, dispatch }) => {
     try {
       const state = getState() as { auth: AuthState };
       const accessToken = state.auth.accessToken;
 
       if (!accessToken) {
-        return rejectWithValue('No access token');
+        return rejectWithValue("No access token");
       }
 
       // Check if token is expired
       if (isTokenExpired(accessToken)) {
         // Since backend doesn't support refresh tokens, just return error
         // User will need to login again when token expires
-        return rejectWithValue('Token expired - please login again');
+        return rejectWithValue("Token expired - please login again");
       }
 
       const response = await fetch(buildApiUrl(API_CONFIG.ENDPOINTS.AUTH.ME), {
         headers: {
-          'Authorization': `Bearer ${accessToken}`,
-          'Accept': 'application/json',
+          Authorization: `Bearer ${accessToken}`,
+          Accept: "application/json",
         },
       });
 
       if (!response.ok) {
         if (response.status === 401) {
           // Token is invalid or expired
-          return rejectWithValue('Authentication failed');
+          return rejectWithValue("Authentication failed");
         }
-        return rejectWithValue('Failed to get user data');
+        return rejectWithValue("Failed to get user data");
       }
 
       const data = await response.json();
-      
+
       // Handle backend response structure: { data: { id, email, first_name, last_name, ... } }
       const user: User = {
         id: data.data.id,
@@ -228,20 +245,22 @@ export const getCurrentUser = createAsyncThunk(
         gender: data.data.gender,
         dateOfBirth: data.data.date_of_birth,
         status: data.data.status,
-        group: data.data.group ? {
-          id: data.data.group.id,
-          name: data.data.group.name,
-          createdAt: data.data.group.created_at,
-          updatedAt: data.data.group.updated_at,
-        } : undefined,
+        group: data.data.group
+          ? {
+              id: data.data.group.id,
+              name: data.data.group.name,
+              createdAt: data.data.group.created_at,
+              updatedAt: data.data.group.updated_at,
+            }
+          : undefined,
         notes: data.data.notes,
         createdAt: data.data.created_at,
         updatedAt: data.data.updated_at,
       };
-      
+
       return user;
     } catch (error) {
-      return rejectWithValue('Network error occurred');
+      return rejectWithValue("Network error occurred");
     }
   }
 );
@@ -259,13 +278,16 @@ const initialState: AuthState = {
 };
 
 const authSlice = createSlice({
-  name: 'auth',
+  name: "auth",
   initialState,
   reducers: {
     clearError: (state) => {
       state.error = null;
     },
-    setCredentials: (state, action: PayloadAction<{ accessToken: string; refreshToken: string }>) => {
+    setCredentials: (
+      state,
+      action: PayloadAction<{ accessToken: string; refreshToken: string }>
+    ) => {
       state.accessToken = action.payload.accessToken;
       state.refreshToken = action.payload.refreshToken;
       state.isAuthenticated = true;
@@ -280,7 +302,10 @@ const authSlice = createSlice({
       }
     },
     // Add action to handle token refresh without logging out
-    handleTokenRefresh: (state, action: PayloadAction<{ accessToken: string; refreshToken: string }>) => {
+    handleTokenRefresh: (
+      state,
+      action: PayloadAction<{ accessToken: string; refreshToken: string }>
+    ) => {
       state.accessToken = action.payload.accessToken;
       state.refreshToken = action.payload.refreshToken;
       state.isAuthenticated = true;
@@ -332,23 +357,20 @@ const authSlice = createSlice({
       });
 
     // Logout
-    builder
-      .addCase(logoutUser.fulfilled, (state) => {
-        state.user = null;
-        state.accessToken = null;
-        state.refreshToken = null;
-        state.isAuthenticated = false;
-        state.error = null;
-        
-      });
+    builder.addCase(logoutUser.fulfilled, (state) => {
+      state.user = null;
+      state.accessToken = null;
+      state.refreshToken = null;
+      state.isAuthenticated = false;
+      state.error = null;
+    });
 
     // Refresh Token - Not supported by backend
-    builder
-      .addCase(refreshToken.rejected, (state) => {
-        // Since backend doesn't support refresh tokens, this shouldn't happen
-        // But if it does, don't clear tokens - let the user continue
-        // The user will be redirected to login when their token actually expires
-      });
+    builder.addCase(refreshToken.rejected, (state) => {
+      // Since backend doesn't support refresh tokens, this shouldn't happen
+      // But if it does, don't clear tokens - let the user continue
+      // The user will be redirected to login when their token actually expires
+    });
 
     // Get Current User
     builder
@@ -362,12 +384,15 @@ const authSlice = createSlice({
       })
       .addCase(getCurrentUser.rejected, (state, action) => {
         state.isLoading = false;
-        
+
         // Only clear user data, don't logout unless it's a clear auth failure
         state.user = null;
-        
+
         // Only logout if it's a clear authentication failure
-        if (action.payload === 'Authentication failed' || action.payload === 'Token expired - please login again') {
+        if (
+          action.payload === "Authentication failed" ||
+          action.payload === "Token expired - please login again"
+        ) {
           state.accessToken = null;
           state.refreshToken = null;
           state.isAuthenticated = false;
@@ -379,5 +404,11 @@ const authSlice = createSlice({
   },
 });
 
-export const { clearError, setCredentials, initializeFromStorage, handleTokenRefresh, restoreUserData } = authSlice.actions;
+export const {
+  clearError,
+  setCredentials,
+  initializeFromStorage,
+  handleTokenRefresh,
+  restoreUserData,
+} = authSlice.actions;
 export default authSlice.reducer;

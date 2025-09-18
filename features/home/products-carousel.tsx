@@ -4,7 +4,7 @@ import React from "react";
 import { SwiperSlide } from "swiper/react";
 
 export default function ProductsCarousel({ products }: { products: any }) {
-  console.log(products);
+
   return (
     <CarouselComponent
       containerClassName="w-full h-fit py-5"

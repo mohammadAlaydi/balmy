@@ -7,7 +7,6 @@ import { useTranslations } from "next-intl";
 import {
   Heart,
   Trash2,
-  ShoppingCart,
   Wifi,
   AlertCircle,
   RefreshCw,
@@ -24,6 +23,7 @@ import ProductCard from "@/components/product-card";
 import { ProductDetailsResponse } from "@/types/types";
 
 function FavouritePageContent() {
+  
   const t = useTranslations("favourites");
   const router = useRouter();
 

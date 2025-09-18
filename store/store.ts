@@ -6,8 +6,8 @@ import { productDetailsReducer } from "./slices/product-details-slice";
 import { categoryProductsSliceReducer } from "./slices/category-products-slice";
 import { categoriesSliceReducer } from "./slices/categories-slice";
 import { homeSliceReducer } from "./slices/home-slice";
-import { productApi } from "./features/products-slice";
-import favouritesReducer from "./features/favourite-slice";
+import { productApi } from "./slices/products-slice";
+import favouritesReducer from "./slices/favourite-slice";
 
 export const store = configureStore({
   reducer: {

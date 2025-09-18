@@ -6,6 +6,7 @@ export const metadata: Metadata = {
 };
 
 export default function ShippingInfoPage() {
+
   return (
     <div className="min-h-screen bg-gray-50 py-12">
       <div className="container mx-auto px-4 max-w-5xl">
@@ -140,7 +141,6 @@ export default function ShippingInfoPage() {
                 حالياً نقدم خدمة الشحن للمملكة العربية السعودية فقط. نخطط لتوسيع خدماتنا لتشمل دول مجلس التعاون الخليجي في المستقبل القريب.
               </p>
             </section>
-
             <section>
               <h2 className="text-xl font-semibold text-gray-800 mb-4">
                 التواصل بخصوص الشحن

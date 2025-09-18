@@ -1,6 +1,6 @@
-import { useCallback } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState, AppDispatch } from '@/store/store';
+import { useCallback } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch } from "@/store/store";
 import {
   addToFavourites,
   removeFromFavourites,
@@ -10,12 +10,14 @@ import {
   clearError,
   moveToCart,
   syncWithBackend,
-} from '@/store/features/favourite-slice';
-import { Product } from '@/types/types';
+} from "@/store/slices/favourite-slice";
+import { Product } from "@/types/types";
 
 export const useFavourites = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const { items, isLoading, error } = useSelector((state: any) => state.favourites);
+  const { items, isLoading, error } = useSelector(
+    (state: any) => state.favourites
+  );
 
   const addToFavouritesHandler = useCallback(
     (product: Product) => {
@@ -67,7 +69,7 @@ export const useFavourites = () => {
 
   const isFavourite = useCallback(
     (productId: number) => {
-      return items.some(item => item.id === productId);
+      return items.some((item) => item.id === productId);
     },
     [items]
   );
@@ -81,7 +83,7 @@ export const useFavourites = () => {
     favourites: items,
     isLoading,
     error,
-    
+
     // Actions
     addToFavourites: addToFavouritesHandler,
     removeFromFavourites: removeFromFavouritesHandler,
@@ -91,7 +93,7 @@ export const useFavourites = () => {
     toggleFavourite: toggleFavouriteHandler,
     clearError: clearErrorHandler,
     syncWithBackend: syncWithBackendHandler,
-    
+
     // Computed
     isFavourite,
     getFavouritesCount,

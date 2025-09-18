@@ -1,7 +1,7 @@
 "use client";
 
 import { Badge } from "./ui/badge";
-import { Search, X } from "lucide-react";
+import { Search} from "lucide-react";
 import { Input } from "./ui/input";
 import ProductCard from "./product-card";
 import { useEffect, useState } from "react";
@@ -43,7 +43,6 @@ const SearchComponent = ({
     }
   }, [search, products, categoryIndex]);
 
-  console.log(products.data, "💝💝💝")
   return (
     <div
       className={`w-full h-full flex flex-col gap-5 py-3 ${maxHeight || "h-full rounded-md"

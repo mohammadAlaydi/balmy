@@ -1,29 +1,30 @@
 "use client";
 
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { useSelector } from 'react-redux';
-import { RootState } from '@/store/store';
-import LoginForm from '@/components/auth/login-form';
-import { Button } from '@/components/ui/button';
-import { IoArrowBack } from 'react-icons/io5';
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
+import LoginForm from "@/components/auth/login-form";
+import { Button } from "@/components/ui/button";
+import { IoArrowBack } from "react-icons/io5";
 
 export default function LoginPage() {
+  
   const router = useRouter();
   const { isAuthenticated } = useSelector((state: RootState) => state.auth);
 
   useEffect(() => {
     if (isAuthenticated) {
-      router.push('/en/home');
+      router.push("/en/home");
     }
   }, [isAuthenticated, router]);
 
   const handleSwitchToRegister = () => {
-    router.push('/en/auth/register');
+    router.push("/en/auth/register");
   };
 
   const handleForgotPassword = () => {
-    router.push('/en/auth/forgot-password');
+    router.push("/en/auth/forgot-password");
   };
 
   if (isAuthenticated) {
@@ -39,17 +40,14 @@ export default function LoginPage() {
             Sign in to your account to continue
           </p>
         </div>
-        TypeError: Cannot read properties of undefined (reading 'createFilename')
-
-        <LoginForm 
+        <LoginForm
           onSwitchToRegister={handleSwitchToRegister}
           onForgotPassword={handleForgotPassword}
         />
-        
         <div className="text-center">
           <Button
             variant="ghost"
-            onClick={() => router.push('/en')}
+            onClick={() => router.push("/en")}
             className="text-primary hover:underline text-sm flex items-center gap-2 mx-auto"
           >
             <IoArrowBack className="text-sm" />

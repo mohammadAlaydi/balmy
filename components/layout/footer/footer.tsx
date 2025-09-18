@@ -16,7 +16,6 @@ import {
   LEGAL_TERMS,
   SERVICES,
   WORK_HOURS,
-  LOCATION_INFO,
 } from "@/static-data/static-data";
 import { useTranslations } from "next-intl";
 

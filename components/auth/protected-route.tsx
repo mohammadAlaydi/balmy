@@ -5,12 +5,12 @@ import { useRouter } from 'next/navigation';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store/store';
 
-
 interface ProtectedRouteProps {
   children: React.ReactNode;
 }
 
 export function ProtectedRoute({ children }: ProtectedRouteProps) {
+
   const router = useRouter();
   const { isAuthenticated, isLoading, user } = useSelector((state: RootState) => state.auth);
   const [isChecking, setIsChecking] = useState(true);

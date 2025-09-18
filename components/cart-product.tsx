@@ -14,10 +14,15 @@ import { useState, useMemo } from "react";
 interface CartProductProps {
   product: any;
   quantity: number | string;
-  deletedProductId :  number | string
+  deletedProductId: number | string;
 }
 
-export default function CartProduct({ product, quantity , deletedProductId }: CartProductProps) {
+export default function CartProduct({
+  product,
+  quantity,
+  deletedProductId,
+}: CartProductProps) {
+  
   const dispatch = useAppDispatch();
   const { increaseOrDecreaseResponse } = useSelector(
     (state: any) => state.cart
@@ -80,7 +85,6 @@ export default function CartProduct({ product, quantity , deletedProductId }: Ca
           className="photo rounded-md object-cover w-full sm:w-28 aspect-square border border-red-color"
         />
       </div>
-
       {/* Actions */}
       <div className="flex gap-3 w-full justify-between items-center">
         <DeleteProductComponent productId={deletedProductId} />

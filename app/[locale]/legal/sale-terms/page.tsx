@@ -7,6 +7,7 @@ export const metadata: Metadata = {
 };
 
 export default function SaleTermsPage() {
+  
   const t = useTranslations("legal.saleTerms");
 
   return (

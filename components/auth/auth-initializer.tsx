@@ -6,6 +6,7 @@ import { AppDispatch } from '@/store/store';
 import { getCurrentUser, initializeFromStorage } from '@/store/slices/auth-slice';
 
 export default function AuthInitializer() {
+  
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {

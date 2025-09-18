@@ -12,16 +12,22 @@ export default function BannerCarousel({ sliders }: { sliders: any }) {
       pagination={true}
       autoPlay={false}
     >
-      {sliders && sliders?.length > 0 && sliders?.map((slider: any, index: number) => (
-        <SwiperSlide key={index}>
-          <Image
+      {sliders &&
+        sliders?.length > 0 &&
+        sliders?.map((slider: any, index: number) => (
+          <SwiperSlide key={index} className="w-full h-full">
+            <div
+              className="h-full w-full bg-no-repeat bg-center bg-[length:100%_100%] bg-scroll"
+              style={{ backgroundImage: `url(${slider?.image_url})` }}
+            >
+              {/* <Image
             src={slider?.image_url}
             alt={slider?.title}
             fill
-            className="object-cover"
-          />
-        </SwiperSlide>
-      ))}
+          /> */}
+            </div>
+          </SwiperSlide>
+        ))}
     </CarouselComponent>
   );
 }

@@ -28,6 +28,7 @@ interface NewPasswordFormProps {
 }
 
 export default function NewPasswordForm({ email, code, onBackToCodeVerification, onPasswordReset }: NewPasswordFormProps) {
+  
   const [isLoading, setIsLoading] = useState(false);
 
   const {

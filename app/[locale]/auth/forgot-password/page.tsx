@@ -1,93 +1,89 @@
 "use client";
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import ForgotPasswordForm from '@/components/auth/forgot-password-form';
-import ResetCodeForm from '@/components/auth/reset-code-form';
-import NewPasswordForm from '@/components/auth/new-password-form';
-import { Button } from '@/components/ui/button';
-import { IoArrowBack } from 'react-icons/io5';
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import ForgotPasswordForm from "@/components/auth/forgot-password-form";
+import ResetCodeForm from "@/components/auth/reset-code-form";
+import NewPasswordForm from "@/components/auth/new-password-form";
 
-type ForgotPasswordView = 'forgot-password' | 'reset-code' | 'new-password';
+type ForgotPasswordView = "forgot-password" | "reset-code" | "new-password";
 
 export default function ForgotPasswordPage() {
-  const [currentView, setCurrentView] = useState<ForgotPasswordView>('forgot-password');
-  const [email, setEmail] = useState('');
-  const [resetCode, setResetCode] = useState('');
+
+  const [currentView, setCurrentView] =
+    useState<ForgotPasswordView>("forgot-password");
+  const [email, setEmail] = useState("");
+  const [resetCode, setResetCode] = useState("");
   const router = useRouter();
 
   const handleEmailSent = (userEmail: string) => {
     setEmail(userEmail);
-    setCurrentView('reset-code');
+    setCurrentView("reset-code");
   };
 
   const handleCodeVerified = (code: string) => {
     setResetCode(code);
-    setCurrentView('new-password');
+    setCurrentView("new-password");
   };
 
   const handlePasswordReset = () => {
     // Redirect to login page after successful password reset
-    router.push('/en/auth/login');
+    router.push("/en/auth/login");
   };
 
   const handleBackToLogin = () => {
-    router.push('/en/auth/login');
+    router.push("/en/auth/login");
   };
 
   const renderCurrentView = () => {
     switch (currentView) {
-      case 'forgot-password':
+      case "forgot-password":
         return (
-          <ForgotPasswordForm 
+          <ForgotPasswordForm
             onBackToLogin={handleBackToLogin}
             onEmailSent={handleEmailSent}
           />
         );
-      case 'reset-code':
+      case "reset-code":
         return (
-          <ResetCodeForm 
+          <ResetCodeForm
             email={email}
-            onBackToForgotPassword={() => setCurrentView('forgot-password')}
+            onBackToForgotPassword={() => setCurrentView("forgot-password")}
             onCodeVerified={handleCodeVerified}
           />
         );
-      case 'new-password':
+      case "new-password":
         return (
-          <NewPasswordForm 
+          <NewPasswordForm
             email={email}
             code={resetCode}
-            onBackToCodeVerification={() => setCurrentView('reset-code')}
+            onBackToCodeVerification={() => setCurrentView("reset-code")}
             onPasswordReset={handlePasswordReset}
           />
         );
       default:
-        return <ForgotPasswordForm onBackToLogin={handleBackToLogin} onEmailSent={handleEmailSent} />;
+        return (
+          <ForgotPasswordForm
+            onBackToLogin={handleBackToLogin}
+            onEmailSent={handleEmailSent}
+          />
+        );
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-[65vh] flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
         <div className="text-center">
-          <h1 className="text-3xl font-bold text-gray-900">Password Recovery</h1>
+          <h1 className="text-3xl font-bold text-gray-900">
+            Password Recovery
+          </h1>
           <p className="mt-2 text-sm text-gray-600">
             Follow the steps to reset your password
           </p>
         </div>
-        
+
         {renderCurrentView()}
-        
-        <div className="text-center">
-          <Button
-            variant="ghost"
-            onClick={handleBackToLogin}
-            className="text-primary hover:underline text-sm flex items-center gap-2 mx-auto"
-          >
-            <IoArrowBack className="text-sm" />
-            Back to Login
-          </Button>
-        </div>
       </div>
     </div>
   );

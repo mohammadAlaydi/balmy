@@ -306,6 +306,7 @@ export const quickCartProducts = [
     quantity: 1,
   },
 ];
+
 export const LEGAL_TERMS = [
   { title: "legal.terms-and-conditions", path: "/terms-and-conditions" },
   { title: "legal.privacy-policy", path: "/privacy-policy" },
@@ -335,6 +336,7 @@ export const LOCATION_INFO = {
   address: "contact.address",
   phone: "contact.phone-number",
 };
+
 export const LANGUAGES: { code: string; title: string }[] = [
   {
     code: "ar",
@@ -345,6 +347,7 @@ export const LANGUAGES: { code: string; title: string }[] = [
     title: "English",
   },
 ];
+
 export const getCurrentMainImage = (
   product: any,
   selectedVariantIndex: number
@@ -360,26 +363,36 @@ export const getCurrentMainImage = (
     product?.base_image?.original_image_url || "/assets/images/no-image.webp"
   );
 };
-export const getHoverImage = (product: any, selectedVariantIndex: number): string => {
+
+export const getHoverImage = (
+  product: any,
+  selectedVariantIndex: number
+): string => {
   if (product?.variants && product.variants.length > 0) {
     const variantIndex = selectedVariantIndex ?? 0;
     const variant = product.variants[variantIndex];
     return (
-      variant?.hovered_image?.original_image_url || getCurrentMainImage(product, selectedVariantIndex)
+      variant?.hovered_image?.original_image_url ||
+      getCurrentMainImage(product, selectedVariantIndex)
     );
   }
-  return product?.hovered_image?.original_image_url || getCurrentMainImage(product, selectedVariantIndex);
+  return (
+    product?.hovered_image?.original_image_url ||
+    getCurrentMainImage(product, selectedVariantIndex)
+  );
 };
+
 export const SUCCESS_MESSAGES = {
-  TITLE: 'Shipping Successful',
-  DESCRIPTION: 'Your order has been successfully shipped! You will receive tracking information via email and can monitor your delivery status.',
-  GO_HOME: 'Go Home',
+  TITLE: "Shipping Successful",
+  DESCRIPTION:
+    "Your order has been successfully shipped! You will receive tracking information via email and can monitor your delivery status.",
+  GO_HOME: "Go Home",
 } as const;
 
 export const ORDER_INFO_LABELS = {
-  ORDER_NUMBER: 'Order Number',
-  ORDER_STATUS: 'Order Status',
-  SHIPPING_METHOD: 'Shipping Method',
-  SHIPPING_AMOUNT: 'Shipping Amount',
-  PAYMENT_TITLE: 'Payment Title',
+  ORDER_NUMBER: "Order Number",
+  ORDER_STATUS: "Order Status",
+  SHIPPING_METHOD: "Shipping Method",
+  SHIPPING_AMOUNT: "Shipping Amount",
+  PAYMENT_TITLE: "Payment Title",
 } as const;

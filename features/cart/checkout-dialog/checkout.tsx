@@ -32,6 +32,7 @@ const defaultFormValues: CheckoutFormValues = {
     address1: "",
     city: "",
     phone: "",
+    use_for_shipping: true,
   },
   shipping: {
     address1: "",
@@ -42,7 +43,6 @@ const defaultFormValues: CheckoutFormValues = {
     method: "cashondelivery" as const,
   },
   shipping_method: "flatrate_flatrate" as const,
-  same_as_billing: true,
 };
 
 export default function Checkout() {
@@ -51,10 +51,12 @@ export default function Checkout() {
     mode: "onChange",
     defaultValues: defaultFormValues,
   });
-  const dispatch = useDispatch()
-  const { saveOrderData, isLoading, status } = useSelector((state: any) => state.cart)
+  const dispatch = useDispatch();
+  const { saveOrderData, isLoading, status } = useSelector(
+    (state: any) => state.cart
+  );
   const onSubmit = (values: CheckoutFormValues) => {
-    dispatch(saveOrder(values) as any)
+    dispatch(saveOrder(values) as any);
   };
   return (
     // <div className="w-full xl:w-2/3 mx-auto">
@@ -108,7 +110,12 @@ export default function Checkout() {
         noValidate
         className="flex flex-col gap-4 mt-5 "
       >
-        <ShippingForm form={form} isSubmitting={isLoading} status={status} data={saveOrderData || null} />
+        <ShippingForm
+          form={form}
+          isSubmitting={isLoading}
+          status={status}
+          data={saveOrderData || null}
+        />
       </form>
     </Form>
   );

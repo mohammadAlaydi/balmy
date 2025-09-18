@@ -12,8 +12,6 @@ interface Category {
 }
 
 export default function Categories({ categories }: { categories: any }) {
-  console.log(categories, "❤️❤️");
-  const image_base_url = process.env.NEXT_PUBLIC_IMAGE_BASE_URL;
   return (
     <CarouselComponent
       spaceBetween={20}
@@ -50,7 +48,7 @@ export default function Categories({ categories }: { categories: any }) {
                 >
                   <div>
                     <Image
-                      src={`${image_base_url}/${category?.banner_url}`}
+                      src={`${category?.banner_url}`}
                       width={250}
                       height={250}
                       className="rounded-full m-auto transform hover:scale-[1.03] transition-all duration-1000 overflow-hidden"

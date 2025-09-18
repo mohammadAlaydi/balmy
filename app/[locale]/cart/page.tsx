@@ -30,7 +30,7 @@ export default function CartPage() {
                   key={item?.product?.id}
                   product={item?.product}
                   quantity={item?.quantity}
-                  deletedProductId ={item?.id}
+                  deletedProductId={item?.id}
                 />
               ))}
           </div>

@@ -5,7 +5,6 @@ import {
   FormControl,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from "./ui/form";
 import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
@@ -32,11 +31,9 @@ type LabelAndRadioProps<T extends Record<string, any>> = {
 export default function LabelAndRadio<T extends Record<string, any>>({
   inputName,
   options,
-  labelText,
   parentStyle = "",
   labelStyle = "",
   itemClassName = "",
-  inputId,
   control,
   action,
 }: LabelAndRadioProps<T>) {
