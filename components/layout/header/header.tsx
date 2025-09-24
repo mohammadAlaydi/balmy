@@ -230,8 +230,8 @@ const NavigationLinks = ({ navbarCategories }: { navbarCategories: any }) => {
                           asChild
                           className="cursor-pointer bg-transparent hover:bg-accent hover:text-accent-foreground"
                         >
-                          <Link
-                            href={`/category/${link?.slug}/${nested?.slug}`}
+                  <Link
+                    href={nested?.slug ? `/category/${link?.slug}/${nested?.slug}` : `/category/${link?.slug}/${nested?.id}`}
                             prefetch={true}
                             className="block rounded-md px-1.5 py-1 text-sm hover:bg-accent hover:text-accent-foreground text-end"
                           >

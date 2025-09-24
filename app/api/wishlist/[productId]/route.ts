@@ -3,6 +3,10 @@ import { makeAuthenticatedRequest } from '@/lib/auth-middleware';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+export const fetchCache = 'force-no-store';
+
 export async function POST(
   request: NextRequest,
   { params }: { params: { productId: string } }

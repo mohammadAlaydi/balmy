@@ -13,7 +13,11 @@ export async function makeAuthenticatedRequest(
   const token = await getAuthToken();
   
   if (!token) {
-    throw new Error('No authentication token found');
+    // Gracefully return 401 so API routes can propagate proper status
+    return new Response(
+      JSON.stringify({ message: 'Authentication required' }),
+      { status: 401, headers: { 'Content-Type': 'application/json' } }
+    );
   }
 
   const headers = {
