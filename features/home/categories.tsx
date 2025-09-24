@@ -16,7 +16,8 @@ export default function Categories({ categories }: { categories: any }) {
     <CarouselComponent
       spaceBetween={20}
       slidesPerView={1}
-      containerClassName="categories-carousel h-fit mb-5"
+      containerClassName="categories-carousel h-auto mb-5"
+      autoHeight
       breakpoints={{
         300: {
           slidesPerView: 1,

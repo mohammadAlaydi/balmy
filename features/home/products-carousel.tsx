@@ -7,9 +7,10 @@ export default function ProductsCarousel({ products }: { products: any }) {
 
   return (
     <CarouselComponent
-      containerClassName="w-full h-fit py-5"
+      containerClassName="w-full h-auto py-5"
       spaceBetween={10}
       slidesPerView={1}
+      autoHeight
       breakpoints={{
         300: {
           slidesPerView: 1,

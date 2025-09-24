@@ -7,20 +7,21 @@ const getHomeData = createAsyncThunk("home", async () => {
     const response = await fetch(`${API_KEY}/v1/home`, {
       method: "GET",
       headers: {
-        Authorization: `Bearer ${localStorage?.getItem("accessToken")}`,
         Accept: "application/json",
         "Content-Type": "application/json",
       },
+      credentials: 'include', // This will include cookies
     });
 
     if (!response.ok) {
-      throw new Error("Failed to fetch category products");
+      throw new Error("Failed to fetch home data");
     }
 
     const data = await response.json();
     return data;
   } catch (error: any) {
     console.log(error);
+    throw error;
   }
 });
 const homeSlice = createSlice({

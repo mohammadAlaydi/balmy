@@ -24,7 +24,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import toast from "react-hot-toast";
 
-export default function UserMenu() {
+export default function UserMenu({ isMobile = false }: { isMobile?: boolean }) {
   const [isMounted, setIsMounted] = useState(false);
   const dispatch = useDispatch<AppDispatch>();
   const { user, isAuthenticated } = useSelector(
@@ -49,7 +49,7 @@ export default function UserMenu() {
   // Don't render until mounted to avoid SSR issues
   if (!isMounted) {
     return (
-      <Button variant="ghost" size="icon" className="hidden lg:flex">
+      <Button variant="ghost" size="icon" className={isMobile ? "lg:hidden" : "hidden lg:flex"}>
         <FaRegUser className="text-xl" />
       </Button>
     );
@@ -59,7 +59,7 @@ export default function UserMenu() {
     return (
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="ghost" size="icon" className="hidden lg:flex">
+          <Button variant="ghost" size="icon" className={isMobile ? "lg:hidden" : "hidden lg:flex"}>
             <FaRegUser className="text-xl" />
           </Button>
         </DropdownMenuTrigger>
@@ -109,7 +109,7 @@ export default function UserMenu() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" className="hidden lg:flex">
+        <Button variant="ghost" size="icon" className={isMobile ? "lg:hidden" : "hidden lg:flex"}>
           <FaRegUser className="text-xl" />
         </Button>
       </DropdownMenuTrigger>

@@ -13,33 +13,34 @@ import { Input } from '@/components/ui/input';
 import { PasswordInput } from '@/components/ui/password-input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import toast from 'react-hot-toast';
-
-const registerSchema = z
-  .object({
-    firstName: z.string().min(2, 'First name must be at least 2 characters'),
-    lastName: z.string().min(2, 'Last name must be at least 2 characters'),
-    email: z.string().email('Invalid email address'),
-    password: z.string().min(8, 'Password must be at least 8 characters'),
-    confirmPassword: z.string(),
-    phone: z.string().optional(),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords don't match",
-    path: ['confirmPassword'],
-  });
-
-type RegisterFormData = z.infer<typeof registerSchema>;
+import { useTranslations } from 'next-intl';
 
 interface RegisterFormProps {
   onSwitchToLogin: () => void;
 }
 
 export default function RegisterForm({ onSwitchToLogin }: RegisterFormProps) {
-  
+  const t = useTranslations("auth");
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
   const { error } = useSelector((state: RootState) => state.auth);
+
+  const registerSchema = z
+    .object({
+      firstName: z.string().min(2, t("first-name-required")),
+      lastName: z.string().min(2, t("last-name-required")),
+      email: z.string().email(t("invalid-email")),
+      password: z.string().min(8, t("password-min-length")),
+      confirmPassword: z.string(),
+      phone: z.string().optional(),
+    })
+    .refine((data) => data.password === data.confirmPassword, {
+      message: t("passwords-dont-match"),
+      path: ['confirmPassword'],
+    });
+
+  type RegisterFormData = z.infer<typeof registerSchema>;
 
   const {
     register,
@@ -68,13 +69,13 @@ export default function RegisterForm({ onSwitchToLogin }: RegisterFormProps) {
       // if registerUser is a createAsyncThunk, unwrap to throw on error
       await dispatch(registerAction(apiData)).unwrap();
 
-      toast.success('Registration successful! Welcome to Farada!');
+      toast.success(t("registration-successful"));
       router.push('/home');
     } catch (err: any) {
       const msg =
         typeof err === 'string'
           ? err
-          : err?.message ?? 'Registration failed';
+          : err?.message ?? t("registration-failed");
       toast.error(msg);
     } finally {
       setIsLoading(false);
@@ -84,9 +85,9 @@ export default function RegisterForm({ onSwitchToLogin }: RegisterFormProps) {
   return (
     <Card className="w-full max-w-md mx-auto">
       <CardHeader className="text-center">
-        <CardTitle className="text-2xl font-bold">Create Account</CardTitle>
+        <CardTitle className="text-2xl font-bold">{t("register")}</CardTitle>
         <p className="text-muted-foreground">
-          Join Farada and start your shopping journey today!
+          {t("join-message")}
         </p>
       </CardHeader>
 
@@ -97,7 +98,7 @@ export default function RegisterForm({ onSwitchToLogin }: RegisterFormProps) {
               <Input
                 {...register('firstName')}
                 type="text"
-                placeholder="First name"
+                placeholder={t("first-name")}
                 autoComplete="given-name"
                 aria-invalid={!!errors.firstName}
                 className={errors.firstName ? 'border-red-500' : ''}
@@ -113,7 +114,7 @@ export default function RegisterForm({ onSwitchToLogin }: RegisterFormProps) {
               <Input
                 {...register('lastName')}
                 type="text"
-                placeholder="Last name"
+                placeholder={t("last-name")}
                 autoComplete="family-name"
                 aria-invalid={!!errors.lastName}
                 className={errors.lastName ? 'border-red-500' : ''}
@@ -130,7 +131,7 @@ export default function RegisterForm({ onSwitchToLogin }: RegisterFormProps) {
             <Input
               {...register('email')}
               type="email"
-              placeholder="Email address"
+              placeholder={t("email")}
               autoComplete="email"
               aria-invalid={!!errors.email}
               className={errors.email ? 'border-red-500' : ''}
@@ -146,7 +147,7 @@ export default function RegisterForm({ onSwitchToLogin }: RegisterFormProps) {
             <Input
               {...register('phone')}
               type="tel"
-              placeholder="Phone number (optional)"
+              placeholder={t("phone-optional")}
               autoComplete="tel"
             />
           </div>
@@ -154,7 +155,7 @@ export default function RegisterForm({ onSwitchToLogin }: RegisterFormProps) {
           <div>
             <PasswordInput
               {...register('password')}
-              placeholder="Password"
+              placeholder={t("password")}
               autoComplete="new-password"
               aria-invalid={!!errors.password}
               className={errors.password ? 'border-red-500' : ''}
@@ -169,7 +170,7 @@ export default function RegisterForm({ onSwitchToLogin }: RegisterFormProps) {
           <div>
             <PasswordInput
               {...register('confirmPassword')}
-              placeholder="Confirm password"
+              placeholder={t("confirm-password")}
               autoComplete="new-password"
               aria-invalid={!!errors.confirmPassword}
               className={errors.confirmPassword ? 'border-red-500' : ''}
@@ -186,7 +187,7 @@ export default function RegisterForm({ onSwitchToLogin }: RegisterFormProps) {
           )}
 
           <Button type="submit" className="w-full" disabled={isLoading}>
-            {isLoading ? 'Creating account...' : 'Create Account'}
+            {isLoading ? t("creating-account") : t("create-account")}
           </Button>
 
           <div className="text-center">
@@ -195,7 +196,7 @@ export default function RegisterForm({ onSwitchToLogin }: RegisterFormProps) {
               onClick={onSwitchToLogin}
               className="text-primary hover:underline text-sm"
             >
-              Already have an account? Sign in
+              {t("already-have-account")}
             </button>
           </div>
         </form>

@@ -7,6 +7,7 @@ import Header from "@/components/layout/header/header";
 import Footer from "@/components/layout/footer/footer";
 import ReduxProvider from "@/store/redux-provider";
 import Providers from "@/components/providers";
+import AuthInitializer from "@/components/auth/auth-initializer";
 
 const cairo = Cairo({
   variable: "--font-cairo",
@@ -44,6 +45,7 @@ export default async function RootLayout({
         <ReduxProvider>
           <NextIntlClientProvider messages={messages}>
             <Header />
+            <AuthInitializer />
             <Providers>{children}</Providers>
             <Footer />
           </NextIntlClientProvider>

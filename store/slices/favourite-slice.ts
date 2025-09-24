@@ -21,55 +21,9 @@ const getStoredFavourites = (): Product[] => {
   }
 };
 
-// Helper function to check authentication
-const isAuthenticated = (): boolean => {
-  if (typeof window === 'undefined') return false;
-  const accessToken = localStorage.getItem('accessToken');
-  return !!accessToken;
-};
-
-// Helper function to handle API calls with token refresh
-const makeAuthenticatedRequest = async (url: string, options: RequestInit, dispatch: any) => {
-  const accessToken = localStorage.getItem('accessToken');
-  
-  if (!accessToken) {
-    throw new Error('Please login to manage favourites');
-  }
-
-  let response = await fetch(url, {
-    ...options,
-    headers: {
-      ...options.headers,
-      'Authorization': `Bearer ${accessToken}`,
-    },
-  });
-
-  // If we get a 401, try to refresh the token
-  if (response.status === 401) {
-    try {
-      // Import the refresh token action dynamically to avoid circular dependency
-      const { refreshToken } = await import('./auth-slice');
-      const refreshResult = await dispatch(refreshToken());
-      
-      if (refreshResult.meta.requestStatus === 'fulfilled') {
-        // Retry with new token
-        const newToken = localStorage.getItem('accessToken');
-        if (newToken) {
-          response = await fetch(url, {
-            ...options,
-            headers: {
-              ...options.headers,
-              'Authorization': `Bearer ${newToken}`,
-            },
-          });
-        }
-      }
-    } catch (refreshError) {
-      // If refresh fails, throw the original error
-      throw new Error('Authentication failed. Please login again.');
-    }
-  }
-
+// Requests are proxied through Next.js API routes with httpOnly cookies
+const makeAuthenticatedRequest = async (url: string, options: RequestInit) => {
+  const response = await fetch(url, options);
   return response;
 };
 
@@ -78,14 +32,12 @@ export const addToFavourites = createAsyncThunk(
   'favourites/add',
   async (product: Product, { rejectWithValue, dispatch }) => {
     try {
-      const apiUrl = buildApiUrl(`${API_CONFIG.ENDPOINTS.WISHLIST}/${product.id}`);
-      
-      const response = await makeAuthenticatedRequest(apiUrl, {
+      const response = await makeAuthenticatedRequest(`/api/wishlist/${product.id}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-      }, dispatch);
+      });
 
       if (!response.ok) {
         const error = await response.json();
@@ -103,14 +55,12 @@ export const removeFromFavourites = createAsyncThunk(
   'favourites/remove',
   async (productId: number, { rejectWithValue, dispatch }) => {
     try {
-      const apiUrl = buildApiUrl(`${API_CONFIG.ENDPOINTS.WISHLIST}/${productId}`);
-      
-      const response = await makeAuthenticatedRequest(apiUrl, {
+      const response = await makeAuthenticatedRequest(`/api/wishlist/${productId}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-      }, dispatch);
+      });
 
       if (!response.ok) {
         const error = await response.json();
@@ -128,14 +78,12 @@ export const fetchFavourites = createAsyncThunk(
   'favourites/fetch',
   async (_, { rejectWithValue, dispatch }) => {
     try {
-      const apiUrl = buildApiUrl(API_CONFIG.ENDPOINTS.WISHLIST);
-      
-      const response = await makeAuthenticatedRequest(apiUrl, {
+      const response = await makeAuthenticatedRequest(`/api/wishlist`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
         },
-      }, dispatch);
+      });
 
       if (!response.ok) {
         const error = await response.json();
@@ -187,11 +135,9 @@ export const clearFavourites = createAsyncThunk(
   'favourites/clear',
   async (_, { rejectWithValue, dispatch }) => {
     try {
-      const apiUrl = buildApiUrl(`${API_CONFIG.ENDPOINTS.WISHLIST}/all`);
-      
-      const response = await makeAuthenticatedRequest(apiUrl, {
+      const response = await makeAuthenticatedRequest(`/api/wishlist/all`, {
         method: 'DELETE',
-      }, dispatch);
+      });
 
       if (!response.ok) {
         const error = await response.json();
@@ -210,13 +156,12 @@ export const moveToCart = createAsyncThunk(
   async (wishlistId: number, { rejectWithValue, dispatch }) => {
     try {
       // First, get the product ID from the wishlist item
-      const wishlistUrl = buildApiUrl(`${API_CONFIG.ENDPOINTS.WISHLIST}`);
-      const wishlistResponse = await makeAuthenticatedRequest(wishlistUrl, {
+      const wishlistResponse = await makeAuthenticatedRequest(`/api/wishlist`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
         },
-      }, dispatch);
+      });
 
       if (!wishlistResponse.ok) {
         const error = await wishlistResponse.json();
@@ -233,16 +178,13 @@ export const moveToCart = createAsyncThunk(
       const productId = wishlistItem.product.id;
       
       // Now add the product to cart
-      const cartUrl = buildApiUrl(`/v1/customer/cart/add/${productId}`);
-      const response = await makeAuthenticatedRequest(cartUrl, {
+      const response = await makeAuthenticatedRequest(`/api/cart/add`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          quantity: 1,
-        }),
-      }, dispatch);
+        body: JSON.stringify({ productId, quantity: 1 }),
+      });
 
       if (!response.ok) {
         const error = await response.json();
@@ -252,13 +194,12 @@ export const moveToCart = createAsyncThunk(
       const data = await response.json();
       
       // Remove from wishlist after successfully adding to cart
-      const removeUrl = buildApiUrl(`${API_CONFIG.ENDPOINTS.WISHLIST}/${wishlistId}`);
-      await makeAuthenticatedRequest(removeUrl, {
+      await makeAuthenticatedRequest(`/api/wishlist/${wishlistId}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-      }, dispatch);
+      });
       
       // After successfully moving to cart, refresh the cart data
       const { getCartProducts } = await import('./cart-slice');

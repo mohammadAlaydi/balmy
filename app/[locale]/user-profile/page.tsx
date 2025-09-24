@@ -7,6 +7,9 @@ import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useAuth } from "@/hooks/use-auth";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/store/store";
+import { getCurrentUser } from "@/store/slices/auth-slice";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -60,6 +63,7 @@ export default function page() {
   const locale = params.locale as string;
   const isRTL = locale === "ar";
   const { user, isLoading, isAuthenticated, accessToken } = useAuth();
+  const dispatch = useDispatch<AppDispatch>();
 
   const form = useForm<ProfileFormData>({
     resolver: zodResolver(profileSchema),
@@ -74,18 +78,25 @@ export default function page() {
     },
   });
 
+  // Load user data when component mounts
+  React.useEffect(() => {
+    if (isAuthenticated && !user) {
+      dispatch(getCurrentUser());
+    }
+  }, [dispatch, isAuthenticated, user]);
+
   // Update form values when user data changes
   React.useEffect(() => {
     if (user && Object.keys(user).length > 0) {
       console.log("Setting form values with user data:", user);
       const formData = {
-        firstName: user.firstName || "",
-        lastName: user.lastName || "",
+        firstName: user.first_name || "",
+        lastName: user.last_name || "",
         email: user.email || "",
         phone: user.phone || "",
-        country: user.country || "المملكة العربية السعودية",
-        city: user.city || "",
-        address: user.address || "",
+        country: "المملكة العربية السعودية", // Default country
+        city: "", // Not provided in API response
+        address: "", // Not provided in API response
       };
       console.log("Form data to set:", formData);
       form.reset(formData);
@@ -136,13 +147,13 @@ export default function page() {
       "Profile page - Full user object:",
       JSON.stringify(user, null, 2)
     );
-    console.log("Profile page - User firstName:", user.firstName);
-    console.log("Profile page - User lastName:", user.lastName);
+    console.log("Profile page - User first_name:", user.first_name);
+    console.log("Profile page - User last_name:", user.last_name);
     console.log("Profile page - User email:", user.email);
     console.log("Profile page - User phone:", user.phone);
-    console.log("Profile page - User country:", user.country);
-    console.log("Profile page - User city:", user.city);
-    console.log("Profile page - User address:", user.address);
+    console.log("Profile page - User name:", user.name);
+    console.log("Profile page - User gender:", user.gender);
+    console.log("Profile page - User date_of_birth:", user.date_of_birth);
   }
 
   // Debug: Check localStorage

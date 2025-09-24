@@ -175,7 +175,7 @@ const ActionIcons = ({
           <DropdownMenuTrigger asChild>
             <MdLanguage className="text-2xl cursor-pointer text-black" />
           </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-40 bg-white overflow-hidden  h-fit z-50 shadow-[0px_6px_20px_rgba(149,157,165,0.1)] rounded-lg">
+          <DropdownMenuContent className="w-40 bg-white overflow-hidden  h-fit z-[60] shadow-[0px_6px_20px_rgba(149,157,165,0.1)] rounded-lg">
             <DropdownMenuLabel className="p-2">
               {t("language")}
             </DropdownMenuLabel>
@@ -203,12 +203,14 @@ const ActionIcons = ({
 
 const NavigationLinks = ({ navbarCategories }: { navbarCategories: any }) => {
   const t = useTranslations("navigation");
+  // Limit to first 5 categories
+  const limitedCategories = navbarCategories?.slice(0, 5) || [];
 
   return (
     <NavigationMenu viewport={false} className="hidden lg:block">
       <NavigationMenuList>
-        {navbarCategories && navbarCategories.length > 0 ? (
-          navbarCategories.map((link: any) => {
+        {limitedCategories && limitedCategories.length > 0 ? (
+          limitedCategories.map((link: any) => {
             const hasChildren = link?.children && link?.children?.length > 0;
             return hasChildren ? (
               <NavigationMenuItem key={link?.name}>
@@ -291,6 +293,8 @@ const MobileMenu = ({
   navbarCategories: any;
 }) => {
   const t = useTranslations("navigation");
+  // Limit to first 5 categories
+  const limitedCategories = navbarCategories?.slice(0, 5) || [];
 
   return (
     <DrawerComponent
@@ -307,12 +311,8 @@ const MobileMenu = ({
         </h2>
 
         {/* ✅ Mobile Navigation Links */}
-        <Accordion
-          type="single"
-          collapsible
-          className="w-full flex-1 overflow-y-auto"
-        >
-          {navbarCategories?.map((category: any, index: number) => (
+        <Accordion className="w-full flex-1 overflow-y-auto">
+          {limitedCategories?.map((category: any, index: number) => (
             <AccordionItem key={category.id} value={`item-${index}`}>
               {category.children && category.children.length > 0 ? (
                 <>
@@ -354,17 +354,24 @@ const MobileMenu = ({
             <Link href="/search" prefetch={true}>
               <IoSearch className="text-xl cursor-pointer text-gray-600 hover:text-gray-900" />
             </Link>
-            <Link href="/user-profile" prefetch={true}>
-              <FaRegUser className="text-xl cursor-pointer text-gray-600 hover:text-gray-900" />
-            </Link>
-            <Link href="/favorites" prefetch={true}>
+             <UserMenu isMobile={true} />
+            <Link href="/favourite" prefetch={true} className="relative">
               <FaRegHeart className="text-xl cursor-pointer text-gray-600 hover:text-gray-900" />
+              {(() => {
+                const { getFavouritesCount } = useFavourites();
+                const favouritesCount = getFavouritesCount();
+                return favouritesCount > 0 ? (
+                  <span className="absolute -top-2 -right-2 h-5 w-5 p-0 text-xs flex items-center justify-center bg-red-500 text-white rounded-full">
+                    {favouritesCount}
+                  </span>
+                ) : null;
+              })()}
             </Link>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <MdLanguage className="text-2xl cursor-pointer text-gray-600 hover:text-gray-900" />
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-40 bg-white overflow-hidden h-fit z-50 shadow-[0px_6px_20px_rgba(149,157,165,0.1)] rounded-lg">
+              <DropdownMenuContent className="w-40 bg-white overflow-hidden h-fit z-[60] shadow-[0px_6px_20px_rgba(149,157,165,0.1)] rounded-lg">
                 <DropdownMenuLabel className="p-2">
                   {t("language")}
                 </DropdownMenuLabel>
@@ -382,13 +389,26 @@ const MobileMenu = ({
                 </DropdownMenuGroup>
               </DropdownMenuContent>
             </DropdownMenu>
-            <DrawerComponent
-              trigger={
-                <MdOutlineShoppingCart className="text-xl cursor-pointer text-gray-600 hover:text-gray-900" />
-              }
-            >
-              <QuickCart />
-            </DrawerComponent>
+            {(() => {
+              const cartData = useSelector((state: RootState) => state.cart.data);
+              const cartCount = cartData?.data?.items?.length || 0;
+              return (
+                <div className="relative">
+                  <DrawerComponent
+                    trigger={
+                      <MdOutlineShoppingCart className="text-xl cursor-pointer text-gray-600 hover:text-gray-900" />
+                    }
+                  >
+                    <QuickCart />
+                  </DrawerComponent>
+                  {cartCount > 0 ? (
+                    <span className="absolute -top-2 -right-2 h-5 w-5 p-0 text-xs flex items-center justify-center bg-blue-500 text-white rounded-full">
+                      {cartCount}
+                    </span>
+                  ) : null}
+                </div>
+              );
+            })()}
           </div>
         </div>
       </div>
@@ -427,9 +447,9 @@ export default function Header() {
     return <Loading fullScreen={true} variant="spinner" size="xl" />;
   }
   return (
-    <div className="w-full">
+    <div className="w-full relative z-50">
       <TopBar />
-      <div className="flex justify-between items-center gap-3 py-5 px-3 lg:px-5 shadow-[0px_6px_20px_rgba(149,157,165,0.1)] transition-shadow duration-200">
+      <div className="flex justify-between items-center gap-3 py-5 px-3 lg:px-5 shadow-[0px_6px_20px_rgba(149,157,165,0.1)] transition-shadow duration-200 bg-white relative z-50">
         <ActionIcons languageItems={languageItems} />
         <NavigationLinks
           navbarCategories={(categories as any)?.categories?.categories || []}

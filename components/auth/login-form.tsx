@@ -14,7 +14,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import toast from "react-hot-toast";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
-import { Loader } from "lucide-react";
+import { Loader } from "react-icons/fa";
 import { Badge } from "../ui/badge";
 
 interface LoginFormProps {
@@ -119,23 +119,25 @@ export default function LoginForm({
             )}
           </Button>
 
-          <div className="text-center">
-            <button
-              type="button"
-              onClick={onSwitchToRegister}
-              className="text-primary hover:underline text-sm"
-            >
-              {t("dont-have-account")}
-            </button>
-          </div>
-          <div>
-            <button
-              type="button"
-              className="text-primary hover:underline text-sm"
-              onClick={onForgotPassword}
-            >
-              {t("forgot-password")}
-            </button>
+          <div className="text-center space-y-2">
+            <div>
+              <button
+                type="button"
+                onClick={onSwitchToRegister}
+                className="text-primary hover:underline text-sm"
+              >
+                {t("dont-have-account")}
+              </button>
+            </div>
+            <div>
+              <button
+                type="button"
+                className="text-primary hover:underline text-sm"
+                onClick={onForgotPassword}
+              >
+                {t("forgot-password")}
+              </button>
+            </div>
           </div>
         </form>
       </CardContent>

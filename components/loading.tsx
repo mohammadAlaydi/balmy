@@ -1,5 +1,5 @@
 import React from "react";
-import { Loader2 } from "lucide-react";
+import { FaSpinner } from "react-icons/fa";
 import { PuffLoader } from "react-spinners";
 
 interface LoadingProps {
@@ -32,7 +32,7 @@ const Loading: React.FC<LoadingProps> = ({
   };
 
   const renderSpinner = () => (
-    <Loader2 className={`${sizeClasses[size]} animate-spin text-primary`} />
+    <FaSpinner className={`${sizeClasses[size]} animate-spin text-primary`} />
   );
 
   const renderDots = () => (

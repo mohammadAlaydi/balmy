@@ -17,6 +17,7 @@ export default function CarouselComponent({
   pagination,
   navigation,
   autoPlay,
+  autoHeight,
 }: {
   spaceBetween: number;
   slidesPerView: number;
@@ -26,6 +27,7 @@ export default function CarouselComponent({
   pagination?: boolean;
   navigation?: boolean;
   autoPlay?: boolean;
+  autoHeight?: boolean;
 }) {
   const modules = [];
   if (pagination) modules.push(Pagination);
@@ -38,11 +40,13 @@ export default function CarouselComponent({
         pagination={pagination ? { clickable: true } : false}
         navigation={navigation}
         modules={modules}
-        className="mySwiper h-full"
+        className="mySwiper w-full"
         spaceBetween={spaceBetween || 30}
         slidesPerView={slidesPerView || 1}
         breakpoints={breakpoints}
         autoplay={autoPlay ? { delay: 5000, disableOnInteraction: false } : false}
+        autoHeight={!!autoHeight}
+        style={{ width: '100%', height: autoHeight ? 'auto' : '100%' }}
       > 
         {children}
       </Swiper>

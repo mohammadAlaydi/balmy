@@ -1,7 +1,7 @@
 "use client";
 
 import { Badge } from "./ui/badge";
-import { Search} from "lucide-react";
+import { FaSearch } from "react-icons/fa";
 import { Input } from "./ui/input";
 import ProductCard from "./product-card";
 import { useEffect, useState } from "react";
@@ -59,7 +59,7 @@ const SearchComponent = ({
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
-        <Search className="cursor-pointer absolute ltr:right-2 rtl:left-2 top-1/2 transform -translate-y-1/2 text-sm" />
+        <FaSearch className="cursor-pointer absolute ltr:right-2 rtl:left-2 top-1/2 transform -translate-y-1/2 text-sm" />
       </div>
       <p>{t("suggested-words")}</p>
       <div className="flex flex-wrap gap-2">

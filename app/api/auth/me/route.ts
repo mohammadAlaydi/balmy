@@ -1,12 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export async function GET(request: NextRequest) {
   try {
-    const cookieStore = cookies();
-    const token = cookieStore.get('accessToken')?.value;
+    const token = request.cookies.get('accessToken')?.value;
 
     if (!token) {
       return NextResponse.json(
@@ -15,7 +13,7 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const response = await fetch(`${API_URL}/v1/customer/me`, {
+    const response = await fetch(`${API_URL}/v1/customer/get`, {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${token}`,

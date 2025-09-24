@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { CheckIcon } from "@/components/ui/icons/check-icon";
+import { FaCheck } from "react-icons/fa";
 import { SuccessProps } from "@/types/types";
 import { ORDER_INFO_LABELS, SUCCESS_MESSAGES } from "@/static-data/static-data";
 import { useDispatch } from "react-redux";
@@ -34,8 +34,8 @@ export default function Success({ data }: SuccessProps) {
   ];
 
   return (
-    <div className="flex flex-col items-center justify-center bg-gray-100 dark:bg-gray-950 p-4 sm:p-6 md:p-8">
-      <div className="max-w-md w-full bg-white dark:bg-gray-900 rounded-xl shadow-lg overflow-hidden">
+    <div className="flex flex-col items-center justify-center bg-white p-4 sm:p-6 md:p-8">
+      <div className="max-w-md w-full bg-white rounded-xl shadow-lg overflow-hidden">
         <SuccessHeader />
         <OrderInfoSection orderInfoItems={orderInfoItems} />
         <ActionSection />
@@ -47,13 +47,13 @@ export default function Success({ data }: SuccessProps) {
 function SuccessHeader() {
   return (
     <div className="px-6 py-12 flex flex-col items-center justify-center space-y-4">
-      <div className="bg-green-500 dark:bg-green-600 p-4 rounded-full">
-        <CheckIcon className="h-8 w-8 text-white" />
+      <div className="bg-green-500 p-4 rounded-full">
+        <FaCheck className="h-6 w-6 text-white" />
       </div>
-      <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-50">
+      <h1 className="text-3xl font-bold text-gray-900">
         {SUCCESS_MESSAGES.TITLE}
       </h1>
-      <p className="text-gray-500 dark:text-gray-400 text-center">
+      <p className="text-gray-600 text-center">
         {SUCCESS_MESSAGES.DESCRIPTION}
       </p>
     </div>
@@ -66,13 +66,13 @@ interface OrderInfoSectionProps {
 
 function OrderInfoSection({ orderInfoItems }: OrderInfoSectionProps) {
   return (
-    <div className="bg-gray-100 dark:bg-gray-800 px-6 py-4 border-t border-gray-200 dark:border-gray-700 flex flex-col gap-4">
+    <div className="bg-gray-50 px-6 py-4 border-t border-gray-200 flex flex-col gap-4">
       {orderInfoItems.map((item, index) => (
         <div className="flex justify-between gap-3 items-center" key={index}>
-          <p className="text-gray-900 dark:text-gray-50 font-medium">
+          <p className="text-gray-900 font-medium">
             {item.value}
           </p>
-          <p className="text-gray-500 dark:text-gray-400 text-sm">
+          <p className="text-gray-500 text-sm">
             {item.label}
           </p>
         </div>
@@ -98,13 +98,13 @@ function ActionSection() {
     <div className="px-6 py-4 flex flex-col gap-3">
       <button
         onClick={handleGoHome}
-        className="inline-flex h-10 items-center justify-center rounded-md bg-gray-900 px-6 text-sm font-medium text-gray-50 shadow transition-colors hover:bg-gray-900/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50 dark:bg-gray-50 dark:text-gray-900 dark:hover:bg-gray-50/90 dark:focus-visible:ring-gray-300"
+        className="inline-flex h-10 items-center justify-center rounded-md bg-gray-900 px-6 text-sm font-medium text-white shadow transition-colors hover:bg-gray-800 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-900 disabled:pointer-events-none disabled:opacity-50"
       >
         {SUCCESS_MESSAGES.GO_HOME}
       </button>
       <button
         onClick={handleResetAndClose}
-        className="inline-flex h-10 items-center justify-center rounded-md bg-gray-200 px-6 text-sm font-medium text-gray-700 shadow transition-colors hover:bg-gray-300 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50"
+        className="inline-flex h-10 items-center justify-center rounded-md bg-gray-200 px-6 text-sm font-medium text-gray-700 shadow transition-colors hover:bg-gray-300 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-300 disabled:pointer-events-none disabled:opacity-50"
       >
         Close Dialog
       </button>

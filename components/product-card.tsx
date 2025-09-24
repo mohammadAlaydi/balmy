@@ -23,7 +23,7 @@ import ZeroQuantity from "./zero-quantity";
 import { FaCartArrowDown } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import { FavouriteButton } from "./favourite-button";
-import { Eye } from "lucide-react";
+import { FaRegEye } from "react-icons/fa";
 
 export default function ProductCard({
   product,
@@ -71,7 +71,7 @@ export default function ProductCard({
       setIsAdding(true);
       // If addToCart is a createAsyncThunk, unwrap to await rejection properly
       const maybePromise: any = dispatch(
-        addToCart({ productId, productQTY: 1 })
+        addToCart({ productId: Number(productId), productQTY: 1 })
       );
       if (typeof maybePromise?.unwrap === "function") {
         await maybePromise.unwrap();
@@ -110,15 +110,13 @@ export default function ProductCard({
           <div className="absolute top-2 ltr:left-2 rtl:right-2 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
             <FavouriteButton product={product} />
             <DrawerComponent
-              hoverDelay={800}
-              autoCloseDelay={1000}
               trigger={
                 <Button
                   variant="ghost"
                   onClick={handleViewProduct}
                   className="text-3xl cursor-pointer text-black hidden md:flex opacity-80 hover:opacity-100"
                 >
-                  <Eye />
+                  <FaRegEye className="text-xl "  />
                 </Button>
               }
             >
@@ -128,7 +126,7 @@ export default function ProductCard({
         </motion.div>
 
         {product?.new && (
-          <Badge className="bg-red-color absolute top-2 ltr:right-2 rtl:left-2 z-10">
+          <Badge className="bg-red-600 text-white font-semibold px-2 py-1 text-xs absolute top-2 ltr:right-2 rtl:left-2 z-10 shadow-md">
             New
           </Badge>
         )}
@@ -196,7 +194,7 @@ export default function ProductCard({
         <div className="flex justify-between gap-1 items-center">
           <p
             className={`text-xs md:text-sm mb-2 text-nowrap ${
-              isInStock ? "text-green-600" : "text-red-color"
+              isInStock ? "text-green-600" : "text-red-600"
             }`}
           >
             {isInStock ? "متوفر" : "غير متوفر"}
@@ -217,7 +215,7 @@ export default function ProductCard({
 
         {/* Variants + desktop price */}
         <div className="flex justify-between gap-1 items-center">
-          {product?.type != "simple" && product?.variants?.length ? (
+          {product?.variants?.length ? (
             <div className="items-center gap-3 hidden md:flex transition-all duration-300">
               {product.variants
                 .slice(0, 3)

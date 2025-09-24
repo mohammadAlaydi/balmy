@@ -4,13 +4,8 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
-import {
-  Heart,
-  Trash2,
-  Wifi,
-  AlertCircle,
-  RefreshCw,
-} from "lucide-react";
+import { Wifi, AlertCircle } from "lucide-react";
+import { FaHeart, FaRegHeart, FaTrashAlt } from "react-icons/fa";
 import { useFavourites } from "@/hooks/use-favourites";
 import { Button } from "@/components/ui/button";
 import SectionTitle from "@/components/section-title";
@@ -38,7 +33,6 @@ function FavouritePageContent() {
     getFavouritesCount,
   } = useFavourites();
 
-  const [isRefreshing, setIsRefreshing] = useState(false);
   const [backendStatus, setBackendStatus] = useState<
     "connected" | "disconnected" | "checking"
   >("checking");
@@ -49,28 +43,13 @@ function FavouritePageContent() {
   const { isAuthenticated: reduxAuth, user } = useSelector(
     (state: RootState) => state.auth
   );
-  const isAuthenticated =
-    reduxAuth &&
-    user &&
-    typeof window !== "undefined" &&
-    !!localStorage.getItem("accessToken");
+  const isAuthenticated = !!user; // Rely on Redux auth slice (cookies)
 
   // Check backend connectivity
   const checkBackendStatus = async () => {
     setBackendStatus("checking");
     try {
-      const accessToken = localStorage.getItem("accessToken");
-      if (!accessToken) {
-        setBackendStatus("disconnected");
-        return;
-      }
-
-      const response = await fetch(buildApiUrl(API_CONFIG.ENDPOINTS.WISHLIST), {
-        method: "HEAD",
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
+      const response = await fetch(`/api/wishlist`, { method: "HEAD" });
 
       if (response.ok) {
         setBackendStatus("connected");
@@ -82,23 +61,6 @@ function FavouritePageContent() {
       }
     } catch (error) {
       setBackendStatus("disconnected");
-    }
-  };
-
-  const handleFetchFavourites = async () => {
-    setIsRefreshing(true);
-    try {
-      await fetchFavourites();
-      setLastSync(new Date());
-      toast.success(t("favouritesRefreshed"));
-    } catch (error) {
-      if (error && typeof error === "string" && error.includes("login")) {
-        console.warn("Authentication required for favourites");
-      } else {
-        toast.error("Failed to refresh favourites");
-      }
-    } finally {
-      setIsRefreshing(false);
     }
   };
 
@@ -188,16 +150,6 @@ function FavouritePageContent() {
           )}
 
           <div className="flex gap-3 justify-center flex-wrap">
-            <Button
-              onClick={handleFetchFavourites}
-              variant="outline"
-              disabled={isRefreshing}
-            >
-              <RefreshCw
-                className={`h-4 w-4 mr-2 ${isRefreshing ? "animate-spin" : ""}`}
-              />
-              {isRefreshing ? t("refreshing") : t("retry")}
-            </Button>
             <Button asChild variant="outline">
               <Link href="/auth/login" prefetch={true}>
                 {t("loginAgain")}
@@ -225,7 +177,7 @@ function FavouritePageContent() {
 
       {favourites.length === 0 ? (
         <div className="text-center py-16">
-          <Heart className="mx-auto h-24 w-24 text-gray-300 mb-4" />
+          <FaRegHeart className="mx-auto h-24 w-24 text-gray-300 mb-4" />
           <h3 className="text-xl font-semibold text-gray-600 mb-2">
             {t("emptyTitle")}
           </h3>
@@ -240,7 +192,7 @@ function FavouritePageContent() {
         <>
           <div className="flex justify-between items-center mb-6">
             <div className="flex items-center gap-3">
-              <Heart className="h-5 w-5 text-red-500" />
+              <FaHeart className="h-5 w-5 text-red-500" />
               <span className="text-lg font-medium text-gray-700">
                 {t("favouritesCount", { count: getFavouritesCount() })}
               </span>
@@ -248,24 +200,11 @@ function FavouritePageContent() {
 
             <div className="flex gap-2">
               <Button
-                onClick={handleFetchFavourites}
-                variant="outline"
-                size="sm"
-                disabled={isRefreshing}
-              >
-                <RefreshCw
-                  className={`h-4 w-4 mr-2 ${
-                    isRefreshing ? "animate-spin" : ""
-                  }`}
-                />
-                {isRefreshing ? t("refreshing") : t("refresh")}
-              </Button>
-              <Button
                 onClick={handleClearAll}
                 variant="outline"
                 className="text-red-600 hover:text-red-700 hover:bg-red-50"
               >
-                <Trash2 className="h-4 w-4 mr-2" />
+                <FaTrashAlt className="h-4 w-4 mr-2" />
                 {t("clearAll")}
               </Button>
             </div>
@@ -281,7 +220,7 @@ function FavouritePageContent() {
                   className="absolute top-2 right-2 z-10 opacity-0 group-hover:opacity-100 transition-opacity"
                   onClick={() => handleRemoveFromFavourites(product.id)}
                 >
-                  <Trash2 className="h-4 w-4" />
+                  <FaTrashAlt className="h-4 w-4" />
                 </Button>
               </div>
             ))}

@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { cn } from "@/lib/utils";
-import { Eye, EyeOff } from "lucide-react";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { Button } from "./button";
 
 export interface PasswordInputProps
@@ -37,9 +37,9 @@ const PasswordInput = React.forwardRef<HTMLInputElement, PasswordInputProps>(
           aria-label={showPassword ? "Hide password" : "Show password"}
         >
           {showPassword ? (
-            <EyeOff className="h-4 w-4 text-muted-foreground" />
+            <FaEyeSlash className="h-4 w-4 text-gray-500" />
           ) : (
-            <Eye className="h-4 w-4 text-muted-foreground" />
+            <FaEye className="h-4 w-4 text-gray-500" />
           )}
         </Button>
       </div>

@@ -27,7 +27,7 @@ const getCartProducts = createAsyncThunk("cart/products", async (_, { rejectWith
 // add to cart
 const addToCart = createAsyncThunk(
   "cart/add",
-  async (payload: { productId: number; productQTY?: string | number }, { rejectWithValue }) => {
+  async (payload: { productId: number; productQTY?: string | number }, { rejectWithValue, dispatch }) => {
     try {
       const response = await fetch('/api/cart/add', {
         method: "POST",
@@ -46,6 +46,8 @@ const addToCart = createAsyncThunk(
         return rejectWithValue(data.message || "Failed to add to cart");
       }
 
+      // Refetch cart items after successful add
+      dispatch(getCartProducts());
       return data;
     } catch (error: any) {
       console.error("Add to cart error:", error);
@@ -57,7 +59,7 @@ const addToCart = createAsyncThunk(
 // remove product from cart
 const removeFromCart = createAsyncThunk(
   "cart/remove",
-  async (payload: { productId: number }, { rejectWithValue }) => {
+  async (payload: { productId: number }, { rejectWithValue, dispatch }) => {
     try {
       const response = await fetch(`/api/cart/remove/${payload.productId}`, {
         method: "DELETE",
@@ -69,6 +71,8 @@ const removeFromCart = createAsyncThunk(
         return rejectWithValue(data.message || "Failed to remove from cart");
       }
 
+      // Refetch cart items after successful remove
+      dispatch(getCartProducts());
       return data;
     } catch (error: any) {
       console.error("Remove from cart error:", error);
@@ -80,7 +84,7 @@ const removeFromCart = createAsyncThunk(
 // remove all products from cart
 const removeAllProductsFromCart = createAsyncThunk(
   "cart/remove/all/products",
-  async (_, { rejectWithValue }) => {
+  async (_, { rejectWithValue, dispatch }) => {
     try {
       const response = await fetch('/api/cart', {
         method: "DELETE",
@@ -92,6 +96,8 @@ const removeAllProductsFromCart = createAsyncThunk(
         return rejectWithValue(data.message || "Failed to clear cart");
       }
 
+      // Refetch cart items after successful clear
+      dispatch(getCartProducts());
       return data;
     } catch (error: any) {
       console.error("Clear cart error:", error);

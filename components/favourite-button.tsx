@@ -1,6 +1,6 @@
 'use client';
 
-import { Heart } from 'lucide-react';
+import { FaHeart, FaRegHeart } from 'react-icons/fa';
 import { Button } from '@/components/ui/button';
 import { useFavourites } from '@/hooks/use-favourites';
 import { cn } from '@/lib/utils';
@@ -85,13 +85,11 @@ export function FavouriteButton({
       aria-label={isFav ? 'Remove from favourites' : 'Add to favourites'}
       title={!isAuthenticated ? 'Login required to manage favourites' : (isFav ? 'Remove from favourites' : 'Add to favourites')}
     >
-      <Heart
-        className={cn(
-          iconSizes[size],
-          'transition-all duration-200',
-          isFav && 'fill-current'
-        )}
-      />
+      {isFav ? (
+        <FaHeart className={cn(iconSizes[size], 'transition-all duration-200 text-red-500')} />
+      ) : (
+        <FaRegHeart className={cn(iconSizes[size], 'transition-all duration-200 text-gray-500 group-hover:text-red-500')} />
+      )}
       {showText && (
         <span className="ml-2">
           {isFav ? 'Remove' : 'Add to Favourites'}
