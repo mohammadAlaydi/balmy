@@ -1,16 +1,37 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { cookies } from 'next/headers';
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export async function POST(request: NextRequest) {
   try {
-    // In a real application, you might want to:
-    // 1. Add the refresh token to a blacklist
-    // 2. Log the logout event
-    // 3. Clear any server-side sessions
-    
-    return NextResponse.json(
-      { message: 'Logged out successfully' },
-      { status: 200 }
-    );
+    const cookieStore = cookies();
+    const token = cookieStore.get('accessToken')?.value;
+
+    if (token) {
+      // Call backend logout endpoint
+      await fetch(`${API_URL}/v1/customer/logout`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Accept': 'application/json',
+        },
+      });
+    }
+
+    // Clear the cookie regardless of backend response
+    cookieStore.set('accessToken', '', {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 0,
+      path: '/',
+    });
+
+    return NextResponse.json({
+      message: 'Logged out successfully',
+    });
+
   } catch (error) {
     console.error('Logout error:', error);
     return NextResponse.json(

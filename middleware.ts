@@ -1,16 +1,29 @@
 import createMiddleware from 'next-intl/middleware';
+import { NextResponse } from 'next/server';
 
 
-export default createMiddleware({
-  // A list of all locales that are supported
+const handleI18nRouting = createMiddleware({
   locales: ['ar', 'en'],
-
-  // Used when no locale matches
   defaultLocale: 'ar',
-
-  // Always redirect to locale-prefixed routes
   localePrefix: 'always'
 });
+
+export default function middleware(request: any) {
+  // First, let next-intl handle locale prefixing
+  const response = handleI18nRouting(request);
+
+  // Then, ensure '/en' or '/ar' redirect to '/{locale}/home'
+  const pathname = request.nextUrl.pathname as string;
+  const match = pathname.match(/^\/(en|ar)\/?$/);
+  if (match) {
+    const locale = match[1];
+    const url = request.nextUrl.clone();
+    url.pathname = `/${locale}/home`;
+    return NextResponse.redirect(url);
+  }
+
+  return response;
+}
 
 export const config = {
   // Match only internationalized pathnames

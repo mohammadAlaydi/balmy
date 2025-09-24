@@ -94,7 +94,7 @@ export default function TermsPage() {
                   {t("liability")}
                 </h2>
                 <p className="text-base sm:text-lg text-gray-600 leading-relaxed">
-                  {t("liabilityDesc")}
+                  {t("liability-desc")}
                 </p>
               </div>
             </div>
@@ -113,7 +113,7 @@ export default function TermsPage() {
                   {t("modifications")}
                 </h2>
                 <p className="text-base sm:text-lg text-gray-600 leading-relaxed">
-                  {t("modificationsDesc")}
+                  {t("modifications-desc")}
                 </p>
               </div>
             </div>
@@ -129,10 +129,10 @@ export default function TermsPage() {
               </div>
               <div>
                 <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-3 sm:mb-4">
-                  {t("governingLaw")}
+                  {t("governing-law")}
                 </h2>
                 <p className="text-base sm:text-lg text-gray-600 leading-relaxed">
-                  {t("governingLawDesc")}
+                  {t("governing-law-desc")}
                 </p>
               </div>
             </div>
@@ -141,10 +141,10 @@ export default function TermsPage() {
           {/* Contact Information */}
           <div className="bg-gray-50 rounded-xl sm:rounded-2xl p-6 sm:p-8 lg:p-10 border border-gray-200 text-center">
             <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 mb-3 sm:mb-4">
-              {t("contactUs")}
+              {t("contact-us")}
             </h3>
             <p className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto">
-              {t("contactUsDesc")}
+              {t("contact-us-desc")}
             </p>
             <div className="mt-4 sm:mt-6 flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center">
               <a

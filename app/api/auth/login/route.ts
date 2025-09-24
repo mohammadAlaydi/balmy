@@ -1,70 +1,47 @@
 import { NextRequest, NextResponse } from 'next/server';
-import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
-import { z } from 'zod';
-import { findUserByEmail } from '@/lib/mock-db';
+import { cookies } from 'next/headers';
 
-// Validation schema
-const loginSchema = z.object({
-  email: z.string().email('Invalid email address'),
-  password: z.string().min(1, 'Password is required'),
-});
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     
-    // Validate input
-    const validatedData = loginSchema.parse(body);
-    
-    // Find user
-    const user = findUserByEmail(validatedData.email);
-    if (!user) {
-      return NextResponse.json(
-        { message: 'Invalid email or password' },
-        { status: 401 }
-      );
-    }
-    
-    // Verify password
-    const isPasswordValid = await bcrypt.compare(validatedData.password, user.password);
-    if (!isPasswordValid) {
-      return NextResponse.json(
-        { message: 'Invalid email or password' },
-        { status: 401 }
-      );
-    }
-    
-    // Remove password from response
-    const { password, ...userWithoutPassword } = user;
-    
-    // Generate tokens
-    const accessToken = jwt.sign(
-      { userId: user.id, email: user.email },
-      process.env.JWT_SECRET || 'your-secret-key',
-      { expiresIn: '15m' }
-    );
-    
-    const refreshToken = jwt.sign(
-      { userId: user.id },
-      process.env.JWT_REFRESH_SECRET || 'your-refresh-secret-key',
-      { expiresIn: '7d' }
-    );
-    
-    return NextResponse.json({
-      user: userWithoutPassword,
-      accessToken,
-      refreshToken,
+    const response = await fetch(`${API_URL}/v1/customer/login`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: JSON.stringify(body),
     });
-    
-  } catch (error) {
-    if (error instanceof z.ZodError) {
+
+    const data = await response.json();
+
+    if (!response.ok) {
       return NextResponse.json(
-        { message: 'Validation error', errors: (error as z.ZodError).errors },
-        { status: 400 }
+        { message: data.message || 'Login failed' },
+        { status: response.status }
       );
     }
-    
+
+    // Set httpOnly cookie with the token
+    const cookieStore = cookies();
+    cookieStore.set('accessToken', data.token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 60 * 60 * 24 * 7, // 7 days
+      path: '/',
+    });
+
+    // Return user data without token
+    return NextResponse.json({
+      data: data.data,
+      message: data.message,
+    });
+
+  } catch (error) {
     console.error('Login error:', error);
     return NextResponse.json(
       { message: 'Internal server error' },

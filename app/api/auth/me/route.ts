@@ -1,52 +1,41 @@
 import { NextRequest, NextResponse } from 'next/server';
-import jwt from 'jsonwebtoken';
-import { findUserById } from '@/lib/mock-db';
+import { cookies } from 'next/headers';
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export async function GET(request: NextRequest) {
   try {
-    // Get the Authorization header
-    const authHeader = request.headers.get('authorization');
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    const cookieStore = cookies();
+    const token = cookieStore.get('accessToken')?.value;
+
+    if (!token) {
       return NextResponse.json(
-        { message: 'Access token required' },
+        { message: 'Not authenticated' },
         { status: 401 }
       );
     }
 
-    // Extract the token
-    const token = authHeader.substring(7);
-
-    // Verify the token
-    const decoded = jwt.verify(
-      token,
-      process.env.JWT_SECRET || 'your-secret-key'
-    ) as { userId: string };
-
-    // Find user
-    const user = findUserById(decoded.userId);
-    if (!user) {
-      return NextResponse.json(
-        { message: 'User not found' },
-        { status: 404 }
-      );
-    }
-
-    // Remove password from response
-    const { password, ...userWithoutPassword } = user;
-
-    return NextResponse.json({
-      user: userWithoutPassword,
+    const response = await fetch(`${API_URL}/v1/customer/me`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Accept': 'application/json',
+      },
     });
 
-  } catch (error) {
-    if (error instanceof jwt.JsonWebTokenError) {
+    const data = await response.json();
+
+    if (!response.ok) {
       return NextResponse.json(
-        { message: 'Invalid token' },
-        { status: 401 }
+        { message: data.message || 'Failed to get user info' },
+        { status: response.status }
       );
     }
 
-    console.error('Get current user error:', error);
+    return NextResponse.json(data);
+
+  } catch (error) {
+    console.error('Get user error:', error);
     return NextResponse.json(
       { message: 'Internal server error' },
       { status: 500 }

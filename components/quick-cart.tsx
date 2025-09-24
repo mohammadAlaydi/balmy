@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getCartProducts,
@@ -17,11 +17,21 @@ export default function QuickCart() {
   
   const t = useTranslations("cart");
   const dispatch = useDispatch();
-  const { data, isLoading } = useSelector((state: any) => state.cart);
-
+  const { data, isLoading, status, cartStatus } = useSelector((state: any) => state.cart);
+  const hasFetchedRef = useRef(false);
   useEffect(() => {
-    dispatch(getCartProducts() as any);
-  }, [dispatch]);
+    if (!hasFetchedRef.current && (data === null || data?.data?.items == null)) {
+      hasFetchedRef.current = true;
+      dispatch(getCartProducts() as any);
+    }
+  }, [dispatch, data]);
+
+  // Refresh cart when order is successful (not cart operations)
+  useEffect(() => {
+    if (status === "success") {
+      dispatch(getCartProducts() as any);
+    }
+  }, [status, dispatch]);
 
   if (isLoading) {
     return <Loading fullScreen={true} variant="spinner" size="xl" />;

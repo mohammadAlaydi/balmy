@@ -5,43 +5,51 @@ const API_KEY = process.env.NEXT_PUBLIC_API_URL;
 
 // get cart products
 
-const getCartProducts = createAsyncThunk("cart/products", async () => {
-  const response = await fetch(`${API_KEY}/v1/customer/cart`, {
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${localStorage?.getItem("accessToken")}`,
-    },
-  });
-  const data = await response.json();
-  return data;
+const getCartProducts = createAsyncThunk("cart/products", async (_, { rejectWithValue }) => {
+  try {
+    const response = await fetch('/api/cart', {
+      method: "GET",
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      return rejectWithValue(data.message || "Failed to fetch cart");
+    }
+
+    return data;
+  } catch (error: any) {
+    console.error("Cart fetch error:", error);
+    return rejectWithValue(error.message || "Failed to fetch cart");
+  }
 });
 
 // add to cart
 const addToCart = createAsyncThunk(
   "cart/add",
-  async (payload: { productId: number; productQTY?: string | number }) => {
+  async (payload: { productId: number; productQTY?: string | number }, { rejectWithValue }) => {
     try {
-      const response = await fetch(
-        `${API_KEY}/v1/customer/cart/add/${payload.productId}`,
-        {
-          method: "POST",
-          headers: {
-            accept: "application/json",
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage?.getItem("accessToken")}`,
-          },
-          body: JSON.stringify({
-            quantity: payload?.productQTY ? payload?.productQTY : 1,
-          }),
-        }
-      );
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
+      const response = await fetch('/api/cart/add', {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          productId: payload.productId,
+          quantity: payload?.productQTY ? payload?.productQTY : 1,
+        }),
+      });
+
       const data = await response.json();
+
+      if (!response.ok) {
+        return rejectWithValue(data.message || "Failed to add to cart");
+      }
+
       return data;
-    } catch (error) {
-      console.log(error, "error");
+    } catch (error: any) {
+      console.error("Add to cart error:", error);
+      return rejectWithValue(error.message || "Failed to add to cart");
     }
   }
 );
@@ -49,62 +57,96 @@ const addToCart = createAsyncThunk(
 // remove product from cart
 const removeFromCart = createAsyncThunk(
   "cart/remove",
-  async (payload: { productId: number }) => {
-    const response = await fetch(
-      `${API_KEY}/v1/customer/cart/remove/${payload.productId}`,
-      {
+  async (payload: { productId: number }, { rejectWithValue }) => {
+    try {
+      const response = await fetch(`/api/cart/remove/${payload.productId}`, {
         method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${localStorage?.getItem("accessToken")}`,
-        },
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        return rejectWithValue(data.message || "Failed to remove from cart");
       }
-    );
+
+      return data;
+    } catch (error: any) {
+      console.error("Remove from cart error:", error);
+      return rejectWithValue(error.message || "Failed to remove from cart");
+    }
   }
 );
 
 // remove all products from cart
 const removeAllProductsFromCart = createAsyncThunk(
   "cart/remove/all/products",
-  async () => {
-    const response = await fetch(`${API_KEY}/v1/customer/cart/remove`, {
-      method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${localStorage?.getItem("accessToken")}`,
-      },
-    });
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await fetch('/api/cart', {
+        method: "DELETE",
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        return rejectWithValue(data.message || "Failed to clear cart");
+      }
+
+      return data;
+    } catch (error: any) {
+      console.error("Clear cart error:", error);
+      return rejectWithValue(error.message || "Failed to clear cart");
+    }
   }
 );
 //save cart order
-const saveOrder = createAsyncThunk("save-order", async (payload: any) => {
-  const response = await fetch(`${API_KEY}/v1/customer/checkout/save-order`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${localStorage?.getItem("accessToken")}`,
-    },
-    body: JSON.stringify(payload),
-  });
-  if (!response.ok) {
-    throw new Error(`HTTP error! status: ${response.status}`);
-  }
+const saveOrder = createAsyncThunk("save-order", async (payload: any, { rejectWithValue }) => {
+  try {
+    const response = await fetch('/api/cart/checkout', {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    });
 
-  const data = await response.json();
-  return data;
+    const data = await response.json();
+
+    if (!response.ok) {
+      return rejectWithValue(data.message || "Checkout failed");
+    }
+
+    return data;
+  } catch (error: any) {
+    console.error("Checkout error:", error);
+    return rejectWithValue(error.message || "Checkout failed");
+  }
 });
 
 const cartSlice = createSlice({
   name: "cart",
   initialState: {
-    data: [],
+    data: null as any,
     saveOrderData: {},
     increaseOrDecreaseLoading: false,
     increaseOrDecreaseResponse: {},
     isLoading: false,
     error: null,
-    status: null,
+    status: null as string | null, // Only for order completion (success/failed)
+    cartStatus: null as string | null, // For cart operations (add/remove)
   },
   reducers: {
     resetStatus: (state) => {
+      console.log(
+        "🔄 resetStatus called, changing status from",
+        state.status,
+        "to null"
+      );
+      // If we just completed an order, clear the saved order and cart data now
+      if (state.status === "success") {
+        state.saveOrderData = {};
+        state.data = null as any;
+      }
       state.status = null;
     },
   },
@@ -114,6 +156,8 @@ const cartSlice = createSlice({
       state.isLoading = true;
     });
     builder.addCase(getCartProducts?.fulfilled, (state, action) => {
+      console.log("🛍️ getCartProducts.fulfilled triggered!");
+      console.log("  - payload:", action.payload);
       state.data = action.payload;
       state.isLoading = false;
     });
@@ -127,14 +171,28 @@ const cartSlice = createSlice({
       state.increaseOrDecreaseLoading = true;
     });
     builder.addCase(addToCart.fulfilled, (state, action) => {
+      console.log("🛒 addToCart.fulfilled triggered!");
+      console.log("  - payload:", action.payload);
       state.increaseOrDecreaseLoading = false;
       state.increaseOrDecreaseResponse = action.payload;
-      state.status = "success";
-      toast.success("تم تنفيذ العملية بنجاح");
+      state.cartStatus = "success"; // Use cartStatus instead of status
+      console.log("  - cartStatus set to success by addToCart");
+      try {
+        const message = (action.payload as any)?.message || "Added to cart";
+        toast.success(message);
+      } catch (e) {
+        // Fallback toast if payload shape unexpected
+        toast.success("Added to cart");
+      }
     });
     builder.addCase(addToCart.rejected, (state: any, action) => {
       state.error = action.error.message || null;
       state.increaseOrDecreaseLoading = false;
+      if (action.error?.message) {
+        toast.error(action.error.message);
+      } else {
+        toast.error("Failed to add to cart");
+      }
     });
 
     // Remove from cart
@@ -142,8 +200,11 @@ const cartSlice = createSlice({
       state.isLoading = true;
     });
     builder.addCase(removeFromCart.fulfilled, (state, action) => {
+      console.log("🗑️ removeFromCart.fulfilled triggered!");
+      console.log("  - payload:", action.payload);
       state.isLoading = false;
-      state.status = "success";
+      state.cartStatus = "success"; // Use cartStatus instead of status
+      console.log("  - cartStatus set to success by removeFromCart");
     });
     builder.addCase(removeFromCart.rejected, (state: any, action) => {
       state.error = action.error.message || null;
@@ -173,14 +234,20 @@ const cartSlice = createSlice({
       state.isLoading = true;
     });
     builder.addCase(saveOrder.fulfilled, (state, action) => {
+      console.log("🎉 saveOrder.fulfilled triggered!");
+      console.log("  - payload:", action.payload);
       state.saveOrderData = action.payload;
+      console.log("  - saveOrderData set to:", state.saveOrderData);
       state.isLoading = false;
       state.status = "success";
+      console.log("  - status set to:", state.status);
+      toast.success("تم حفظ الطلب بنجاح");
     });
     builder.addCase(saveOrder.rejected, (state: any, action) => {
       state.error = action.error.message || null;
       state.isLoading = false;
       state.status = "failed";
+      toast.error("فشل في حفظ الطلب");
     });
   },
 });

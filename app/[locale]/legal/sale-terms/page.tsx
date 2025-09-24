@@ -1,14 +1,10 @@
-import { Metadata } from "next";
-import { useTranslations } from "next-intl";
+"use client";
 
-export const metadata: Metadata = {
-  title: "شروط وأحكام البيع - فرادا",
-  description: "شروط وأحكام البيع في متجر فرادا",
-};
+import { useTranslations } from "next-intl";
 
 export default function SaleTermsPage() {
   
-  const t = useTranslations("legal.saleTerms");
+  const t = useTranslations("legal.sale-terms");
 
   return (
     <div className="min-h-screen bg-gray-50 py-12">

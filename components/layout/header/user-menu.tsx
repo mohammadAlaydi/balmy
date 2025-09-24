@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState, AppDispatch } from "@/store/store";
-import { logoutUser } from "@/store/slices/auth-slice";
+import { logout } from "@/store/slices/auth-slice";
 import { Button } from "@/components/ui/button";
 import {
   FaRegUser,
@@ -39,7 +39,7 @@ export default function UserMenu() {
 
   const handleLogout = async () => {
     try {
-      await dispatch(logoutUser());
+      await dispatch(logout());
       toast.success("Logged out successfully");
     } catch (error) {
       toast.error("Logout failed");

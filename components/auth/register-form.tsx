@@ -7,7 +7,7 @@ import { z } from 'zod';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/navigation';
 import { AppDispatch, RootState } from '@/store/store';
-import { registerUser, clearError } from '@/store/slices/auth-slice';
+import { register as registerAction, clearError } from '@/store/slices/auth-slice';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { PasswordInput } from '@/components/ui/password-input';
@@ -66,7 +66,7 @@ export default function RegisterForm({ onSwitchToLogin }: RegisterFormProps) {
       };
 
       // if registerUser is a createAsyncThunk, unwrap to throw on error
-      await dispatch(registerUser(apiData)).unwrap();
+      await dispatch(registerAction(apiData)).unwrap();
 
       toast.success('Registration successful! Welcome to Farada!');
       router.push('/home');

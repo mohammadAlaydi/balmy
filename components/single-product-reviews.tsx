@@ -64,7 +64,12 @@ export default function SingleProductReviews({
         <button
           key={i}
           type={interactive ? "button" : undefined}
-          onClick={interactive ? () => setUserRating(starValue) : undefined}
+          onClick={
+            interactive
+              ? () =>
+                  setUserRating((prev) => (prev === starValue ? 0 : starValue))
+              : undefined
+          }
           onMouseEnter={
             interactive ? () => setHoverRating(starValue) : undefined
           }

@@ -78,9 +78,9 @@ export default function ProductCard({
       } else {
         await maybePromise; // fallback if not a thunk
       }
-      toast.success(t("added-to-cart"));
+      // Toasts are triggered centrally in the slice based on API response
     } catch (err) {
-      toast.error(t("failed-to-add") || "تعذر إضافة المنتج إلى السلة");
+      // Errors will be handled by slice rejected toast
     } finally {
       setIsAdding(false);
     }

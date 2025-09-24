@@ -15,8 +15,7 @@ import toast from "react-hot-toast";
 import { useTranslations } from "next-intl";
 import Checkout from "./checkout-dialog/checkout";
 import { useDispatch, useSelector } from "react-redux";
-import { getCartProducts, resetStatus } from "@/store/slices/cart-slice";
-import { useEffect } from "react";
+import { resetStatus } from "@/store/slices/cart-slice";
 import { useRouter } from "next/navigation";
 
 interface CouponFormData {
@@ -42,11 +41,7 @@ export default function OrderSummary({ data }: { data: any }) {
     },
   });
 
-  useEffect(() => {
-    if (status == null) {
-      dispatch(getCartProducts() as any);
-    }
-  }, [status]);
+
 
   const onSubmit = (data: CouponFormData) => {
     if (!data.coupon.trim()) {
@@ -139,7 +134,16 @@ export default function OrderSummary({ data }: { data: any }) {
         </div>
       </div>
       {/* Checkout Button */}
-      <Dialog onOpenChange={() => dispatch(resetStatus())}>
+      <Dialog onOpenChange={(open) => {
+        console.log("🔄 Dialog onOpenChange:", open);
+        // Only reset status when dialog is closed AND status is not success
+        if (!open && status !== "success") {
+          console.log("🔄 Dialog closed, resetting status");
+          dispatch(resetStatus());
+        } else if (!open && status === "success") {
+          console.log("🔄 Dialog closed but keeping success status");
+        }
+      }}>
         <DialogTitle className="hidden"></DialogTitle>
         <DialogTrigger
           className="w-full bg-black text-white hover:bg-gray-800 transition-colors py-2 cursor-pointer text-base font-semibold rounded-md"

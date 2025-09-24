@@ -64,9 +64,7 @@ export default function QuickProductDetails({
 
     if (!productId) return;
     await dispatch(addToCart({ productId }));
-    if (status == "success") {
-      toast.success("تم اضافة المنتج بنجاح");
-    }
+    // Toasts are triggered centrally in the slice based on API response
   };
   const handleVariantSelect = (index: number) => {
     setSelectedVariantIndex(index);

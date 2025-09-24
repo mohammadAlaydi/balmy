@@ -8,7 +8,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Form } from "@/components/ui/form";
 import ShippingForm from "./shipping-form";
 import { useDispatch, useSelector } from "react-redux";
-import { saveOrder } from "@/store/slices/cart-slice";
+import { saveOrder, resetStatus } from "@/store/slices/cart-slice";
+import { useEffect } from "react";
 
 const { Stepper } = defineStepper(
   { id: "shipping", title: "Shipping" },
@@ -55,6 +56,16 @@ export default function Checkout() {
   const { saveOrderData, isLoading, status } = useSelector(
     (state: any) => state.cart
   );
+
+  // Debug logging to see status changes
+  useEffect(() => {
+    console.log("🔍 Checkout Debug:");
+    console.log("  - status:", status);
+    console.log("  - isLoading:", isLoading);
+    console.log("  - saveOrderData:", saveOrderData);
+    console.log("  - saveOrderData keys:", Object.keys(saveOrderData || {}));
+  }, [status, isLoading, saveOrderData]);
+
   const onSubmit = (values: CheckoutFormValues) => {
     dispatch(saveOrder(values) as any);
   };
@@ -110,12 +121,12 @@ export default function Checkout() {
         noValidate
         className="flex flex-col gap-4 mt-5 "
       >
-        <ShippingForm
-          form={form}
-          isSubmitting={isLoading}
-          status={status}
-          data={saveOrderData || null}
-        />
+         <ShippingForm
+           form={form}
+           isSubmitting={isLoading}
+           status={status}
+           data={saveOrderData || null}
+         />
       </form>
     </Form>
   );

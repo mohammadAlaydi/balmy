@@ -18,12 +18,14 @@ export default function CartPage() {
   const { data, isLoading } = useSelector((state: any) => state.cart);
 
   useEffect(() => {
-    dispatch(getCartProducts() as any);
-  }, [dispatch]);
+    if (!isLoading && !data) {
+      dispatch(getCartProducts() as any);
+    }
+  }, [dispatch, isLoading, data]);
 
-  if (isLoading) {
-    return <Loading fullScreen={true} variant="spinner" size="xl" />;
-  }
+  // if (isLoading) {
+  //   return <Loading fullScreen={true} variant="spinner" size="xl" />;
+  // }
 
   return (
     <PagePadding>

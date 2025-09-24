@@ -3,7 +3,7 @@
 import { useTranslations } from "next-intl";
 
 export default function WhoWeArePage() {
-  const t = useTranslations("whoWeAre");
+  const t = useTranslations("who-we-are");
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -27,10 +27,10 @@ export default function WhoWeArePage() {
           <section className="bg-white rounded-xl sm:rounded-2xl shadow-lg sm:shadow-xl p-6 sm:p-8 lg:p-10 border border-gray-200">
             <div className="text-center mb-8 sm:mb-12">
               <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4 sm:mb-6">
-                {t("ourStory")}
+                {t("our-story")}
               </h2>
               <p className="text-base sm:text-lg lg:text-xl text-gray-600 max-w-4xl mx-auto leading-relaxed">
-                {t("ourStoryDesc")}
+                {t("our-story-desc")}
               </p>
             </div>
           </section>
@@ -61,10 +61,10 @@ export default function WhoWeArePage() {
                   </svg>
                 </div>
                 <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-800 mb-3 sm:mb-4">
-                  {t("ourVision")}
+                  {t("our-vision")}
                 </h2>
                 <p className="text-gray-700 leading-relaxed text-sm sm:text-base">
-                  {t("ourVisionDesc")}
+                  {t("our-vision-desc")}
                 </p>
               </div>
             </section>
@@ -87,10 +87,10 @@ export default function WhoWeArePage() {
                   </svg>
                 </div>
                 <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-800 mb-3 sm:mb-4">
-                  {t("ourMission")}
+                  {t("our-mission")}
                 </h2>
                 <p className="text-gray-700 leading-relaxed text-sm sm:text-base">
-                  {t("ourMissionDesc")}
+                  {t("our-mission-desc")}
                 </p>
               </div>
             </section>
@@ -99,7 +99,7 @@ export default function WhoWeArePage() {
           {/* Our Values Section */}
           <section className="bg-white rounded-xl sm:rounded-2xl shadow-lg sm:shadow-xl p-6 sm:p-8 lg:p-10 border border-gray-200">
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-6 sm:mb-8 text-center">
-              {t("ourValues")}
+              {t("our-values")}
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
               <div className="bg-gray-50 p-4 sm:p-6 rounded-xl border border-gray-200 hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
@@ -122,7 +122,7 @@ export default function WhoWeArePage() {
                   {t("quality")}
                 </h3>
                 <p className="text-gray-700 text-center text-xs sm:text-sm">
-                  {t("qualityDesc")}
+                  {t("quality-desc")}
                 </p>
               </div>
 
@@ -146,7 +146,7 @@ export default function WhoWeArePage() {
                   {t("honesty")}
                 </h3>
                 <p className="text-gray-700 text-center text-xs sm:text-sm">
-                  {t("honestyDesc")}
+                  {t("honesty-desc")}
                 </p>
               </div>
 
@@ -170,7 +170,7 @@ export default function WhoWeArePage() {
                   {t("innovation")}
                 </h3>
                 <p className="text-gray-700 text-center text-xs sm:text-sm">
-                  {t("innovationDesc")}
+                  {t("innovation-desc")}
                 </p>
               </div>
 
@@ -191,10 +191,10 @@ export default function WhoWeArePage() {
                   </svg>
                 </div>
                 <h3 className="font-bold text-gray-800 mb-2 sm:mb-3 text-center text-sm sm:text-base">
-                  {t("customerService")}
+                  {t("customer-service")}
                 </h3>
                 <p className="text-gray-700 text-center text-xs sm:text-sm">
-                  {t("customerServiceDesc")}
+                  {t("customer-service-desc")}
                 </p>
               </div>
             </div>
@@ -204,10 +204,10 @@ export default function WhoWeArePage() {
           <section className="bg-white rounded-xl sm:rounded-2xl shadow-lg sm:shadow-xl p-6 sm:p-8 lg:p-10 border border-gray-200">
             <div className="text-center">
               <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4 sm:mb-6">
-                {t("ourExperience")}
+                {t("our-experience")}
               </h2>
               <p className="text-base sm:text-lg lg:text-xl text-gray-600 max-w-4xl mx-auto leading-relaxed">
-                {t("ourExperienceDesc")}
+                {t("our-experience-desc")}
               </p>
             </div>
           </section>
@@ -216,10 +216,10 @@ export default function WhoWeArePage() {
           <section className="bg-white rounded-xl sm:rounded-2xl shadow-lg sm:shadow-xl p-6 sm:p-8 lg:p-10 border border-gray-200">
             <div className="text-center">
               <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4 sm:mb-6">
-                {t("communityCommitment")}
+                {t("community-commitment")}
               </h2>
               <p className="text-base sm:text-lg lg:text-xl text-gray-600 max-w-4xl mx-auto leading-relaxed">
-                {t("communityCommitmentDesc")}
+                {t("community-commitment-desc")}
               </p>
             </div>
           </section>
@@ -228,10 +228,10 @@ export default function WhoWeArePage() {
           <section className="bg-white rounded-xl sm:rounded-2xl shadow-lg sm:shadow-xl p-6 sm:p-8 lg:p-10 border border-gray-200">
             <div className="text-center">
               <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4 sm:mb-6">
-                {t("ourFuture")}
+                {t("our-future")}
               </h2>
               <p className="text-base sm:text-lg lg:text-xl text-gray-600 max-w-4xl mx-auto leading-relaxed">
-                {t("ourFutureDesc")}
+                {t("our-future-desc")}
               </p>
             </div>
           </section>
@@ -239,13 +239,13 @@ export default function WhoWeArePage() {
           {/* Call to Action */}
           <div className="bg-gray-800 text-white border border-gray-700 sm:shadow-xl shadow-lg p-8 sm:p-10 lg:p-12 rounded-xl sm:rounded-2xl text-center">
             <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-3 sm:mb-4">
-              {t("joinUsCoffee")}
+              {t("join-us-coffee")}
             </h3>
             <p className="text-lg sm:text-xl lg:text-2xl text-gray-200 mb-4 sm:mb-6 max-w-3xl mx-auto">
-              {t("joinUsCoffeeDesc")}
+              {t("join-us-coffee-desc")}
             </p>
             <button className="bg-white text-gray-800 px-6 sm:px-8 py-2 sm:py-3 rounded-full font-semibold text-base sm:text-lg hover:bg-gray-100 transition-colors duration-200">
-              {t("learnMore")}
+              {t("learn-more")}
             </button>
           </div>
         </div>

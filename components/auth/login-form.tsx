@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/store/store";
-import { loginUser, clearError } from "@/store/slices/auth-slice";
+import { login, clearError } from "@/store/slices/auth-slice";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { PasswordInput } from "@/components/ui/password-input";
@@ -52,8 +52,8 @@ export default function LoginForm({
     dispatch(clearError());
 
     try {
-      const result = await dispatch(loginUser(data));
-      if (loginUser.fulfilled.match(result)) {
+      const result = await dispatch(login(data));
+      if (login.fulfilled.match(result)) {
         toast.success(t("login-successful"));
         // Redirect to locale home; router base path includes locale from segment config
         router.push("/home");

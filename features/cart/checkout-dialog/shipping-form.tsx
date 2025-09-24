@@ -27,6 +27,13 @@ export default function ShippingForm({
   const t = useTranslations("cart");
   const tButtons = useTranslations("buttons");
 
+  // Debug logging
+  console.log("🚢 ShippingForm Debug:");
+  console.log("  - status:", status);
+  console.log("  - isSubmitting:", isSubmitting);
+  console.log("  - data:", data);
+  console.log("  - Will show success?", status === "success");
+
   return (
     <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
       <Card

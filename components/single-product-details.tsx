@@ -7,7 +7,6 @@ import { addToCart } from "@/store/slices/cart-slice";
 import { FavouriteButton } from "@/components/favourite-button";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import toast from "react-hot-toast";
 import {
   MdOutlineShoppingCart,
   MdOutlineShare,
@@ -48,10 +47,6 @@ export default function SingleProductDetails({
   const handleAddToCart = () => {
     const productIdToAdd = currentVariant?.id || product.id;
     dispatch(addToCart({ productId: productIdToAdd }));
-    toast.success(`${t("add-to-cart")} ${product.name}`, {
-      duration: 3000,
-      position: "top-right",
-    });
   };
 
   const handleShare = async () => {
@@ -169,14 +164,7 @@ export default function SingleProductDetails({
         </div>
       )}
 
-      {/* Short Description */}
-      {product.short_description && (
-        <div>
-          <p className="text-[20px] lg:text-[20px] md:text-[18px] text-gray-700 leading-relaxed font-cairo">
-            {product.short_description}
-          </p>
-        </div>
-      )}
+      {/* Optional promo/label area (kept minimal to avoid duplication with full description) */}
 
       {/* Variant Selector */}
       {hasVariants && (

@@ -1,60 +1,53 @@
 import { NextRequest, NextResponse } from 'next/server';
-import jwt from 'jsonwebtoken';
-import { findUserById } from '@/lib/mock-db';
+import { cookies } from 'next/headers';
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
-    const { refreshToken } = body;
+    const cookieStore = cookies();
+    const token = cookieStore.get('accessToken')?.value;
 
-    if (!refreshToken) {
+    if (!token) {
       return NextResponse.json(
-        { message: 'Refresh token required' },
-        { status: 400 }
-      );
-    }
-
-    // Verify the refresh token
-    const decoded = jwt.verify(
-      refreshToken,
-      process.env.JWT_REFRESH_SECRET || 'your-refresh-secret-key'
-    ) as { userId: string };
-
-    // Find user
-    const user = findUserById(decoded.userId);
-    if (!user) {
-      return NextResponse.json(
-        { message: 'User not found' },
-        { status: 404 }
-      );
-    }
-
-    // Generate new tokens
-    const newAccessToken = jwt.sign(
-      { userId: user.id, email: user.email },
-      process.env.JWT_SECRET || 'your-secret-key',
-      { expiresIn: '15m' }
-    );
-
-    const newRefreshToken = jwt.sign(
-      { userId: user.id },
-      process.env.JWT_REFRESH_SECRET || 'your-refresh-secret-key',
-      { expiresIn: '7d' }
-    );
-
-    return NextResponse.json({
-      accessToken: newAccessToken,
-      refreshToken: newRefreshToken,
-    });
-
-  } catch (error) {
-    if (error instanceof jwt.JsonWebTokenError) {
-      return NextResponse.json(
-        { message: 'Invalid refresh token' },
+        { message: 'No token to refresh' },
         { status: 401 }
       );
     }
 
+    const response = await fetch(`${API_URL}/v1/customer/refresh-token`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: JSON.stringify({}),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      return NextResponse.json(
+        { message: data.message || 'Token refresh failed' },
+        { status: response.status }
+      );
+    }
+
+    // Set new token in cookie
+    cookieStore.set('accessToken', data.token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 60 * 60 * 24 * 7, // 7 days
+      path: '/',
+    });
+
+    return NextResponse.json({
+      message: data.message || 'Token refreshed successfully',
+    });
+
+  } catch (error) {
     console.error('Token refresh error:', error);
     return NextResponse.json(
       { message: 'Internal server error' },

@@ -30,6 +30,11 @@ export default function DrawerComponent({
     }
   }, [currentLocale]);
 
+  // Close drawer automatically on route change (e.g., navigating to /cart)
+  useEffect(() => {
+    setOpen(false);
+  }, [pathname]);
+
   return (
     <div className={`${containerClassName}`}>
       <Drawer open={open} onOpenChange={setOpen} direction={direction}>

@@ -2,10 +2,25 @@ import Link from "next/link";
 import { CheckIcon } from "@/components/ui/icons/check-icon";
 import { SuccessProps } from "@/types/types";
 import { ORDER_INFO_LABELS, SUCCESS_MESSAGES } from "@/static-data/static-data";
+import { useDispatch } from "react-redux";
+import { resetStatus } from "@/store/slices/cart-slice";
+import { useRouter } from "next/navigation";
 
 export default function Success({ data }: SuccessProps) {
+  console.log("✅ Success component rendered with data:", data);
   
-  const { order } = data.data;
+  // Handle different data structures
+  const order = data?.data?.order || data?.data || data;
+
+  // If no order data, show error
+  if (!order || !order.id) {
+    console.error("No order data available:", data);
+    return (
+      <div className="p-4 bg-red-100 text-red-800 rounded-md">
+        Error: No order data available. Please check the console for details.
+      </div>
+    );
+  }
 
   const orderInfoItems = [
     { label: ORDER_INFO_LABELS.ORDER_NUMBER, value: `#${order.id}` },
@@ -13,7 +28,7 @@ export default function Success({ data }: SuccessProps) {
     { label: ORDER_INFO_LABELS.SHIPPING_METHOD, value: order.shipping_method },
     {
       label: ORDER_INFO_LABELS.SHIPPING_AMOUNT,
-      value: order.shipping_amount + " " + order?.channel_currency_code,
+      value: order.shipping_amount + " " + ((order as any)?.channel_currency_code || ""),
     },
     { label: ORDER_INFO_LABELS.PAYMENT_TITLE, value: order.payment_title },
   ];
@@ -67,15 +82,32 @@ function OrderInfoSection({ orderInfoItems }: OrderInfoSectionProps) {
 }
 
 function ActionSection() {
+  const dispatch = useDispatch();
+  const router = useRouter();
+  
+  const handleResetAndClose = () => {
+    dispatch(resetStatus());
+  };
+
+  const handleGoHome = () => {
+    dispatch(resetStatus());
+    router.push("/home");
+  };
+
   return (
     <div className="px-6 py-4 flex flex-col gap-3">
-      <Link
-        href="/home"
+      <button
+        onClick={handleGoHome}
         className="inline-flex h-10 items-center justify-center rounded-md bg-gray-900 px-6 text-sm font-medium text-gray-50 shadow transition-colors hover:bg-gray-900/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50 dark:bg-gray-50 dark:text-gray-900 dark:hover:bg-gray-50/90 dark:focus-visible:ring-gray-300"
-        prefetch={false}
       >
         {SUCCESS_MESSAGES.GO_HOME}
-      </Link>
+      </button>
+      <button
+        onClick={handleResetAndClose}
+        className="inline-flex h-10 items-center justify-center rounded-md bg-gray-200 px-6 text-sm font-medium text-gray-700 shadow transition-colors hover:bg-gray-300 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50"
+      >
+        Close Dialog
+      </button>
     </div>
   );
 }

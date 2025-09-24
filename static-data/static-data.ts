@@ -307,21 +307,22 @@ export const quickCartProducts = [
   },
 ];
 
+// Match actual Next.js routes under app/[locale]/legal/* and app/[locale]/services/*
 export const LEGAL_TERMS = [
-  { title: "legal.terms-and-conditions", path: "/terms-and-conditions" },
-  { title: "legal.privacy-policy", path: "/privacy-policy" },
-  { title: "legal.delivery-policy", path: "/delivery-policy" },
-  { title: "legal.payment-policy", path: "/payment-policy" },
+  { title: "legal.terms-and-conditions", path: "/legal/terms" },
+  { title: "legal.privacy-policy", path: "/legal/privacy" },
+  { title: "legal.delivery-policy", path: "/services/shipping-info" },
+  { title: "legal.payment-policy", path: "/legal/sale-terms" },
   { title: "legal.return-policy", path: "/services/return-policy" },
 ];
 
 export const KNOW_US_MORE = [
-  { title: "about.who-we-are", path: "/about-us" },
-  { title: "about.our-services", path: "/services" },
+  { title: "about.who-we-are", path: "/about/who-we-are" },
+  { title: "about.our-services", path: "/services/faq" },
 ];
 
 export const SERVICES = [
-  { title: "services.contact-us", path: "/contact-us" },
+  { title: "services.contact-us", path: "/contact/contact-us" },
   { title: "services.shipping-info", path: "/services/shipping-info" },
   { title: "services.faq", path: "/services/faq" },
 ];
