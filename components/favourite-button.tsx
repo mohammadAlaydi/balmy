@@ -5,6 +5,8 @@ import { Button } from '@/components/ui/button';
 import { useFavourites } from '@/hooks/use-favourites';
 import { cn } from '@/lib/utils';
 import toast from 'react-hot-toast';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/store/store';
 
 interface FavouriteButtonProps {
   product: any;
@@ -23,9 +25,7 @@ export function FavouriteButton({
 }: FavouriteButtonProps) {
   const { isFavourite, addToFavourites, removeFromFavourites } = useFavourites();
   const isFav = isFavourite(product.id);
-
-  // Check authentication state
-  const isAuthenticated = typeof window !== 'undefined' && !!localStorage.getItem('accessToken');
+  const { isAuthenticated } = useSelector((state: RootState) => state.auth);
 
   const handleToggle = async (e: React.MouseEvent) => {
     e.preventDefault();
@@ -33,8 +33,6 @@ export function FavouriteButton({
     
     if (!isAuthenticated) {
       toast.error('Please login to manage favourites');
-      // Redirect to login page
-      window.location.href = '/auth/login';
       return;
     }
     
