@@ -2,7 +2,7 @@
 
 import { useTranslations } from "next-intl";
 
-export default function SaleTermsPage() {
+export default function page() {
   
   const t = useTranslations("legal.sale-terms");
 
@@ -14,7 +14,7 @@ export default function SaleTermsPage() {
             {t("title")}
           </h1>
           
-          <div className="space-y-6 text-right">
+          <div className="space-y-6">
             <section>
               <h2 className="text-xl font-semibold text-gray-800 mb-4">
                 {t("purchase-orders")}

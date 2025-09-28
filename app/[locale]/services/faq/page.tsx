@@ -1,39 +1,38 @@
-import { Metadata } from "next";
+"use client";
+
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 
-export const metadata: Metadata = {
-  title: "الأسئلة الأكثر شيوعاً - فرادا",
-  description: "إجابات على الأسئلة الأكثر شيوعاً حول منتجات وخدمات فرادا",
-};
-
-export default function FAQPage() {
+export default function page() {
+  
+  const t = useTranslations("faq");
   
   return (
     <div className="min-h-[65vh] bg-gray-50 py-12">
       <div className="container mx-auto px-4 max-w-5xl">
         <div className="bg-white rounded-lg shadow-lg p-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-8 text-center">
-            الأسئلة الأكثر شيوعاً (FAQ)
+            {t("title")}
           </h1>
 
-          <div className="space-y-6 text-right">
+          <div className="space-y-6 ">
             <section>
               <h2 className="text-xl font-semibold text-gray-800 mb-4">
-                المنتجات والطلبات
+                {t("products-orders")}
               </h2>
 
               <div className="space-y-4">
                 <div className="border border-gray-200 rounded-lg">
                   <details className="group">
                     <summary className="flex justify-between items-center p-4 cursor-pointer hover:bg-gray-50">
-                      <span className="font-semibold text-gray-800">كيف يمكنني طلب منتجات من فرادا؟</span>
+                      <span className="font-semibold text-gray-800">{t("how-to-order")}</span>
                       <svg className="w-5 h-5 text-gray-500 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                       </svg>
                     </summary>
                     <div className="p-4 bg-gray-50 border-t border-gray-200">
                       <p className="text-gray-600">
-                        يمكنك طلب المنتجات عبر موقعنا الإلكتروني أو تطبيق الهاتف المحمول. اختر المنتجات المطلوبة، أضفها إلى سلة التسوق، ثم أكمل عملية الدفع. يمكنك أيضاً الطلب عبر الهاتف على الرقم +966-55-766-5585.
+                        {t("how-to-order-answer")}
                       </p>
                     </div>
                   </details>
@@ -42,14 +41,14 @@ export default function FAQPage() {
                 <div className="border border-gray-200 rounded-lg">
                   <details className="group">
                     <summary className="flex justify-between items-center p-4 cursor-pointer hover:bg-gray-50">
-                      <span className="font-semibold text-gray-800">ما هي طرق الدفع المتاحة؟</span>
+                      <span className="font-semibold text-gray-800">{t("payment-methods")}</span>
                       <svg className="w-5 h-5 text-gray-500 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                       </svg>
                     </summary>
                     <div className="p-4 bg-gray-50 border-t border-gray-200">
                       <p className="text-gray-600">
-                        نقدم عدة طرق دفع: البطاقات الائتمانية والمدى، الدفع عند الاستلام، التحويل البنكي، والدفع عبر المحافظ الإلكترونية مثل STC Pay وApple Pay.
+                        {t("payment-methods-answer")}
                       </p>
                     </div>
                   </details>
@@ -58,14 +57,14 @@ export default function FAQPage() {
                 <div className="border border-gray-200 rounded-lg">
                   <details className="group">
                     <summary className="flex justify-between items-center p-4 cursor-pointer hover:bg-gray-50">
-                      <span className="font-semibold text-gray-800">هل يمكنني تعديل أو إلغاء طلبي؟</span>
+                      <span className="font-semibold text-gray-800">{t("modify-cancel-order")}</span>
                       <svg className="w-5 h-5 text-gray-500 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                       </svg>
                     </summary>
                     <div className="p-4 bg-gray-50 border-t border-gray-200">
                       <p className="text-gray-600">
-                        نعم، يمكنك تعديل أو إلغاء طلبك قبل بدء عملية الشحن. تواصل معنا على الفور عبر الهاتف أو البريد الإلكتروني. بعد بدء الشحن، يخضع الإلغاء لسياسة الإرجاع والاستبدال.
+                        {t("modify-cancel-order-answer")}
                       </p>
                     </div>
                   </details>
@@ -75,21 +74,21 @@ export default function FAQPage() {
 
             <section>
               <h2 className="text-xl font-semibold text-gray-800 mb-4">
-                الشحن والتسليم
+                {t("shipping-delivery")}
               </h2>
 
               <div className="space-y-4">
                 <div className="border border-gray-200 rounded-lg">
                   <details className="group">
                     <summary className="flex justify-between items-center p-4 cursor-pointer hover:bg-gray-50">
-                      <span className="font-semibold text-gray-800">كم تستغرق مدة التسليم؟</span>
+                      <span className="font-semibold text-gray-800">{t("delivery-time")}</span>
                       <svg className="w-5 h-5 text-gray-500 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                       </svg>
                     </summary>
                     <div className="p-4 bg-gray-50 border-t border-gray-200">
                       <p className="text-gray-600">
-                        مدة التسليم تختلف حسب المنطقة: الرياض (1-2 أيام عمل)، المدن الرئيسية (2-3 أيام عمل)، المناطق النائية (3-5 أيام عمل). نقدم أيضاً خدمة الشحن السريع للمناطق القريبة.
+                        {t("delivery-time-answer")}
                       </p>
                     </div>
                   </details>
@@ -98,14 +97,14 @@ export default function FAQPage() {
                 <div className="border border-gray-200 rounded-lg">
                   <details className="group">
                     <summary className="flex justify-between items-center p-4 cursor-pointer hover:bg-gray-50">
-                      <span className="font-semibold text-gray-800">هل الشحن مجاني؟</span>
+                      <span className="font-semibold text-gray-800">{t("free-shipping")}</span>
                       <svg className="w-5 h-5 text-gray-500 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                       </svg>
                     </summary>
                     <div className="p-4 bg-gray-50 border-t border-gray-200">
                       <p className="text-gray-600">
-                        الشحن مجاني للرياض، و25 ريال للمدن الرئيسية، و35 ريال للمناطق النائية. الطلبات التي تزيد قيمتها عن 200 ريال تحصل على شحن مجاني لجميع المناطق.
+                        {t("free-shipping-answer")}
                       </p>
                     </div>
                   </details>
@@ -114,14 +113,14 @@ export default function FAQPage() {
                 <div className="border border-gray-200 rounded-lg">
                   <details className="group">
                     <summary className="flex justify-between items-center p-4 cursor-pointer hover:bg-gray-50">
-                      <span className="font-semibold text-gray-800">كيف يمكنني تتبع طلبي؟</span>
+                      <span className="font-semibold text-gray-800">{t("track-order")}</span>
                       <svg className="w-5 h-5 text-gray-500 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                       </svg>
                     </summary>
                     <div className="p-4 bg-gray-50 border-t border-gray-200">
                       <p className="text-gray-600">
-                        ستتلقى رقم تتبع عبر البريد الإلكتروني والرسائل النصية. يمكنك استخدام هذا الرقم لتتبع حالة طلبك عبر موقعنا أو تطبيق الهاتف المحمول.
+                        {t("track-order-answer")}
                       </p>
                     </div>
                   </details>
@@ -131,21 +130,21 @@ export default function FAQPage() {
 
             <section>
               <h2 className="text-xl font-semibold text-gray-800 mb-4">
-                الإرجاع والاستبدال
+                {t("returns-exchanges")}
               </h2>
 
               <div className="space-y-4">
                 <div className="border border-gray-200 rounded-lg">
                   <details className="group">
                     <summary className="flex justify-between items-center p-4 cursor-pointer hover:bg-gray-50">
-                      <span className="font-semibold text-gray-800">ما هي سياسة الإرجاع؟</span>
+                      <span className="font-semibold text-gray-800">{t("return-policy")}</span>
                       <svg className="w-5 h-5 text-gray-500 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                       </svg>
                     </summary>
                     <div className="p-4 bg-gray-50 border-t border-gray-200">
                       <p className="text-gray-600">
-                        يمكنك إرجاع المنتج خلال 14 يوم من تاريخ الاستلام إذا كان معيباً أو لا يتطابق مع المواصفات. نقدم خيارات متعددة: استرداد المال، استبدال المنتج، أو رصيد في المتجر.
+                        {t("return-policy-answer")}
                       </p>
                     </div>
                   </details>
@@ -154,14 +153,14 @@ export default function FAQPage() {
                 <div className="border border-gray-200 rounded-lg">
                   <details className="group">
                     <summary className="flex justify-between items-center p-4 cursor-pointer hover:bg-gray-50">
-                      <span className="font-semibold text-gray-800">كم تستغرق مدة معالجة الإرجاع؟</span>
+                      <span className="font-semibold text-gray-800">{t("return-processing-time")}</span>
                       <svg className="w-5 h-5 text-gray-500 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                       </svg>
                     </summary>
                     <div className="p-4 bg-gray-50 border-t border-gray-200">
                       <p className="text-gray-600">
-                        تستغرق معالجة الإرجاع من 5-9 أيام عمل: استلام المنتج (1-2 يوم)، فحص المنتج (1-2 يوم)، معالجة الطلب (3-5 أيام).
+                        {t("return-processing-time-answer")}
                       </p>
                     </div>
                   </details>
@@ -171,21 +170,21 @@ export default function FAQPage() {
 
             <section>
               <h2 className="text-xl font-semibold text-gray-800 mb-4">
-                الحساب والخصوصية
+                {t("account-privacy")}
               </h2>
 
               <div className="space-y-4">
                 <div className="border border-gray-200 rounded-lg">
                   <details className="group">
                     <summary className="flex justify-between items-center p-4 cursor-pointer hover:bg-gray-50">
-                      <span className="font-semibold text-gray-800">كيف يمكنني إنشاء حساب؟</span>
+                      <span className="font-semibold text-gray-800">{t("create-account")}</span>
                       <svg className="w-5 h-5 text-gray-500 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                       </svg>
                     </summary>
                     <div className="p-4 bg-gray-50 border-t border-gray-200">
                       <p className="text-gray-600">
-                        يمكنك إنشاء حساب بسهولة عبر موقعنا أو تطبيق الهاتف المحمول. أدخل بريدك الإلكتروني ورقم الهاتف، ثم اتبع التعليمات لإكمال التسجيل.
+                        {t("create-account-answer")}
                       </p>
                     </div>
                   </details>
@@ -194,14 +193,14 @@ export default function FAQPage() {
                 <div className="border border-gray-200 rounded-lg">
                   <details className="group">
                     <summary className="flex justify-between items-center p-4 cursor-pointer hover:bg-gray-50">
-                      <span className="font-semibold text-gray-800">هل معلوماتي آمنة؟</span>
+                      <span className="font-semibold text-gray-800">{t("data-security")}</span>
                       <svg className="w-5 h-5 text-gray-500 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                       </svg>
                     </summary>
                     <div className="p-4 bg-gray-50 border-t border-gray-200">
                       <p className="text-gray-600">
-                        نعم، نستخدم تقنيات تشفير متقدمة لحماية معلوماتك الشخصية وبيانات الدفع. نلتزم بسياسة خصوصية صارمة ولا نشارك معلوماتك مع أطراف ثالثة.
+                        {t("data-security-answer")}
                       </p>
                     </div>
                   </details>
@@ -211,21 +210,21 @@ export default function FAQPage() {
 
             <section>
               <h2 className="text-xl font-semibold text-gray-800 mb-4">
-                الخدمة والدعم
+                {t("service-support")}
               </h2>
 
               <div className="space-y-4">
                 <div className="border border-gray-200 rounded-lg">
                   <details className="group">
                     <summary className="flex justify-between items-center p-4 cursor-pointer hover:bg-gray-50">
-                      <span className="font-semibold text-gray-800">ما هي ساعات العمل؟</span>
+                      <span className="font-semibold text-gray-800">{t("working-hours")}</span>
                       <svg className="w-5 h-5 text-gray-500 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                       </svg>
                     </summary>
                     <div className="p-4 bg-gray-50 border-t border-gray-200">
                       <p className="text-gray-600">
-                        ساعات العمل: الأحد - الخميس من 9:00 صباحاً إلى 6:00 مساءً، السبت من 10:00 صباحاً إلى 4:00 مساءً، الجمعة مغلق.
+                        {t("working-hours-answer")}
                       </p>
                     </div>
                   </details>
@@ -234,14 +233,14 @@ export default function FAQPage() {
                 <div className="border border-gray-200 rounded-lg">
                   <details className="group">
                     <summary className="flex justify-between items-center p-4 cursor-pointer hover:bg-gray-50">
-                      <span className="font-semibold text-gray-800">كيف يمكنني التواصل مع خدمة العملاء؟</span>
+                      <span className="font-semibold text-gray-800">{t("contact-customer-service")}</span>
                       <svg className="w-5 h-5 text-gray-500 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                       </svg>
                     </summary>
                     <div className="p-4 bg-gray-50 border-t border-gray-200">
                       <p className="text-gray-600">
-                        يمكنك التواصل معنا عبر الهاتف: +966-55-766-5585، البريد الإلكتروني: info@farada.com، أو عبر نموذج التواصل في موقعنا.
+                        {t("contact-customer-service-answer")}
                       </p>
                     </div>
                   </details>
@@ -251,17 +250,17 @@ export default function FAQPage() {
 
             <div className="mt-8 p-6 bg-gray-50 rounded-lg text-center">
               <h3 className="text-lg font-semibold text-gray-800 mb-2">
-                لم تجد إجابة لسؤالك؟
+                {t("no-answer-found")}
               </h3>
               <p className="text-gray-600 mb-4">
-                فريق خدمة العملاء لدينا متاح لمساعدتك في أي استفسار آخر
+                {t("customer-service-available")}
               </p>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-5">
                 <Link  prefetch={true} href="tel:+966557665585" className="inline-block bg-gray-700 text-white px-4 py-2 rounded-md w-full">
-                  الهاتف : +966-55-766-5585
+                  {t("phone")}
                 </Link>
                 <Link  prefetch={true} href="mailto:info@farada.com" className="inline-block bg-gray-700 text-white px-4 py-2 rounded-md w-full">
-                  البريد الإلكتروني : info@farada.com
+                  {t("email")}
                 </Link>
               </div>
             </div>

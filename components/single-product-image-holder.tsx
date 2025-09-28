@@ -3,12 +3,12 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
-import { ImageUrls } from "@/types/types";
+import { ProductImage } from "@/types/types";
 
 interface SingleProductImageHolderProps {
-  baseImage: ImageUrls;
-  hoverImage: ImageUrls;
-  galleryImages: ImageUrls[];
+  baseImage: ProductImage;
+  hoverImage: ProductImage;
+  galleryImages: ProductImage[];
   productName: string;
   className?: string;
 }

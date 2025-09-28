@@ -1,6 +1,10 @@
+"use client";
+
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 
 export default function CrossBody() {
+  const t = useTranslations("home.cross-body");
   
   return (
     <div className="cross-body flex flex-col md:flex-row justify-between m-auto gap-3 px-3 md:px-0  w-full  xl:max-w-[75%] py-[20px] md:py-[30px]">
@@ -15,7 +19,7 @@ export default function CrossBody() {
         />
         <div className="absolute h-full w-full  flex flex-col gap-3 justify-center items-center top-0 left-0">
           <h2 className="text-white text-base sm:text-xl md:text-2xl xl:text-3xl hover:text-white/70 transition-all duration-500 cursor-pointer px-3 text-center">
-            كن أنت الرمز , دع أناقتك تتحدث عنك
+            {t("title-1")}
           </h2>
         </div>
       </div>
@@ -29,9 +33,8 @@ export default function CrossBody() {
           quality={100}
         />
         <div className="flex flex-col gap-3 justify-center items-center">
-          <h2 className="text-base sm:text-xl md:text-2xl xl:text-3xl text-center">تميز بأسلوبك ... تألق بفخامتك</h2>
-          <p className="text-center">خطواتك مع فرادا...راحة وأناقة
-          </p>
+          <h2 className="text-base sm:text-xl md:text-2xl xl:text-3xl text-center">{t("title-2")}</h2>
+          <p className="text-center">{t("subtitle")}</p>
         </div>
       </div>
     </div>

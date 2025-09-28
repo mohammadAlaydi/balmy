@@ -14,7 +14,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import toast from "react-hot-toast";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
-import { Loader } from "react-icons/fa";
+import { FaSpinner } from "react-icons/fa";
 import { Badge } from "../ui/badge";
 
 interface LoginFormProps {
@@ -112,19 +112,19 @@ export default function LoginForm({
                 <Badge className="text-base bg-transparent text-white">
                   {t("sign-in")}
                 </Badge>{" "}
-                <Loader />
+                <FaSpinner className="animate-spin" />
               </p>
             ) : (
               t("sign-in")
             )}
           </Button>
 
-          <div className="text-center space-y-2">
+          <div className="text-center flex gap-5 justify-between items-center">
             <div>
               <button
                 type="button"
                 onClick={onSwitchToRegister}
-                className="text-primary hover:underline text-sm"
+                className="text-primary underline text-sm hover:text-primary/80"
               >
                 {t("dont-have-account")}
               </button>
@@ -132,7 +132,7 @@ export default function LoginForm({
             <div>
               <button
                 type="button"
-                className="text-primary hover:underline text-sm"
+                className="text-primary underline text-sm hover:text-primary/80"
                 onClick={onForgotPassword}
               >
                 {t("forgot-password")}

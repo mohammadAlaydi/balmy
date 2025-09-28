@@ -1,137 +1,132 @@
-import { Metadata } from "next";
+"use client";
 
-export const metadata: Metadata = {
-  title: "سياسة الإرجاع والاستبدال - فرادا",
-  description: "سياسة الإرجاع والاستبدال في متجر فرادا",
-};
+import { useTranslations } from "next-intl";
 
-export default function ReturnPolicyPage() {
+export default function page() {
+
+  const t = useTranslations("returnPolicy");
   
   return (
     <div className="min-h-screen bg-gray-50 py-12">
       <div className="container mx-auto px-4 max-w-5xl">
         <div className="bg-white rounded-lg shadow-lg p-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-8 text-center">
-            سياسة الإرجاع والاستبدال
+            {t("title")}
           </h1>
           
-          <div className="space-y-6 text-right">
+          <div className="space-y-6">
             <section>
               <h2 className="text-xl font-semibold text-gray-800 mb-4">
-                التزامنا تجاه رضاك
+                {t("commitment.title")}
               </h2>
               <p className="text-gray-600 leading-relaxed">
-                في فرادا، نؤمن بأهمية رضا العميل. نقدم سياسة إرجاع واستبدال شفافة وعادلة لضمان تجربة تسوق ممتعة ومطمئنة لجميع عملائنا.
+                {t("commitment.description")}
               </p>
             </section>
 
             <section>
               <h2 className="text-xl font-semibold text-gray-800 mb-4">
-                شروط الإرجاع
+                {t("returnConditions.title")}
               </h2>
               <div className="bg-gray-50 p-4 rounded-lg">
-                <h3 className="font-semibold text-gray-800 mb-2">يمكن إرجاع المنتج في الحالات التالية:</h3>
+                <h3 className="font-semibold text-gray-800 mb-2">{t("returnConditions.subtitle")}</h3>
                 <ul className="text-gray-700 text-sm space-y-1">
-                  <li>• المنتج معيب أو تالف عند الاستلام</li>
-                  <li>• المنتج لا يتطابق مع المواصفات المعلنة</li>
-                  <li>• المنتج غير مناسب أو لا يلبي التوقعات</li>
-                  <li>• خطأ في الطلب من جانبنا</li>
+                  {t.raw("returnConditions.items").map((item: string, index: number) => (
+                    <li key={index}>• {item}</li>
+                  ))}
                 </ul>
               </div>
             </section>
 
             <section>
               <h2 className="text-xl font-semibold text-gray-800 mb-4">
-                شروط عدم الإرجاع
+                {t("nonReturnConditions.title")}
               </h2>
               <div className="bg-gray-50 p-4 rounded-lg">
-                <h3 className="font-semibold text-gray-800 mb-2">لا يمكن إرجاع المنتج في الحالات التالية:</h3>
+                <h3 className="font-semibold text-gray-800 mb-2">{t("nonReturnConditions.subtitle")}</h3>
                 <ul className="text-gray-700 text-sm space-y-1">
-                  <li>• المنتجات الغذائية المفتوحة أو المستخدمة</li>
-                  <li>• المنتجات التالفة بسبب سوء الاستخدام</li>
-                  <li>• المنتجات المفقودة أو المنسية</li>
-                  <li>• المنتجات التي تم شراؤها بأسعار مخفضة خاصة</li>
+                  {t.raw("nonReturnConditions.items").map((item: string, index: number) => (
+                    <li key={index}>• {item}</li>
+                  ))}
                 </ul>
               </div>
             </section>
 
             <section>
               <h2 className="text-xl font-semibold text-gray-800 mb-4">
-                فترة الإرجاع
+                {t("returnPeriod.title")}
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="bg-gray-50 p-4 rounded-lg text-center">
-                  <h3 className="font-semibold text-gray-800 mb-2">المنتجات العادية</h3>
-                  <p className="text-gray-600">14 يوم من تاريخ الاستلام</p>
+                  <h3 className="font-semibold text-gray-800 mb-2">{t("returnPeriod.regularProducts.title")}</h3>
+                  <p className="text-gray-600">{t("returnPeriod.regularProducts.period")}</p>
                 </div>
                 <div className="bg-gray-50 p-4 rounded-lg text-center">
-                  <h3 className="font-semibold text-gray-800 mb-2">المنتجات الإلكترونية</h3>
-                  <p className="text-gray-600">7 أيام من تاريخ الاستلام</p>
+                  <h3 className="font-semibold text-gray-800 mb-2">{t("returnPeriod.electronicProducts.title")}</h3>
+                  <p className="text-gray-600">{t("returnPeriod.electronicProducts.period")}</p>
                 </div>
               </div>
             </section>
 
             <section>
               <h2 className="text-xl font-semibold text-gray-800 mb-4">
-                كيفية طلب الإرجاع
+                {t("howToReturn.title")}
               </h2>
               <div className="bg-gray-50 p-4 rounded-lg">
                 <ol className="list-decimal list-inside space-y-2 text-gray-700">
-                  <li>تواصل معنا عبر الهاتف أو البريد الإلكتروني خلال فترة الإرجاع</li>
-                  <li>قدم رقم الطلب وسبب الإرجاع</li>
-                  <li>سنقوم بتقييم طلبك والرد عليك خلال 24 ساعة</li>
-                  <li>في حالة الموافقة، سنرسل لك تعليمات الإرجاع</li>
-                  <li>أرسل المنتج إلينا مع جميع الملحقات والتغليف الأصلي</li>
+                  {t.raw("howToReturn.steps").map((step: string, index: number) => (
+                    <li key={index}>{step}</li>
+                  ))}
                 </ol>
               </div>
             </section>
 
             <section>
               <h2 className="text-xl font-semibold text-gray-800 mb-4">
-                خيارات الإرجاع
+                {t("returnOptions.title")}
               </h2>
               <div className="space-y-4">
                 <div className="border border-gray-200 rounded-lg p-4">
-                  <h3 className="font-semibold text-gray-800 mb-2">استرداد المال</h3>
+                  <h3 className="font-semibold text-gray-800 mb-2">{t("returnOptions.moneyRefund.title")}</h3>
                   <p className="text-gray-600 text-sm mb-2">
-                    استرداد كامل المبلغ المدفوع (باستثناء رسوم الشحن)
+                    {t("returnOptions.moneyRefund.description")}
                   </p>
-                  <span className="bg-gray-100 text-gray-800 text-xs px-2 py-1 rounded">متاح</span>
+                  <span className="bg-gray-100 text-gray-800 text-xs px-2 py-1 rounded">{t("returnOptions.moneyRefund.status")}</span>
                 </div>
                 <div className="border border-gray-200 rounded-lg p-4">
-                  <h3 className="font-semibold text-gray-800 mb-2">استبدال المنتج</h3>
+                  <h3 className="font-semibold text-gray-800 mb-2">{t("returnOptions.productReplacement.title")}</h3>
                   <p className="text-gray-600 text-sm mb-2">
-                    استبدال المنتج بمنتج آخر من نفس القيمة
+                    {t("returnOptions.productReplacement.description")}
                   </p>
-                  <span className="bg-gray-100 text-gray-800 text-xs px-2 py-1 rounded">متاح</span>
+                  <span className="bg-gray-100 text-gray-800 text-xs px-2 py-1 rounded">{t("returnOptions.productReplacement.status")}</span>
                 </div>
                 <div className="border border-gray-200 rounded-lg p-4">
-                  <h3 className="font-semibold text-gray-800 mb-2">رصيد في المتجر</h3>
+                  <h3 className="font-semibold text-gray-800 mb-2">{t("returnOptions.storeCredit.title")}</h3>
                   <p className="text-gray-600 text-sm mb-2">
-                    رصيد يمكن استخدامه في مشتريات مستقبلية
+                    {t("returnOptions.storeCredit.description")}
                   </p>
-                  <span className="bg-gray-100 text-gray-800 text-xs px-2 py-1 rounded">متاح</span>
+                  <span className="bg-gray-100 text-gray-800 text-xs px-2 py-1 rounded">{t("returnOptions.storeCredit.status")}</span>
                 </div>
               </div>
             </section>
 
             <section>
               <h2 className="text-xl font-semibold text-gray-800 mb-4">
-                رسوم الإرجاع
+                {t("returnFees.title")}
               </h2>
               <div className="bg-gray-50 p-4 rounded-lg">
                 <div className="space-y-2 text-gray-800">
                   <div className="flex justify-between">
-                    <span>إرجاع المنتج المعيب:</span>
-                    <span className="font-semibold">مجاناً</span>
+                    <span>{t("returnFees.defectiveProduct")}</span>
+                    <span className="font-semibold">{t("returnFees.defectiveProductFee")}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span>إرجاع المنتج بدون سبب:</span>
-                    <span className="font-semibold">25 ريال</span>
+                    <span>{t("returnFees.noReasonReturn")}</span>
+                    <span className="font-semibold">{t("returnFees.noReasonReturnFee")}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span>رسوم الشحن:</span>
-                    <span className="font-semibold">على العميل</span>
+                    <span>{t("returnFees.shippingFees")}</span>
+                    <span className="font-semibold">{t("returnFees.shippingFeesResponsibility")}</span>
                   </div>
                 </div>
               </div>
@@ -139,72 +134,62 @@ export default function ReturnPolicyPage() {
 
             <section>
               <h2 className="text-xl font-semibold text-gray-800 mb-4">
-                مدة معالجة الإرجاع
+                {t("processingTime.title")}
               </h2>
               <div className="space-y-3">
                 <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-                  <span className="text-gray-700">استلام المنتج:</span>
-                  <span className="font-semibold text-gray-800">1-2 يوم عمل</span>
+                  <span className="text-gray-700">{t("processingTime.productReceipt")}</span>
+                  <span className="font-semibold text-gray-800">{t("processingTime.productReceiptTime")}</span>
                 </div>
                 <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-                  <span className="text-gray-700">فحص المنتج:</span>
-                  <span className="font-semibold text-gray-800">1-2 يوم عمل</span>
+                  <span className="text-gray-700">{t("processingTime.productInspection")}</span>
+                  <span className="font-semibold text-gray-800">{t("processingTime.productInspectionTime")}</span>
                 </div>
                 <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-                  <span className="text-gray-700">معالجة الطلب:</span>
-                  <span className="font-semibold text-gray-800">3-5 أيام عمل</span>
+                  <span className="text-gray-700">{t("processingTime.orderProcessing")}</span>
+                  <span className="font-semibold text-gray-800">{t("processingTime.orderProcessingTime")}</span>
                 </div>
                 <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-                  <span className="text-gray-700">إجمالي المدة:</span>
-                  <span className="font-semibold text-gray-600">5-9 أيام عمل</span>
+                  <span className="text-gray-700">{t("processingTime.totalTime")}</span>
+                  <span className="font-semibold text-gray-600">{t("processingTime.totalTimePeriod")}</span>
                 </div>
               </div>
             </section>
 
             <section>
               <h2 className="text-xl font-semibold text-gray-800 mb-4">
-                معلومات مهمة
+                {t("importantInfo.title")}
               </h2>
               <div className="space-y-3">
-                <div className="flex items-start space-x-2 space-x-reverse">
-                  <div className="w-2 h-2 bg-gray-600 rounded-full mt-2"></div>
-                  <span className="text-gray-600">يجب أن يكون المنتج في حالته الأصلية مع جميع الملحقات والتغليف</span>
-                </div>
-                <div className="flex items-start space-x-2 space-x-reverse">
-                  <div className="w-2 h-2 bg-gray-600 rounded-full mt-2"></div>
-                  <span className="text-gray-600">نوصي بتوثيق حالة المنتج عند الإرسال</span>
-                </div>
-                <div className="flex items-start space-x-2 space-x-reverse">
-                  <div className="w-2 h-2 bg-gray-600 rounded-full mt-2"></div>
-                  <span className="text-gray-600">سيتم إخطارك عبر البريد الإلكتروني عند استلام المنتج</span>
-                </div>
-                <div className="flex items-start space-x-2 space-x-reverse">
-                  <div className="w-2 h-2 bg-gray-600 rounded-full mt-2"></div>
-                  <span className="text-gray-600">يمكنك تتبع حالة طلب الإرجاع عبر حسابك</span>
-                </div>
+                {t.raw("importantInfo.items").map((item: string, index: number) => (
+                  <div key={index} className="flex items-start space-x-2 space-x-reverse gap-2">
+                    <div className="w-2 h-2 bg-gray-600 rounded-full mt-2"></div>
+                    <span className="text-gray-600">{item}</span>
+                  </div>
+                ))}
               </div>
             </section>
 
             <section>
               <h2 className="text-xl font-semibold text-gray-800 mb-4">
-                التواصل بخصوص الإرجاع
+                {t("contact.title")}
               </h2>
               <p className="text-gray-600 leading-relaxed">
-                إذا كان لديك أي أسئلة حول سياسة الإرجاع أو تحتاج إلى مساعدة، يمكنك التواصل معنا:
+                {t("contact.description")}
               </p>
               <div className="mt-4 p-4 bg-gray-50 rounded-lg">
                 <p className="text-gray-800">
-                  <strong>الهاتف:</strong> +966-55-766-5585<br/>
-                  <strong>البريد الإلكتروني:</strong> returns@farada.com<br/>
-                  <strong>ساعات العمل:</strong> الأحد - الخميس، 9:00 ص - 6:00 م
+                  <strong>{t("contact.phone")}</strong> +966-55-766-5585<br/>
+                  <strong>{t("contact.email")}</strong> returns@farada.com<br/>
+                  <strong>{t("contact.workingHours")}</strong> {t("contact.workingHoursValue")}
                 </p>
               </div>
             </section>
 
             <div className="mt-8 p-4 bg-gray-50 rounded-lg text-center">
-              <h3 className="font-semibold text-gray-800 mb-2">نحن هنا لمساعدتك</h3>
+              <h3 className="font-semibold text-gray-800 mb-2">{t("helpSection.title")}</h3>
               <p className="text-gray-700 text-sm">
-                هدفنا هو ضمان رضاك التام. إذا لم تكن راضياً عن منتجك، سنعمل معك لإيجاد الحل المناسب
+                {t("helpSection.description")}
               </p>
             </div>
           </div>

@@ -9,7 +9,6 @@
     "routing": "Routing",
     "api": "API",
     "guides": "Guides",
-    "auth": "Auth",
     "styling": "Styling",
     "changelog": "Changelog",
     "menu": "Menu",
@@ -108,7 +107,14 @@
     "quick-look": "Quick Look",
     "products-added-to-cart": "The following products have been added to your cart",
     "go-to-cart": "Go to Cart",
-    "no-products-in-cart": "No products in cart"
+    "no-products-in-cart": "No products in cart",
+    "no-data-found": "No data found",
+    "placeholder-first-name": "John",
+    "placeholder-last-name": "Doe",
+    "placeholder-email": "john.doe@example.com",
+    "placeholder-address": "1234 Maple Street",
+    "placeholder-city": "Los Angeles",
+    "placeholder-phone": "+1-555-987-6543"
   },
   "about": {
     "who-we-are": "Who We Are",
@@ -259,6 +265,7 @@
     "last-name": "Last Name",
     "last-name-placeholder": "Enter your last name",
     "email-placeholder": "Enter your email address",
+    "password-placeholder": "Enter your password",
     "phone-placeholder": "Enter your phone number",
     "subject": "Subject",
     "choose-subject": "Choose Subject",
@@ -293,7 +300,9 @@
       "modifications": "Modifications",
       "modifications-desc": "We reserve the right to modify these terms at any time. Changes will be effective immediately upon posting on the website.",
       "governing-law": "Governing Law",
-      "governing-law-desc": "These terms shall be governed by and construed in accordance with the laws of the Kingdom of Saudi Arabia."
+      "governing-law-desc": "These terms shall be governed by and construed in accordance with the laws of the Kingdom of Saudi Arabia.",
+      "contact-us": "Contact Us",
+      "contact-us-desc": "If you have any questions about these Terms and Conditions, please contact us."
     },
     "sale-terms": {
       "title": "Sale Terms & Conditions",
@@ -340,21 +349,33 @@
       "title": "Cookies Policy",
       "subtitle": "How we use cookies and similar technologies on our website",
       "what-are-cookies": "What Are Cookies?",
-      "what-are-cookies-desc": "Cookies are small text files that are placed on your device when you visit our website.",
+      "what-are-cookies-desc": "Cookies are small text files that are stored on your device when you visit our website. These files help improve your browsing experience and provide personalized services.",
       "types-of-cookies": "Types of Cookies We Use",
       "types-of-cookies-desc": "We use essential cookies for website functionality, analytics cookies to understand usage, and marketing cookies for personalized content.",
+      "essential-cookies": "Essential Cookies",
+      "essential-cookies-desc": "Necessary for the website to function properly, such as saving language preferences and time zone settings.",
+      "functional-cookies": "Functional Cookies",
+      "functional-cookies-desc": "Improve user experience by remembering your preferences and settings.",
+      "analytics-cookies": "Analytics Cookies",
+      "analytics-cookies-desc": "Help us understand how the website is used to improve our services.",
       "how-we-use": "How We Use Cookies",
-      "how-we-use-desc": "Cookies help us provide you with a better experience by remembering your preferences and analyzing website traffic.",
+      "how-we-use-desc": "We use cookies to remember your preferences, analyze traffic, improve website performance, and provide personalized content based on your interests.",
       "third-party-cookies": "Third-Party Cookies",
-      "third-party-cookies-desc": "Some cookies are placed by third-party services that appear on our pages, such as analytics and social media plugins.",
+      "third-party-cookies-desc": "We may use third-party services such as Google Analytics or payment tools that place their own cookies. These files are subject to the privacy policies of those companies.",
       "cookie-management": "Managing Cookies",
-      "cookie-management-desc": "You can control and manage cookies through your browser settings. However, disabling cookies may affect website functionality.",
+      "cookie-management-desc": "You can control cookies through your browser settings. You can delete existing cookies or prevent new ones from being placed. Note: Disabling some cookies may affect website functionality.",
       "disabling-cookies": "How to Disable Cookies",
       "disabling-cookies-desc": "Most browsers allow you to refuse cookies or delete them. Please refer to your browser's help section for instructions.",
-      "policy-updates": "Updates to This Policy",
-      "policy-updates-desc": "We may update this Cookies Policy from time to time. Please check this page regularly for updates.",
+      "browser-instructions": "Common Browser Instructions:",
+      "chrome-instructions": "Settings → Privacy and Security → Cookies",
+      "firefox-instructions": "Options → Privacy and Security → Cookies",
+      "safari-instructions": "Preferences → Privacy → Cookies",
+      "edge-instructions": "Settings → Cookies and Site Permissions",
+      "policy-updates": "Cookies Policy Updates",
+      "policy-updates-desc": "We may update this policy from time to time to reflect changes in our practices or for regulatory reasons. Any changes will be published on this page.",
       "contact-us": "Contact Us",
-      "contact-us-desc": "If you have any questions about our use of cookies, please contact us."
+      "contact-us-desc": "If you have any questions about our use of cookies, please contact us via email or phone: +966-55-766-5585",
+      "last-updated": "Last updated"
     }
   },
   "home": {
@@ -370,16 +391,23 @@
     "always-with-you": "Always With You",
     "always-with-you-desc": "Continuous customer service - contact us 24/7",
     "gold-membership": "Gold Membership",
-    "gold-membership-desc": "Exclusive discounts and points await you"
+    "gold-membership-desc": "Exclusive discounts and points await you",
+    "cross-body": {
+      "title-1": "Be the symbol, let your elegance speak for you",
+      "title-2": "Distinguish yourself with your style... shine with your luxury",
+      "subtitle": "Your steps with Farada... comfort and elegance"
+    }
   },
   "auth": {
     "login": "Login",
     "register": "Register",
     "logout": "Logout",
-    "forgot-password": "Forgot Password",
+    "forgot-password": "Forgot Password ?",
     "reset-password": "Reset Password",
     "email": "Email",
+    "email-placeholder": "Enter your email address",
     "password": "Password",
+    "password-placeholder": "Enter your password",
     "confirm-password": "Confirm Password",
     "first-name": "First Name",
     "last-name": "Last Name",
@@ -393,8 +421,9 @@
     "already-have-account": "Already have an account?",
     "forgot-password-text": "Forgot your password?",
     "back-to-login": "Back to Login",
-    "welcome-back": "welcome back",
-    "sign-in": "sign in",
+    "welcome-back": "Welcome Back",
+    "sign-in": "Sign In",
+    "back-to-home": "Back to Home",
     "create-account": "Create Account",
     "creating-account": "Creating account...",
     "join-message": "Join Farada and start your shopping journey today!",
@@ -408,7 +437,12 @@
     "password-required": "Password is required",
     "login-successful": "Login successful",
     "login-failed": "Login failed",
-    "unexpected-error": "An unexpected error occurred"
+    "unexpected-error": "An unexpected error occurred",
+    "password-recovery": "Password Recovery",
+    "follow-steps": "Follow the steps to reset your password",
+    "back": "Back",
+    "create-your-account": "Create your account",
+    "join-farada-subtitle": "Join Farada and start your shopping journey"
   },
   "test": {
     "title": "API Integration Test",
@@ -508,6 +542,7 @@
     "city": "City",
     "address": "Detailed Address",
     "save-changes": "Save Changes",
+    "saving": "Saving...",
     "changes-saved": "Changes saved successfully",
     "error-saving": "Error saving changes",
     "select-gender": "Select gender"
@@ -549,78 +584,286 @@
     "connectionIssue": "Connection issue detected",
     "checkBackend": "Check backend status",
     "apiEndpoint": "API Endpoint",
-    "lastUpdated": "Last updated"
+    "lastUpdated": "Last updated",
+    "login-to-manage-favourites": "Please login to manage favourites",
+    "login-to-move-to-cart": "Please login to move items to cart",
+    "authentication-required": "Authentication Required: Please login to access your favourites."
   },
-  "who-we-are": {
-    "title": "Who We Are",
-    "subtitle": "Discover Farada's story and our journey in providing the best experience for our valued customers",
-    "our-story": "Our Story",
-    "our-story-desc": "Farada was established in the Kingdom of Saudi Arabia with the goal of providing the best types of products and high-quality services for our valued customers. We believe that quality is not just a word, but a unique experience that combines authenticity and modernity.",
-    "our-vision": "Our Vision",
-    "our-vision-desc": "We strive to be the first choice for customers in the Kingdom of Saudi Arabia and the region, through providing high-quality products and exceptional customer service that makes every visit an unforgettable experience.",
-    "our-mission": "Our Mission",
-    "our-mission-desc": "Providing the best types of products and carefully selected services, while maintaining the highest standards of quality and service. We are committed to providing a unique consumer experience worthy of our valued customers.",
-    "our-values": "Our Values",
-    "quality": "Quality",
-    "quality-desc": "We choose the best products and ensure their high quality",
-    "honesty": "Honesty",
-    "honesty-desc": "We deal with our customers with complete honesty and transparency",
-    "innovation": "Innovation",
-    "innovation-desc": "We always strive to develop our services and provide new things",
-    "customer-service": "Customer Service",
-    "customer-service-desc": "We put customer satisfaction first",
-    "our-experience": "Our Experience",
-    "our-experience-desc": "We have years of experience in providing high-quality products and services. Our team of specialized experts ensures providing the best advice and products suitable for your needs.",
-    "community-commitment": "Our Community Commitment",
-    "community-commitment-desc": "We believe in the importance of social responsibility and participate in many community initiatives. We strive to build strong relationships with our local community and provide support for charitable and educational projects.",
-    "our-future": "Our Future",
-    "our-future-desc": "We plan to expand into new areas and provide more innovative products and services. Our goal is to be the trusted partner for customers throughout the Kingdom.",
-    "join-us-coffee": "Join us on the journey",
-    "join-us-coffee-desc": "Discover a world of distinctive products and exceptional service with Farada",
-    "learn-more": "Learn More About Us"
+  "order": {
+    "order-number": "Order Number",
+    "order-status": "Order Status",
+    "shipping-method": "Shipping Method",
+    "shipping-amount": "Shipping Amount",
+    "payment-title": "Payment Title",
+    "shipping-successful": "Shipping Successful",
+    "shipping-successful-desc": "Your order has been successfully shipped! You will receive tracking information via email and can monitor your delivery status.",
+    "go-home": "Go Home",
+    "close-dialog": "Close Dialog",
+    "request-failed": "Request Failed",
+    "request-failed-message": "We're sorry, but your request was unsuccessful. Please try again.",
+    "try-again": "Try Again"
   },
-  "legal": {
-    "terms-and-conditions": "Terms & Conditions",
-    "privacy-policy": "Privacy Policy",
-    "delivery-policy": "Delivery Policy",
-    "payment-policy": "Payment Policy",
-    "return-policy": "Return Policy",
-    "terms": {
-      "title": "Website Terms & Conditions",
-      "subtitle": "Please read these terms and conditions carefully before using our website",
-      "acceptance": "Acceptance of Terms",
-      "acceptance-desc": "By accessing and using this website, you accept and agree to be bound by the terms and provision of this agreement.",
-      "website-use": "Website Use",
-      "website-use-desc": "You agree to use the website only for lawful purposes and in accordance with these Terms and Conditions.",
-      "intellectual-property": "Intellectual Property",
-      "intellectual-property-desc": "The website and its entire contents, features, and functionality are owned by Farada and are protected by copyright, trademark, and other intellectual property laws.",
-      "liability": "Liability",
-      "liability-desc": "Farada shall not be liable for any indirect, incidental, special, consequential, or punitive damages resulting from your use of the website.",
-      "modifications": "Modifications",
-      "modifications-desc": "We reserve the right to modify these terms at any time. Changes will be effective immediately upon posting on the website.",
-      "governing-law": "Governing Law",
-      "governing-law-desc": "These terms shall be governed by and construed in accordance with the laws of the Kingdom of Saudi Arabia.",
-      "contact-us": "Contact Us",
-      "contact-us-desc": "If you have any questions about these Terms and Conditions, please contact us."
+  "validation": {
+    "first-name-required": "First name is required",
+    "last-name-required": "Last name is required",
+    "invalid-email": "Enter a valid email address",
+    "phone-required": "Phone is required",
+    "phone-invalid": "Enter a valid phone number",
+    "country-required": "Country is required",
+    "city-required": "City is required",
+    "address-required": "Street address is required",
+    "street-address-required": "Street address is required"
+  },
+  "cities": {
+    "riyadh": "Riyadh",
+    "jeddah": "Jeddah",
+    "makkah": "Makkah",
+    "madinah": "Madinah",
+    "dammam": "Dammam",
+    "khobar": "Khobar",
+    "dhahran": "Dhahran",
+    "tabuk": "Tabuk",
+    "buraidah": "Buraidah",
+    "khamis-mushait": "Khamis Mushait",
+    "hail": "Hail",
+    "najran": "Najran",
+    "jazan": "Jazan",
+    "yanbu": "Yanbu",
+    "abha": "Abha",
+    "taif": "Taif",
+    "qatif": "Qatif",
+    "hafar-al-batin": "Hafar Al Batin",
+    "jubail": "Jubail",
+    "al-kharj": "Al Kharj"
+  },
+  "gender": {
+    "male": "Male",
+    "female": "Female",
+    "other": "Other"
+  },
+  "category": {
+    "title": "Category Products",
+    "no-products-found": "No products found in this category",
+    "loading-products": "Loading products...",
+    "products-count": "{count} products found"
+  },
+  "faq": {
+    "title": "Frequently Asked Questions (FAQ)",
+    "meta-title": "Frequently Asked Questions - Farada",
+    "meta-description": "Answers to the most common questions about Farada products and services",
+    "products-orders": "Products and Orders",
+    "shipping-delivery": "Shipping and Delivery",
+    "returns-exchanges": "Returns and Exchanges",
+    "account-privacy": "Account and Privacy",
+    "service-support": "Service and Support",
+    "how-to-order": "How can I order products from Farada?",
+    "how-to-order-answer": "You can order products through our website or mobile app. Select the desired products, add them to your cart, then complete the payment process. You can also order by phone at +966-55-766-5585.",
+    "payment-methods": "What payment methods are available?",
+    "payment-methods-answer": "We offer several payment methods: credit cards and Mada, cash on delivery, bank transfer, and payment through digital wallets like STC Pay and Apple Pay.",
+    "modify-cancel-order": "Can I modify or cancel my order?",
+    "modify-cancel-order-answer": "Yes, you can modify or cancel your order before shipping begins. Contact us immediately by phone or email. After shipping starts, cancellation is subject to our return and exchange policy.",
+    "delivery-time": "How long does delivery take?",
+    "delivery-time-answer": "Delivery time varies by region: Riyadh (1-2 business days), major cities (2-3 business days), remote areas (3-5 business days). We also offer express shipping for nearby areas.",
+    "free-shipping": "Is shipping free?",
+    "free-shipping-answer": "Shipping is free for Riyadh, 25 SAR for major cities, and 35 SAR for remote areas. Orders over 200 SAR get free shipping to all areas.",
+    "track-order": "How can I track my order?",
+    "track-order-answer": "You will receive a tracking number via email and SMS. You can use this number to track your order status through our website or mobile app.",
+    "return-policy": "What is the return policy?",
+    "return-policy-answer": "You can return the product within 14 days of receipt if it's defective or doesn't match specifications. We offer multiple options: money refund, product replacement, or store credit.",
+    "return-processing-time": "How long does return processing take?",
+    "return-processing-time-answer": "Return processing takes 5-9 business days: product receipt (1-2 days), product inspection (1-2 days), order processing (3-5 days).",
+    "create-account": "How can I create an account?",
+    "create-account-answer": "You can easily create an account through our website or mobile app. Enter your email and phone number, then follow the instructions to complete registration.",
+    "data-security": "Is my information secure?",
+    "data-security-answer": "Yes, we use advanced encryption technologies to protect your personal information and payment data. We adhere to strict privacy policies and do not share your information with third parties.",
+    "working-hours": "What are the working hours?",
+    "working-hours-answer": "Working hours: Sunday - Thursday from 9:00 AM to 6:00 PM, Saturday from 10:00 AM to 4:00 PM, Friday closed.",
+    "contact-customer-service": "How can I contact customer service?",
+    "contact-customer-service-answer": "You can contact us by phone: +966-55-766-5585, email: info@farada.com, or through the contact form on our website.",
+    "no-answer-found": "Didn't find an answer to your question?",
+    "customer-service-available": "Our customer service team is available to help you with any other inquiries",
+    "phone": "Phone: +966-55-766-5585",
+    "email": "Email: info@farada.com"
+  },
+  "returnPolicy": {
+    "title": "Return and Exchange Policy",
+    "description": "Return and exchange policy at Farada store",
+    "commitment": {
+      "title": "Our Commitment to Your Satisfaction",
+      "description": "At Farada, we believe in the importance of customer satisfaction. We provide a transparent and fair return and exchange policy to ensure an enjoyable and reassuring shopping experience for all our customers."
     },
-    "sale-terms": {
-      "title": "Sale Terms & Conditions",
-      "subtitle": "Terms and conditions governing the sale of products through our website",
-      "purchase-orders": "Purchase Orders",
-      "purchase-orders-desc": "When placing a purchase order, you confirm that all information provided is accurate and complete. We reserve the right to reject any order if the information is incorrect.",
-      "pricing-payment": "Pricing and Payment",
-      "pricing-payment-desc": "All prices are displayed in Saudi Riyal and include VAT. Prices are subject to change without prior notice. Full payment must be made when placing the order.",
-      "order-confirmation": "Order Confirmation",
-      "order-confirmation-desc": "Order confirmation will be sent via email after payment is received. The order is not binding until order confirmation is sent.",
-      "shipping-delivery": "Shipping and Delivery",
-      "shipping-delivery-desc": "We provide shipping service to all regions of the Kingdom of Saudi Arabia. Delivery time ranges from 1-3 business days depending on the region. Delivery time may be delayed in remote areas.",
-      "order-cancellation": "Order Cancellation",
-      "order-cancellation-desc": "Orders can be cancelled before the shipping process begins. After shipping begins, cancellation is subject to the return and exchange policy.",
-      "warranty": "Warranty",
-      "warranty-desc": "All our products are guaranteed against manufacturing defects. The warranty covers a specific period that varies according to the product type. The warranty does not cover damages resulting from improper use.",
-      "privacy-security": "Privacy and Security",
-      "privacy-security-desc": "We are committed to protecting your personal information and payment data. All transactions are conducted through secure and encrypted channels to protect your security.",
-      "contact-for-inquiries": "For additional inquiries about sale terms, please contact us at: +966-55-766-5585"
+    "returnConditions": {
+      "title": "Return Conditions",
+      "subtitle": "The product can be returned in the following cases:",
+      "items": [
+        "Product is defective or damaged upon receipt",
+        "Product does not match the advertised specifications",
+        "Product is not suitable or does not meet expectations",
+        "Order error on our part"
+      ]
+    },
+    "nonReturnConditions": {
+      "title": "Non-Return Conditions",
+      "subtitle": "The product cannot be returned in the following cases:",
+      "items": [
+        "Opened or used food products",
+        "Products damaged due to misuse",
+        "Lost or forgotten products",
+        "Products purchased at special discounted prices"
+      ]
+    },
+    "returnPeriod": {
+      "title": "Return Period",
+      "regularProducts": {
+        "title": "Regular Products",
+        "period": "14 days from receipt date"
+      },
+      "electronicProducts": {
+        "title": "Electronic Products",
+        "period": "7 days from receipt date"
+      }
+    },
+    "howToReturn": {
+      "title": "How to Request a Return",
+      "steps": [
+        "Contact us by phone or email during the return period",
+        "Provide order number and return reason",
+        "We will evaluate your request and respond within 24 hours",
+        "If approved, we will send you return instructions",
+        "Send the product to us with all accessories and original packaging"
+      ]
+    },
+    "returnOptions": {
+      "title": "Return Options",
+      "moneyRefund": {
+        "title": "Money Refund",
+        "description": "Full refund of paid amount (excluding shipping fees)",
+        "status": "Available"
+      },
+      "productReplacement": {
+        "title": "Product Replacement",
+        "description": "Replace product with another product of the same value",
+        "status": "Available"
+      },
+      "storeCredit": {
+        "title": "Store Credit",
+        "description": "Credit that can be used for future purchases",
+        "status": "Available"
+      }
+    },
+    "returnFees": {
+      "title": "Return Fees",
+      "defectiveProduct": "Defective product return:",
+      "defectiveProductFee": "Free",
+      "noReasonReturn": "Return without reason:",
+      "noReasonReturnFee": "25 SAR",
+      "shippingFees": "Shipping fees:",
+      "shippingFeesResponsibility": "Customer responsibility"
+    },
+    "processingTime": {
+      "title": "Return Processing Time",
+      "productReceipt": "Product receipt:",
+      "productReceiptTime": "1-2 business days",
+      "productInspection": "Product inspection:",
+      "productInspectionTime": "1-2 business days",
+      "orderProcessing": "Order processing:",
+      "orderProcessingTime": "3-5 business days",
+      "totalTime": "Total time:",
+      "totalTimePeriod": "5-9 business days"
+    },
+    "importantInfo": {
+      "title": "Important Information",
+      "items": [
+        "Product must be in original condition with all accessories and packaging",
+        "We recommend documenting product condition when shipping",
+        "You will be notified via email when product is received",
+        "You can track return request status through your account"
+      ]
+    },
+    "contact": {
+      "title": "Contact Regarding Returns",
+      "description": "If you have any questions about the return policy or need assistance, you can contact us:",
+      "phone": "Phone:",
+      "email": "Email:",
+      "workingHours": "Working Hours:",
+      "workingHoursValue": "Sunday - Thursday, 9:00 AM - 6:00 PM"
+    },
+    "helpSection": {
+      "title": "We're Here to Help",
+      "description": "Our goal is to ensure your complete satisfaction. If you're not satisfied with your product, we'll work with you to find the appropriate solution"
+    }
+  },
+  "shippingInfo": {
+    "title": "Shipping Information",
+    "description": "Information about shipping and delivery services at Farada",
+    "shippingAreas": {
+      "title": "Shipping Areas",
+      "description": "We provide shipping service to all regions of Saudi Arabia, including major cities and remote areas. We guarantee safe and fast delivery of your order."
+    },
+    "deliveryTime": {
+      "title": "Delivery Time",
+      "riyadh": "Riyadh",
+      "riyadhTime": "1-2 business days",
+      "majorCities": "Major Cities",
+      "majorCitiesTime": "2-3 business days",
+      "remoteAreas": "Remote Areas",
+      "remoteAreasTime": "3-5 business days"
+    },
+    "shippingCost": {
+      "title": "Shipping Cost",
+      "riyadh": "Riyadh:",
+      "riyadhCost": "Free",
+      "majorCities": "Major Cities:",
+      "majorCitiesCost": "25 SAR",
+      "remoteAreas": "Remote Areas:",
+      "remoteAreasCost": "35 SAR",
+      "freeShipping": "Orders over 200 SAR:",
+      "freeShippingCost": "Free shipping"
+    },
+    "shippingMethods": {
+      "title": "Available Shipping Methods",
+      "express": {
+        "title": "Express Shipping",
+        "description": "Delivery within 24 hours for areas close to Riyadh",
+        "tag": "Additional cost"
+      },
+      "standard": {
+        "title": "Standard Shipping",
+        "description": "Standard shipping for all areas",
+        "tag": "Included"
+      },
+      "pickup": {
+        "title": "Store Pickup",
+        "description": "Pick up your order from our store in Riyadh",
+        "tag": "Free"
+      }
+    },
+    "orderTracking": {
+      "title": "Order Tracking",
+      "description": "After sending your order, you will receive a tracking number via email and text messages. You can use this number to track your order status through our website or mobile app."
+    },
+    "importantInfo": {
+      "title": "Important Information",
+      "shippingHours": "Shipping is from Sunday to Thursday from 9:00 AM to 6:00 PM",
+      "deliveryAttempt": "If you are not at home, the order will be left with a neighbor or we will try again",
+      "customDelivery": "You can schedule a custom delivery time when completing the order",
+      "shippingInsurance": "We provide shipping insurance for all orders"
+    },
+    "internationalShipping": {
+      "title": "International Shipping",
+      "description": "Currently we only provide shipping service to Saudi Arabia. We plan to expand our services to include GCC countries in the near future."
+    },
+    "shippingContact": {
+      "title": "Shipping Contact",
+      "description": "If you have any inquiries about shipping or want to update delivery information, you can contact us:",
+      "phone": "Phone:",
+      "email": "Email:",
+      "workingHours": "Working Hours:",
+      "workingHoursValue": "Sunday - Thursday, 9:00 AM - 6:00 PM"
+    },
+    "guarantee": {
+      "title": "We guarantee safe delivery of your order",
+      "description": "We use the best shipping companies and apply the highest quality standards to ensure your order arrives in excellent condition"
     }
   }
 }

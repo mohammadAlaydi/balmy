@@ -11,9 +11,10 @@ import {
 } from "@/store/slices/cart-slice";
 import { MdDeleteSweep } from "react-icons/md";
 import Loading from "@/components/loading";
+import { useTranslations } from "next-intl";
 
 export default function CartPage() {
-  
+  const t = useTranslations("cart");
   const dispatch = useDispatch();
   const { data, isLoading } = useSelector((state: any) => state.cart);
 
@@ -56,7 +57,7 @@ export default function CartPage() {
       ) : (
         <div className="flex items-center justify-center h-full w-full min-h-[65vh]">
           <p className="text-base md:text-lg xl:text-xl text-center">
-            No data found
+            {t("no-data-found")}
           </p>
         </div>
       )}

@@ -384,16 +384,16 @@ export const getHoverImage = (
 };
 
 export const SUCCESS_MESSAGES = {
-  TITLE: "Shipping Successful",
-  DESCRIPTION:
-    "Your order has been successfully shipped! You will receive tracking information via email and can monitor your delivery status.",
-  GO_HOME: "Go Home",
+  TITLE: "order.shipping-successful",
+  DESCRIPTION: "order.shipping-successful-desc",
+  GO_HOME: "order.go-home",
+  CLOSE_DIALOG: "order.close-dialog",
 } as const;
 
 export const ORDER_INFO_LABELS = {
-  ORDER_NUMBER: "Order Number",
-  ORDER_STATUS: "Order Status",
-  SHIPPING_METHOD: "Shipping Method",
-  SHIPPING_AMOUNT: "Shipping Amount",
-  PAYMENT_TITLE: "Payment Title",
+  ORDER_NUMBER: "order.order-number",
+  ORDER_STATUS: "order.order-status",
+  SHIPPING_METHOD: "order.shipping-method",
+  SHIPPING_AMOUNT: "order.shipping-amount",
+  PAYMENT_TITLE: "order.payment-title",
 } as const;

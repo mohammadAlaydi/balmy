@@ -49,7 +49,7 @@ export default function NewPasswordForm({ email, code, onBackToCodeVerification,
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email, code: resetCode, newPassword }),
+        body: JSON.stringify({ email, code, newPassword: data.password }),
       });
 
       if (response.ok) {

@@ -7,6 +7,7 @@ import { addToCart } from "@/store/slices/cart-slice";
 import { FavouriteButton } from "@/components/favourite-button";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import toast from "react-hot-toast";
 import {
   MdOutlineShoppingCart,
   MdOutlineShare,

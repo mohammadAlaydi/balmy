@@ -46,7 +46,6 @@ export default function LabelAndInput({
               type={inputType}
               placeholder={inputPlaceholder}
               className={inputStyle}
-              value={value? value : field.value || ""}
               {...field}
             />
           </FormControl>

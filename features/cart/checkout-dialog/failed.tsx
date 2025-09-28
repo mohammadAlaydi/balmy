@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 
 interface ActionConfig {
   label: string;
@@ -15,13 +16,14 @@ interface RequestFailedProps {
 }
 
 export default function Failed({
-  title = "Request Failed",
-  message = "We're sorry, but your request was unsuccessful. Please try again.",
+  title,
+  message,
   primaryAction,
   secondaryAction,
   showHomeButton = true,
 }: RequestFailedProps) {
   const router = useRouter();
+  const t = useTranslations("order");
 
   const handleTryAgain = () => {
     primaryAction?.onClick() ?? router.back();
@@ -40,12 +42,12 @@ export default function Failed({
       <div className="mx-auto max-w-md text-center">
         <CircleXIcon className="mx-auto h-12 w-12 text-red-500" />
         <h1 className="mt-4 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-          {title}
+          {title || t("request-failed")}
         </h1>
-        <p className="mt-4 text-muted-foreground">{message}</p>
+        <p className="mt-4 text-muted-foreground">{message || t("request-failed-message")}</p>
         <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-center">
           <Button onClick={handleTryAgain}>
-            {primaryAction?.label || "Try Again"}
+            {primaryAction?.label || t("try-again")}
           </Button>
           {secondaryAction && (
             <Button variant="outline" onClick={handleSecondaryAction}>
@@ -54,7 +56,7 @@ export default function Failed({
           )}
           {showHomeButton && (
             <Button variant="ghost" onClick={handleGoHome}>
-              Go Home
+              {t("go-home")}
             </Button>
           )}
         </div>

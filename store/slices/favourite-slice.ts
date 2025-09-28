@@ -215,7 +215,7 @@ export const moveToCart = createAsyncThunk(
 // Initialize state with empty array (no local storage fallback)
 const initialState: FavouriteState = {
   items: [],
-  isLoading: false,
+  loading: false,
   error: null,
 };
 
@@ -247,11 +247,11 @@ const favouriteSlice = createSlice({
     // Add to favourites
     builder
       .addCase(addToFavourites.pending, (state) => {
-        state.isLoading = true;
+        state.loading = true;
         state.error = null;
       })
       .addCase(addToFavourites.fulfilled, (state, action: PayloadAction<Product>) => {
-        state.isLoading = false;
+        state.loading = false;
         const product = action.payload;
         
         // Only add if not already present
@@ -263,73 +263,73 @@ const favouriteSlice = createSlice({
         state.error = null;
       })
       .addCase(addToFavourites.rejected, (state, action) => {
-        state.isLoading = false;
+        state.loading = false;
         state.error = action.payload as string;
       });
 
     // Remove from favourites
     builder
       .addCase(removeFromFavourites.pending, (state) => {
-        state.isLoading = true;
+        state.loading = true;
         state.error = null;
       })
       .addCase(removeFromFavourites.fulfilled, (state, action: PayloadAction<number>) => {
-        state.isLoading = false;
+        state.loading = false;
         const productId = action.payload;
         state.items = state.items.filter(item => item.id !== productId);
         state.error = null;
       })
       .addCase(removeFromFavourites.rejected, (state, action) => {
-        state.isLoading = false;
+        state.loading = false;
         state.error = action.payload as string;
       });
 
     // Fetch favourites
     builder
       .addCase(fetchFavourites.pending, (state) => {
-        state.isLoading = true;
+        state.loading = true;
         state.error = null;
       })
       .addCase(fetchFavourites.fulfilled, (state, action: PayloadAction<Product[]>) => {
-        state.isLoading = false;
+        state.loading = false;
         state.items = action.payload;
         state.error = null;
       })
       .addCase(fetchFavourites.rejected, (state, action) => {
-        state.isLoading = false;
+        state.loading = false;
         state.error = action.payload as string;
       });
 
     // Clear favourites
     builder
       .addCase(clearFavourites.pending, (state) => {
-        state.isLoading = true;
+        state.loading = true;
         state.error = null;
       })
       .addCase(clearFavourites.fulfilled, (state) => {
-        state.isLoading = false;
+        state.loading = false;
         state.items = [];
         state.error = null;
       })
       .addCase(clearFavourites.rejected, (state, action) => {
-        state.isLoading = false;
+        state.loading = false;
         state.error = action.payload as string;
       });
 
     // Move to cart
     builder
       .addCase(moveToCart.pending, (state) => {
-        state.isLoading = true;
+        state.loading = true;
         state.error = null;
       })
       .addCase(moveToCart.fulfilled, (state, action: PayloadAction<{ wishlistId: number; cartData: any }>) => {
-        state.isLoading = false;
+        state.loading = false;
         // Remove the item from favourites after moving to cart
         state.items = state.items.filter(item => item.wishlistId !== action.payload.wishlistId);
         state.error = null;
       })
       .addCase(moveToCart.rejected, (state, action) => {
-        state.isLoading = false;
+        state.loading = false;
         state.error = action.payload as string;
       });
   },

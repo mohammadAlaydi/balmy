@@ -58,11 +58,11 @@ export default function RegisterForm({ onSwitchToLogin }: RegisterFormProps) {
     try {
       // shape request for your API
       const apiData = {
-        first_name: data.firstName,
-        last_name: data.lastName,
+        firstName: data.firstName,
+        lastName: data.lastName,
         email: data.email,
         password: data.password,
-        password_confirmation: data.confirmPassword,
+        confirmPassword: data.confirmPassword,
         phone: data.phone ?? undefined,
       };
 

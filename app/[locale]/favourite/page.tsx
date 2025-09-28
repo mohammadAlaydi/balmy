@@ -78,7 +78,7 @@ function FavouritePageContent() {
       setTimeout(() => fetchFavourites(), 500);
     } catch (error) {
       if (error && typeof error === "string" && error.includes("login")) {
-        toast.error("Please login to manage favourites");
+        toast.error(t("login-to-manage-favourites"));
       } else {
         toast.error(t("errorRemovingProduct"));
       }
@@ -92,7 +92,7 @@ function FavouritePageContent() {
       setTimeout(() => fetchFavourites(), 500);
     } catch (error) {
       if (error && typeof error === "string" && error.includes("login")) {
-        toast.error("Please login to manage favourites");
+        toast.error(t("login-to-manage-favourites"));
       } else {
         toast.error(t("errorClearingAll"));
       }
@@ -108,7 +108,7 @@ function FavouritePageContent() {
       setTimeout(() => fetchFavourites(), 500);
     } catch (error) {
       if (error && typeof error === "string" && error.includes("login")) {
-        toast.error("Please login to move items to cart");
+        toast.error(t("login-to-move-to-cart"));
       } else {
         toast.error(t("errorMovingToCart"));
       }
@@ -143,8 +143,7 @@ function FavouritePageContent() {
           {error.includes("Please login") && (
             <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg max-w-md mx-auto">
               <p className="text-red-800 text-sm">
-                <strong>Authentication Required:</strong> Please login to access
-                your favourites.
+                <strong>{t("authentication-required")}</strong>
               </p>
             </div>
           )}

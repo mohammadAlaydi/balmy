@@ -2,7 +2,8 @@
 
 import { useTranslations } from "next-intl";
 
-export default function WhoWeArePage() {
+export default function page() {
+
   const t = useTranslations("who-we-are");
 
   return (
@@ -20,7 +21,6 @@ export default function WhoWeArePage() {
           </div>
         </div>
       </div>
-
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20">
         <div className="space-y-12 sm:space-y-16 lg:space-y-20">
           {/* Our Story Section */}
@@ -68,7 +68,6 @@ export default function WhoWeArePage() {
                 </p>
               </div>
             </section>
-
             <section className="bg-white rounded-xl sm:rounded-2xl shadow-lg sm:shadow-xl p-6 sm:p-8 lg:p-10 border border-gray-200">
               <div className="text-center">
                 <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gray-700 rounded-full flex items-center justify-center mb-4 sm:mb-6 mx-auto">
@@ -95,7 +94,6 @@ export default function WhoWeArePage() {
               </div>
             </section>
           </div>
-
           {/* Our Values Section */}
           <section className="bg-white rounded-xl sm:rounded-2xl shadow-lg sm:shadow-xl p-6 sm:p-8 lg:p-10 border border-gray-200">
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-6 sm:mb-8 text-center">
@@ -125,7 +123,6 @@ export default function WhoWeArePage() {
                   {t("quality-desc")}
                 </p>
               </div>
-
               <div className="bg-gray-50 p-4 sm:p-6 rounded-xl border border-gray-200 hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
                 <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gray-700 rounded-full flex items-center justify-center mb-3 sm:mb-4 mx-auto">
                   <svg
@@ -149,7 +146,6 @@ export default function WhoWeArePage() {
                   {t("honesty-desc")}
                 </p>
               </div>
-
               <div className="bg-gray-50 p-4 sm:p-6 rounded-xl border border-gray-200 hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
                 <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gray-700 rounded-full flex items-center justify-center mb-3 sm:mb-4 mx-auto">
                   <svg
@@ -173,7 +169,6 @@ export default function WhoWeArePage() {
                   {t("innovation-desc")}
                 </p>
               </div>
-
               <div className="bg-gray-50 p-4 sm:p-6 rounded-xl border border-gray-200 hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
                 <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gray-700 rounded-full flex items-center justify-center mb-3 sm:mb-4 mx-auto">
                   <svg
@@ -199,7 +194,6 @@ export default function WhoWeArePage() {
               </div>
             </div>
           </section>
-
           {/* Experience Section */}
           <section className="bg-white rounded-xl sm:rounded-2xl shadow-lg sm:shadow-xl p-6 sm:p-8 lg:p-10 border border-gray-200">
             <div className="text-center">
@@ -211,7 +205,6 @@ export default function WhoWeArePage() {
               </p>
             </div>
           </section>
-
           {/* Community Commitment Section */}
           <section className="bg-white rounded-xl sm:rounded-2xl shadow-lg sm:shadow-xl p-6 sm:p-8 lg:p-10 border border-gray-200">
             <div className="text-center">
@@ -223,7 +216,6 @@ export default function WhoWeArePage() {
               </p>
             </div>
           </section>
-
           {/* Future Section */}
           <section className="bg-white rounded-xl sm:rounded-2xl shadow-lg sm:shadow-xl p-6 sm:p-8 lg:p-10 border border-gray-200">
             <div className="text-center">
@@ -235,7 +227,6 @@ export default function WhoWeArePage() {
               </p>
             </div>
           </section>
-
           {/* Call to Action */}
           <div className="bg-gray-800 text-white border border-gray-700 sm:shadow-xl shadow-lg p-8 sm:p-10 lg:p-12 rounded-xl sm:rounded-2xl text-center">
             <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-3 sm:mb-4">

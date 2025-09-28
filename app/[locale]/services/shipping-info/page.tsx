@@ -1,71 +1,70 @@
-import { Metadata } from "next";
+"use client";
 
-export const metadata: Metadata = {
-  title: "معلومات الشحن - فرادا",
-  description: "معلومات حول خدمات الشحن والتسليم في فرادا",
-};
+import { useTranslations } from "next-intl";
 
-export default function ShippingInfoPage() {
+export default function page() {
+  
+  const t = useTranslations("shippingInfo");
 
   return (
     <div className="min-h-screen bg-gray-50 py-12">
       <div className="container mx-auto px-4 max-w-5xl">
         <div className="bg-white rounded-lg shadow-lg p-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-8 text-center">
-            معلومات الشحن
+            {t("title")}
           </h1>
           
           <div className="space-y-6 text-right">
             <section>
               <h2 className="text-xl font-semibold text-gray-800 mb-4">
-                مناطق الشحن
+                {t("shippingAreas.title")}
               </h2>
               <p className="text-gray-600 leading-relaxed">
-                نقدم خدمة الشحن لجميع مناطق المملكة العربية السعودية، بما في ذلك المدن الرئيسية والمناطق النائية. نضمن وصول طلبك بأمان وسرعة.
+                {t("shippingAreas.description")}
               </p>
             </section>
 
             <section>
               <h2 className="text-xl font-semibold text-gray-800 mb-4">
-                مدة التسليم
+                {t("deliveryTime.title")}
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="bg-gray-50 p-4 rounded-lg text-center">
-                  <h3 className="font-semibold text-gray-800 mb-2">الرياض</h3>
-                  <p className="text-gray-600">1-2 أيام عمل</p>
+                  <h3 className="font-semibold text-gray-800 mb-2">{t("deliveryTime.riyadh")}</h3>
+                  <p className="text-gray-600">{t("deliveryTime.riyadhTime")}</p>
                 </div>
                 <div className="bg-gray-50 p-4 rounded-lg text-center">
-                  <h3 className="font-semibold text-gray-800 mb-2">المدن الرئيسية</h3>
-                  <p className="text-gray-600">2-3 أيام عمل</p>
+                  <h3 className="font-semibold text-gray-800 mb-2">{t("deliveryTime.majorCities")}</h3>
+                  <p className="text-gray-600">{t("deliveryTime.majorCitiesTime")}</p>
                 </div>
                 <div className="bg-gray-50 p-4 rounded-lg text-center">
-                  <h3 className="font-semibold text-gray-800 mb-2">المناطق النائية</h3>
-                  <p className="text-gray-600">3-5 أيام عمل</p>
+                  <h3 className="font-semibold text-gray-800 mb-2">{t("deliveryTime.remoteAreas")}</h3>
+                  <p className="text-gray-600">{t("deliveryTime.remoteAreasTime")}</p>
                 </div>
               </div>
             </section>
 
             <section>
               <h2 className="text-xl font-semibold text-gray-800 mb-4">
-                تكلفة الشحن
+                {t("shippingCost.title")}
               </h2>
               <div className="bg-gray-50 p-4 rounded-lg">
                 <div className="space-y-3">
                   <div className="flex justify-between items-center">
-                    <span className="text-gray-700">الرياض:</span>
-                    <span className="font-semibold text-gray-800">مجاناً</span>
+                    <span className="text-gray-700">{t("shippingCost.riyadh")}</span>
+                    <span className="font-semibold text-gray-800">{t("shippingCost.riyadhCost")}</span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-gray-700">المدن الرئيسية:</span>
-                    <span className="font-semibold text-gray-800">25 ريال</span>
+                    <span className="text-gray-700">{t("shippingCost.majorCities")}</span>
+                    <span className="font-semibold text-gray-800">{t("shippingCost.majorCitiesCost")}</span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-gray-700">المناطق النائية:</span>
-                    <span className="font-semibold text-gray-800">35 ريال</span>
+                    <span className="text-gray-700">{t("shippingCost.remoteAreas")}</span>
+                    <span className="font-semibold text-gray-800">{t("shippingCost.remoteAreasCost")}</span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-gray-700">الطلبات فوق 200 ريال:</span>
-                    <span className="font-semibold text-gray-600">شحن مجاني</span>
+                    <span className="text-gray-700">{t("shippingCost.freeShipping")}</span>
+                    <span className="font-semibold text-gray-600">{t("shippingCost.freeShippingCost")}</span>
                   </div>
                 </div>
               </div>
@@ -73,94 +72,94 @@ export default function ShippingInfoPage() {
 
             <section>
               <h2 className="text-xl font-semibold text-gray-800 mb-4">
-                طرق الشحن المتاحة
+                {t("shippingMethods.title")}
               </h2>
               <div className="space-y-4">
                 <div className="border border-gray-200 rounded-lg p-4">
-                  <h3 className="font-semibold text-gray-800 mb-2">الشحن السريع</h3>
+                  <h3 className="font-semibold text-gray-800 mb-2">{t("shippingMethods.express.title")}</h3>
                   <p className="text-gray-600 text-sm mb-2">
-                    توصيل خلال 24 ساعة للمناطق القريبة من الرياض
+                    {t("shippingMethods.express.description")}
                   </p>
-                  <span className="bg-gray-100 text-gray-800 text-xs px-2 py-1 rounded">تكلفة إضافية</span>
+                  <span className="bg-gray-100 text-gray-800 text-xs px-2 py-1 rounded">{t("shippingMethods.express.tag")}</span>
                 </div>
                 <div className="border border-gray-200 rounded-lg p-4">
-                  <h3 className="font-semibold text-gray-800 mb-2">الشحن العادي</h3>
+                  <h3 className="font-semibold text-gray-800 mb-2">{t("shippingMethods.standard.title")}</h3>
                   <p className="text-gray-600 text-sm mb-2">
-                    الشحن القياسي لجميع المناطق
+                    {t("shippingMethods.standard.description")}
                   </p>
-                  <span className="bg-gray-100 text-gray-800 text-xs px-2 py-1 rounded">متضمن</span>
+                  <span className="bg-gray-100 text-gray-800 text-xs px-2 py-1 rounded">{t("shippingMethods.standard.tag")}</span>
                 </div>
                 <div className="border border-gray-200 rounded-lg p-4">
-                  <h3 className="font-semibold text-gray-800 mb-2">الاستلام من المتجر</h3>
+                  <h3 className="font-semibold text-gray-800 mb-2">{t("shippingMethods.pickup.title")}</h3>
                   <p className="text-gray-600 text-sm mb-2">
-                    استلام الطلب من متجرنا في الرياض
+                    {t("shippingMethods.pickup.description")}
                   </p>
-                  <span className="bg-gray-100 text-gray-800 text-xs px-2 py-1 rounded">مجاناً</span>
+                  <span className="bg-gray-100 text-gray-800 text-xs px-2 py-1 rounded">{t("shippingMethods.pickup.tag")}</span>
                 </div>
               </div>
             </section>
 
             <section>
               <h2 className="text-xl font-semibold text-gray-800 mb-4">
-                تتبع الطلب
+                {t("orderTracking.title")}
               </h2>
               <p className="text-gray-600 leading-relaxed">
-                بعد إرسال طلبك، ستتلقى رقم تتبع عبر البريد الإلكتروني والرسائل النصية. يمكنك استخدام هذا الرقم لتتبع حالة طلبك عبر موقعنا أو تطبيق الهاتف المحمول.
+                {t("orderTracking.description")}
               </p>
             </section>
 
             <section>
               <h2 className="text-xl font-semibold text-gray-800 mb-4">
-                معلومات مهمة
+                {t("importantInfo.title")}
               </h2>
               <div className="space-y-3">
-                <div className="flex items-start space-x-2 space-x-reverse">
+                <div className="flex items-start space-x-2 space-x-reverse gap-2">
                   <div className="w-2 h-2 bg-gray-600 rounded-full mt-2"></div>
-                  <span className="text-gray-600">يتم الشحن من الأحد إلى الخميس من الساعة 9:00 صباحاً إلى 6:00 مساءً</span>
+                  <span className="text-gray-600">{t("importantInfo.shippingHours")}</span>
                 </div>
-                <div className="flex items-start space-x-2 space-x-reverse">
+                <div className="flex items-start space-x-2 space-x-reverse gap-2">
                   <div className="w-2 h-2 bg-gray-600 rounded-full mt-2"></div>
-                  <span className="text-gray-600">في حالة عدم وجودك في المنزل، سيتم ترك الطلب مع الجار أو إعادة المحاولة</span>
+                  <span className="text-gray-600">{t("importantInfo.deliveryAttempt")}</span>
                 </div>
-                <div className="flex items-start space-x-2 space-x-reverse">
+                <div className="flex items-start space-x-2 space-x-reverse gap-2">
                   <div className="w-2 h-2 bg-gray-600 rounded-full mt-2"></div>
-                  <span className="text-gray-600">يمكنك تحديد موعد تسليم مخصص عند إتمام الطلب</span>
+                  <span className="text-gray-600">{t("importantInfo.customDelivery")}</span>
                 </div>
-                <div className="flex items-start space-x-2 space-x-reverse">
+                <div className="flex items-start space-x-2 space-x-reverse gap-2">
                   <div className="w-2 h-2 bg-gray-600 rounded-full mt-2"></div>
-                  <span className="text-gray-600">نقدم تأمين على الشحن لجميع الطلبات</span>
+                  <span className="text-gray-600">{t("importantInfo.shippingInsurance")}</span>
                 </div>
               </div>
             </section>
 
             <section>
               <h2 className="text-xl font-semibold text-gray-800 mb-4">
-                الشحن الدولي
+                {t("internationalShipping.title")}
               </h2>
               <p className="text-gray-600 leading-relaxed">
-                حالياً نقدم خدمة الشحن للمملكة العربية السعودية فقط. نخطط لتوسيع خدماتنا لتشمل دول مجلس التعاون الخليجي في المستقبل القريب.
+                {t("internationalShipping.description")}
               </p>
             </section>
             <section>
               <h2 className="text-xl font-semibold text-gray-800 mb-4">
-                التواصل بخصوص الشحن
+                {t("shippingContact.title")}
               </h2>
               <p className="text-gray-600 leading-relaxed">
-                إذا كان لديك أي استفسارات حول الشحن أو تريد تحديث معلومات التوصيل، يمكنك التواصل معنا:
+                {t("shippingContact.description")}
               </p>
               <div className="mt-4 p-4 bg-gray-50 rounded-lg">
                 <p className="text-gray-800">
-                  <strong>الهاتف:</strong> +966-55-766-5585<br/>
-                  <strong>البريد الإلكتروني:</strong> shipping@farada.com<br/>
-                  <strong>ساعات العمل:</strong> الأحد - الخميس، 9:00 ص - 6:00 م
+                  <strong>{t("shippingContact.phone")}</strong> +966-55-766-5585<br/>
+                  <strong>{t("shippingContact.email")}</strong> shipping@farada.com<br/>
+                  <strong>{t("shippingContact.workingHours")}</strong> {t("shippingContact.workingHoursValue")}
                 </p>
               </div>
             </section>
 
             <div className="mt-8 p-4 bg-gray-50 rounded-lg text-center">
-              <h3 className="font-semibold text-gray-800 mb-2">نضمن وصول طلبك بأمان</h3>
+              <h3 className="font-semibold text-gray-800 mb-2">{t("guarantee.title")}</h3>
               <p className="text-gray-700 text-sm">
-                نستخدم أفضل شركات الشحن ونطبق أعلى معايير الجودة لضمان وصول طلبك في حالة ممتازة
+                {t("guarantee.description")}
               </p>
             </div>
           </div>

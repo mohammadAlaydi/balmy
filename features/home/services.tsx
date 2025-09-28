@@ -1,18 +1,20 @@
+"use client";
+
 import CarouselComponent from "@/components/carousel-component";
 import React from "react";
 import { MdOutlineLocalShipping } from "react-icons/md";
-import { TbArrowBack } from "react-icons/tb";
 import { BiSupport } from "react-icons/bi";
 import { PiSealCheck } from "react-icons/pi";
 import { SwiperSlide } from "swiper/react";
 import { useTranslations } from "next-intl";
+import { TfiBackLeft } from "react-icons/tfi";
 
 export default function Services() {
 
   const t = useTranslations("home");
   let benfits = [
     {
-      icon: <TbArrowBack className="text-4xl text-primary" />,
+      icon: <TfiBackLeft className="text-4xl text-primary" />,
       h2: t("return-and-exchange"),
       p: t("return-and-exchange-desc"),
     },

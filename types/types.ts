@@ -1,3 +1,6 @@
+import { ReactNode } from 'react';
+import { Control } from 'react-hook-form';
+
 // Navigation types
 export type NavLeaf = {
   title: string;
@@ -226,6 +229,9 @@ export interface Product {
   reviews: number;
   description?: string;
   specifications?: Record<string, string>;
+  wishlistId?: number;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface CartItem {
@@ -252,7 +258,7 @@ export interface InputInterFace {
   labelText?: string;
   labelStyle?: string;
   inputId?: string;
-  control?: any;
+  control?: Control<any>;
   value?: any;
 }
 
@@ -266,7 +272,7 @@ export interface SelectInterFace {
   fieldName: string;
   labelText?: string;
   labelStyle?: string;
-  control?: any;
+  control?: Control<any>;
 }
 export interface CheckBoxOrRadioInterFace {
   inputId?: string;
@@ -275,10 +281,13 @@ export interface CheckBoxOrRadioInterFace {
   fieldName: string;
   labelText?: string;
   labelStyle?: string;
-  control?: object;
+  control?: Control<any>;
 }
-interface ProductImage {
+export interface ProductImage {
   original_image_url: string;
+  medium_image_url?: string;
+  small_image_url?: string;
+  large_image_url?: string;
 }
 
 export interface ProductVariant {
@@ -381,6 +390,23 @@ export interface ProductDetailsApiResponse {
       attributes: Record<string, Array<string | null>>; // { color: ['White'], size: ['L','XL'] }
     };
   };
+}
+
+// Type alias for backward compatibility
+export type ProductDetailsResponse = ProductDetailsApiResponse;
+
+// Favourite state type
+export interface FavouriteState {
+  items: Product[];
+  loading: boolean;
+  error: string | null;
+}
+
+// Image URLs type
+export interface ImageUrls {
+  original_image_url: string;
+  medium_image_url: string;
+  small_image_url: string;
 }
 
 export interface ApiProduct {

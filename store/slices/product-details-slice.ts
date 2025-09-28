@@ -22,7 +22,7 @@ const productDetailsSlice = createSlice({
   initialState: {
     productDetails: null,
     isLoading: false,
-    error: null,
+    error: null as string | null,
   },
   reducers: {},
   extraReducers: (builder) => {
@@ -34,7 +34,7 @@ const productDetailsSlice = createSlice({
       state.isLoading = false;
     });
     builder.addCase(getProductDetails.rejected, (state, action) => {
-      state.error = action.error.message;
+      state.error = action.error.message || 'Failed to fetch product details';
       state.isLoading = false;
     });
   },

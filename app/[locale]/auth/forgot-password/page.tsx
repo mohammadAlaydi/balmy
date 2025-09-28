@@ -2,19 +2,21 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import ForgotPasswordForm from "@/components/auth/forgot-password-form";
 import ResetCodeForm from "@/components/auth/reset-code-form";
 import NewPasswordForm from "@/components/auth/new-password-form";
 
 type ForgotPasswordView = "forgot-password" | "reset-code" | "new-password";
 
-export default function ForgotPasswordPage() {
+export default function page() {
 
   const [currentView, setCurrentView] =
     useState<ForgotPasswordView>("forgot-password");
   const [email, setEmail] = useState("");
   const [resetCode, setResetCode] = useState("");
   const router = useRouter();
+  const t = useTranslations("auth");
 
   const handleEmailSent = (userEmail: string) => {
     setEmail(userEmail);
@@ -76,13 +78,12 @@ export default function ForgotPasswordPage() {
       <div className="max-w-md w-full space-y-8">
         <div className="text-center">
           <h1 className="text-3xl font-bold text-gray-900">
-            Password Recovery
+            {t("password-recovery")}
           </h1>
           <p className="mt-2 text-sm text-gray-600">
-            Follow the steps to reset your password
+            {t("follow-steps")}
           </p>
         </div>
-
         {renderCurrentView()}
       </div>
     </div>

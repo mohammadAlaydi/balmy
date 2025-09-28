@@ -20,7 +20,7 @@ const searchProductsSlice = createSlice({
   initialState: {
     products: [],
     isLoading: false,
-    error: null,
+    error: null as string | null,
   },
   reducers: {},
   extraReducers: (builder) => {
@@ -32,7 +32,7 @@ const searchProductsSlice = createSlice({
       state.isLoading = true;
     });
     builder.addCase(getSearchProducts.rejected, (state, action) => {
-      state.error = action.error.message;
+      state.error = action.error.message || 'Failed to fetch search products';
       state.isLoading = false;
     });
   },

@@ -30,7 +30,7 @@ const categoriesSlice = createSlice({
     initialState: {
         categories: [],
         loading: false,
-        error: null
+        error: null as string | null
     },
     reducers: {},
     extraReducers(builder) {

@@ -27,13 +27,6 @@ export default function ShippingForm({
   const t = useTranslations("cart");
   const tButtons = useTranslations("buttons");
 
-  // Debug logging
-  console.log("🚢 ShippingForm Debug:");
-  console.log("  - status:", status);
-  console.log("  - isSubmitting:", isSubmitting);
-  console.log("  - data:", data);
-  console.log("  - Will show success?", status === "success");
-
   return (
     <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
       <Card
@@ -50,7 +43,7 @@ export default function ShippingForm({
                 control={form.control}
                 fieldName="billing.first_name"
                 labelText={t("first-name")}
-                inputPlaceholder="John"
+                inputPlaceholder={t("placeholder-first-name")}
                 inputType="text"
                 inputId="billing-first-name"
               />
@@ -58,7 +51,7 @@ export default function ShippingForm({
                 control={form.control}
                 fieldName="billing.last_name"
                 labelText={t("last-name")}
-                inputPlaceholder="Doe"
+                inputPlaceholder={t("placeholder-last-name")}
                 inputType="text"
                 inputId="billing-last-name"
               />
@@ -68,7 +61,7 @@ export default function ShippingForm({
                 control={form.control}
                 fieldName="billing.email"
                 labelText={t("email")}
-                inputPlaceholder="john.doe@example.com"
+                inputPlaceholder={t("placeholder-email")}
                 inputType="email"
                 inputId="billing-email"
               />
@@ -76,7 +69,7 @@ export default function ShippingForm({
                 control={form.control}
                 fieldName="billing.address1"
                 labelText={t("address")}
-                inputPlaceholder="1234 Maple Street"
+                inputPlaceholder={t("placeholder-address")}
                 inputType="text"
                 inputId="billing-address"
               />
@@ -86,7 +79,7 @@ export default function ShippingForm({
                 control={form.control}
                 fieldName="billing.city"
                 labelText={t("city")}
-                inputPlaceholder="Los Angeles"
+                inputPlaceholder={t("placeholder-city")}
                 inputType="text"
                 inputId="billing-city"
               />
@@ -94,7 +87,7 @@ export default function ShippingForm({
                 control={form.control}
                 fieldName="billing.phone"
                 labelText={t("phone")}
-                inputPlaceholder="+1-555-987-6543"
+                inputPlaceholder={t("placeholder-phone")}
                 inputType="tel"
                 inputId="billing-phone"
               />
@@ -120,7 +113,7 @@ export default function ShippingForm({
                   control={form.control}
                   fieldName="shipping.address1"
                   labelText={t("address")}
-                  inputPlaceholder="1234 Maple Street"
+                  inputPlaceholder={t("placeholder-address")}
                   inputType="text"
                   inputId="shipping-address"
                 />
@@ -128,7 +121,7 @@ export default function ShippingForm({
                   control={form.control}
                   fieldName="shipping.city"
                   labelText={t("city")}
-                  inputPlaceholder="Los Angeles"
+                  inputPlaceholder={t("placeholder-city")}
                   inputType="text"
                   inputId="shipping-city"
                 />
@@ -138,7 +131,7 @@ export default function ShippingForm({
                   control={form.control}
                   fieldName="shipping.phone"
                   labelText={t("phone")}
-                  inputPlaceholder="+1-555-987-6543"
+                  inputPlaceholder={t("placeholder-phone")}
                   inputType="tel"
                   inputId="shipping-phone"
                 />

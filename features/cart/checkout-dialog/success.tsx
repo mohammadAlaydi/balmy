@@ -1,4 +1,5 @@
-import Link from "next/link";
+"use client";
+
 import { FaCheck } from "react-icons/fa";
 import { SuccessProps } from "@/types/types";
 import { ORDER_INFO_LABELS, SUCCESS_MESSAGES } from "@/static-data/static-data";
@@ -98,15 +99,15 @@ function ActionSection() {
     <div className="px-6 py-4 flex flex-col gap-3">
       <button
         onClick={handleGoHome}
-        className="inline-flex h-10 items-center justify-center rounded-md bg-gray-900 px-6 text-sm font-medium text-white shadow transition-colors hover:bg-gray-800 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-900 disabled:pointer-events-none disabled:opacity-50"
+        className="inline-flex h-10 items-center justify-center rounded-md bg-gray-900 px-6 text-sm font-medium text-white shadow transition-colors hover:bg-gray-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900 disabled:pointer-events-none disabled:opacity-50"
       >
         {SUCCESS_MESSAGES.GO_HOME}
       </button>
       <button
         onClick={handleResetAndClose}
-        className="inline-flex h-10 items-center justify-center rounded-md bg-gray-200 px-6 text-sm font-medium text-gray-700 shadow transition-colors hover:bg-gray-300 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-300 disabled:pointer-events-none disabled:opacity-50"
+        className="inline-flex h-10 items-center justify-center rounded-md bg-gray-200 px-6 text-sm font-medium text-gray-700 shadow transition-colors hover:bg-gray-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-300 disabled:pointer-events-none disabled:opacity-50"
       >
-        Close Dialog
+        {SUCCESS_MESSAGES.CLOSE_DIALOG}
       </button>
     </div>
   );

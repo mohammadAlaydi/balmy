@@ -2,7 +2,7 @@ import { NextRequest } from 'next/server';
 import { cookies } from 'next/headers';
 
 export async function getAuthToken(): Promise<string | null> {
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
   return cookieStore.get('accessToken')?.value || null;
 }
 

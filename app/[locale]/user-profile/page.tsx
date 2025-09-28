@@ -25,36 +25,47 @@ import { ProtectedRoute } from "@/components/auth/protected-route";
 
 // Form validation schema
 const profileSchema = z.object({
-  firstName: z.string().min(1, "First name is required"),
-  lastName: z.string().min(1, "Last name is required"),
-  email: z.string().email("Invalid email address"),
-  phone: z.string().min(1, "Phone number is required"),
-  country: z.string().min(1, "Country is required"),
-  city: z.string().min(1, "City is required"),
-  address: z.string().min(1, "Address is required"),
+  firstName: z.string().min(1, "validation.first-name-required"),
+  lastName: z.string().min(1, "validation.last-name-required"),
+  email: z.string().email("validation.invalid-email"),
+  phone: z.string().min(1, "validation.phone-required"),
+  country: z.string().min(1, "validation.country-required"),
+  city: z.string().min(1, "validation.city-required"),
+  address: z.string().min(1, "validation.address-required"),
+  gender: z.string().optional(),
 });
 
 type ProfileFormData = z.infer<typeof profileSchema>;
 
-// City options for Saudi Arabia
-const cityOptions = [
-  { label: "الرياض", value: "الرياض" },
-  { label: "جدة", value: "جدة" },
-  { label: "مكة المكرمة", value: "مكة المكرمة" },
-  { label: "المدينة المنورة", value: "المدينة المنورة" },
-  { label: "الدمام", value: "الدمام" },
-  { label: "الخبر", value: "الخبر" },
-  { label: "الظهران", value: "الظهران" },
-  { label: "تبوك", value: "تبوك" },
-  { label: "بريدة", value: "بريدة" },
-  { label: "خميس مشيط", value: "خميس مشيط" },
-  { label: "حائل", value: "حائل" },
-  { label: "أبها", value: "أبها" },
-  { label: "نجران", value: "نجران" },
-  { label: "الجوف", value: "الجوف" },
-  { label: "جازان", value: "جازان" },
-  { label: "الباحة", value: "الباحة" },
-  { label: "الحدود الشمالية", value: "الحدود الشمالية" },
+// City options for Saudi Arabia - will be populated with translations
+const getCityOptions = (t: any) => [
+  { label: t("cities.riyadh"), value: "riyadh" },
+  { label: t("cities.jeddah"), value: "jeddah" },
+  { label: t("cities.makkah"), value: "makkah" },
+  { label: t("cities.madinah"), value: "madinah" },
+  { label: t("cities.dammam"), value: "dammam" },
+  { label: t("cities.khobar"), value: "khobar" },
+  { label: t("cities.dhahran"), value: "dhahran" },
+  { label: t("cities.tabuk"), value: "tabuk" },
+  { label: t("cities.buraidah"), value: "buraidah" },
+  { label: t("cities.khamis-mushait"), value: "khamis-mushait" },
+  { label: t("cities.hail"), value: "hail" },
+  { label: t("cities.abha"), value: "abha" },
+  { label: t("cities.najran"), value: "najran" },
+  { label: t("cities.jazan"), value: "jazan" },
+  { label: t("cities.yanbu"), value: "yanbu" },
+  { label: t("cities.taif"), value: "taif" },
+  { label: t("cities.qatif"), value: "qatif" },
+  { label: t("cities.hafar-al-batin"), value: "hafar-al-batin" },
+  { label: t("cities.jubail"), value: "jubail" },
+  { label: t("cities.al-kharj"), value: "al-kharj" },
+];
+
+// Gender options
+const getGenderOptions = (t: any) => [
+  { label: t("gender.male"), value: "male" },
+  { label: t("gender.female"), value: "female" },
+  { label: t("gender.other"), value: "other" },
 ];
 
 export default function page() {
@@ -72,9 +83,10 @@ export default function page() {
       lastName: "",
       email: "",
       phone: "",
-      country: "المملكة العربية السعودية",
+      country: "Saudi Arabia",
       city: "",
       address: "",
+      gender: "",
     },
   });
 
@@ -88,40 +100,24 @@ export default function page() {
   // Update form values when user data changes
   React.useEffect(() => {
     if (user && Object.keys(user).length > 0) {
-      console.log("Setting form values with user data:", user);
       const formData = {
-        firstName: user.first_name || "",
-        lastName: user.last_name || "",
+        firstName: user.firstName || "",
+        lastName: user.lastName || "",
         email: user.email || "",
         phone: user.phone || "",
-        country: "المملكة العربية السعودية", // Default country
+        country: "Saudi Arabia", // Default country
         city: "", // Not provided in API response
         address: "", // Not provided in API response
+        gender: "", // Not provided in API response
       };
-      console.log("Form data to set:", formData);
       form.reset(formData);
     }
   }, [user, form]);
 
-  // Debug: Log form values when they change
-  React.useEffect(() => {
-    const subscription = form.watch((value) => {
-      console.log("Form values changed:", value);
-    });
-    return () => subscription.unsubscribe();
-  }, [form]);
-
-  // Debug: Log current form values
-  console.log("Profile page - Current form values:", form.getValues());
-  console.log("Profile page - Form errors:", form.formState.errors);
-  console.log("Profile page - Current locale:", locale);
-  console.log("Profile page - Is RTL:", isRTL);
 
   const onSubmit = async (data: ProfileFormData) => {
     try {
       // Here you would typically make an API call to update the user profile
-      console.log("Profile data to update:", data);
-
       // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
@@ -131,42 +127,6 @@ export default function page() {
     }
   };
 
-  // Debug: Log current user state
-  console.log("Profile page - Current user:", user);
-  console.log("Profile page - Is loading:", isLoading);
-  console.log("Profile page - Is authenticated:", isAuthenticated);
-  console.log("Profile page - Access token:", accessToken);
-  console.log(
-    "Profile page - User keys:",
-    user ? Object.keys(user) : "No user"
-  );
-
-  // Log the actual user object structure
-  if (user) {
-    console.log(
-      "Profile page - Full user object:",
-      JSON.stringify(user, null, 2)
-    );
-    console.log("Profile page - User first_name:", user.first_name);
-    console.log("Profile page - User last_name:", user.last_name);
-    console.log("Profile page - User email:", user.email);
-    console.log("Profile page - User phone:", user.phone);
-    console.log("Profile page - User name:", user.name);
-    console.log("Profile page - User gender:", user.gender);
-    console.log("Profile page - User date_of_birth:", user.date_of_birth);
-  }
-
-  // Debug: Check localStorage
-  if (typeof window !== "undefined") {
-    console.log(
-      "Profile page - localStorage accessToken:",
-      !!localStorage.getItem("accessToken")
-    );
-    console.log(
-      "Profile page - localStorage refreshToken:",
-      !!localStorage.getItem("refreshToken")
-    );
-  }
 
   return (
     <ProtectedRoute>
@@ -270,7 +230,7 @@ export default function page() {
                       control={form.control}
                       fieldName="city"
                       labelText={t("city")}
-                      selectOptions={cityOptions}
+                      selectOptions={getCityOptions(t)}
                       containerStyle=""
                       containerColSpan=""
                       labelColSpan=""
@@ -304,7 +264,7 @@ export default function page() {
                       disabled={form.formState.isSubmitting}
                     >
                       {form.formState.isSubmitting
-                        ? "جاري الحفظ..."
+                        ? t("saving")
                         : t("save-changes")}
                     </Button>
                   </div>

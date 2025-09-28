@@ -23,9 +23,9 @@ export const NAV_LINKS: NavConfig = [
 
 // Contact information
 export const CONTACT_INFO = {
-  phone: "01097352356",
-  callToAction: "إتصل بنا اليوم",
-  discount: "خصومات تصل إلى 50",
+  phone: "contact.phone",
+  callToAction: "contact.call-to-action",
+  discount: "contact.discount",
 };
 
 // Language options
@@ -42,41 +42,41 @@ export const LANGUAGES: { code: string; title: string; }[] = [
 
 // Legal terms
 export const LEGAL_TERMS = [
-  { title: "الشروط والأحكام", path: "/terms-and-conditions" },
-  { title: "سياسة الخصوصية", path: "/privacy-policy" },
-  { title: "سياسة التوصيل", path: "/delivery-policy" },
-  { title: "سياسة الدفع", path: "/payment-policy" },
-  { title: "سياسة الإسترجاع", path: "/refund-policy" },
+  { title: "legal.terms-and-conditions", path: "/legal/terms" },
+  { title: "legal.privacy-policy", path: "/legal/privacy" },
+  { title: "legal.delivery-policy", path: "/services/shipping-info" },
+  { title: "legal.payment-policy", path: "/legal/sale-terms" },
+  { title: "legal.return-policy", path: "/services/return-policy" },
 ];
 
 // Know us more links
 export const KNOW_US_MORE = [
-  { title: "من نحن", path: "/about-us" },
-  { title: "خدماتنا", path: "/services" },
+  { title: "about.who-we-are", path: "/about/who-we-are" },
+  { title: "about.our-services", path: "/services/faq" },
 ];
 
 // Services links
 export const SERVICES = [
-  { title: "تواصل معنا", path: "/contact-us" },
-  { title: "معلومات الشحن", path: "/shipping-information" },
-  { title: "FAQ", path: "/faq" },
+  { title: "services.contact-us", path: "/contact/contact-us" },
+  { title: "services.shipping-info", path: "/services/shipping-info" },
+  { title: "services.faq", path: "/services/faq" },
 ];
 
 // Work hours
 export const WORK_HOURS = {
-  title: "ساعات العمل",
+  title: "footer.working-hours",
   schedule: [
-    "طوال أيام الأسبوع",
-    "من 9 ص - إلي 11:30 ص",
-    "من 3:30 م - إلي 11:30 م",
+    "footer.all-week",
+    "footer.from-9am-to-1130am",
+    "footer.from-330pm-to-1130pm",
   ],
 };
 
 // Location information
 export const LOCATION_INFO = {
-  title: "كيف تصل الينا",
-  address: "طريق أنس ابن مالك، الصحافة، الرياض 13321",
-  phone: "+966-55-766-5585",
+  title: "footer.how-to-reach-us",
+  address: "contact.address",
+  phone: "contact.phone-number",
 };
 
 // Toast styles
