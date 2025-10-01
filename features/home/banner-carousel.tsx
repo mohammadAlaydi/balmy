@@ -4,31 +4,35 @@ import { SwiperSlide } from "swiper/react";
 import Image from "next/image";
 
 export default function BannerCarousel({ sliders }: { sliders: any }) {
-  const placeholderSlides = [
-    { image_url: "/assets/images/banner.jpg", title: "Placeholder Banner" },
-  ];
 
   const items =
-    Array.isArray(sliders) && sliders.length > 0 ? sliders : placeholderSlides;
+    Array.isArray(sliders) && sliders.length > 0 ? sliders : [];
 
   return (
-    <div className="w-full min-h-[40vh] sm:min-h-[50vh] md:min-h-[55vh] lg:min-h-[65vh] xl:min-h-[70vh]">
+    <div className="w-full">
       <CarouselComponent
-        containerClassName="w-full h-auto"
+        containerClassName="w-full h-full"
         spaceBetween={30}
         slidesPerView={1}
         pagination={true}
         autoPlay={false}
         autoHeight
+        swiperClassName="lg:hero h-fit"
       >
         {items.map((slider: any, index: number) => (
-          <SwiperSlide key={index} className="w-full">
-            <div
-              className="w-full min-h-[40vh] sm:min-h-[50vh] md:min-h-[55vh] lg:min-h-[65vh] xl:min-h-[70vh] bg-no-repeat bg-center bg-cover"
-              style={{ backgroundImage: `url(${slider?.image_url})` }}
-            >
-              {/* Content can go here */}
-            </div>
+          <SwiperSlide
+            key={index}
+            className={`w-full h-full relative fade-item-${index + 1} fade-item`}
+          >
+            <Image
+              src={slider?.image_url}
+              alt={slider?.title || "Banner image"}
+              width={500}
+              height={400}
+              className="w-full h-[200px] sm:h-[250px] md:h-[300px] lg:h-full object-cover aspect-square lg:aspect-auto"
+              quality={100}
+              priority={index === 0}
+            />
           </SwiperSlide>
         ))}
       </CarouselComponent>

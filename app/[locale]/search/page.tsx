@@ -1,12 +1,12 @@
-import PagePadding from "@/components/page-padding";
+import PageWrapper from "@/components/page-wrapper";
 import SearchPopup from "@/components/search-component";
 import { products } from "@/static-data/static-data";
 
 export default function SearchPage() {
   
   return (
-    <PagePadding>
+    <PageWrapper>
       <SearchPopup products={products} />
-    </PagePadding>
+    </PageWrapper>
   );
 }

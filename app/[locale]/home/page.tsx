@@ -6,19 +6,19 @@ import ProductsCarousel from "@/features/home/products-carousel";
 import CrossBody from "@/features/home/cross-body";
 import Services from "@/features/home/services";
 import Categories from "@/features/home/categories";
-import PagePadding from "@/components/page-padding";
 import { useEffect } from "react";
 import { getHomeData } from "@/store/slices/home-slice";
 import { useDispatch, useSelector } from "react-redux";
 import Loading from "@/components/loading";
+import PageWrapper from "@/components/page-wrapper";
+import SectionTitle from "@/components/section-title";
 
 export default function page() {
-
-  const dispatch = useDispatch()
-  const { data, loading } = useSelector((state: any) => state.home)
+  const dispatch = useDispatch();
+  const { data, loading } = useSelector((state: any) => state.home);
   useEffect(() => {
-    dispatch(getHomeData() as any)
-  }, [dispatch])
+    dispatch(getHomeData() as any);
+  }, [dispatch]);
 
   const t = useTranslations("home");
 
@@ -27,15 +27,17 @@ export default function page() {
   }
 
   return (
-    <div className="min-h-[100vh]">
+    <>
       <BannerCarousel sliders={data?.sliders} />
-      <PagePadding containerClassName="gap-10">
+      <PageWrapper>
         <Services />
         <Categories categories={data?.featured_categories} />
+        <SectionTitle title={t("featured-products")} titleStyle="text-xl md:text-3xl my-5"/> 
         <ProductsCarousel products={data?.featured_products} />
-        <CrossBody />
+        <CrossBody ads={data?.ads} />
+        <SectionTitle title={t("new-arrivals")}  titleStyle="text-xl md:text-3xl my-5"/>
         <ProductsCarousel products={data?.new_products} />
-      </PagePadding>
-    </div>
+      </PageWrapper>
+    </>
   );
 }

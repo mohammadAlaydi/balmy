@@ -23,6 +23,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import toast from "react-hot-toast";
+import Image from "next/image";
 
 export default function UserMenu({ isMobile = false }: { isMobile?: boolean }) {
   const [isMounted, setIsMounted] = useState(false);
@@ -59,8 +60,8 @@ export default function UserMenu({ isMobile = false }: { isMobile?: boolean }) {
     return (
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="ghost" size="icon" className={isMobile ? "lg:hidden" : "hidden lg:flex"}>
-            <FaRegUser className="text-xl" />
+          <Button variant="ghost" size="icon" className={isMobile ? "lg:hidden" : "hidden lg:flex hover:bg-transparent"}>
+            <Image src="/assets/images/user.svg" alt="user" width={24} height={24} className="cursor-pointer text-black" />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-56">

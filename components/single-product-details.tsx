@@ -210,10 +210,10 @@ export default function SingleProductDetails({
         <Button
           onClick={handleAddToCart}
           disabled={!(currentVariant?.in_stock ?? product.in_stock)}
-          className="bg-black text-white hover:bg-white hover:text-black border border-black px-5 py-3 rounded-[5px] transition-all duration-300 font-cairo text-[20px] lg:text-[20px] md:text-[18px]"
-        >
+          className="bg-black text-white hover:bg-black/75 hover:text-white border border-black px-5 py-3 rounded-[5px] transition-all duration-300 font-cairo text-[20px] lg:text-[20px] md:text-[18px]"
+          >
           <MdOutlineShoppingCart className="text-xl ml-2" />
-          {t("add-to-cart")}
+         <Badge className="text-base bg-transparent"> {t("add-to-cart")}</Badge>
         </Button>
 
         <div className="flex gap-3">

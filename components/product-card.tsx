@@ -24,6 +24,7 @@ import { FaCartArrowDown } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import { FavouriteButton } from "./favourite-button";
 import { FaRegEye } from "react-icons/fa";
+import AuthModal from "./auth/auth-modal";
 
 export default function ProductCard({
   product,
@@ -37,12 +38,14 @@ export default function ProductCard({
   const [chosenVariantId, setChosenVariantId] = useState<
     number | string | null
   >(null);
+  const [showAuthModal, setShowAuthModal] = useState(false);
 
   const dispatch = useAppDispatch();
   const t = useTranslations("products");
   const router = useRouter();
 
   const { productDetails } = useSelector((state: any) => state.productDetails);
+  const { isAuthenticated } = useSelector((state: any) => state.auth);
 
   const baseImageUrl = getCurrentMainImage(product, selectedVariantIndex ?? 0);
   const hoverImageUrl = getHoverImage(product, selectedVariantIndex ?? 0);
@@ -66,6 +69,13 @@ export default function ProductCard({
 
   const handleAddToCart = async () => {
     if (!isInStock || isAdding) return;
+    
+    // Check if user is authenticated
+    if (!isAuthenticated) {
+      setShowAuthModal(true);
+      return;
+    }
+    
     const productId = resolveTargetId();
     try {
       setIsAdding(true);
@@ -116,7 +126,7 @@ export default function ProductCard({
                   onClick={handleViewProduct}
                   className="text-3xl cursor-pointer text-black hidden md:flex opacity-80 hover:opacity-100"
                 >
-                  <FaRegEye className="text-xl "  />
+                  <FaRegEye className="text-xl " />
                 </Button>
               }
             >
@@ -201,15 +211,23 @@ export default function ProductCard({
           </p>
           <p className="text-xs md:text-sm text-nowrap flex md:hidden">
             {(() => {
-              const pv = Array.isArray(product?.variants) ? product.variants : [];
-              const base = Number.isFinite(Number(product?.price)) ? Number(product?.price) : undefined;
+              const pv = Array.isArray(product?.variants)
+                ? product.variants
+                : [];
+              const base = Number.isFinite(Number(product?.price))
+                ? Number(product?.price)
+                : undefined;
               const minVar = pv
-                .map((v: any) => (v?.special_price ?? v?.price))
-                .map((x: any) => (Number.isFinite(Number(x)) ? Number(x) : undefined))
-                .filter((n: any) => typeof n === 'number');
-              const price = base ?? (minVar.length ? Math.min(...(minVar as number[])) : 0);
+                .map((v: any) => v?.special_price ?? v?.price)
+                .map((x: any) =>
+                  Number.isFinite(Number(x)) ? Number(x) : undefined
+                )
+                .filter((n: any) => typeof n === "number");
+              const price =
+                base ?? (minVar.length ? Math.min(...(minVar as number[])) : 0);
               return price.toFixed(2);
-            })()} {t("currency")}
+            })()}{" "}
+            {t("currency")}
           </p>
         </div>
 
@@ -267,18 +285,31 @@ export default function ProductCard({
 
           <p className="text-xs md:text-sm mb-3 text-nowrap hidden md:flex">
             {(() => {
-              const pv = Array.isArray(product?.variants) ? product.variants : [];
-              const base = Number.isFinite(Number(product?.price)) ? Number(product?.price) : undefined;
+              const pv = Array.isArray(product?.variants)
+                ? product.variants
+                : [];
+              const base = Number.isFinite(Number(product?.price))
+                ? Number(product?.price)
+                : undefined;
               const minVar = pv
-                .map((v: any) => (v?.special_price ?? v?.price))
-                .map((x: any) => (Number.isFinite(Number(x)) ? Number(x) : undefined))
-                .filter((n: any) => typeof n === 'number');
-              const price = base ?? (minVar.length ? Math.min(...(minVar as number[])) : 0);
+                .map((v: any) => v?.special_price ?? v?.price)
+                .map((x: any) =>
+                  Number.isFinite(Number(x)) ? Number(x) : undefined
+                )
+                .filter((n: any) => typeof n === "number");
+              const price =
+                base ?? (minVar.length ? Math.min(...(minVar as number[])) : 0);
               return price.toFixed(2);
-            })()} {t("currency")}
+            })()}{" "}
+            {t("currency")}
           </p>
         </div>
       </CardContent>
+      
+      <AuthModal 
+        isOpen={showAuthModal} 
+        onOpenChange={setShowAuthModal} 
+      />
     </Card>
   );
 }

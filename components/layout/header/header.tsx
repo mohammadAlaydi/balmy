@@ -16,9 +16,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { IoSearch } from "react-icons/io5";
-import { FaBars, FaRegUser, FaRegHeart } from "react-icons/fa";
-import { MdOutlineShoppingCart } from "react-icons/md";
+import { FaRegUser } from "react-icons/fa";
 import Image from "next/image";
 import SocialMediaIcons from "@/components/social-media-icons";
 import DrawerComponent from "../drawer/drawer-component";
@@ -53,9 +51,10 @@ import Loading from "@/components/loading";
 import { useTranslations } from "next-intl";
 import ClientOnly from "@/components/ui/client-only";
 import { getCategories } from "@/store/slices/categories-slice";
+import { getHomeData } from "@/store/slices/home-slice";
 
 // Components
-const TopBar = () => {
+const TopBar = ({data}: {data: any}) => {
   const t = useTranslations("contact");
   const tAccessibility = useTranslations("accessibility");
   const tSearch = useTranslations("search");
@@ -74,8 +73,9 @@ const TopBar = () => {
         {t("discount")}
       </Badge>
       <SocialMediaIcons
-        iconStyle="text-white"
+        iconStyle="text-white text-lg"
         containerStyle="hidden md:flex"
+        data={data}
       />
     </div>
   );
@@ -132,7 +132,7 @@ const ActionIcons = ({
       <div className="items-center gap-3 hidden lg:flex">
         <Dialog>
           <DialogTrigger>
-            <IoSearch className="text-xl cursor-pointer" />
+            <Image src="/assets/images/search.svg" alt="search" width={24} height={24} className="cursor-pointer text-black" />
           </DialogTrigger>
           <DialogContent>
             <DialogTitle className="sr-only">
@@ -150,7 +150,7 @@ const ActionIcons = ({
           className="relative hidden lg:block"
           prefetch={true}
         >
-          <FaRegHeart className="text-xl cursor-pointer" />
+          <Image src="/assets/images/heart.svg" alt="heart" width={24} height={24} className="cursor-pointer text-black" />
           {favouritesCount > 0 && (
             <Badge className="absolute -top-2 -right-2 h-5 w-5 p-0 text-xs flex items-center justify-center bg-red-500 text-white">
               {favouritesCount}
@@ -160,7 +160,7 @@ const ActionIcons = ({
         <DrawerComponent
           trigger={
             <div className="relative hidden lg:block">
-              <MdOutlineShoppingCart className="cursor-pointer text-black text-xl" />
+              <Image src="/assets/images/cart.svg" alt="shopping-cart" width={24} height={24} className="cursor-pointer text-black" />
               {cartCount > 0 && (
                 <Badge className="absolute -top-2 -right-2 h-5 w-5 p-0 text-xs flex items-center justify-center bg-blue-500 text-white">
                   {cartCount}
@@ -173,7 +173,7 @@ const ActionIcons = ({
         </DrawerComponent>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <MdLanguage className="text-2xl cursor-pointer text-black" />
+            <Image src="/assets/images/language.svg" alt="language" width={24} height={24} className="cursor-pointer text-black" />
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-40 bg-white overflow-hidden  h-fit z-[60] shadow-[0px_6px_20px_rgba(149,157,165,0.1)] rounded-lg">
             <DropdownMenuLabel className="p-2">
@@ -230,8 +230,12 @@ const NavigationLinks = ({ navbarCategories }: { navbarCategories: any }) => {
                           asChild
                           className="cursor-pointer bg-transparent hover:bg-accent hover:text-accent-foreground"
                         >
-                  <Link
-                    href={nested?.slug ? `/category/${link?.slug}/${nested?.slug}` : `/category/${link?.slug}/${nested?.id}`}
+                          <Link
+                            href={
+                              nested?.slug
+                                ? `/category/${link?.slug}/${nested?.slug}`
+                                : `/category/${link?.slug}/${nested?.id}`
+                            }
                             prefetch={true}
                             className="block rounded-md px-1.5 py-1 text-sm hover:bg-accent hover:text-accent-foreground text-end"
                           >
@@ -300,7 +304,7 @@ const MobileMenu = ({
     <DrawerComponent
       trigger={
         <div className="lg:hidden">
-          <FaBars className="text-xl cursor-pointer text-black" />
+          <Image src="/assets/images/menu.svg" alt="menu" width={24} height={24} className="cursor-pointer text-black" />
         </div>
       }
       containerClassName="lg:hidden"
@@ -352,11 +356,11 @@ const MobileMenu = ({
         <div className="pt-6 border-t border-gray-200 flex-shrink-0">
           <div className="flex items-center justify-center gap-6">
             <Link href="/search" prefetch={true}>
-              <IoSearch className="text-xl cursor-pointer text-gray-600 hover:text-gray-900" />
+              <Image src="/assets/images/search.svg" alt="search" width={24} height={24} className="cursor-pointer text-gray-600 hover:text-gray-900" />
             </Link>
-             <UserMenu isMobile={true} />
+            <UserMenu isMobile={true} />
             <Link href="/favourite" prefetch={true} className="relative">
-              <FaRegHeart className="text-xl cursor-pointer text-gray-600 hover:text-gray-900" />
+              <Image src="/assets/images/heart.svg" alt="heart" width={24} height={24} className="cursor-pointer text-gray-600 hover:text-gray-900" />
               {(() => {
                 const { getFavouritesCount } = useFavourites();
                 const favouritesCount = getFavouritesCount();
@@ -369,7 +373,7 @@ const MobileMenu = ({
             </Link>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <MdLanguage className="text-2xl cursor-pointer text-gray-600 hover:text-gray-900" />
+                <Image src="/assets/images/language.svg" alt="language" width={24} height={24} className="cursor-pointer text-gray-600 hover:text-gray-900" />
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-40 bg-white overflow-hidden h-fit z-[60] shadow-[0px_6px_20px_rgba(149,157,165,0.1)] rounded-lg">
                 <DropdownMenuLabel className="p-2">
@@ -390,13 +394,15 @@ const MobileMenu = ({
               </DropdownMenuContent>
             </DropdownMenu>
             {(() => {
-              const cartData = useSelector((state: RootState) => state.cart.data);
+              const cartData = useSelector(
+                (state: RootState) => state.cart.data
+              );
               const cartCount = cartData?.data?.items?.length || 0;
               return (
                 <div className="relative">
                   <DrawerComponent
                     trigger={
-                      <MdOutlineShoppingCart className="text-xl cursor-pointer text-gray-600 hover:text-gray-900" />
+                      <Image src="/assets/images/cart.svg" alt="shopping-cart" width={24} height={24} className="cursor-pointer text-gray-600 hover:text-gray-900" />
                     }
                   >
                     <QuickCart />
@@ -420,11 +426,15 @@ export default function Header() {
   const dispatch = useDispatch();
   const categories = useSelector((state: any) => state.categories);
   const loading = useSelector((state: any) => state.categories.loading);
+  const { data, loading: homeLoading } = useSelector(
+    (state: any) => state.home
+  );
 
   useEffect(() => {
     dispatch(getCategories() as any);
+    dispatch(getHomeData() as any);
   }, [dispatch]);
-
+console.log(data, "🤷‍♂️🤷‍♂️🤷‍♂️👌👌👌👌");
   const router = useRouter();
   const pathname = usePathname();
   const currentLocale = pathname.split("/")[1];
@@ -448,8 +458,8 @@ export default function Header() {
   }
   return (
     <div className="w-full relative z-50">
-      <TopBar />
-      <div className="flex justify-between items-center gap-3 py-5 px-3 lg:px-5 shadow-[0px_6px_20px_rgba(149,157,165,0.1)] transition-shadow duration-200 bg-white relative z-50">
+      <TopBar data={data} />
+      <div className="flex justify-between items-center gap-3 py-5 px-3 lg:px-5 scroll-shadow:shadow-[0px_6px_20px_rgba(149,157,165,0.1)] transition-shadow duration-200 bg-white relative z-50">
         <ActionIcons languageItems={languageItems} />
         <NavigationLinks
           navbarCategories={(categories as any)?.categories?.categories || []}

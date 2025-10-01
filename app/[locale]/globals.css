@@ -144,7 +144,7 @@ svg {
   direction: rtl;
 }
 
-.rtl .space-y-6>*+* {
+.rtl .space-y-6 > * + * {
   margin-top: 1.5rem;
 }
 
@@ -176,4 +176,76 @@ body {
 
 .font-cairo {
   font-family: var(--font-cairo), system-ui, sans-serif;
+}
+.hero {
+  width: 100%;
+  aspect-ratio: 0.75/0.8;
+  max-height: 85vh;
+}
+.hero img {
+  object-fit: cover;
+}
+.swiper-slide .fade-item {
+  transform: translateY(100%);
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+.swiper-slide .fade-item {
+  transition-delay: 0.4s;
+}
+
+.swiper-slide .fade-item.fade-item-1 {
+  transition-delay: 0.5s;
+}
+
+.swiper-slide .fade-item.fade-item-2 {
+  transition-delay: 0.6s;
+}
+
+.swiper-slide .fade-item.fade-item-3 {
+  transition-delay: 0.7s;
+}
+
+.swiper-slide .fade-item.fade-item-4 {
+  transition-delay: 0.8s;
+}
+
+.swiper-slide-active .fade-item {
+  transform: translateY(0px);
+  opacity: 1;
+  visibility: visible;
+}
+
+.swiper-initialized {
+  width: 100% !important;
+}
+.swiper-pagination-bullet {
+  background-color: white !important;
+  opacity: 0.9 !important;
+}
+.swiper-pagination-bullet-active {
+  outline: 1px solid white !important;
+  outline-offset: 5px !important;
+}
+
+.swiper-horizontal > .swiper-pagination-bullets .swiper-pagination-bullet,
+.swiper-pagination-horizontal.swiper-pagination-bullets
+  .swiper-pagination-bullet {
+  background-color: white !important;
+  padding: 3px !important;
+  margin-inline: 15px !important;
+}
+
+.swiper-pagination {
+  display: flex !important;
+  justify-content: center !important;
+  bottom: 30px !important;
+}
+
+@media only screen and (max-width: 768px) {
+  .swiper-pagination {
+    bottom: 20px !important;
+  }
 }

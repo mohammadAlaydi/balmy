@@ -194,9 +194,10 @@ const cartSlice = createSlice({
     builder.addCase(addToCart.rejected, (state: any, action) => {
       state.error = action.error.message || null;
       state.increaseOrDecreaseLoading = false;
-      if (action.error?.message) {
+      // Only show toast for non-authentication errors
+      if (action.error?.message && !action.error.message.includes("Unauthorized") && !action.error.message.includes("authentication")) {
         toast.error(action.error.message);
-      } else {
+      } else if (!action.error?.message || (!action.error.message.includes("Unauthorized") && !action.error.message.includes("authentication"))) {
         toast.error("Failed to add to cart");
       }
     });

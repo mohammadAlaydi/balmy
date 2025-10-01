@@ -1,6 +1,5 @@
 "use client";
 
-import PagePadding from "@/components/page-padding";
 import CartProduct from "@/components/cart-product";
 import OrderSummary from "@/features/cart/order-Summary";
 import { useDispatch, useSelector } from "react-redux";
@@ -12,6 +11,7 @@ import {
 import { MdDeleteSweep } from "react-icons/md";
 import Loading from "@/components/loading";
 import { useTranslations } from "next-intl";
+import PageWrapper from "@/components/page-wrapper";
 
 export default function CartPage() {
   const t = useTranslations("cart");
@@ -29,7 +29,7 @@ export default function CartPage() {
   // }
 
   return (
-    <PagePadding>
+    <PageWrapper>
       {data && data?.data?.items?.length > 0 ? (
         <div className="grid grid-cols-12 xl:max-w-7xl mx-auto gap-5 justify-between">
           <OrderSummary data={data} />
@@ -61,6 +61,6 @@ export default function CartPage() {
           </p>
         </div>
       )}
-    </PagePadding>
+    </PageWrapper>
   );
 }

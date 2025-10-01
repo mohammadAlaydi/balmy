@@ -645,7 +645,25 @@
     "title": "Category Products",
     "no-products-found": "No products found in this category",
     "loading-products": "Loading products...",
-    "products-count": "{count} products found"
+    "products-count": "{count} products found",
+    "filters": "Filters",
+    "clear-filters": "Clear Filters",
+    "filter-products": "Filter Products",
+    "price-range": "Price Range",
+    "currency": "SAR",
+    "availability": "Availability",
+    "in-stock-only": "In Stock Only",
+    "sort-by": "Sort By",
+    "select-sort": "Select sorting option",
+    "name": "Name",
+    "price-low-to-high": "Price: Low to High",
+    "price-high-to-low": "Price: High to Low",
+    "rating": "Rating",
+    "no-products-match-filters": "No products match your filters",
+    "available": "Available",
+    "unavailable": "Unavailable",
+    "limited-stock": "Limited Stock",
+    "pre-order": "Pre-order"
   },
   "faq": {
     "title": "Frequently Asked Questions (FAQ)",
@@ -865,5 +883,31 @@
       "title": "We guarantee safe delivery of your order",
       "description": "We use the best shipping companies and apply the highest quality standards to ensure your order arrives in excellent condition"
     }
+  },
+  "breadcrumb": {
+    "category": "Category",
+    "product": "Product",
+    "search": "Search",
+    "cart": "Cart",
+    "favourite": "Favorites",
+    "user-profile": "Profile",
+    "auth": "Authentication",
+    "login": "Login",
+    "register": "Register",
+    "forgot-password": "Forgot Password",
+    "about": "About",
+    "contact": "Contact",
+    "legal": "Legal",
+    "services": "Services",
+    "careers": "Careers",
+    "who-we-are": "Who We Are",
+    "contact-us": "Contact Us",
+    "cookies": "Cookies",
+    "privacy": "Privacy",
+    "sale-terms": "Sale Terms",
+    "terms": "Terms",
+    "faq": "FAQ",
+    "return-policy": "Return Policy",
+    "shipping-info": "Shipping Info"
   }
 }

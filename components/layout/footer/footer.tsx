@@ -18,14 +18,17 @@ import {
   WORK_HOURS,
 } from "@/static-data/static-data";
 import { useTranslations } from "next-intl";
+import { useDispatch, useSelector } from "react-redux";
+import { getHomeData } from "@/store/slices/home-slice";
+import { useEffect } from "react";
 
 // Components
 const WorkHoursSection = () => {
   const t = useTranslations("footer");
-  
+
   return (
     <div className="col-span-12 lg:col-span-6 flex flex-col gap-2 ">
-              <SectionTitle title={t("working-hours")} titleStyle="text-white/65" />
+      <SectionTitle title={t("working-hours")} titleStyle="text-white/65" />
       {WORK_HOURS.schedule.map((time, index) => (
         <p key={index} className="text-sm text-white">
           {t(time)}
@@ -36,16 +39,22 @@ const WorkHoursSection = () => {
 };
 
 const LocationSection = () => {
-
   const t = useTranslations("contact");
   const tFooter = useTranslations("footer");
-  
+
   return (
     <div className="col-span-12 lg:col-span-6 flex flex-col gap-2">
-      <SectionTitle title={tFooter("how-to-reach-us")} titleStyle="text-white/65" />
+      <SectionTitle
+        title={tFooter("how-to-reach-us")}
+        titleStyle="text-white/65"
+      />
       <p className="text-sm text-white">{t("address")}</p>
-              <Link href={`tel:${t("phone-number")}`} prefetch={true} className="text-sm text-white">
-          {t("phone-number")}
+      <Link
+        href={`tel:${t("phone-number")}`}
+        prefetch={true}
+        className="text-sm text-white"
+      >
+        {t("phone-number")}
       </Link>
     </div>
   );
@@ -63,17 +72,16 @@ const FooterImage = () => (
   </div>
 );
 
-const SocialMediaSection = () => {
-
+const SocialMediaSection = ({ data }: { data: any }) => {
   const t = useTranslations("footer");
-  
+
   return (
     <div className="col-span-12 lg:col-span-3 flex flex-col gap-3 items-start">
       <SectionTitle
         title={t("follow-us")}
         titleStyle="text-white/65 text-end text-base ltr:text-start"
       />
-      <SocialMediaIcons iconStyle="bg-white text-black p-1.5 text-[30px] rounded-full hover:bg-black hover:text-white transition-all duration-300" />
+      <SocialMediaIcons data={data} iconStyle="bg-white text-black p-1.5 text-[30px] rounded-full hover:bg-black hover:text-white transition-all duration-300 text-2xl" />
     </div>
   );
 };
@@ -88,9 +96,12 @@ const FooterAccordion = ({
   defaultValue: string;
 }) => {
   const t = useTranslations();
-  
+
   return (
-    <Accordion className="col-span-12 lg:col-span-3" defaultValue={defaultValue}>
+    <Accordion
+      className="col-span-12 lg:col-span-3"
+      defaultValue={defaultValue}
+    >
       <AccordionItem
         value={defaultValue}
         className="col-span-12 lg:col-span-3 flex flex-col gap-2"
@@ -122,7 +133,7 @@ const FooterAccordion = ({
 
 const CopyrightSection = () => {
   const t = useTranslations("footer");
-  
+
   return (
     <div className="flex justify-center items-center p-2">
       <Badge className="bg-transparent text-sm lg:text-base text-white">
@@ -133,9 +144,13 @@ const CopyrightSection = () => {
 };
 
 export default function Footer({ locale = "ar" }: { locale?: string }) {
-
+  const { data } = useSelector((state: any) => state.home);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(getHomeData() as any);
+  }, [dispatch]);
   const t = useTranslations("footer");
-  
+
   return (
     <div className="bg-black">
       <div className="grid grid-cols-12">
@@ -147,7 +162,7 @@ export default function Footer({ locale = "ar" }: { locale?: string }) {
       </div>
       <hr />
       <div className="grid grid-cols-12 items-start p-3 lg:p-5 gap-3">
-        <SocialMediaSection />
+        <SocialMediaSection data={data} />
         <FooterAccordion
           title={t("legal-terms")}
           items={LEGAL_TERMS}

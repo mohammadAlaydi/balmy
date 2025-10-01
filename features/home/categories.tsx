@@ -43,8 +43,7 @@ export default function Categories({ categories }: { categories: any }) {
             category?.name != "Root" && (
               <SwiperSlide key={index}>
                 <Link
-                  href={`${category.link}`}
-                  prefetch={true}
+                  href={`/category/${category.slug}/${category.id}`}
                   className="overflow-hidden cursor-pointer"
                 >
                   <div>

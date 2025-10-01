@@ -10,7 +10,6 @@ import { useTranslations } from "next-intl";
 import { TfiBackLeft } from "react-icons/tfi";
 
 export default function Services() {
-
   const t = useTranslations("home");
   let benfits = [
     {
@@ -34,12 +33,12 @@ export default function Services() {
       p: t("gold-membership-desc"),
     },
   ];
-  
+
   return (
     <CarouselComponent
       spaceBetween={20}
       slidesPerView={1}
-      containerClassName="services-carousel"
+      containerClassName="services-carousel my-5"
       breakpoints={{
         1000: { slidesPerView: 4, spaceBetween: 20 },
         768: { slidesPerView: 3, spaceBetween: 20 },
@@ -48,7 +47,7 @@ export default function Services() {
       }}
     >
       {benfits.map((benfit, index) => (
-        <SwiperSlide key={index} className="px-5 py-10">
+        <SwiperSlide key={index} className="px-5 py-10 ">
           <div className="flex justify-center">{benfit.icon}</div>
           <div>
             <h2 className="text-center text-sm md:text-md lg:text-[20px] mt-2">

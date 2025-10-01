@@ -8,12 +8,13 @@ export default function ProductsCarousel({ products }: { products: any }) {
   return (
     <CarouselComponent
       containerClassName="w-full h-auto py-5"
-      spaceBetween={10}
+      spaceBetween={30}
       slidesPerView={1}
       autoHeight
       breakpoints={{
         300: {
-          slidesPerView: 1,
+          slidesPerView: 2,
+          spaceBetween: 10,
         },
         350: {
           slidesPerView: 2,
@@ -27,9 +28,7 @@ export default function ProductsCarousel({ products }: { products: any }) {
         1500: {
           slidesPerView: 6,
         },
-        1660: {
-          slidesPerView: 7,
-        },
+      
       }}
       autoPlay={true}
     >

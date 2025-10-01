@@ -8,6 +8,7 @@ import Footer from "@/components/layout/footer/footer";
 import ReduxProvider from "@/store/redux-provider";
 import Providers from "@/components/providers";
 import AuthInitializer from "@/components/auth/auth-initializer";
+import BreadcrumbWrapper from "@/components/layout/breadcrumb-wrapper";
 
 const cairo = Cairo({
   variable: "--font-cairo",
@@ -38,13 +39,13 @@ export default async function RootLayout({
 }>) {
   const { locale } = await params;
   const messages = await getMessages({ locale });
-
   return (
     <html lang={locale} dir={locale == "ar" ? "rtl" : "ltr"}>
       <body className={`${cairo.variable} font-cairo`}>
         <ReduxProvider>
           <NextIntlClientProvider messages={messages}>
             <Header />
+            <BreadcrumbWrapper />
             <AuthInitializer />
             <Providers>{children}</Providers>
             <Footer />
