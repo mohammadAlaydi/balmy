@@ -9,10 +9,12 @@ interface ProductDetailsPageProps {
   }>;
 }
 
-export default async function ProductDetailsPage({ params }: ProductDetailsPageProps) {
+export default async function ProductDetailsPage({
+  params,
+}: ProductDetailsPageProps) {
   const resolvedParams = await params;
   const productId = parseInt(resolvedParams.id);
-  
+
   if (isNaN(productId)) {
     notFound();
   }

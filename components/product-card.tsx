@@ -52,7 +52,7 @@ export default function ProductCard({
   const isInStock = product?.in_stock ?? product?.inStock ?? false;
 
   const handleViewProduct = () => {
-    dispatch(getProductDetails({ id: product.id }));
+    dispatch(getProductDetails({ id: product.product_id }));
   };
 
   const handleVariantSelect = (index: number, variantId?: number | string) => {
@@ -61,21 +61,27 @@ export default function ProductCard({
   };
 
   const resolveTargetId = () => {
-    if (product?.variants?.length) {
-      return chosenVariantId ?? product.variants[0]?.id ?? product.id;
+    if (
+      product?.variants &&
+      product?.variants?.length > 0 
+    ) {
+      return (
+        chosenVariantId ?? product.variants[0]?.product_id 
+      );
+    } else if (product.product_id && !product.variants) {
+      return product.product_id;
     }
-    return product.id;
   };
 
   const handleAddToCart = async () => {
     if (!isInStock || isAdding) return;
-    
+
     // Check if user is authenticated
     if (!isAuthenticated) {
       setShowAuthModal(true);
       return;
     }
-    
+
     const productId = resolveTargetId();
     try {
       setIsAdding(true);
@@ -147,7 +153,7 @@ export default function ProductCard({
           src={baseImageUrl}
           alt={`${product?.name || t("product")} - ${product?.sku || ""}`}
           className="rounded-t-lg w-full h-full aspect-square transition-all duration-300"
-          onClick={() => router.push(`/product/${product.id}`)}
+          onClick={() => router.push(`/product/${product.product_id}`)}
         />
 
         {hoverImageUrl !== baseImageUrl && (
@@ -159,7 +165,7 @@ export default function ProductCard({
               product?.sku || ""
             }`}
             className="absolute inset-0 rounded-t-lg w-full h-full aspect-square object-cover transition-all duration-300 opacity-0 group-hover:opacity-100"
-            onClick={() => router.push(`/product/${product.id}`)}
+            onClick={() => router.push(`/product/${product.product_id}`)}
           />
         )}
 
@@ -238,7 +244,7 @@ export default function ProductCard({
               {product.variants
                 .slice(0, 3)
                 .map((variant: any, index: number) => (
-                  <div key={variant.id} className="relative mb-3">
+                  <div key={variant.product_id} className="relative mb-3">
                     <Image
                       width={32}
                       height={32}
@@ -255,7 +261,9 @@ export default function ProductCard({
                           ? "ring-2 ring-gray-300 scale-110"
                           : "hover:scale-105"
                       }`}
-                      onClick={() => handleVariantSelect(index, variant.id)}
+                      onClick={() =>
+                        handleVariantSelect(index, variant.product_id)
+                      }
                     />
                   </div>
                 ))}
@@ -277,7 +285,7 @@ export default function ProductCard({
                   }
                   alt={`${product?.name || t("product")}  `}
                   className="cursor-pointer transition-all duration-200 rounded-full ring-2 ring-gray-300 scale-110 h-[32px] w-[32px]"
-                  onClick={() => handleVariantSelect(0, product.id)}
+                  onClick={() => handleVariantSelect(0, product.product_id)}
                 />
               </div>
             </div> // no variants
@@ -305,11 +313,8 @@ export default function ProductCard({
           </p>
         </div>
       </CardContent>
-      
-      <AuthModal 
-        isOpen={showAuthModal} 
-        onOpenChange={setShowAuthModal} 
-      />
+
+      <AuthModal isOpen={showAuthModal} onOpenChange={setShowAuthModal} />
     </Card>
   );
 }
