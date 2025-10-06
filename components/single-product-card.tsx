@@ -48,7 +48,7 @@ export default function SingleProductCard({ product, className }: SingleProductC
           </div>
           
           {/* Product Details - 35% width on desktop, 100% on mobile */}
-          <div className="w-full lg:w-[35%] order-2 lg:order-2">
+          <div className="w-full lg:w-[40%] order-2 lg:order-2">
             <SingleProductDetails 
               product={product}
               variantProps={{
@@ -66,7 +66,7 @@ export default function SingleProductCard({ product, className }: SingleProductC
       </div>
 
       {/* Full Width Sections */}
-      <div className="w-full lg:w-[70%] mx-auto">
+      <div className="w-full lg:w-[60%] mx-auto">
         {/* Product Description */}
         <SingleProductDescription 
           description={product.description}

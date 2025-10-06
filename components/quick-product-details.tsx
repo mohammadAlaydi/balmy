@@ -16,6 +16,7 @@ import { useAppDispatch } from "@/store/hooks";
 import { ApiProduct } from "@/types/types";
 import LoadingSpinner from "./ui/loading-spinner";
 import toast from "react-hot-toast";
+import AuthModal from "./auth/auth-modal";
 
 interface QuickProductDetailsProps {
   product: ApiProduct;
@@ -37,6 +38,7 @@ export default function QuickProductDetails({
     number | null
   >(null);
   const [choosenVarianrID, setChoosenVarianrID] = useState(null);
+  const [showAuthModal, setShowAuthModal] = useState(false);
   const t = useTranslations("products");
   const dispatch = useAppDispatch();
 
@@ -44,6 +46,7 @@ export default function QuickProductDetails({
   const { increaseOrDecreaseLoading: cartLoading, status } = useSelector(
     (state: any) => state.cart
   );
+  const { isAuthenticated } = useSelector((state: any) => state.auth);
   const baseImageUrl = getCurrentMainImage(product, 0);
 
   if (isLoading) {
@@ -58,6 +61,10 @@ export default function QuickProductDetails({
     );
   }
   const handleAddToCart = async () => {
+    if (!isAuthenticated) {
+      setShowAuthModal(true);
+      return;
+    }
     const productId = product?.variants
       ? choosenVarianrID || product?.variants[0]?.id
       : product?.id;
@@ -250,6 +257,7 @@ export default function QuickProductDetails({
         </div>
       </div>
       {renderActionButtons()}
+      <AuthModal isOpen={showAuthModal} onOpenChange={setShowAuthModal} />
     </div>
   );
 }

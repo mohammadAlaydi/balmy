@@ -4,9 +4,7 @@ import { SwiperSlide } from "swiper/react";
 import Image from "next/image";
 
 export default function BannerCarousel({ sliders }: { sliders: any }) {
-
-  const items =
-    Array.isArray(sliders) && sliders.length > 0 ? sliders : [];
+  const items = Array.isArray(sliders) && sliders.length > 0 ? sliders : [];
 
   return (
     <div className="w-full">
@@ -22,7 +20,9 @@ export default function BannerCarousel({ sliders }: { sliders: any }) {
         {items.map((slider: any, index: number) => (
           <SwiperSlide
             key={index}
-            className={`w-full h-full relative fade-item-${index + 1} fade-item`}
+            className={`w-full h-full relative fade-item-${
+              index + 1
+            } fade-item`}
           >
             <Image
               src={slider?.image_url}

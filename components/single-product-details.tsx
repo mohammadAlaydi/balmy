@@ -18,6 +18,8 @@ import VariantSelector from "./variant-selector";
 import { useProductVariants } from "@/hooks/use-product-variants";
 import { FaPlus } from "react-icons/fa";
 import { TiMinus } from "react-icons/ti";
+import { useSelector } from "react-redux";
+import AuthModal from "./auth/auth-modal";
 
 interface SingleProductDetailsProps {
   product: ProductDetailsApiResponse["data"];
@@ -33,6 +35,8 @@ export default function SingleProductDetails({
   const t = useTranslations("product-details");
   const dispatch = useAppDispatch();
   const [quantity, setQuantity] = useState(1);
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const { isAuthenticated } = useSelector((state: any) => state.auth);
 
   // Use the variant management hook
   const {
@@ -46,7 +50,11 @@ export default function SingleProductDetails({
   } = variantProps ?? useProductVariants({ product });
 
   const handleAddToCart = () => {
-    const productIdToAdd = currentVariant?.id || product.id;
+    if (!isAuthenticated) {
+      setShowAuthModal(true);
+      return;
+    }
+    const productIdToAdd = currentVariant?.product_id || product.product_id;
     dispatch(addToCart({ productId: productIdToAdd }));
   };
 
@@ -219,7 +227,7 @@ export default function SingleProductDetails({
         <div className="flex gap-3">
           <FavouriteButton
             product={{
-              id: currentVariant?.id || product.id,
+              id: currentVariant?.product_id || product.product_id,
               name: product.name,
               nameEn: product.name,
               price: (effectiveSpecial ?? effectivePrice),
@@ -264,6 +272,8 @@ export default function SingleProductDetails({
           </Badge>
         )}
       </div>
+      {/* Auth Modal */}
+      <AuthModal isOpen={showAuthModal} onOpenChange={setShowAuthModal} />
     </div>
   );
 }
