@@ -60,7 +60,7 @@ export default function OrderSummary({ data }: { data: any }) {
   const handleTriggerClick = (e: React.MouseEvent) => {
     if (!localStorage.getItem("accessToken")) {
       e.preventDefault();
-      router.push("/login");
+      router.push("/auth/login");
     }
   };
   return (
