@@ -8,6 +8,7 @@ import { useTranslations } from "next-intl";
 import { IoHome } from "react-icons/io5";
 
 import { cn } from "@/lib/utils";
+import { useBreadcrumbData } from "@/hooks/use-breadcrumb-data";
 
 const Breadcrumb = React.forwardRef<
   HTMLElement,
@@ -112,6 +113,9 @@ const AutoBreadcrumb = ({ className, showHome = true }: AutoBreadcrumbProps) => 
   // Remove locale from path segments
   const segments = pathSegments.slice(1);
   
+  // Fetch dynamic breadcrumb data for numeric IDs
+  const { breadcrumbData, loading } = useBreadcrumbData(segments);
+  
   // Generate breadcrumb items
   const breadcrumbItems = React.useMemo(() => {
     const items = [];
@@ -121,7 +125,7 @@ const AutoBreadcrumb = ({ className, showHome = true }: AutoBreadcrumbProps) => 
     if (showHome) {
       items.push({
         label: t("home"),
-        href: currentPath,
+        href: `/${locale}/home`,
         isHome: true,
         isLast: false,
       });
@@ -134,6 +138,27 @@ const AutoBreadcrumb = ({ className, showHome = true }: AutoBreadcrumbProps) => 
       
       // Decode URL-encoded segments
       const decodedSegment = decodeURIComponent(segment);
+      
+      // Check if it's a numeric ID (like category/product IDs)
+      const isNumericId = /^\d+$/.test(decodedSegment);
+      
+      // Skip category IDs if we have a category slug before it
+      if (isNumericId) {
+        const prevSegment = index > 0 ? segments[index - 1] : '';
+        const decodedPrevSegment = decodeURIComponent(prevSegment);
+        
+        // If this is a category ID and we have a category slug before it, skip this segment
+        if (decodedPrevSegment === 'category' && index > 0) {
+          const categorySlugIndex = index - 1;
+          const categorySlug = segments[categorySlugIndex];
+          const decodedCategorySlug = decodeURIComponent(categorySlug);
+          
+          // If we have a category slug (non-numeric), skip the ID
+          if (!/^\d+$/.test(decodedCategorySlug)) {
+            return; // Skip this segment
+          }
+        }
+      }
       
       // Get translated label for segment
       let label = decodedSegment;
@@ -167,24 +192,11 @@ const AutoBreadcrumb = ({ className, showHome = true }: AutoBreadcrumbProps) => 
         'shipping-info': tBreadcrumb("shipping-info"),
       };
       
-      // Check if it's a numeric ID (like category/product IDs)
-      const isNumericId = /^\d+$/.test(decodedSegment);
-      
       if (translations[decodedSegment]) {
         label = translations[decodedSegment];
       } else if (isNumericId) {
-        // For numeric IDs, try to get the previous segment to determine context
-        const prevSegment = index > 0 ? segments[index - 1] : '';
-        const decodedPrevSegment = decodeURIComponent(prevSegment);
-        
-        if (decodedPrevSegment === 'category') {
-          label = tBreadcrumb("category");
-        } else if (decodedPrevSegment === 'product') {
-          label = tBreadcrumb("product");
-        } else {
-          // Fallback for unknown numeric IDs
-          label = decodedSegment;
-        }
+        // For numeric IDs, try to get the fetched name, otherwise show the ID
+        label = breadcrumbData[segment] || decodedSegment;
       } else {
         // For non-numeric segments, check if it contains Arabic characters
         const hasArabic = /[\u0600-\u06FF]/.test(decodedSegment);
@@ -201,14 +213,8 @@ const AutoBreadcrumb = ({ className, showHome = true }: AutoBreadcrumbProps) => 
       // Determine if this segment should have a clickable link
       let href = undefined;
       if (!isLast) {
-        // Check if this is a standalone segment that doesn't have a valid route
-        if (decodedSegment === 'category' && segments.length > 1) {
-          // For category pages, don't make "category" clickable as it leads to 404
-          // Instead, make it non-clickable (current page behavior)
-          href = undefined;
-        } else {
-          href = currentPath;
-        }
+        // Always make non-last segments clickable, except for specific cases
+        href = currentPath;
       }
       
       items.push({
@@ -220,7 +226,7 @@ const AutoBreadcrumb = ({ className, showHome = true }: AutoBreadcrumbProps) => 
     });
     
     return items;
-  }, [segments, locale, t, tBreadcrumb, showHome]);
+  }, [segments, locale, t, tBreadcrumb, showHome, breadcrumbData]);
   
   if (breadcrumbItems.length <= 1) {
     return null; // Don't show breadcrumb if only home or no items
@@ -238,7 +244,8 @@ const AutoBreadcrumb = ({ className, showHome = true }: AutoBreadcrumbProps) => 
                 <BreadcrumbLink asChild>
                   <Link 
                     href={item.href} 
-                    className="flex items-center gap-1 hover:text-primary transition-colors"
+                    className="flex items-center gap-1 hover:text-primary transition-colors cursor-pointer"
+                    prefetch={false}
                   >
                     {item.isHome && <IoHome className="h-4 w-4" />}
                     <span>{item.label}</span>

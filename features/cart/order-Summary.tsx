@@ -135,13 +135,9 @@ export default function OrderSummary({ data }: { data: any }) {
       </div>
       {/* Checkout Button */}
       <Dialog onOpenChange={(open) => {
-        console.log("🔄 Dialog onOpenChange:", open);
-        // Only reset status when dialog is closed AND status is not success
         if (!open && status !== "success") {
-          console.log("🔄 Dialog closed, resetting status");
           dispatch(resetStatus());
         } else if (!open && status === "success") {
-          console.log("🔄 Dialog closed but keeping success status");
         }
       }}>
         <DialogTitle className="hidden"></DialogTitle>

@@ -46,7 +46,7 @@ export default function DeleteProductComponent({
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger>
-        <MdDeleteSweep className="text-2xl cursor-pointer text-red-color" />
+        <MdDeleteSweep className="text-2xl cursor-pointer text-red-500" />
       </DialogTrigger>
       <DialogContent
         className="flex flex-col gap-8"

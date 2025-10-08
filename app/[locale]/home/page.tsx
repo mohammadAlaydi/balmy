@@ -14,6 +14,7 @@ import PageWrapper from "@/components/page-wrapper";
 import SectionTitle from "@/components/section-title";
 
 export default function page() {
+  
   const dispatch = useDispatch();
   const { data, loading } = useSelector((state: any) => state.home);
   useEffect(() => {

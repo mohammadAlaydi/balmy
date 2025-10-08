@@ -28,16 +28,16 @@ export default function RegisterForm({ onSwitchToLogin }: RegisterFormProps) {
 
   const registerSchema = z
     .object({
-      firstName: z.string().min(2, t("first-name-required")),
-      lastName: z.string().min(2, t("last-name-required")),
+      first_name: z.string().min(2, t("first-name-required")),
+      last_name: z.string().min(2, t("last-name-required")),
       email: z.string().email(t("invalid-email")),
       password: z.string().min(8, t("password-min-length")),
-      confirmPassword: z.string(),
+      password_confirmation: z.string(),
       phone: z.string().optional(),
     })
-    .refine((data) => data.password === data.confirmPassword, {
+    .refine((data) => data.password === data.password_confirmation, {
       message: t("passwords-dont-match"),
-      path: ['confirmPassword'],
+      path: ['password_confirmation'],
     });
 
   type RegisterFormData = z.infer<typeof registerSchema>;
@@ -58,11 +58,11 @@ export default function RegisterForm({ onSwitchToLogin }: RegisterFormProps) {
     try {
       // shape request for your API
       const apiData = {
-        firstName: data.firstName,
-        lastName: data.lastName,
+        first_name: data.first_name,
+        last_name: data.last_name,
         email: data.email,
         password: data.password,
-        confirmPassword: data.confirmPassword,
+        password_confirmation: data.password_confirmation,
         phone: data.phone ?? undefined,
       };
 
@@ -96,32 +96,32 @@ export default function RegisterForm({ onSwitchToLogin }: RegisterFormProps) {
           <div className="grid grid-cols-2 gap-4">
             <div>
               <Input
-                {...register('firstName')}
+                {...register('first_name')}
                 type="text"
                 placeholder={t("first-name")}
                 autoComplete="given-name"
-                aria-invalid={!!errors.firstName}
-                className={errors.firstName ? 'border-red-500' : ''}
+                aria-invalid={!!errors.first_name}
+                className={errors.first_name ? 'border-red-500' : ''}
               />
-              {errors.firstName && (
+              {errors.first_name && (
                 <p className="text-red-500 text-sm mt-1">
-                  {errors.firstName.message}
+                  {errors.first_name.message}
                 </p>
               )}
             </div>
 
             <div>
               <Input
-                {...register('lastName')}
+                {...register('last_name')}
                 type="text"
                 placeholder={t("last-name")}
                 autoComplete="family-name"
-                aria-invalid={!!errors.lastName}
-                className={errors.lastName ? 'border-red-500' : ''}
+                aria-invalid={!!errors.last_name}
+                className={errors.last_name ? 'border-red-500' : ''}
               />
-              {errors.lastName && (
+              {errors.last_name && (
                 <p className="text-red-500 text-sm mt-1">
-                  {errors.lastName.message}
+                  {errors.last_name.message}
                 </p>
               )}
             </div>
@@ -169,15 +169,15 @@ export default function RegisterForm({ onSwitchToLogin }: RegisterFormProps) {
 
           <div>
             <PasswordInput
-              {...register('confirmPassword')}
+              {...register('password_confirmation')}
               placeholder={t("confirm-password")}
               autoComplete="new-password"
-              aria-invalid={!!errors.confirmPassword}
-              className={errors.confirmPassword ? 'border-red-500' : ''}
+              aria-invalid={!!errors.password_confirmation}
+              className={errors.password_confirmation ? 'border-red-500' : ''}
             />
-            {errors.confirmPassword && (
+            {errors.password_confirmation && (
               <p className="text-red-500 text-sm mt-1">
-                {errors.confirmPassword.message}
+                {errors.password_confirmation.message}
               </p>
             )}
           </div>

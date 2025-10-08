@@ -601,7 +601,8 @@
     "close-dialog": "إغلاق النافذة",
     "request-failed": "فشل الطلب",
     "request-failed-message": "نأسف، لكن طلبك لم ينجح. يرجى المحاولة مرة أخرى.",
-    "try-again": "حاول مرة أخرى"
+    "try-again": "حاول مرة أخرى",
+    "no-order-data-error": "خطأ: لا توجد بيانات طلب متاحة. يرجى التحقق من وحدة التحكم للحصول على التفاصيل."
   },
   "validation": {
     "first-name-required": "الاسم الأول مطلوب",

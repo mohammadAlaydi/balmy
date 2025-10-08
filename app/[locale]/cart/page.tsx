@@ -27,7 +27,6 @@ export default function CartPage() {
   // if (isLoading) {
   //   return <Loading fullScreen={true} variant="spinner" size="xl" />;
   // }
-
   return (
     <PageWrapper>
       {data && data?.data?.items?.length > 0 ? (
@@ -38,17 +37,20 @@ export default function CartPage() {
           >
             {data?.data?.items &&
               data.data.items.length > 0 &&
-              data.data.items.map((item: any) => (
-                <CartProduct
-                  key={item?.product?.id}
-                  product={item?.product}
-                  quantity={item?.quantity}
-                  deletedProductId={item?.id}
-                />
-              ))}
+              data.data.items.map(
+                (item: any) =>
+                  item?.product?.in_stock == true && (
+                    <CartProduct
+                      key={item?.product?.id}
+                      product={item?.product}
+                      quantity={item?.quantity}
+                      deletedProductId={item?.id}
+                    />
+                  )
+              )}
             <div className="flex justify-end w-full cursor-pointer">
               <MdDeleteSweep
-                className="text-red-color text-3xl"
+                className="text-red-500 text-3xl"
                 onClick={() => dispatch(removeAllProductsFromCart() as any)}
               />
             </div>

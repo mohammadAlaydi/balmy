@@ -1,11 +1,14 @@
+"use client";
+
 import CarouselComponent from "@/components/carousel-component";
 import React from "react";
 import { SwiperSlide } from "swiper/react";
 import Image from "next/image";
 
 export default function BannerCarousel({ sliders }: { sliders: any }) {
-  const items = Array.isArray(sliders) && sliders.length > 0 ? sliders : [];
 
+  const items = Array.isArray(sliders) && sliders.length > 0 ? sliders : [];
+  
   return (
     <div className="w-full">
       <CarouselComponent

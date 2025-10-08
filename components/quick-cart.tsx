@@ -14,13 +14,17 @@ import CartProduct from "./cart-product";
 import { MdDeleteSweep } from "react-icons/md";
 
 export default function QuickCart() {
-  
   const t = useTranslations("cart");
   const dispatch = useDispatch();
-  const { data, isLoading, status, cartStatus } = useSelector((state: any) => state.cart);
+  const { data, isLoading, status, cartStatus } = useSelector(
+    (state: any) => state.cart
+  );
   const hasFetchedRef = useRef(false);
   useEffect(() => {
-    if (!hasFetchedRef.current && (data === null || data?.data?.items == null)) {
+    if (
+      !hasFetchedRef.current &&
+      (data === null || data?.data?.items == null)
+    ) {
       hasFetchedRef.current = true;
       dispatch(getCartProducts() as any);
     }
@@ -69,21 +73,25 @@ export default function QuickCart() {
             ))}
         </div>
       </div>
-      <div className="flex justify-start w-full cursor-pointer">
-        <MdDeleteSweep
-          className="text-red-color text-3xl"
-          onClick={() => dispatch(removeAllProductsFromCart() as any)}
-        />
-      </div>
-      <div className="flex gap-2">
-        <Link
-          prefetch={true}
-          href="/cart"
-          className="text-nowrap md:text-sm text-xs bg-black text-white px-4 py-2 rounded-md hover:bg-white border border-black hover:text-black transition-all duration-300"
-        >
-          {t("go-to-cart")}
-        </Link>
-      </div>
+      {data?.data?.items?.length > 0 && (
+        <div className="flex justify-start w-full cursor-pointer">
+          <MdDeleteSweep
+            className="text-red-500 text-3xl"
+            onClick={() => dispatch(removeAllProductsFromCart() as any)}
+          />
+        </div>
+      )}
+      {data?.data?.items?.length > 0 && (
+        <div className="flex gap-2">
+          <Link
+            prefetch={true}
+            href="/cart"
+            className="text-nowrap md:text-sm text-xs bg-black text-white px-4 py-2 rounded-md hover:bg-black/80 border border-black hover:text-white transition-all duration-300"
+          >
+            {t("go-to-cart")}
+          </Link>
+        </div>
+      )}
     </div>
   );
 }

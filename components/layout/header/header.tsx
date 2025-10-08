@@ -45,7 +45,6 @@ import {
   DropdownMenuTrigger,
   DropdownMenuGroup,
 } from "@radix-ui/react-dropdown-menu";
-import { MdLanguage } from "react-icons/md";
 import { usePathname, useRouter } from "next/navigation";
 import Loading from "@/components/loading";
 import { useTranslations } from "next-intl";
@@ -54,10 +53,8 @@ import { getCategories } from "@/store/slices/categories-slice";
 import { getHomeData } from "@/store/slices/home-slice";
 
 // Components
-const TopBar = ({data}: {data: any}) => {
+const TopBar = ({ data }: { data: any }) => {
   const t = useTranslations("contact");
-  const tAccessibility = useTranslations("accessibility");
-  const tSearch = useTranslations("search");
 
   return (
     <div className="flex justify-center md:justify-between xl:justify-around items-center gap-5 py-0.5 px-3 lg:px-5 bg-black w-full">
@@ -132,9 +129,15 @@ const ActionIcons = ({
       <div className="items-center gap-3 hidden lg:flex">
         <Dialog>
           <DialogTrigger>
-            <Image src="/assets/images/search.svg" alt="search" width={24} height={24} className="cursor-pointer text-black" />
+            <Image
+              src="/assets/images/search.svg"
+              alt="search"
+              width={24}
+              height={24}
+              className="cursor-pointer text-black"
+            />
           </DialogTrigger>
-          <DialogContent>
+          <DialogContent className="mt-5">
             <DialogTitle className="sr-only">
               {tSearch("search-products")}
             </DialogTitle>
@@ -150,7 +153,13 @@ const ActionIcons = ({
           className="relative hidden lg:block"
           prefetch={true}
         >
-          <Image src="/assets/images/heart.svg" alt="heart" width={24} height={24} className="cursor-pointer text-black" />
+          <Image
+            src="/assets/images/heart.svg"
+            alt="heart"
+            width={24}
+            height={24}
+            className="cursor-pointer text-black"
+          />
           {favouritesCount > 0 && (
             <Badge className="absolute -top-2 -right-2 h-5 w-5 p-0 text-xs flex items-center justify-center bg-red-500 text-white">
               {favouritesCount}
@@ -160,7 +169,13 @@ const ActionIcons = ({
         <DrawerComponent
           trigger={
             <div className="relative hidden lg:block">
-              <Image src="/assets/images/cart.svg" alt="shopping-cart" width={24} height={24} className="cursor-pointer text-black" />
+              <Image
+                src="/assets/images/cart.svg"
+                alt="shopping-cart"
+                width={24}
+                height={24}
+                className="cursor-pointer text-black"
+              />
               {cartCount > 0 && (
                 <Badge className="absolute -top-2 -right-2 h-5 w-5 p-0 text-xs flex items-center justify-center bg-blue-500 text-white">
                   {cartCount}
@@ -173,7 +188,13 @@ const ActionIcons = ({
         </DrawerComponent>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Image src="/assets/images/language.svg" alt="language" width={24} height={24} className="cursor-pointer text-black" />
+            <Image
+              src="/assets/images/language.svg"
+              alt="language"
+              width={24}
+              height={24}
+              className="cursor-pointer text-black"
+            />
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-40 bg-white overflow-hidden  h-fit z-[60] shadow-[0px_6px_20px_rgba(149,157,165,0.1)] rounded-lg">
             <DropdownMenuLabel className="p-2">
@@ -274,19 +295,16 @@ const NavigationLinks = ({ navbarCategories }: { navbarCategories: any }) => {
 };
 
 const Logo = () => (
-  <ClientOnly>
-    <Link href="/home" prefetch={true}>
-      <Image
-        src="/assets/images/logo.svg"
-        alt="logo"
-        className="lg:w-[180px]"
-        width={140}
-        height={120}
-        priority
-        suppressHydrationWarning
-      />
-    </Link>
-  </ClientOnly>
+  <Link href="/" prefetch={true}>
+    <Image
+      src="/assets/images/logo.svg"
+      alt="logo"
+      className="lg:w-[180px]"
+      width={140}
+      height={120}
+      priority
+    />
+  </Link>
 );
 
 const MobileMenu = ({
@@ -304,7 +322,13 @@ const MobileMenu = ({
     <DrawerComponent
       trigger={
         <div className="lg:hidden">
-          <Image src="/assets/images/menu.svg" alt="menu" width={24} height={24} className="cursor-pointer text-black" />
+          <Image
+            src="/assets/images/menu.svg"
+            alt="menu"
+            width={24}
+            height={24}
+            className="cursor-pointer text-black"
+          />
         </div>
       }
       containerClassName="lg:hidden"
@@ -356,11 +380,23 @@ const MobileMenu = ({
         <div className="pt-6 border-t border-gray-200 flex-shrink-0">
           <div className="flex items-center justify-center gap-6">
             <Link href="/search" prefetch={true}>
-              <Image src="/assets/images/search.svg" alt="search" width={24} height={24} className="cursor-pointer text-gray-600 hover:text-gray-900" />
+              <Image
+                src="/assets/images/search.svg"
+                alt="search"
+                width={24}
+                height={24}
+                className="cursor-pointer text-gray-600 hover:text-gray-900"
+              />
             </Link>
             <UserMenu isMobile={true} />
             <Link href="/favourite" prefetch={true} className="relative">
-              <Image src="/assets/images/heart.svg" alt="heart" width={24} height={24} className="cursor-pointer text-gray-600 hover:text-gray-900" />
+              <Image
+                src="/assets/images/heart.svg"
+                alt="heart"
+                width={24}
+                height={24}
+                className="cursor-pointer text-gray-600 hover:text-gray-900"
+              />
               {(() => {
                 const { getFavouritesCount } = useFavourites();
                 const favouritesCount = getFavouritesCount();
@@ -373,7 +409,13 @@ const MobileMenu = ({
             </Link>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Image src="/assets/images/language.svg" alt="language" width={24} height={24} className="cursor-pointer text-gray-600 hover:text-gray-900" />
+                <Image
+                  src="/assets/images/language.svg"
+                  alt="language"
+                  width={24}
+                  height={24}
+                  className="cursor-pointer text-gray-600 hover:text-gray-900"
+                />
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-40 bg-white overflow-hidden h-fit z-[60] shadow-[0px_6px_20px_rgba(149,157,165,0.1)] rounded-lg">
                 <DropdownMenuLabel className="p-2">
@@ -402,7 +444,13 @@ const MobileMenu = ({
                 <div className="relative">
                   <DrawerComponent
                     trigger={
-                      <Image src="/assets/images/cart.svg" alt="shopping-cart" width={24} height={24} className="cursor-pointer text-gray-600 hover:text-gray-900" />
+                      <Image
+                        src="/assets/images/cart.svg"
+                        alt="shopping-cart"
+                        width={24}
+                        height={24}
+                        className="cursor-pointer text-gray-600 hover:text-gray-900"
+                      />
                     }
                   >
                     <QuickCart />
@@ -434,7 +482,7 @@ export default function Header() {
     dispatch(getCategories() as any);
     dispatch(getHomeData() as any);
   }, [dispatch]);
-console.log(data, "🤷‍♂️🤷‍♂️🤷‍♂️👌👌👌👌");
+  console.log(data, "🤷‍♂️🤷‍♂️🤷‍♂️👌👌👌👌");
   const router = useRouter();
   const pathname = usePathname();
   const currentLocale = pathname.split("/")[1];

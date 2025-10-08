@@ -601,7 +601,8 @@
     "close-dialog": "Close Dialog",
     "request-failed": "Request Failed",
     "request-failed-message": "We're sorry, but your request was unsuccessful. Please try again.",
-    "try-again": "Try Again"
+    "try-again": "Try Again",
+    "no-order-data-error": "Error: No order data available. Please check the console for details."
   },
   "validation": {
     "first-name-required": "First name is required",

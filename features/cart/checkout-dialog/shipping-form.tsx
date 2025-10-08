@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { PuffLoader } from "react-spinners";
 import Success from "./success";
 import Failed from "./failed";
+import { useEffect } from "react";
 
 export default function ShippingForm({
   isSubmitting,
@@ -27,6 +28,9 @@ export default function ShippingForm({
   const t = useTranslations("cart");
   const tButtons = useTranslations("buttons");
 
+  useEffect(() => {
+    status = null;
+  }, [status]);
   return (
     <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
       <Card

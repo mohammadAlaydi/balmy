@@ -8,8 +8,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Form } from "@/components/ui/form";
 import ShippingForm from "./shipping-form";
 import { useDispatch, useSelector } from "react-redux";
-import { saveOrder, resetStatus } from "@/store/slices/cart-slice";
+import {
+  saveOrder,
+  resetStatus,
+  getCartProducts,
+} from "@/store/slices/cart-slice";
 import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 const { Stepper } = defineStepper(
   { id: "shipping", title: "Shipping" },
@@ -47,6 +52,7 @@ const defaultFormValues: CheckoutFormValues = {
 };
 
 export default function Checkout() {
+  const router = useRouter();
   const form = useForm<CheckoutFormValues>({
     resolver: zodResolver(formSchema),
     mode: "onChange",
@@ -57,17 +63,13 @@ export default function Checkout() {
     (state: any) => state.cart
   );
 
-  // Debug logging to see status changes
-  useEffect(() => {
-    console.log("🔍 Checkout Debug:");
-    console.log("  - status:", status);
-    console.log("  - isLoading:", isLoading);
-    console.log("  - saveOrderData:", saveOrderData);
-    console.log("  - saveOrderData keys:", Object.keys(saveOrderData || {}));
-  }, [status, isLoading, saveOrderData]);
-
-  const onSubmit = (values: CheckoutFormValues) => {
-    dispatch(saveOrder(values) as any);
+  const onSubmit = async (values: CheckoutFormValues) => {
+    await dispatch(saveOrder(values) as any);
+    dispatch(getCartProducts() as any);
+    router.refresh();
+    setTimeout(() => {
+      router.push("/home");
+    }, 2000);
   };
   return (
     // <div className="w-full xl:w-2/3 mx-auto">
@@ -121,12 +123,12 @@ export default function Checkout() {
         noValidate
         className="flex flex-col gap-4 mt-5 "
       >
-         <ShippingForm
-           form={form}
-           isSubmitting={isLoading}
-           status={status}
-           data={saveOrderData || null}
-         />
+        <ShippingForm
+          form={form}
+          isSubmitting={isLoading}
+          status={status}
+          data={saveOrderData || null}
+        />
       </form>
     </Form>
   );

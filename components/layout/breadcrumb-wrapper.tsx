@@ -6,8 +6,8 @@ import { AutoBreadcrumb } from "@/components/ui/breadcrumb";
 export default function BreadcrumbWrapper() {
   const pathname = usePathname();
 
-  // Don't show breadcrumb on home page
-  if (pathname.includes("home")) {
+  // Don't show breadcrumb on home page or root page
+  if (pathname.includes("home") || pathname === "/" || pathname.match(/^\/[a-z]{2}$/)) {
     return null;
   }
 

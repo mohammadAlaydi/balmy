@@ -2,13 +2,14 @@
 
 import { FaCheck } from "react-icons/fa";
 import { SuccessProps } from "@/types/types";
-import { ORDER_INFO_LABELS, SUCCESS_MESSAGES } from "@/static-data/static-data";
 import { useDispatch } from "react-redux";
 import { resetStatus } from "@/store/slices/cart-slice";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 
 export default function Success({ data }: SuccessProps) {
   console.log("✅ Success component rendered with data:", data);
+  const t = useTranslations("order");
   
   // Handle different data structures
   const order = data?.data?.order || data?.data || data;
@@ -18,20 +19,20 @@ export default function Success({ data }: SuccessProps) {
     console.error("No order data available:", data);
     return (
       <div className="p-4 bg-red-100 text-red-800 rounded-md">
-        Error: No order data available. Please check the console for details.
+        {t("no-order-data-error")}
       </div>
     );
   }
 
   const orderInfoItems = [
-    { label: ORDER_INFO_LABELS.ORDER_NUMBER, value: `#${order.id}` },
-    { label: ORDER_INFO_LABELS.ORDER_STATUS, value: order.status },
-    { label: ORDER_INFO_LABELS.SHIPPING_METHOD, value: order.shipping_method },
+    { label: t("order-number"), value: `#${order.id}` },
+    { label: t("order-status"), value: order.status },
+    { label: t("shipping-method"), value: order.shipping_method },
     {
-      label: ORDER_INFO_LABELS.SHIPPING_AMOUNT,
+      label: t("shipping-amount"),
       value: order.shipping_amount + " " + ((order as any)?.channel_currency_code || ""),
     },
-    { label: ORDER_INFO_LABELS.PAYMENT_TITLE, value: order.payment_title },
+    { label: t("payment-title"), value: order.payment_title },
   ];
 
   return (
@@ -46,16 +47,18 @@ export default function Success({ data }: SuccessProps) {
 }
 
 function SuccessHeader() {
+  const t = useTranslations("order");
+  
   return (
     <div className="px-6 py-12 flex flex-col items-center justify-center space-y-4">
       <div className="bg-green-500 p-4 rounded-full">
         <FaCheck className="h-6 w-6 text-white" />
       </div>
       <h1 className="text-3xl font-bold text-gray-900">
-        {SUCCESS_MESSAGES.TITLE}
+        {t("shipping-successful")}
       </h1>
       <p className="text-gray-600 text-center">
-        {SUCCESS_MESSAGES.DESCRIPTION}
+        {t("shipping-successful-desc")}
       </p>
     </div>
   );
@@ -85,6 +88,7 @@ function OrderInfoSection({ orderInfoItems }: OrderInfoSectionProps) {
 function ActionSection() {
   const dispatch = useDispatch();
   const router = useRouter();
+  const t = useTranslations("order");
   
   const handleResetAndClose = () => {
     dispatch(resetStatus());
@@ -101,13 +105,13 @@ function ActionSection() {
         onClick={handleGoHome}
         className="inline-flex h-10 items-center justify-center rounded-md bg-gray-900 px-6 text-sm font-medium text-white shadow transition-colors hover:bg-gray-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900 disabled:pointer-events-none disabled:opacity-50"
       >
-        {SUCCESS_MESSAGES.GO_HOME}
+        {t("go-home")}
       </button>
       <button
         onClick={handleResetAndClose}
         className="inline-flex h-10 items-center justify-center rounded-md bg-gray-200 px-6 text-sm font-medium text-gray-700 shadow transition-colors hover:bg-gray-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-300 disabled:pointer-events-none disabled:opacity-50"
       >
-        {SUCCESS_MESSAGES.CLOSE_DIALOG}
+        {t("close-dialog")}
       </button>
     </div>
   );

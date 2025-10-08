@@ -388,6 +388,7 @@ export const SUCCESS_MESSAGES = {
   DESCRIPTION: "order.shipping-successful-desc",
   GO_HOME: "order.go-home",
   CLOSE_DIALOG: "order.close-dialog",
+  NO_ORDER_DATA_ERROR: "order.no-order-data-error",
 } as const;
 
 export const ORDER_INFO_LABELS = {
