@@ -60,7 +60,7 @@ export default function CartProduct({
   return (
     <div className="flex flex-col gap-3 w-full rounded-md border border-gray-200 p-4">
       {/* Product Info */}
-      <div className="image-and-info-container flex flex-col-reverse gap-3 w-full justify-end">
+      <div className="image-and-info-container flex flex-col-reverse md:flex-row gap-3 w-full justify-end">
         <div className="flex flex-col gap-2 flex-1">
           <p className="text-sm text-gray-color ltr:text-end rtl:text-start">
             {typeof product?.category === "string"

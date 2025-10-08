@@ -6,6 +6,7 @@ interface BreadcrumbData {
 }
 
 export const useBreadcrumbData = (segments: string[]) => {
+  
   const [breadcrumbData, setBreadcrumbData] = useState<BreadcrumbData>({});
   const [loading, setLoading] = useState(false);
 
