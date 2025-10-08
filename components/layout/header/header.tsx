@@ -44,7 +44,7 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
   DropdownMenuGroup,
-} from "@radix-ui/react-dropdown-menu";
+} from "@/components/ui/dropdown-menu";
 import { usePathname, useRouter } from "next/navigation";
 import Loading from "@/components/loading";
 import { useTranslations } from "next-intl";
@@ -236,12 +236,7 @@ const NavigationLinks = ({ navbarCategories }: { navbarCategories: any }) => {
             return hasChildren ? (
               <NavigationMenuItem key={link?.name}>
                 <NavigationMenuTrigger className="cursor-pointer hover:bg-transparent hover:text-red-color">
-                  <Link
-                    href={`/category/${link?.slug}/${link?.id}`}
-                    prefetch={true}
-                  >
-                    {link?.name}
-                  </Link>
+                  {link?.name}
                 </NavigationMenuTrigger>
                 <NavigationMenuContent className="overflow-hidden min-w-[100px]">
                   <ul className="grid gap-1 p-1">
@@ -295,7 +290,7 @@ const NavigationLinks = ({ navbarCategories }: { navbarCategories: any }) => {
 };
 
 const Logo = () => (
-  <Link href="/" prefetch={true}>
+  <Link href="/home" prefetch={true}>
     <Image
       src="/assets/images/logo.svg"
       alt="logo"
@@ -353,7 +348,7 @@ const MobileMenu = ({
                         <li key={nested.id}>
                           <Link
                             prefetch={true}
-                            href={`/category/${nested.slug}/${nested.id}`}
+                            href={`/category/${category.slug}/${nested.slug}/${nested.id}`}
                             className="block rounded-md px-1.5 py-1 text-sm hover:bg-accent hover:text-accent-foreground"
                           >
                             {nested.name}

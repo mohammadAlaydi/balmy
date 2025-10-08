@@ -11,13 +11,14 @@ import { Button } from "@/components/ui/button";
 import { PuffLoader } from "react-spinners";
 import Success from "./success";
 import Failed from "./failed";
-import { useEffect } from "react";
+import { Label } from "@/components/ui/label";
 
 export default function ShippingForm({
   isSubmitting,
   form,
   status,
   data,
+  submitLabel,
 }: {
   submitLabel?: string;
   isSubmitting?: boolean;
@@ -28,9 +29,7 @@ export default function ShippingForm({
   const t = useTranslations("cart");
   const tButtons = useTranslations("buttons");
 
-  useEffect(() => {
-    status = null;
-  }, [status]);
+  // Remove the problematic useEffect that tries to modify props
   return (
     <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
       <Card
@@ -98,14 +97,16 @@ export default function ShippingForm({
             </div>
           </div>
           {/* Same as Billing Checkbox */}
-          <div className="my-6">
-            <LabelAndCheckbox
-              control={form.control}
-              fieldName="billing.use_for_shipping"
-              labelText={t("same-as-billing")}
-              inputId="same-as-billing"
-              containerStyle="flex-row-reverse justify-end gap-3"
+          <div className="my-6 flex items-center gap-2">
+
+            <input type="checkbox"  
+              name="billing.use_for_shipping"
+              checked={form.watch("billing.use_for_shipping")}
+              onChange={(e) => form.setValue("billing.use_for_shipping", e.target.checked)}
+              id="same-as-billing"
+              className="mr-2"
             />
+            <Label htmlFor="same-as-billing" className="text-sm font-medium">{t("same-as-billing")}</Label>
           </div>
           {/* Shipping Information */}
           {!form.watch("billing.use_for_shipping") && (
@@ -205,7 +206,7 @@ export default function ShippingForm({
                 <span>{tButtons("submitting")}</span>
               </div>
             ) : (
-              tButtons("submit")
+              submitLabel || tButtons("submit")
             )}
           </Button>
         </CardContent>
