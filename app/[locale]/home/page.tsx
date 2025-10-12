@@ -3,7 +3,7 @@
 import { useTranslations } from "next-intl";
 import BannerCarousel from "@/features/home/banner-carousel";
 import ProductsCarousel from "@/features/home/products-carousel";
-import CrossBody from "@/features/home/cross-body";
+import Ads from "@/features/home/ads";
 import Services from "@/features/home/services";
 import Categories from "@/features/home/categories";
 import { useEffect } from "react";
@@ -35,7 +35,7 @@ export default function page() {
         <Categories categories={data?.featured_categories} />
         <SectionTitle title={t("featured-products")} titleStyle="text-xl md:text-3xl my-5"/> 
         <ProductsCarousel products={data?.featured_products} />
-        <CrossBody ads={data?.ads} />
+        <Ads ads={data?.ads} />
         <SectionTitle title={t("new-arrivals")}  titleStyle="text-xl md:text-3xl my-5"/>
         <ProductsCarousel products={data?.new_products} />
       </PageWrapper>

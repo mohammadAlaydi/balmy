@@ -6,7 +6,7 @@ export default function SearchPage() {
   
   return (
     <PageWrapper>
-      <SearchPopup products={products} />
+      <SearchPopup />
     </PageWrapper>
   );
 }

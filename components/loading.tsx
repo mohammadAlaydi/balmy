@@ -84,7 +84,7 @@ const Loading: React.FC<LoadingProps> = ({
 
   if (fullScreen) {
     return (
-      <div className="fixed inset-0 bg-white flex items-center justify-center z-100 rounded-md">
+      <div className="fixed inset-0 bg-white flex items-center justify-center z-50 rounded-md">
         <PuffLoader />
       </div>
     );
