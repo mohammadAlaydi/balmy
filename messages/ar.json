@@ -116,7 +116,9 @@
     "placeholder-email": "ahmed.mohamed@example.com",
     "placeholder-address": "شارع الملك فهد، الرياض",
     "placeholder-city": "الرياض",
-    "placeholder-phone": "+966-50-123-4567"
+    "placeholder-phone": "+966-50-123-4567",
+    "login-required": "تسجيل الدخول مطلوب",
+    "please-login-to-checkout": "يرجى تسجيل الدخول للمتابعة مع الدفع"
   },
   "about": {
     "who-we-are": "من نحن",

@@ -116,7 +116,9 @@
     "placeholder-email": "john.doe@example.com",
     "placeholder-address": "1234 Maple Street",
     "placeholder-city": "Los Angeles",
-    "placeholder-phone": "+1-555-987-6543"
+    "placeholder-phone": "+1-555-987-6543",
+    "login-required": "Login Required",
+    "please-login-to-checkout": "Please login to proceed with checkout"
   },
   "about": {
     "who-we-are": "Who We Are",

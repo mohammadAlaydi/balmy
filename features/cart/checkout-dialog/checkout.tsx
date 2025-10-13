@@ -9,8 +9,11 @@ import { Form } from "@/components/ui/form";
 import ShippingForm from "./shipping-form";
 import { useDispatch, useSelector } from "react-redux";
 import { saveOrder, getCartProducts } from "@/store/slices/cart-slice";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { useTranslations } from "next-intl";
+import AuthModal from "@/components/auth/auth-modal";
 
 const { Stepper } = defineStepper(
   { id: "shipping", title: "Shipping" },
@@ -49,6 +52,11 @@ const defaultFormValues: CheckoutFormValues = {
 
 export default function Checkout() {
   const router = useRouter();
+  const t = useTranslations("cart");
+  const tButtons = useTranslations("buttons");
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  
   const form = useForm<CheckoutFormValues>({
     resolver: zodResolver(formSchema),
     mode: "onChange",
@@ -59,7 +67,17 @@ export default function Checkout() {
     (state: any) => state.cart
   );
 
+  // Check authentication status
+  useEffect(() => {
+    const token = localStorage.getItem("accessToken");
+    setIsAuthenticated(!!token);
+  }, []);
+
   const onSubmit = (values: CheckoutFormValues) => {
+    if (!isAuthenticated) {
+      setShowAuthModal(true);
+      return;
+    }
     dispatch(saveOrder(values) as any);
   };
 
@@ -74,65 +92,44 @@ export default function Checkout() {
     }
   }, [status, dispatch, router]);
   return (
-    // <div className="w-full xl:w-2/3 mx-auto">
-    //   {/* <Stepper.Provider className="space-y-4 my-5">
-    //     {(params) => (
-    //       <>
-    //         <Stepper.Navigation>
-    //           <Stepper.Step
-    //             of="shipping"
-    //             onClick={() => params.methods.goTo("shipping")}
-    //           >
-    //             <Stepper.Title>{t("shipping")}</Stepper.Title>
-    //           </Stepper.Step>
-
-    //           <Stepper.Step
-    //             of="payment"
-    //             onClick={() => params.methods.goTo("payment")}
-    //           >
-    //             <Stepper.Title>{t("payment")}</Stepper.Title>
-    //           </Stepper.Step>
-    //         </Stepper.Navigation>
-
-    //         {params.methods.switch({
-    //           shipping: () => (
-    //             <Stepper.Panel>
-    //               <ShippingForm />
-    //             </Stepper.Panel>
-    //           ),
-    //           payment: () => (
-    //             <Stepper.Panel>
-    //               <div className="p-4 border rounded-md">
-    //                 {t("payment-options")}
-    //               </div>
-    //             </Stepper.Panel>
-    //           ),
-    //         })}
-
-    //         <Stepper.Controls className="pt-2">
-    //           <Button variant="secondary" onClick={() => params.methods.prev()}>
-    //             {t("back")}
-    //           </Button>
-    //           <Button onClick={() => params.methods.next()}>{t("next")}</Button>
-    //         </Stepper.Controls>
-    //       </>
-    //     )}
-    //   </Stepper.Provider> */}
-    // </div>
-    <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        noValidate
-        className="flex flex-col gap-4 mt-5 "
-      >
-        <ShippingForm
-          form={form}
-          isSubmitting={isLoading}
-          status={status}
-          data={saveOrderData || null}
-        />
-      </form>
-    </Form>
+    <>
+      {!isAuthenticated ? (
+        <div className="flex flex-col items-center justify-center p-8 text-center">
+          <h3 className="text-lg font-semibold mb-4">{t("login-required")}</h3>
+          <p className="text-gray-600 mb-6">{t("please-login-to-checkout")}</p>
+          <Button 
+            onClick={() => setShowAuthModal(true)}
+            className="bg-black text-white hover:bg-gray-800"
+          >
+            {tButtons("login")}
+          </Button>
+        </div>
+      ) : (
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            noValidate
+            className="flex flex-col gap-4 mt-5 "
+          >
+            <ShippingForm
+              form={form}
+              isSubmitting={isLoading}
+              status={status}
+              data={saveOrderData || null}
+            />
+          </form>
+        </Form>
+      )}
+      
+      <AuthModal
+        isOpen={showAuthModal}
+        onOpenChange={setShowAuthModal}
+        onAuthenticated={() => {
+          setIsAuthenticated(true);
+          setShowAuthModal(false);
+        }}
+      />
+    </>
   );
 }
 export const toCheckoutPayload = (values: CheckoutFormValues) => ({

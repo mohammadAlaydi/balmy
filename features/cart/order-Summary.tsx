@@ -58,10 +58,8 @@ export default function OrderSummary({ data }: { data: any }) {
     }
   };
   const handleTriggerClick = (e: React.MouseEvent) => {
-    if (!localStorage.getItem("accessToken")) {
-      e.preventDefault();
-      router.push("/auth/login");
-    }
+    // Allow the dialog to open regardless of authentication status
+    // Authentication will be handled within the checkout dialog
   };
 
   // Close the dialog immediately when checkout finishes (success or failed)
