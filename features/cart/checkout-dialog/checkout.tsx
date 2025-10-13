@@ -8,11 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Form } from "@/components/ui/form";
 import ShippingForm from "./shipping-form";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  saveOrder,
-  resetStatus,
-  getCartProducts,
-} from "@/store/slices/cart-slice";
+import { saveOrder, getCartProducts } from "@/store/slices/cart-slice";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 
@@ -63,14 +59,20 @@ export default function Checkout() {
     (state: any) => state.cart
   );
 
-  const onSubmit = async (values: CheckoutFormValues) => {
-    await dispatch(saveOrder(values) as any);
-    dispatch(getCartProducts() as any);
-    router.refresh();
-    setTimeout(() => {
-      router.push("/home");
-    }, 2000);
+  const onSubmit = (values: CheckoutFormValues) => {
+    dispatch(saveOrder(values) as any);
   };
+
+  // Navigate to checkout status page once we have a definitive status
+  useEffect(() => {
+    if (status === "success" || status === "failed") {
+      if (status === "success") {
+        // Refresh cart data after successful checkout
+        dispatch(getCartProducts() as any);
+      }
+      router.push("/cart/checkout-status");
+    }
+  }, [status, dispatch, router]);
   return (
     // <div className="w-full xl:w-2/3 mx-auto">
     //   {/* <Stepper.Provider className="space-y-4 my-5">

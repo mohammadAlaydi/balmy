@@ -39,6 +39,7 @@ export default function QuickProductDetails({
   >(null);
   const [choosenVarianrID, setChoosenVarianrID] = useState(null);
   const [showAuthModal, setShowAuthModal] = useState(false);
+  const [pendingAddProductId, setPendingAddProductId] = useState<number | null>(null);
   const t = useTranslations("products");
   const dispatch = useAppDispatch();
 
@@ -62,6 +63,10 @@ export default function QuickProductDetails({
   }
   const handleAddToCart = async () => {
     if (!isAuthenticated) {
+      const pid = product?.variants
+        ? (choosenVarianrID as any) || product?.variants[0]?.id
+        : (product as any)?.id;
+      if (pid) setPendingAddProductId(Number(pid));
       setShowAuthModal(true);
       return;
     }
@@ -138,7 +143,7 @@ export default function QuickProductDetails({
         {product.in_stock ? "متوفر" : "غير متوفر"}
       </p>
       <p className="text-gray-color font-[600] md:font-[650] md:text-sm text-xs">
-        {product.price || 0.0} {t("currency")}
+        {product.price || 0.0} <i className="icon-rial"></i>
       </p>
     </div>
   );
@@ -257,7 +262,21 @@ export default function QuickProductDetails({
         </div>
       </div>
       {renderActionButtons()}
-      <AuthModal isOpen={showAuthModal} onOpenChange={setShowAuthModal} />
+      <AuthModal
+        isOpen={showAuthModal}
+        onOpenChange={(open) => {
+          setShowAuthModal(open);
+          if (!open) setPendingAddProductId(null);
+        }}
+        onAuthenticated={async () => {
+          const pid = pendingAddProductId ?? (product?.variants
+            ? (choosenVarianrID as any) || product?.variants[0]?.id
+            : (product as any)?.id);
+          if (!pid) return;
+          await dispatch(addToCart({ productId: Number(pid) }));
+          setPendingAddProductId(null);
+        }}
+      />
     </div>
   );
 }

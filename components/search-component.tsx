@@ -10,6 +10,7 @@ import { getSearchProducts } from "@/store/slices/search-products-slice";
 import { useSelector } from "react-redux";
 import { useTranslations } from "next-intl";
 import Loading from "./loading";
+import { IoClose } from "react-icons/io5";
 
 const SearchComponent = ({ maxHeight }: { maxHeight?: string }) => {
   const t = useTranslations("search");
@@ -20,6 +21,7 @@ const SearchComponent = ({ maxHeight }: { maxHeight?: string }) => {
   const categories = useSelector((state: any) => state.categories);
   const loading = useSelector((state: any) => state.categories.loading);
   const [search, setSearch] = useState("");
+  const [searchCategory, setSearchCategory] = useState("");
   const [filteredProducts, setFilteredProducts] = useState(
     products?.data || []
   );
@@ -32,18 +34,32 @@ const SearchComponent = ({ maxHeight }: { maxHeight?: string }) => {
   useEffect(() => {
     if (!products?.data) return;
 
-    if (!search) {
-      setFilteredProducts(products.data);
-    } else {
-      setFilteredProducts(
-        products.data.filter(
-          (product: any) =>
-            product?.name?.toLowerCase().includes(search.toLowerCase()) ||
-            product?.sku == search.toLowerCase()
-        )
-      );
-    }
-  }, [search, products, categoryIndex]);
+    const normalizedSearch = search.trim().toLowerCase();
+    const hasSearch = normalizedSearch.length > 0;
+
+    const filtered = products.data.filter((product: any) => {
+      const matchesCategory = searchCategory
+        ? Array.isArray(product?.category_id)
+          ? product.category_id.includes(searchCategory)
+          : product?.category_id === searchCategory
+        : true;
+
+      if (!hasSearch) return matchesCategory;
+
+      const productName = (product?.name || "").toLowerCase();
+      const productSku =
+        typeof product?.sku === "string"
+          ? product.sku.toLowerCase()
+          : String(product?.sku || "").toLowerCase();
+      const matchesText =
+        productName.includes(normalizedSearch) ||
+        productSku === normalizedSearch;
+
+      return matchesText && matchesCategory;
+    });
+
+    setFilteredProducts(filtered);
+  }, [search, products, searchCategory]);
   if (isLoading || loading) {
     return (
       <div className="min-h-[40vh]">
@@ -51,7 +67,6 @@ const SearchComponent = ({ maxHeight }: { maxHeight?: string }) => {
       </div>
     );
   }
-
   return (
     <div
       className={`w-full h-full flex flex-col gap-5 py-3 ${
@@ -71,22 +86,36 @@ const SearchComponent = ({ maxHeight }: { maxHeight?: string }) => {
       <p>{t("suggested-words")}</p>
       <div className="flex flex-wrap gap-2">
         {categories?.categories?.categories?.map(
-          (suggestion: string, index: number) => (
+          (suggestion: any, index: number) => (
             <Badge
               key={index}
               className={`py-0.5 px-2 text-sm cursor-pointer bg-white border border-gray-200 rounded-md text-black py-1 px-3 ${
                 index == categoryIndex ? "bg-black text-white" : ""
               }`}
               onClick={() => {
-                setSearch(suggestion?.name);
+                setSearchCategory(String(suggestion?.id ?? ""));
                 setCategoryIndex(index);
               }}
             >
-              {suggestion?.name}
+              {String(suggestion?.name ?? "")}
             </Badge>
           )
         )}
       </div>
+      {(searchCategory !== "" || search !== "") && (
+        <div
+          onClick={() => {
+            setSearchCategory("");
+            setCategoryIndex(null);
+            setSearch("");
+          }}
+          className="gap-2 cursor-pointer text-base bg-red-500 flex items-center px-2 py-1 rounded-md w-fit text-white"
+        >
+          {t("clear-filters")} {" "}
+          <IoClose className="text-base text-white font-bold" />
+        </div>
+      )}
+
       <div className="w-full h-full grid grid-cols-12 gap-2 overflow-y-auto justify-center ">
         {filteredProducts?.map((product: any, index: number) => (
           <ProductCard

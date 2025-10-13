@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 
 export default function Success({ data }: SuccessProps) {
-  console.log("✅ Success component rendered with data:", data);
+
   const t = useTranslations("order");
   
   // Handle different data structures
@@ -16,7 +16,6 @@ export default function Success({ data }: SuccessProps) {
 
   // If no order data, show error
   if (!order || !order.id) {
-    console.error("No order data available:", data);
     return (
       <div className="p-4 bg-red-100 text-red-800 rounded-md">
         {t("no-order-data-error")}
@@ -86,6 +85,7 @@ function OrderInfoSection({ orderInfoItems }: OrderInfoSectionProps) {
 }
 
 function ActionSection() {
+  
   const dispatch = useDispatch();
   const router = useRouter();
   const t = useTranslations("order");

@@ -41,6 +41,7 @@ export default function QuickCart() {
     return <Loading fullScreen={true} variant="spinner" size="xl" />;
   }
   return (
+   
     <div className="flex flex-col gap-4 items-center justify-between h-full ">
       <div className="flex flex-col gap-4 flex-1 h-full w-full">
         <SectionTitle

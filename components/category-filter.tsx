@@ -217,13 +217,13 @@ export default function CategoryFilter({
                   <div className="flex justify-between items-center">
                     <div className="flex items-center gap-2 bg-blue-50 px-3 py-1 rounded-full">
                       <span className="text-xs md:text-sm md:font-medium text-blue-700 text-nowrap">
-                        {filters.priceRange[0]} {t("currency")}
+                        {filters.priceRange[0]} <i className="icon-rial"></i>
                       </span>
                     </div>
                     <div className="w-8 h-px bg-gray-300"></div>
                     <div className="flex items-center gap-2 bg-green-50 px-3 py-1 rounded-full">
                       <span className="text-xs md:text-sm md:font-medium text-green-700 text-nowrap">
-                        {filters.priceRange[1]} {t("currency")}
+                        {filters.priceRange[1]} <i className="icon-rial"></i>
                       </span>
                     </div>
                   </div>

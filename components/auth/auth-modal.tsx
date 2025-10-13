@@ -26,11 +26,13 @@ type AuthView =
 interface AuthModalProps {
   isOpen?: boolean;
   onOpenChange?: (open: boolean) => void;
+  onAuthenticated?: () => void; // called after successful login
 }
 
 export default function AuthModal({
   isOpen: externalIsOpen,
   onOpenChange: externalOnOpenChange,
+  onAuthenticated,
 }: AuthModalProps = {}) {
   const [internalIsOpen, setInternalIsOpen] = useState(false);
   const [currentView, setCurrentView] = useState<AuthView>("login");
@@ -101,6 +103,14 @@ export default function AuthModal({
           <LoginForm
             onSwitchToRegister={handleSwitchToRegister}
             onForgotPassword={handleSwitchToForgotPassword}
+            onLoginSuccess={() => {
+              // close and reset modal, then notify parent
+              setIsOpen(false);
+              setCurrentView("login");
+              setEmail("");
+              setResetCode("");
+              onAuthenticated && onAuthenticated();
+            }}
           />
         );
       case "register":

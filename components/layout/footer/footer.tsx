@@ -21,6 +21,7 @@ import { useTranslations } from "next-intl";
 import { useDispatch, useSelector } from "react-redux";
 import { getHomeData } from "@/store/slices/home-slice";
 import { useEffect } from "react";
+import Loading from "@/components/loading";
 
 // Components
 const WorkHoursSection = () => {
@@ -60,17 +61,24 @@ const LocationSection = () => {
   );
 };
 
-const FooterImage = () => (
-  <div className="col-span-12 lg:col-span-6">
-    <Image
-      width={400}
-      height={400}
-      src="/assets/images/footer-image.webp"
-      alt="footer-image"
-      className="w-full"
-    />
-  </div>
-);
+const FooterImage = ({ data }: { data: any }) => {
+  // Check if ads array exists and has at least 3 elements
+  if (!data?.ads || !Array.isArray(data.ads) || data.ads.length < 3) {
+    return null;
+  }
+
+  return (
+    <div className="col-span-12 lg:col-span-6">
+      <Image
+        width={400}
+        height={400}
+        src={data.ads[2]?.img_path}
+        alt="footer-image"
+        className="w-full max-h-[400px] object-cover"
+      />
+    </div>
+  );
+};
 
 const SocialMediaSection = ({ data }: { data: any }) => {
   const t = useTranslations("footer");
@@ -81,7 +89,10 @@ const SocialMediaSection = ({ data }: { data: any }) => {
         title={t("follow-us")}
         titleStyle="text-white/65 text-end text-base ltr:text-start"
       />
-      <SocialMediaIcons data={data} iconStyle="bg-white text-black p-1.5 text-[30px] rounded-full hover:bg-black hover:text-white transition-all duration-300 text-2xl" />
+      <SocialMediaIcons
+        data={data}
+        iconStyle="bg-white text-black p-1.5 text-[30px] rounded-full hover:bg-black hover:text-white transition-all duration-300 text-2xl"
+      />
     </div>
   );
 };
@@ -144,13 +155,15 @@ const CopyrightSection = () => {
 };
 
 export default function Footer({ locale = "ar" }: { locale?: string }) {
-  const { data } = useSelector((state: any) => state.home);
+  const { data, loading } = useSelector((state: any) => state.home);
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getHomeData() as any);
   }, [dispatch]);
   const t = useTranslations("footer");
-
+  if (loading) {
+    return <Loading fullScreen={true} variant="spinner" size="xl" />;
+  }
   return (
     <div className="bg-black">
       <div className="grid grid-cols-12">
@@ -158,7 +171,7 @@ export default function Footer({ locale = "ar" }: { locale?: string }) {
           <WorkHoursSection />
           <LocationSection />
         </div>
-        <FooterImage />
+        <FooterImage data={data} />
       </div>
       <hr />
       <div className="grid grid-cols-12 items-start p-3 lg:p-5 gap-3">

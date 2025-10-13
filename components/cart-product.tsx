@@ -4,12 +4,12 @@ import Image from "next/image";
 import { FaPlus } from "react-icons/fa";
 import { TiMinus } from "react-icons/ti";
 import DeleteProductComponent from "@/components/delete-product-component";
-import { addToCart } from "@/store/slices/cart-slice";
+import { applyLocalQuantityDelta } from "@/store/slices/cart-slice";
 import { useAppDispatch } from "@/store/hooks";
 import ReactStars from "./react-stars";
 import { useSelector } from "react-redux";
 import toast from "react-hot-toast";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 
 interface CartProductProps {
   product: any;
@@ -22,7 +22,6 @@ export default function CartProduct({
   quantity,
   deletedProductId,
 }: CartProductProps) {
-  
   const dispatch = useAppDispatch();
   const { increaseOrDecreaseResponse } = useSelector(
     (state: any) => state.cart
@@ -30,7 +29,6 @@ export default function CartProduct({
 
   const [loadingProductId, setLoadingProductId] = useState<number | null>(null);
   const isLoading = loadingProductId === product?.id;
-
   // Derive current quantity from Redux (live) or fall back to prop
   const currentQty: number = useMemo(() => {
     const fromStore = increaseOrDecreaseResponse?.data?.items?.find(
@@ -43,16 +41,40 @@ export default function CartProduct({
     return Number.isFinite(num) && num > 0 ? num : 0;
   }, [increaseOrDecreaseResponse, product?.id, quantity]);
 
-  const handleUpdateQuantity = async (productId: number, qtyChange: number) => {
+  // Keep a local, optimistic quantity and batch deltas to avoid a request per click
+  const [optimisticQty, setOptimisticQty] = useState<number | null>(null);
+  const [pendingDelta, setPendingDelta] = useState<number>(0);
+
+  // Whenever the store quantity changes (e.g., after a server sync), align the optimistic value
+  useEffect(() => {
+    if (optimisticQty === null) return; // user hasn't interacted yet
+    // If store reflects the same value, clear local overrides
+    if (currentQty === optimisticQty && pendingDelta === 0) {
+      setOptimisticQty(null);
+    }
+  }, [currentQty, optimisticQty, pendingDelta]);
+
+  const displayedQty = optimisticQty ?? currentQty;
+
+  const handleClickChange = (delta: number) => {
+    // Optimistic local update first (no request)
     try {
-      setLoadingProductId(productId);
-      await dispatch(
-        addToCart({
-          productId,
-          productQTY: qtyChange,
-        })
+      setLoadingProductId(product?.id ?? null);
+      // Prevent decreasing below 1 at UI level
+      const next = (optimisticQty ?? currentQty) + delta;
+      if (next < 1) {
+        toast.error("لا يمكن أن تكون الكمية أقل من 1");
+        setLoadingProductId(null);
+        return;
+      }
+      setOptimisticQty(next);
+      setPendingDelta((d) => d + delta);
+      // Apply to shared store so Quick Cart and Cart reflect immediately
+      dispatch(
+        applyLocalQuantityDelta({ productId: product?.id, delta }) as any
       );
     } finally {
+      // End the visual loading quickly; no network round-trip here
       setLoadingProductId(null);
     }
   };
@@ -72,9 +94,7 @@ export default function CartProduct({
           </h2>
           <ReactStars rating={product?.reviews?.total || 0} edit={false} />
           <p className="text-sm text-gray-color ltr:text-start rtl:text-end">
-            {typeof product?.price === "number"
-              ? `${product?.price} ر.س`
-              : product?.price?.formatted ?? ""}
+            {product?.price} <i className="icon-rial"></i>
           </p>
         </div>
         <Image
@@ -95,13 +115,7 @@ export default function CartProduct({
             className={`text-2xl cursor-pointer border border-gray-200 rounded-full p-1 ${
               isLoading ? "text-gray-400" : ""
             }`}
-            onClick={() => {
-              if (!isLoading) {
-                handleUpdateQuantity(product?.id, 1);
-              } else {
-                toast.error("يتم تنفيذ العملية الآن، برجاء الانتظار");
-              }
-            }}
+            onClick={() => handleClickChange(1)}
           />
 
           {/* Quantity */}
@@ -110,19 +124,15 @@ export default function CartProduct({
               isLoading ? "text-gray-400" : ""
             }`}
           >
-            {currentQty}
+            {displayedQty}
           </span>
 
           {/* Decrease */}
           <TiMinus
             className={`text-2xl cursor-pointer border border-gray-200 rounded-full p-1 ${
-              isLoading || currentQty <= 1 ? "text-gray-400" : ""
+              isLoading || displayedQty <= 1 ? "text-gray-400" : ""
             }`}
-            onClick={() => {
-              if (!isLoading && currentQty > 1) {
-                handleUpdateQuantity(product?.id, -1);
-              }
-            }}
+            onClick={() => handleClickChange(-1)}
           />
         </div>
       </div>

@@ -3,7 +3,6 @@
 import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import LabelAndInput from "@/components/label-and-input";
-import LabelAndCheckbox from "@/components/label-and-checkbox";
 import LabelAndRadio from "@/components/label-and-radio";
 import SectionTitle from "@/components/section-title";
 import { useTranslations } from "next-intl";
@@ -28,7 +27,6 @@ export default function ShippingForm({
 }) {
   const t = useTranslations("cart");
   const tButtons = useTranslations("buttons");
-
   // Remove the problematic useEffect that tries to modify props
   return (
     <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
@@ -98,15 +96,19 @@ export default function ShippingForm({
           </div>
           {/* Same as Billing Checkbox */}
           <div className="my-6 flex items-center gap-2">
-
-            <input type="checkbox"  
+            <input
+              type="checkbox"
               name="billing.use_for_shipping"
               checked={form.watch("billing.use_for_shipping")}
-              onChange={(e) => form.setValue("billing.use_for_shipping", e.target.checked)}
+              onChange={(e) =>
+                form.setValue("billing.use_for_shipping", e.target.checked)
+              }
               id="same-as-billing"
               className="mr-2"
             />
-            <Label htmlFor="same-as-billing" className="text-sm font-medium">{t("same-as-billing")}</Label>
+            <Label htmlFor="same-as-billing" className="text-sm font-medium">
+              {t("same-as-billing")}
+            </Label>
           </div>
           {/* Shipping Information */}
           {!form.watch("billing.use_for_shipping") && (
@@ -211,8 +213,6 @@ export default function ShippingForm({
           </Button>
         </CardContent>
       </Card>
-      {status == "success" && <Success data={data} />}
-      {status === "failed" && <Failed />}
     </motion.div>
   );
 }

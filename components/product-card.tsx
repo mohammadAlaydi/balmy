@@ -39,6 +39,7 @@ export default function ProductCard({
     number | string | null
   >(null);
   const [showAuthModal, setShowAuthModal] = useState(false);
+  const [pendingAddProductId, setPendingAddProductId] = useState<number | null>(null);
 
   const dispatch = useAppDispatch();
   const t = useTranslations("products");
@@ -78,6 +79,8 @@ export default function ProductCard({
 
     // Check if user is authenticated
     if (!isAuthenticated) {
+      const target = resolveTargetId();
+      if (target != null) setPendingAddProductId(Number(target));
       setShowAuthModal(true);
       return;
     }
@@ -101,10 +104,6 @@ export default function ProductCard({
       setIsAdding(false);
     }
   };
-  console.log(product, "✔️✔️✔️");
-  if (!product?.variants) {
-    console.log(product, "😘😘");
-  }
   return (
     <Card
       onMouseEnter={() => (isInStock ? setIsHovered(true) : undefined)}
@@ -199,7 +198,7 @@ export default function ProductCard({
           <p className="font-[600] md:font-[650] md:text-sm text-xs overflow-hidden text-ellipsis whitespace-nowrap">
             {product?.name || t("product-name")}
           </p>
-          <p className="font-[600] md:font-[650] md:text-sm text-xs">
+          <p className="font-[600] md:font-[650] md:text-sm text-xs overflow-hidden text-ellipsis whitespace-nowrap">
             {product?.sku}
           </p>
         </div>
@@ -213,7 +212,7 @@ export default function ProductCard({
               isInStock ? "text-green-600" : "text-red-600"
             }`}
           >
-            {isInStock ? "متوفر" : "غير متوفر"}
+            {isInStock ? t("in-stock") : t("out-of-stock")}
           </p>
           <p className="text-xs md:text-sm text-nowrap flex md:hidden">
             {(() => {
@@ -232,8 +231,8 @@ export default function ProductCard({
               const price =
                 base ?? (minVar.length ? Math.min(...(minVar as number[])) : 0);
               return price.toFixed(2);
-            })()}{" "}
-            {t("currency")}
+            })()} {" "}
+            <i className="icon-rial"></i>
           </p>
         </div>
 
@@ -308,13 +307,38 @@ export default function ProductCard({
               const price =
                 base ?? (minVar.length ? Math.min(...(minVar as number[])) : 0);
               return price.toFixed(2);
-            })()}{" "}
-            {t("currency")}
+            })()} {" "}
+            <i className="icon-rial"></i>
           </p>
         </div>
       </CardContent>
 
-      <AuthModal isOpen={showAuthModal} onOpenChange={setShowAuthModal} />
+      <AuthModal
+        isOpen={showAuthModal}
+        onOpenChange={(open) => {
+          setShowAuthModal(open);
+          if (!open) setPendingAddProductId(null);
+        }}
+        onAuthenticated={async () => {
+          // Auto add after successful login
+          const targetId = pendingAddProductId ?? Number(resolveTargetId());
+          if (!targetId) return;
+          try {
+            setIsAdding(true);
+            const maybePromise: any = dispatch(
+              addToCart({ productId: Number(targetId), productQTY: 1 })
+            );
+            if (typeof maybePromise?.unwrap === "function") {
+              await maybePromise.unwrap();
+            } else {
+              await maybePromise;
+            }
+          } finally {
+            setIsAdding(false);
+            setPendingAddProductId(null);
+          }
+        }}
+      />
     </Card>
   );
 }

@@ -36,6 +36,7 @@ export default function SingleProductDetails({
   const dispatch = useAppDispatch();
   const [quantity, setQuantity] = useState(1);
   const [showAuthModal, setShowAuthModal] = useState(false);
+  const [pendingAddProductId, setPendingAddProductId] = useState<number | null>(null);
   const { isAuthenticated } = useSelector((state: any) => state.auth);
 
   // Use the variant management hook
@@ -51,6 +52,8 @@ export default function SingleProductDetails({
 
   const handleAddToCart = () => {
     if (!isAuthenticated) {
+      const targetId = currentVariant?.product_id || product.product_id;
+      if (targetId) setPendingAddProductId(Number(targetId));
       setShowAuthModal(true);
       return;
     }
@@ -122,12 +125,12 @@ export default function SingleProductDetails({
       <div className="border-y border-gray-200 py-4">
         <div className="flex items-center gap-3 flex-wrap">
           <div className="text-[28px] lg:text-[28px] md:text-[24px] font-[800] md:font-[500] text-[#D07A51] font-cairo">
-            {(hasDiscount ? effectiveSpecial! : effectivePrice).toFixed(2)} {t("currency")}
+            {(hasDiscount ? effectiveSpecial! : effectivePrice).toFixed(2)} <i className="icon-rial"></i>
           </div>
           {hasDiscount && (
             <>
               <div className="text-[20px] lg:text-[20px] md:text-[18px] text-gray-500 line-through font-cairo">
-                {effectivePrice.toFixed(2)} {t("currency")}
+                {effectivePrice.toFixed(2)} <i className="icon-rial"></i>
               </div>
               <Badge className="bg-[#D07A51] text-white text-xs px-2 py-1 rounded">
                 {t("discount")}
@@ -273,7 +276,19 @@ export default function SingleProductDetails({
         )}
       </div>
       {/* Auth Modal */}
-      <AuthModal isOpen={showAuthModal} onOpenChange={setShowAuthModal} />
+      <AuthModal
+        isOpen={showAuthModal}
+        onOpenChange={(open) => {
+          setShowAuthModal(open);
+          if (!open) setPendingAddProductId(null);
+        }}
+        onAuthenticated={() => {
+          const targetId = pendingAddProductId || currentVariant?.product_id || product.product_id;
+          if (!targetId) return;
+          dispatch(addToCart({ productId: Number(targetId) }));
+          setPendingAddProductId(null);
+        }}
+      />
     </div>
   );
 }

@@ -44,7 +44,9 @@
     "base-image": "الصورة الأساسية",
     "variant-image": "صورة المتغير",
     "more-variants": "المزيد من المتغيرات",
-    "added-to-cart": "تم إضافة المنتج إلى السلة"
+    "added-to-cart": "تم إضافة المنتج إلى السلة",
+    "in-stock": "متوفر",
+    "out-of-stock": "غير متوفر"
   },
   "categories": {
     "footwear": "أحذية",
@@ -516,6 +518,7 @@
     "no-results": "لم يتم العثور على نتائج",
     "search-results": "نتائج البحث",
     "suggested-words": "كلمات مقترحة",
+    "clear-filters": "مسح المرشحات",
     "search-suggestions": ["نعال", "حذاء", "شماغ"],
     "search-products": "البحث عن المنتجات",
     "search-description": "ابحث عن المنتجات في متجرنا"
@@ -645,6 +648,8 @@
   "category": {
     "title": "منتجات الفئة",
     "no-products-found": "لم يتم العثور على منتجات في هذه الفئة",
+    "no-products-match-filters": "لا توجد منتجات تطابق المرشحات المحددة",
+    "error-loading-products": "خطأ في تحميل المنتجات. يرجى المحاولة مرة أخرى.",
     "loading-products": "جاري تحميل المنتجات...",
     "products-count": "تم العثور على {count} منتج",
     "filters": "المرشحات",

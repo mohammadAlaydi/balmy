@@ -17,6 +17,7 @@ import Checkout from "./checkout-dialog/checkout";
 import { useDispatch, useSelector } from "react-redux";
 import { resetStatus } from "@/store/slices/cart-slice";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 interface CouponFormData {
   coupon: string;
@@ -34,14 +35,13 @@ export default function OrderSummary({ data }: { data: any }) {
   const t = useTranslations("cart");
   const dispatch = useDispatch();
   const { status } = useSelector((state: any) => state.cart);
+  const [open, setOpen] = useState(false);
 
   const form = useForm<CouponFormData>({
     defaultValues: {
       coupon: "",
     },
   });
-
-
 
   const onSubmit = (data: CouponFormData) => {
     if (!data.coupon.trim()) {
@@ -63,6 +63,13 @@ export default function OrderSummary({ data }: { data: any }) {
       router.push("/auth/login");
     }
   };
+
+  // Close the dialog immediately when checkout finishes (success or failed)
+  useEffect(() => {
+    if (status === "success" || status === "failed") {
+      setOpen(false);
+    }
+  }, [status]);
   return (
     <div className="col-span-12 lg:col-span-5 xl:col-span-4  p-6 rounded-lg border border-gray-200 h-fit flex flex-col gap-6 bg-white shadow-sm">
       <h2 className="text-xl font-bold text-gray-900">{t("order-summary")}</h2>
@@ -91,7 +98,7 @@ export default function OrderSummary({ data }: { data: any }) {
             variant="outline"
             className="text-sm  bg-transparent text-gray-color border-gray-200"
           >
-            {Number(data?.data?.sub_total)?.toFixed(2) || 0} ر.س
+            {Number(data?.data?.sub_total)?.toFixed(2) || 0} <i className="icon-rial"></i>
           </Badge>
           <Badge
             variant="outline"
@@ -107,7 +114,7 @@ export default function OrderSummary({ data }: { data: any }) {
             variant="outline"
             className="text-sm  bg-transparent text-gray-color border-gray-200"
           >
-            {Number(data?.data?.base_tax_total)?.toFixed(2)} ر.س
+            {Number(data?.data?.base_tax_total)?.toFixed(2)} <i className="icon-rial"></i>
           </Badge>
           <Badge
             variant="outline"
@@ -121,9 +128,9 @@ export default function OrderSummary({ data }: { data: any }) {
         <div className="flex justify-between items-center gap-5">
           <Badge
             variant="outline"
-            className="text-sm  font-semibold bg-transparent text-gray-color border-gray-200"
+            className="text-sm font-semibold bg-transparent text-gray-color border-gray-200"
           >
-            {Number(data?.data?.grand_total)?.toFixed(2)} ر.س
+            {Number(data?.data?.grand_total)?.toFixed(2)} <i className="icon-rial"></i>
           </Badge>
           <Badge
             variant="outline"
@@ -134,12 +141,18 @@ export default function OrderSummary({ data }: { data: any }) {
         </div>
       </div>
       {/* Checkout Button */}
-      <Dialog onOpenChange={(open) => {
-        if (!open && status !== "success") {
-          dispatch(resetStatus());
-        } else if (!open && status === "success") {
-        }
-      }}>
+      <Dialog
+        open={open}
+        onOpenChange={(nextOpen) => {
+          setOpen(nextOpen);
+          // Reset status when dialog is closed, except when order was successful
+          if (!nextOpen && status !== "success") {
+            dispatch(resetStatus());
+          }
+          // For successful orders, we don't reset status when dialog closes
+          // so the success state persists until user explicitly closes it
+        }}
+      >
         <DialogTitle className="hidden"></DialogTitle>
         <DialogTrigger
           className="w-full bg-black text-white hover:bg-gray-800 transition-colors py-2 cursor-pointer text-base font-semibold rounded-md"
@@ -151,10 +164,6 @@ export default function OrderSummary({ data }: { data: any }) {
           <Checkout />
         </DialogContent>
       </Dialog>
-      {/* Additional Info */}
-      <div className="text-sm  text-gray-500 text-center">
-        {t("free-shipping-over")}
-      </div>
     </div>
   );
 }

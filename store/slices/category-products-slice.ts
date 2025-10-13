@@ -4,7 +4,7 @@ const API_KEY = process.env.NEXT_PUBLIC_API_URL;
 
 const getCategoryProducts = createAsyncThunk(
   "categories/products",
-  async (payload: { categoryId: string | number }) => {
+  async (payload: { categoryId: string | number }, { rejectWithValue }) => {
     try {
       const response = await fetch(`${API_KEY}/v1/category-products/${payload?.categoryId}`, {
         method: "GET",
@@ -16,20 +16,23 @@ const getCategoryProducts = createAsyncThunk(
       })
 
       if (!response.ok) {
-        throw new Error("Failed to fetch category products")
+        throw new Error(`Failed to fetch category products: ${response.status}`)
       }
 
       const data = await response.json()
       return data
     } catch (error: any) {
-      console.log(error)
+      console.error("Error fetching category products:", error)
+      return rejectWithValue(error.message || "Failed to fetch category products")
     }
   }
 )
 const categoryProductsSlice = createSlice({
   name: "categories/products",
   initialState: {
-    products: [] as any[],
+    products: {
+      data: [] as any[],
+    },
     loading: false,
     error: null as string | null,
   },
@@ -42,11 +45,12 @@ const categoryProductsSlice = createSlice({
       })
       .addCase(getCategoryProducts.fulfilled, (state, action) => {
         state.loading = false
-        state.products = action.payload
+        state.products = action.payload || { data: [] }
       })
       .addCase(getCategoryProducts.rejected, (state, action) => {
         state.loading = false
         state.error = action.payload as string
+        state.products = { data: [] }
       })
   },
 })

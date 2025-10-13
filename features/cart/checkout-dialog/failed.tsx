@@ -1,6 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
+import { useDispatch } from "react-redux";
+import { resetStatus } from "@/store/slices/cart-slice";
 
 interface ActionConfig {
   label: string;
@@ -23,10 +25,17 @@ export default function Failed({
   showHomeButton = true,
 }: RequestFailedProps) {
   const router = useRouter();
+  const dispatch = useDispatch();
   const t = useTranslations("order");
-
   const handleTryAgain = () => {
-    primaryAction?.onClick() ?? router.back();
+    // Reset the status to allow retry
+    dispatch(resetStatus());
+    // If primary action is provided, use it; otherwise, just reset status
+    // This allows the user to retry the payment form
+    if (primaryAction?.onClick) {
+      primaryAction.onClick();
+    }
+    // Don't navigate away - let user retry the payment
   };
 
   const handleSecondaryAction = () => {
@@ -34,7 +43,12 @@ export default function Failed({
   };
 
   const handleGoHome = () => {
+    dispatch(resetStatus());
     router.push("/home");
+  };
+
+  const handleCloseDialog = () => {
+    dispatch(resetStatus());
   };
 
   return (
@@ -59,6 +73,9 @@ export default function Failed({
               {t("go-home")}
             </Button>
           )}
+          <Button variant="outline" onClick={handleCloseDialog}>
+            {t("close-dialog")}
+          </Button>
         </div>
       </div>
     </div>

@@ -20,11 +20,13 @@ import { Badge } from "../ui/badge";
 interface LoginFormProps {
   onSwitchToRegister: () => void;
   onForgotPassword: () => void;
+  onLoginSuccess?: () => void; // optional callback to override default redirect
 }
 
 export default function LoginForm({
   onSwitchToRegister,
   onForgotPassword,
+  onLoginSuccess,
 }: LoginFormProps) {
   const t = useTranslations("auth");
   const router = useRouter();
@@ -55,8 +57,12 @@ export default function LoginForm({
       const result = await dispatch(login(data));
       if (login.fulfilled.match(result)) {
         toast.success(t("login-successful"));
-        // Redirect to locale home; router base path includes locale from segment config
-        router.push("/home");
+        if (onLoginSuccess) {
+          onLoginSuccess();
+        } else {
+          // Redirect to locale home; router base path includes locale from segment config
+          router.push("/home");
+        }
       } else {
         toast.error((result.payload as string) || t("login-failed"));
       }

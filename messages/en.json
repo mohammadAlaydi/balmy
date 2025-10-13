@@ -44,7 +44,9 @@
     "base-image": "Base Image",
     "variant-image": "Variant Image",
     "more-variants": "More variants",
-    "added-to-cart": "Added to cart"
+    "added-to-cart": "Added to cart",
+    "in-stock": "In Stock",
+    "out-of-stock": "Out of Stock"
   },
   "categories": {
     "footwear": "Footwear",
@@ -516,6 +518,7 @@
     "no-results": "No results found",
     "search-results": "Search Results",
     "suggested-words": "Suggested Words",
+    "clear-filters": "Clear Filters",
     "search-suggestions": ["Slippers", "Shoes", "Scarf"],
     "search-products": "Search Products",
     "search-description": "Search for products in our store"
@@ -645,6 +648,8 @@
   "category": {
     "title": "Category Products",
     "no-products-found": "No products found in this category",
+    "no-products-match-filters": "No products match the selected filters",
+    "error-loading-products": "Error loading products. Please try again.",
     "loading-products": "Loading products...",
     "products-count": "{count} products found",
     "filters": "Filters",

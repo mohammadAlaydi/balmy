@@ -8,15 +8,22 @@ import {
   getCartProducts,
   removeAllProductsFromCart,
 } from "@/store/slices/cart-slice";
+import { resetStatus } from "@/store/slices/cart-slice";
 import { MdDeleteSweep } from "react-icons/md";
 import Loading from "@/components/loading";
 import { useTranslations } from "next-intl";
 import PageWrapper from "@/components/page-wrapper";
 
-export default function CartPage() {
+export default function page() {
+
   const t = useTranslations("cart");
   const dispatch = useDispatch();
-  const { data, isLoading } = useSelector((state: any) => state.cart);
+  const { data, isLoading, status } = useSelector((state: any) => state.cart);
+
+  useEffect(() => {
+    // Ensure checkout status starts as null so the shipping form is visible
+    dispatch(resetStatus() as any);
+  }, [dispatch]);
 
   useEffect(() => {
     if (!isLoading && !data) {
@@ -27,6 +34,8 @@ export default function CartPage() {
   // if (isLoading) {
   //   return <Loading fullScreen={true} variant="spinner" size="xl" />;
   // }
+  
+  
   return (
     <PageWrapper>
       {data && data?.data?.items?.length > 0 ? (

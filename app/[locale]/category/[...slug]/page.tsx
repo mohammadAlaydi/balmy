@@ -9,43 +9,59 @@ import { useDispatch, useSelector } from "react-redux";
 import { useTranslations } from "next-intl";
 import PageWrapper from "@/components/page-wrapper";
 
-export default function CategoryPage({
+export default function page({
   params,
 }: {
   params: Promise<{ slug: string[] }>;
 }) {
+  
   const t = useTranslations("category");
   const { slug } = use(params);
   const [categorySlug, categoryId] = slug;
   const [filteredProducts, setFilteredProducts] = useState<any[]>([]);
-  const categoryProducts = useSelector((state: any) => state.categoryProducts);
-  const isLoading = useSelector(
-    (state: any) => state.categoryProducts.isLoading
-  );
+  const {
+    products: categoryProducts,
+    loading,
+    error,
+  } = useSelector((state: any) => state.categoryProducts);
+
   const dispatch = useDispatch();
 
   useEffect(() => {
     if (categoryId) {
       dispatch(getCategoryProducts({ categoryId }) as any);
     }
-  }, [dispatch, categoryId]);
+  }, [dispatch, categoryId, categorySlug]);
 
   // Update filtered products when products change
   useEffect(() => {
-    const products = categoryProducts?.products?.data || [];
+    const products = categoryProducts?.data || [];
     setFilteredProducts(products);
-  }, [categoryProducts]);
+  }, [categoryProducts, categorySlug, categoryId]);
 
-  if (isLoading) {
+  if (loading) {
     return <Loading fullScreen={true} variant="spinner" size="xl" />;
+  }
+
+  if (error) {
+    return (
+      <PageWrapper>
+        <div className="flex items-center justify-center h-full w-full min-h-[65vh]">
+          <p className="text-base md:text-lg xl:text-xl text-center text-red-600">
+            {t("error-loading-products") ||
+              "Error loading products. Please try again."}
+          </p>
+        </div>
+      </PageWrapper>
+    );
   }
 
   const products = categoryProducts?.products?.data || [];
 
   return (
     <PageWrapper>
-     <div className="flex items-center gap-5 justify-start my-5">
-     {products.length > 0 && (
+      <div className="flex items-center gap-5 justify-start my-5">
+        {products.length > 0 && (
           <CategoryFilter
             products={products}
             onFilterChange={setFilteredProducts}
@@ -56,7 +72,7 @@ export default function CategoryPage({
             {t("products-count", { count: filteredProducts.length })}
           </p>
         )}
-     </div>
+      </div>
       {filteredProducts.length > 0 ? (
         <div className="grid grid-cols-12 gap-2 md:gap-3 xl:gap-5 flex-wrap min-h-[65vh]">
           {filteredProducts.map((product: any, index: number) => (

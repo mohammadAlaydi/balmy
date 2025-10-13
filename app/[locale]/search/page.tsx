@@ -1,12 +1,11 @@
 import PageWrapper from "@/components/page-wrapper";
-import SearchPopup from "@/components/search-component";
-import { products } from "@/static-data/static-data";
+import SearchComponent from "@/components/search-component";
 
 export default function SearchPage() {
   
   return (
     <PageWrapper>
-      <SearchPopup />
+      <SearchComponent  />
     </PageWrapper>
   );
 }

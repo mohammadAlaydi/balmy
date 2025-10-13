@@ -5,31 +5,37 @@ const API_KEY = process.env.NEXT_PUBLIC_API_URL;
 
 // get cart products
 
-const getCartProducts = createAsyncThunk("cart/products", async (_, { rejectWithValue }) => {
-  try {
-    const response = await fetch('/api/cart', {
-      method: "GET",
-    });
+const getCartProducts = createAsyncThunk(
+  "cart/products",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await fetch("/api/cart", {
+        method: "GET",
+      });
 
-    const data = await response.json();
+      const data = await response.json();
 
-    if (!response.ok) {
-      return rejectWithValue(data.message || "Failed to fetch cart");
+      if (!response.ok) {
+        return rejectWithValue(data.message || "Failed to fetch cart");
+      }
+
+      return data;
+    } catch (error: any) {
+      console.error("Cart fetch error:", error);
+      return rejectWithValue(error.message || "Failed to fetch cart");
     }
-
-    return data;
-  } catch (error: any) {
-    console.error("Cart fetch error:", error);
-    return rejectWithValue(error.message || "Failed to fetch cart");
   }
-});
+);
 
 // add to cart
 const addToCart = createAsyncThunk(
   "cart/add",
-  async (payload: { productId: number; productQTY?: string | number }, { rejectWithValue, dispatch }) => {
+  async (
+    payload: { productId: number; productQTY?: string | number },
+    { rejectWithValue, dispatch }
+  ) => {
     try {
-      const response = await fetch('/api/cart/add', {
+      const response = await fetch("/api/cart/add", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -86,7 +92,7 @@ const removeAllProductsFromCart = createAsyncThunk(
   "cart/remove/all/products",
   async (_, { rejectWithValue, dispatch }) => {
     try {
-      const response = await fetch('/api/cart', {
+      const response = await fetch("/api/cart", {
         method: "DELETE",
       });
 
@@ -106,28 +112,31 @@ const removeAllProductsFromCart = createAsyncThunk(
   }
 );
 //save cart order
-const saveOrder = createAsyncThunk("save-order", async (payload: any, { rejectWithValue }) => {
-  try {
-    const response = await fetch('/api/cart/checkout', {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(payload),
-    });
+const saveOrder = createAsyncThunk(
+  "save-order",
+  async (payload: any, { rejectWithValue }) => {
+    try {
+      const response = await fetch("/api/cart/checkout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
 
-    const data = await response.json();
+      const data = await response.json();
 
-    if (!response.ok) {
-      return rejectWithValue(data.message || "Checkout failed");
+      if (!response.ok) {
+        return rejectWithValue(data.message || "Checkout failed");
+      }
+
+      return data;
+    } catch (error: any) {
+      console.error("Checkout error:", error);
+      return rejectWithValue(error.message || "Checkout failed");
     }
-
-    return data;
-  } catch (error: any) {
-    console.error("Checkout error:", error);
-    return rejectWithValue(error.message || "Checkout failed");
   }
-});
+);
 
 const cartSlice = createSlice({
   name: "cart",
@@ -155,6 +164,70 @@ const cartSlice = createSlice({
       }
       state.status = null;
     },
+    // Optimistically update quantity locally without a network request
+    applyLocalQuantityDelta: (
+      state,
+      action: {
+        payload: { productId: number; delta: number };
+      }
+    ) => {
+      const { productId, delta } = action.payload;
+
+      const mutateItems = (items: any[] | undefined | null) => {
+        if (!Array.isArray(items)) return { affected: false, unitDeltaTotal: 0 };
+        let affected = false;
+        let unitDeltaTotal = 0;
+        for (const item of items) {
+          const idMatch =
+            item?.additional?.product_id === productId ||
+            item?.product?.id === productId;
+          if (!idMatch) continue;
+          const prevQtyNum = Number(item?.quantity ?? 0) || 0;
+          const priceRaw = item?.product?.price;
+          const unitPrice =
+            typeof priceRaw === "number"
+              ? priceRaw
+              : Number(
+                  priceRaw?.value ??
+                    priceRaw?.final_price ??
+                    priceRaw?.base_price ??
+                    0
+                );
+          const nextQty = Math.max(1, prevQtyNum + delta);
+          const actualAppliedDelta = nextQty - prevQtyNum;
+          if (actualAppliedDelta !== 0) {
+            item.quantity = nextQty;
+            unitDeltaTotal += unitPrice * actualAppliedDelta;
+            affected = true;
+          }
+          break;
+        }
+        return { affected, unitDeltaTotal };
+      };
+
+      // Update both possible sources (server payload mirrors)
+      const itemsA = state?.data?.data?.items;
+      const { affected: affectedA, unitDeltaTotal: deltaTotalA } = mutateItems(
+        itemsA
+      );
+
+      const itemsB = (state as any)?.increaseOrDecreaseResponse?.data?.items;
+      const { affected: affectedB, unitDeltaTotal: deltaTotalB } = mutateItems(
+        itemsB
+      );
+
+      // Adjust summary numbers if we have cart totals in state
+      const cartData = (state as any)?.data?.data;
+      const totalDelta = (deltaTotalA || 0) || (deltaTotalB || 0);
+      if ((affectedA || affectedB) && cartData) {
+        const prevSub = Number(cartData.sub_total ?? 0) || 0;
+        const nextSub = prevSub + totalDelta;
+        cartData.sub_total = Number(nextSub.toFixed(2));
+        const prevTax = Number(cartData.base_tax_total ?? 0) || 0;
+        // Leave tax unchanged if we don't know rate; recompute grand as sub + tax
+        cartData.grand_total = Number((nextSub + prevTax).toFixed(2));
+      }
+    },
   },
   extraReducers(builder) {
     // Get cart products
@@ -162,8 +235,6 @@ const cartSlice = createSlice({
       state.isLoading = true;
     });
     builder.addCase(getCartProducts?.fulfilled, (state, action) => {
-      console.log("🛍️ getCartProducts.fulfilled triggered!");
-      console.log("  - payload:", action.payload);
       state.data = action.payload;
       state.isLoading = false;
     });
@@ -177,12 +248,9 @@ const cartSlice = createSlice({
       state.increaseOrDecreaseLoading = true;
     });
     builder.addCase(addToCart.fulfilled, (state, action) => {
-      console.log("🛒 addToCart.fulfilled triggered!");
-      console.log("  - payload:", action.payload);
       state.increaseOrDecreaseLoading = false;
       state.increaseOrDecreaseResponse = action.payload;
       state.cartStatus = "success"; // Use cartStatus instead of status
-      console.log("  - cartStatus set to success by addToCart");
       try {
         const message = (action.payload as any)?.message || "Added to cart";
         toast.success(message);
@@ -195,9 +263,17 @@ const cartSlice = createSlice({
       state.error = action.error.message || null;
       state.increaseOrDecreaseLoading = false;
       // Only show toast for non-authentication errors
-      if (action.error?.message && !action.error.message.includes("Unauthorized") && !action.error.message.includes("authentication")) {
+      if (
+        action.error?.message &&
+        !action.error.message.includes("Unauthorized") &&
+        !action.error.message.includes("authentication")
+      ) {
         toast.error(action.error.message);
-      } else if (!action.error?.message || (!action.error.message.includes("Unauthorized") && !action.error.message.includes("authentication"))) {
+      } else if (
+        !action.error?.message ||
+        (!action.error.message.includes("Unauthorized") &&
+          !action.error.message.includes("authentication"))
+      ) {
         toast.error("Failed to add to cart");
       }
     });
@@ -207,11 +283,8 @@ const cartSlice = createSlice({
       state.isLoading = true;
     });
     builder.addCase(removeFromCart.fulfilled, (state, action) => {
-      console.log("🗑️ removeFromCart.fulfilled triggered!");
-      console.log("  - payload:", action.payload);
       state.isLoading = false;
-      state.cartStatus = "success"; // Use cartStatus instead of status
-      console.log("  - cartStatus set to success by removeFromCart");
+      state.cartStatus = "success";
     });
     builder.addCase(removeFromCart.rejected, (state: any, action) => {
       state.error = action.error.message || null;
@@ -241,25 +314,19 @@ const cartSlice = createSlice({
       state.isLoading = true;
     });
     builder.addCase(saveOrder.fulfilled, (state, action) => {
-      console.log("🎉 saveOrder.fulfilled triggered!");
-      console.log("  - payload:", action.payload);
       state.saveOrderData = action.payload;
-      console.log("  - saveOrderData set to:", state.saveOrderData);
       state.isLoading = false;
       state.status = "success";
-      console.log("  - status set to:", state.status);
-      toast.success("تم حفظ الطلب بنجاح");
     });
     builder.addCase(saveOrder.rejected, (state: any, action) => {
       state.error = action.error.message || null;
       state.isLoading = false;
       state.status = "failed";
-      toast.error("فشل في حفظ الطلب");
     });
   },
 });
 
-export const { resetStatus } = cartSlice.actions;
+export const { resetStatus, applyLocalQuantityDelta } = cartSlice.actions;
 export {
   getCartProducts,
   addToCart,
