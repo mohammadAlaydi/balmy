@@ -39,7 +39,9 @@ export default function ProductCard({
     number | string | null
   >(null);
   const [showAuthModal, setShowAuthModal] = useState(false);
-  const [pendingAddProductId, setPendingAddProductId] = useState<number | null>(null);
+  const [pendingAddProductId, setPendingAddProductId] = useState<number | null>(
+    null
+  );
 
   const dispatch = useAppDispatch();
   const t = useTranslations("products");
@@ -62,13 +64,8 @@ export default function ProductCard({
   };
 
   const resolveTargetId = () => {
-    if (
-      product?.variants &&
-      product?.variants?.length > 0 
-    ) {
-      return (
-        chosenVariantId ?? product.variants[0]?.product_id 
-      );
+    if (product?.variants && product?.variants?.length > 0) {
+      return chosenVariantId ?? product.variants[0]?.product_id;
     } else if (product.product_id && !product.variants) {
       return product.product_id;
     }
@@ -205,37 +202,6 @@ export default function ProductCard({
 
         <ReactStars edit={false} rating={product?.reviews?.total || 0} />
 
-        {/* Stock status + mobile price */}
-        <div className="flex justify-between gap-1 items-center">
-          <p
-            className={`text-xs md:text-sm mb-2 text-nowrap ${
-              isInStock ? "text-green-600" : "text-red-600"
-            }`}
-          >
-            {isInStock ? t("in-stock") : t("out-of-stock")}
-          </p>
-          <p className="text-xs md:text-sm text-nowrap flex md:hidden items-center gap-2">
-            {(() => {
-              const pv = Array.isArray(product?.variants)
-                ? product.variants
-                : [];
-              const base = Number.isFinite(Number(product?.price))
-                ? Number(product?.price)
-                : undefined;
-              const minVar = pv
-                .map((v: any) => v?.special_price ?? v?.price)
-                .map((x: any) =>
-                  Number.isFinite(Number(x)) ? Number(x) : undefined
-                )
-                .filter((n: any) => typeof n === "number");
-              const price =
-                base ?? (minVar.length ? Math.min(...(minVar as number[])) : 0);
-              return price.toFixed(2);
-            })()} {" "}
-            <i className="icon-rial"></i>
-          </p>
-        </div>
-
         {/* Variants + desktop price */}
         <div className="flex justify-between gap-1 items-center">
           {product?.variants?.length ? (
@@ -307,7 +273,7 @@ export default function ProductCard({
               const price =
                 base ?? (minVar.length ? Math.min(...(minVar as number[])) : 0);
               return price.toFixed(2);
-            })()} {" "}
+            })()}{" "}
             <i className="icon-rial"></i>
           </p>
         </div>

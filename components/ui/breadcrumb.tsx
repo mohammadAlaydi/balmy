@@ -131,33 +131,21 @@ const AutoBreadcrumb = ({ className, showHome = true }: AutoBreadcrumbProps) => 
       });
     }
     
+    // Filter out numeric ID segments first to avoid trailing separators
+    const filteredSegments = segments.filter((seg) => !/^\d+$/.test(decodeURIComponent(seg)));
+
     // Add other segments
-    segments.forEach((segment, index) => {
+    filteredSegments.forEach((segment, index) => {
       currentPath += `/${segment}`;
-      const isLast = index === segments.length - 1;
+      const isLast = index === filteredSegments.length - 1;
       
       // Decode URL-encoded segments
       const decodedSegment = decodeURIComponent(segment);
       
-      // Check if it's a numeric ID (like category/product IDs)
+      // Check if it's a numeric ID (like category/product IDs) and hide it entirely
       const isNumericId = /^\d+$/.test(decodedSegment);
-      
-      // Skip category IDs if we have a category slug before it
       if (isNumericId) {
-        const prevSegment = index > 0 ? segments[index - 1] : '';
-        const decodedPrevSegment = decodeURIComponent(prevSegment);
-        
-        // If this is a category ID and we have a category slug before it, skip this segment
-        if (decodedPrevSegment === 'category' && index > 0) {
-          const categorySlugIndex = index - 1;
-          const categorySlug = segments[categorySlugIndex];
-          const decodedCategorySlug = decodeURIComponent(categorySlug);
-          
-          // If we have a category slug (non-numeric), skip the ID
-          if (!/^\d+$/.test(decodedCategorySlug)) {
-            return; // Skip this segment
-          }
-        }
+        return; // Hide numeric ID segments from breadcrumb
       }
       
       // Get translated label for segment
@@ -170,6 +158,7 @@ const AutoBreadcrumb = ({ className, showHome = true }: AutoBreadcrumbProps) => 
         'product': tBreadcrumb("product"),
         'search': tBreadcrumb("search"),
         'cart': tBreadcrumb("cart"),
+        'checkout-status': tBreadcrumb("checkout-status"),
         'favourite': tBreadcrumb("favourite"),
         'user-profile': tBreadcrumb("user-profile"),
         'auth': tBreadcrumb("auth"),
@@ -213,8 +202,8 @@ const AutoBreadcrumb = ({ className, showHome = true }: AutoBreadcrumbProps) => 
       // Determine if this segment should have a clickable link
       let href = undefined;
       if (!isLast) {
-        // Always make non-last segments clickable, except for specific cases
-        href = currentPath;
+        // Make non-last segments clickable, except for specific cases like 'category'
+        href = decodedSegment === 'category' ? undefined : currentPath;
       }
       
       items.push({

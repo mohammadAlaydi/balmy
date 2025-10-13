@@ -895,6 +895,7 @@
     "product": "Product",
     "search": "Search",
     "cart": "Cart",
+    "checkout-status": "Checkout Status",
     "favourite": "Favorites",
     "user-profile": "Profile",
     "auth": "Authentication",
