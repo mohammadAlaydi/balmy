@@ -214,7 +214,7 @@ export default function ProductCard({
           >
             {isInStock ? t("in-stock") : t("out-of-stock")}
           </p>
-          <p className="text-xs md:text-sm text-nowrap flex md:hidden">
+          <p className="text-xs md:text-sm text-nowrap flex md:hidden items-center gap-2">
             {(() => {
               const pv = Array.isArray(product?.variants)
                 ? product.variants
@@ -290,7 +290,7 @@ export default function ProductCard({
             </div> // no variants
           )}
 
-          <p className="text-xs md:text-sm mb-3 text-nowrap hidden md:flex">
+          <p className="text-xs md:text-sm mb-3 text-nowrap hidden md:flex items-center gap-2">
             {(() => {
               const pv = Array.isArray(product?.variants)
                 ? product.variants

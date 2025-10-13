@@ -8,8 +8,6 @@ import SectionTitle from "@/components/section-title";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { PuffLoader } from "react-spinners";
-import Success from "./success";
-import Failed from "./failed";
 import { Label } from "@/components/ui/label";
 
 export default function ShippingForm({
