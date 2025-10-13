@@ -98,7 +98,8 @@ export default function OrderSummary({ data }: { data: any }) {
             variant="outline"
             className="text-sm  bg-transparent text-gray-color border-gray-200"
           >
-            {Number(data?.data?.sub_total)?.toFixed(2) || 0} <i className="icon-rial"></i>
+            {Number(data?.data?.sub_total)?.toFixed(2) || 0}{" "}
+            <i className="icon-rial"></i>
           </Badge>
           <Badge
             variant="outline"
@@ -114,7 +115,8 @@ export default function OrderSummary({ data }: { data: any }) {
             variant="outline"
             className="text-sm  bg-transparent text-gray-color border-gray-200"
           >
-            {Number(data?.data?.base_tax_total)?.toFixed(2)} <i className="icon-rial"></i>
+            {Number(data?.data?.base_tax_total)?.toFixed(2)}{" "}
+            <i className="icon-rial"></i>
           </Badge>
           <Badge
             variant="outline"
@@ -130,7 +132,8 @@ export default function OrderSummary({ data }: { data: any }) {
             variant="outline"
             className="text-sm font-semibold bg-transparent text-gray-color border-gray-200"
           >
-            {Number(data?.data?.grand_total)?.toFixed(2)} <i className="icon-rial"></i>
+            {Number(data?.data?.grand_total)?.toFixed(2)}{" "}
+            <i className="icon-rial"></i>
           </Badge>
           <Badge
             variant="outline"
@@ -145,12 +148,9 @@ export default function OrderSummary({ data }: { data: any }) {
         open={open}
         onOpenChange={(nextOpen) => {
           setOpen(nextOpen);
-          // Reset status when dialog is closed, except when order was successful
           if (!nextOpen && status !== "success") {
             dispatch(resetStatus());
           }
-          // For successful orders, we don't reset status when dialog closes
-          // so the success state persists until user explicitly closes it
         }}
       >
         <DialogTitle className="hidden"></DialogTitle>
