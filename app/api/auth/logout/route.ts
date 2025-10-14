@@ -6,14 +6,15 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL;
 export async function POST(request: NextRequest) {
   try {
     const cookieStore = await cookies();
-    const token = cookieStore.get('accessToken')?.value;
+    const accessToken = cookieStore.get('accessToken')?.value;
+    const refreshToken = cookieStore.get('refreshToken')?.value;
 
-    if (token) {
+    if (accessToken) {
       // Call backend logout endpoint
       await fetch(`${API_URL}/v1/customer/logout`, {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${token}`,
+          'Authorization': `Bearer ${accessToken}`,
           'Accept': 'application/json',
         },
       });
@@ -27,6 +28,16 @@ export async function POST(request: NextRequest) {
       maxAge: 0,
       path: '/',
     });
+
+    if (refreshToken) {
+      cookieStore.set('refreshToken', '', {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        maxAge: 0,
+        path: '/',
+      });
+    }
 
     return NextResponse.json({
       message: 'Logged out successfully',

@@ -14,7 +14,7 @@ export default function Ads({ ads }) {
           width={400}
           height={400}
           className="w-full h-full transform transition-all duration-500 relative hover:scale-105"
-          src={`/${ads[0]?.img_path}`}
+          src={`${ads[0]?.img_path}` || "/assets/images/no-image.webp"}
           alt="..."
           quality={100}
         />
@@ -24,7 +24,7 @@ export default function Ads({ ads }) {
           width={400}
           height={400}
           className="w-full h-full transform transition-all duration-500 cursor-pointer relative hover:scale-105"
-          src={`/${ads[1]?.img_path}`}
+          src={`${ads[1]?.img_path}` || "/assets/images/no-image.webp"}
           alt="..."
           quality={100}
         />

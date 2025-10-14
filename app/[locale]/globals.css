@@ -172,6 +172,7 @@ svg {
 
 body {
   font-family: var(--font-cairo), system-ui, sans-serif;
+  text-transform: capitalize !important;
 }
 
 .font-cairo {

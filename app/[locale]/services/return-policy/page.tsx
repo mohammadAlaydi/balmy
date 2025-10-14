@@ -30,9 +30,9 @@ export default function page() {
               </h2>
               <div className="bg-gray-50 p-4 rounded-lg">
                 <h3 className="font-semibold text-gray-800 mb-2">{t("returnConditions.subtitle")}</h3>
-                <ul className="text-gray-700 text-sm space-y-1">
+                <ul className="text-gray-700 text-sm space-y-1 list-disc list-inside">
                   {t.raw("returnConditions.items").map((item: string, index: number) => (
-                    <li key={index}>• {item}</li>
+                    <li key={index}>{item}</li>
                   ))}
                 </ul>
               </div>
@@ -44,9 +44,9 @@ export default function page() {
               </h2>
               <div className="bg-gray-50 p-4 rounded-lg">
                 <h3 className="font-semibold text-gray-800 mb-2">{t("nonReturnConditions.subtitle")}</h3>
-                <ul className="text-gray-700 text-sm space-y-1">
+                <ul className="text-gray-700 text-sm space-y-1 list-disc list-inside">
                   {t.raw("nonReturnConditions.items").map((item: string, index: number) => (
-                    <li key={index}>• {item}</li>
+                    <li key={index}>{item}</li>
                   ))}
                 </ul>
               </div>

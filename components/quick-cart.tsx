@@ -54,7 +54,7 @@ export default function QuickCart() {
           </p>
         ) : (
           <p className="text-red-color font-[600] text-center w-full">
-            لا يوجد منتجات حتى الان
+            {t("no-products-yet")}
           </p>
         )}
         <div

@@ -2,10 +2,11 @@
 
 import React from "react";
 import { useTranslations } from "next-intl";
-import SingleProductCard from "./../../../../components/single-product-card";
+import SingleProductCard from "../../../../components/product-details-components/single-product-card";
 import { ErrorBoundary } from "next/dist/client/components/error-boundary";
 import { useGetProductDetailsQuery } from "@/store/slices/products-slice";
 import Loading from "@/components/loading";
+import PageWrapper from "@/components/page-wrapper";
 
 interface ProductDetailsClientProps {
   productId: number;
@@ -14,7 +15,6 @@ interface ProductDetailsClientProps {
 export default function ProductDetailsClient({
   productId,
 }: ProductDetailsClientProps) {
-
   const t = useTranslations("product-details");
   const { data, isLoading, error, refetch } =
     useGetProductDetailsQuery(productId);
@@ -25,7 +25,7 @@ export default function ProductDetailsClient({
 
   if (error || !data?.data) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center bg-red-500">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-gray-900 mb-4">
             {error ? t("error-loading-product") : t("product-not-found")}
@@ -45,12 +45,10 @@ export default function ProductDetailsClient({
   }
 
   return (
-    <ErrorBoundary>
-      <div className="min-h-screen bg-gray-50">
-        <div className="max-w-[1920px] mx-auto px-4 py-8">
-          <SingleProductCard product={data.data} />
-        </div>
-      </div>
-    </ErrorBoundary>
+    <PageWrapper>
+      <ErrorBoundary>
+        <SingleProductCard product={data.data} />
+      </ErrorBoundary>
+    </PageWrapper>
   );
 }

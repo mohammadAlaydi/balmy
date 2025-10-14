@@ -14,7 +14,11 @@ interface SingleProductCardProps {
   className?: string;
 }
 
-export default function SingleProductCard({ product, className }: SingleProductCardProps) {
+export default function SingleProductCard({
+  product,
+  className,
+}: SingleProductCardProps) {
+  const variantProps = useProductVariants({ product });
   const {
     hasVariants,
     colorVariants,
@@ -23,59 +27,52 @@ export default function SingleProductCard({ product, className }: SingleProductC
     selectedVariants,
     handleColorChange,
     handleSizeChange,
-  } = useProductVariants({ product });
+  } = variantProps;
 
   const baseImage = currentVariant?.base_image || product.base_image;
   const hoverImage = currentVariant?.hovered_image || product.hovered_image;
-  const galleryImages = (currentVariant?.gallary && currentVariant.gallary.length > 0)
-    ? currentVariant.gallary
-    : product.gallary;
+  const galleryImages =
+    currentVariant?.gallary && currentVariant.gallary.length > 0
+      ? currentVariant.gallary
+      : product.gallary;
 
   return (
     <div className={cn("w-full", className)}>
       {/* Main Product Section */}
-      <div className="w-full lg:w-[70%] mx-auto">
+      <div className="w-full">
         {/* Product Image and Details Row */}
-        <div className="flex flex-col lg:flex-row gap-8 mb-12">
+        <div className="flex flex-col md:flex-row justify-between gap-8 mb-12">
           {/* Image Holder - 65% width on desktop, 100% on mobile */}
-          <div className="w-full lg:w-[65%] order-1 lg:order-1">
-            <SingleProductImageHolder 
+          <div className="w-full order-1 lg:order-1 md:w-[48%] grid grid-cols-12">
+            <SingleProductImageHolder
               baseImage={baseImage}
               hoverImage={hoverImage}
               galleryImages={galleryImages}
               productName={product.name}
             />
           </div>
-          
+
           {/* Product Details - 35% width on desktop, 100% on mobile */}
-          <div className="w-full lg:w-[40%] order-2 lg:order-2">
-            <SingleProductDetails 
+          <div className="w-full order-2 lg:order-2 md:w-[48%]">
+            <SingleProductDetails
               product={product}
-              variantProps={{
-                hasVariants,
-                colorVariants,
-                availableSizesForSelectedColor,
-                currentVariant,
-                selectedVariants,
-                handleColorChange,
-                handleSizeChange,
-              }}
+              variantProps={variantProps}
             />
           </div>
         </div>
       </div>
 
       {/* Full Width Sections */}
-      <div className="w-full lg:w-[60%] mx-auto">
+      <div className="w-full  mx-auto">
         {/* Product Description */}
-        <SingleProductDescription 
-          description={product.description}
-          shortDescription={product.short_description}
+        <SingleProductDescription
+          description={product.description ?? ""}
+          shortDescription={product.short_description ?? ""}
           productName={product.name}
         />
-        
+
         {/* Product Reviews */}
-        <SingleProductReviews 
+        <SingleProductReviews
           reviews={product.reviews}
           productId={product.id}
           productName={product.name}

@@ -152,11 +152,7 @@ const cartSlice = createSlice({
   },
   reducers: {
     resetStatus: (state) => {
-      console.log(
-        "🔄 resetStatus called, changing status from",
-        state.status,
-        "to null"
-      );
+     
       // If we just completed an order, clear the saved order and cart data now
       if (state.status === "success") {
         state.saveOrderData = {};
@@ -174,7 +170,8 @@ const cartSlice = createSlice({
       const { productId, delta } = action.payload;
 
       const mutateItems = (items: any[] | undefined | null) => {
-        if (!Array.isArray(items)) return { affected: false, unitDeltaTotal: 0 };
+        if (!Array.isArray(items))
+          return { affected: false, unitDeltaTotal: 0 };
         let affected = false;
         let unitDeltaTotal = 0;
         for (const item of items) {
@@ -207,18 +204,16 @@ const cartSlice = createSlice({
 
       // Update both possible sources (server payload mirrors)
       const itemsA = state?.data?.data?.items;
-      const { affected: affectedA, unitDeltaTotal: deltaTotalA } = mutateItems(
-        itemsA
-      );
+      const { affected: affectedA, unitDeltaTotal: deltaTotalA } =
+        mutateItems(itemsA);
 
       const itemsB = (state as any)?.increaseOrDecreaseResponse?.data?.items;
-      const { affected: affectedB, unitDeltaTotal: deltaTotalB } = mutateItems(
-        itemsB
-      );
+      const { affected: affectedB, unitDeltaTotal: deltaTotalB } =
+        mutateItems(itemsB);
 
       // Adjust summary numbers if we have cart totals in state
       const cartData = (state as any)?.data?.data;
-      const totalDelta = (deltaTotalA || 0) || (deltaTotalB || 0);
+      const totalDelta = deltaTotalA || 0 || deltaTotalB || 0;
       if ((affectedA || affectedB) && cartData) {
         const prevSub = Number(cartData.sub_total ?? 0) || 0;
         const nextSub = prevSub + totalDelta;
@@ -251,31 +246,10 @@ const cartSlice = createSlice({
       state.increaseOrDecreaseLoading = false;
       state.increaseOrDecreaseResponse = action.payload;
       state.cartStatus = "success"; // Use cartStatus instead of status
-      try {
-        const message = (action.payload as any)?.message || "Added to cart";
-        toast.success(message);
-      } catch (e) {
-        // Fallback toast if payload shape unexpected
-        toast.success("Added to cart");
-      }
     });
     builder.addCase(addToCart.rejected, (state: any, action) => {
       state.error = action.error.message || null;
       state.increaseOrDecreaseLoading = false;
-      // Only show toast for non-authentication errors
-      if (
-        action.error?.message &&
-        !action.error.message.includes("Unauthorized") &&
-        !action.error.message.includes("authentication")
-      ) {
-        toast.error(action.error.message);
-      } else if (
-        !action.error?.message ||
-        (!action.error.message.includes("Unauthorized") &&
-          !action.error.message.includes("authentication"))
-      ) {
-        toast.error("Failed to add to cart");
-      }
     });
 
     // Remove from cart

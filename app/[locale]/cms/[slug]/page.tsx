@@ -6,15 +6,18 @@ import { getHomeData } from '@/store/slices/home-slice';
 import { useTranslations } from 'next-intl';
 import React, { use, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
+import { usePathname } from 'next/navigation';
 
 export default function Page({ params }: { params: Promise<{ slug: string }> }) {
     
   const { slug } = use(params);
+  const pathname = usePathname();
+  const currentLocale = pathname.split("/")[1];
   const { data, loading } = useSelector((state: any) => state.home);
   const dispatch = useDispatch();
   useEffect(() => {         
-    dispatch(getHomeData() as any);
-  }, [dispatch]);
+    dispatch(getHomeData(currentLocale || "ar") as any);
+  }, [dispatch, currentLocale]);
   const t = useTranslations("cms");
   if (loading) {
     return <Loading fullScreen={true} variant="spinner" size="xl" />;

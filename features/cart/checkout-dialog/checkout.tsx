@@ -15,10 +15,7 @@ import { Button } from "@/components/ui/button";
 import { useTranslations } from "next-intl";
 import AuthModal from "@/components/auth/auth-modal";
 
-const { Stepper } = defineStepper(
-  { id: "shipping", title: "Shipping" },
-  { id: "payment", title: "Payment" }
-);
+// Stepper will be defined inside the component to allow translated titles
 
 export type CheckoutFormValues = z.infer<typeof formSchema>;
 
@@ -56,6 +53,10 @@ export default function Checkout() {
   const tButtons = useTranslations("buttons");
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const { Stepper } = defineStepper(
+    { id: "shipping", title: t("shipping") },
+    { id: "payment", title: t("payment") }
+  );
   
   const form = useForm<CheckoutFormValues>({
     resolver: zodResolver(formSchema),

@@ -3,23 +3,21 @@
 import React, { useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
 import { useAppDispatch } from "@/store/hooks";
-import { addToCart } from "@/store/slices/cart-slice";
+import { addToCart, applyLocalQuantityDelta } from "@/store/slices/cart-slice";
 import { FavouriteButton } from "@/components/favourite-button";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import toast from "react-hot-toast";
-import {
-  MdOutlineShoppingCart,
-  MdOutlineShare,
-  MdOutlineStar,
-} from "react-icons/md";
+// toast is already imported above for link sharing
+import { MdOutlineShoppingCart, MdOutlineShare } from "react-icons/md";
+import StarRating from "../react-stars";
 import { ProductDetailsApiResponse } from "@/types/types";
-import VariantSelector from "./variant-selector";
+import VariantSelector from "../variant-selector";
 import { useProductVariants } from "@/hooks/use-product-variants";
 import { FaPlus } from "react-icons/fa";
 import { TiMinus } from "react-icons/ti";
 import { useSelector } from "react-redux";
-import AuthModal from "./auth/auth-modal";
+import AuthModal from "../auth/auth-modal";
+import toast from "react-hot-toast";
 
 interface SingleProductDetailsProps {
   product: ProductDetailsApiResponse["data"];
@@ -33,11 +31,17 @@ export default function SingleProductDetails({
   variantProps,
 }: SingleProductDetailsProps) {
   const t = useTranslations("product-details");
+  const tProducts = useTranslations("products");
   const dispatch = useAppDispatch();
   const [quantity, setQuantity] = useState(1);
   const [showAuthModal, setShowAuthModal] = useState(false);
-  const [pendingAddProductId, setPendingAddProductId] = useState<number | null>(null);
+  const [pendingAddProductId, setPendingAddProductId] = useState<number | null>(
+    null
+  );
   const { isAuthenticated } = useSelector((state: any) => state.auth);
+  const { data: cartData, increaseOrDecreaseResponse } = useSelector(
+    (state: any) => state.cart
+  );
 
   // Use the variant management hook
   const {
@@ -58,7 +62,8 @@ export default function SingleProductDetails({
       return;
     }
     const productIdToAdd = currentVariant?.product_id || product.product_id;
-    dispatch(addToCart({ productId: productIdToAdd }));
+    dispatch(addToCart({ productId: productIdToAdd, productQTY: quantity }));
+    toast.success(tProducts("added-to-cart"));
   };
 
   const handleShare = async () => {
@@ -78,9 +83,11 @@ export default function SingleProductDetails({
     }
   };
 
-  const normalizePrice = (value: string | number | null | undefined): number | null => {
+  const normalizePrice = (
+    value: string | number | null | undefined
+  ): number | null => {
     if (value === null || value === undefined) return null;
-    const n = typeof value === 'number' ? value : parseFloat(value);
+    const n = typeof value === "number" ? value : parseFloat(value);
     return Number.isFinite(n) ? n : null;
   };
 
@@ -95,19 +102,43 @@ export default function SingleProductDetails({
   const minVariantPrice = useMemo(() => {
     if (!product.variants || product.variants.length === 0) return null;
     const prices = product.variants
-      .map(v => normalizePrice(v.special_price ?? v.price))
+      .map((v) => normalizePrice(v.special_price ?? v.price))
       .filter((n): n is number => n !== null);
     if (prices.length === 0) return null;
     return Math.min(...prices);
   }, [product.variants]);
 
-  const effectivePrice =
-    variantPrice ?? productPrice ?? minVariantPrice ?? 0;
+  const effectivePrice = variantPrice ?? productPrice ?? minVariantPrice ?? 0;
   const effectiveSpecial = (() => {
     const sp = variantSpecial ?? productSpecial;
     return sp !== null && sp < effectivePrice ? sp : null;
   })();
   const hasDiscount = effectiveSpecial !== null;
+
+  // Derive quantity already in cart for this product (if present)
+  const targetProductId = useMemo(
+    () => currentVariant?.product_id || product.product_id,
+    [currentVariant?.product_id, product.product_id]
+  );
+
+  const cartQuantityForProduct = useMemo(() => {
+    if (!targetProductId) return null;
+    const fromCart = cartData?.data?.items?.find(
+      (i: any) =>
+        i?.additional?.product_id === Number(targetProductId) ||
+        i?.product?.id === Number(targetProductId)
+    )?.quantity;
+    const fromMirror = increaseOrDecreaseResponse?.data?.items?.find(
+      (i: any) => i?.additional?.product_id === Number(targetProductId)
+    )?.quantity;
+    const candidate = fromCart ?? fromMirror;
+    if (candidate == null) return null;
+    const n =
+      typeof candidate === "string" ? parseInt(candidate, 10) : candidate;
+    return Number.isFinite(n) && n > 0 ? n : null;
+  }, [cartData, increaseOrDecreaseResponse, targetProductId]);
+
+  const displayedQuantity = cartQuantityForProduct ?? quantity;
 
   return (
     <div className={`flex flex-col gap-6 ${className}`}>
@@ -125,7 +156,8 @@ export default function SingleProductDetails({
       <div className="border-y border-gray-200 py-4">
         <div className="flex items-center gap-3 flex-wrap">
           <div className="text-[28px] lg:text-[28px] md:text-[24px] font-[800] md:font-[500] text-[#D07A51] font-cairo">
-            {(hasDiscount ? effectiveSpecial! : effectivePrice).toFixed(2)} <i className="icon-rial"></i>
+            {(hasDiscount ? effectiveSpecial! : effectivePrice).toFixed(2)}{" "}
+            <i className="icon-rial"></i>
           </div>
           {hasDiscount && (
             <>
@@ -158,18 +190,11 @@ export default function SingleProductDetails({
       {/* Rating */}
       {product.reviews.average_rating && (
         <div className="flex items-center gap-2">
-          <div className="flex items-center gap-1">
-            {[...Array(5)].map((_, i) => (
-              <MdOutlineStar
-                key={i}
-                className={`text-xl ${
-                  i < Math.round(product.reviews.average_rating!)
-                    ? "text-[#ffd700] fill-current"
-                    : "text-gray-300"
-                }`}
-              />
-            ))}
-          </div>
+          <StarRating
+            rating={product.reviews.average_rating}
+            edit={false}
+            inline
+          />
           <span className="text-sm text-gray-600">
             ({product.reviews.total} {t("reviews")})
           </span>
@@ -199,16 +224,38 @@ export default function SingleProductDetails({
         </h3>
         <div className="flex items-center ">
           <button
-            onClick={() => setQuantity(Math.max(1, quantity - 1))}
+            onClick={() => {
+              const targetId = currentVariant?.product_id || product.product_id;
+              if (quantity > 1 && targetId) {
+                dispatch(
+                  applyLocalQuantityDelta({
+                    productId: Number(targetId),
+                    delta: -1,
+                  }) as any
+                );
+              }
+              setQuantity((q) => Math.max(1, q - 1));
+            }}
             className="w-[40px] h-[40px] cursor-pointer border border-gray-300 rounded-full hover:bg-gray-50 transition-colors flex justify-center items-center"
           >
             <TiMinus className="text-sm " />
           </button>
           <span className="w-[45px] text-center text-lg font-medium">
-            {quantity}
+            {displayedQuantity}
           </span>
           <button
-            onClick={() => setQuantity(quantity + 1)}
+            onClick={() => {
+              const targetId = currentVariant?.product_id || product.product_id;
+              if (targetId) {
+                dispatch(
+                  applyLocalQuantityDelta({
+                    productId: Number(targetId),
+                    delta: 1,
+                  }) as any
+                );
+              }
+              setQuantity((q) => q + 1);
+            }}
             className="w-[40px] h-[40px] cursor-pointer border border-gray-300 rounded-full hover:bg-gray-50 transition-colors flex justify-center items-center"
           >
             <FaPlus className="text-sm " />
@@ -222,26 +269,17 @@ export default function SingleProductDetails({
           onClick={handleAddToCart}
           disabled={!(currentVariant?.in_stock ?? product.in_stock)}
           className="bg-black text-white hover:bg-black/75 hover:text-white border border-black px-5 py-3 rounded-[5px] transition-all duration-300 font-cairo text-[20px] lg:text-[20px] md:text-[18px]"
-          >
+        >
           <MdOutlineShoppingCart className="text-xl ml-2" />
-         <Badge className="text-base bg-transparent"> {t("add-to-cart")}</Badge>
+          <Badge className="text-base bg-transparent">
+            {" "}
+            {t("add-to-cart")}
+          </Badge>
         </Button>
 
         <div className="flex gap-3">
           <FavouriteButton
-            product={{
-              id: currentVariant?.product_id || product.product_id,
-              name: product.name,
-              nameEn: product.name,
-              price: (effectiveSpecial ?? effectivePrice),
-              priceEn: `${(effectiveSpecial ?? effectivePrice).toFixed(2)} ج.م`,
-              code: product.sku,
-              images: [product.base_image.original_image_url],
-              category: "",
-              inStock: currentVariant?.in_stock ?? product.in_stock,
-              rating: product.reviews.average_rating || 0,
-              reviews: product.reviews.total,
-            }}
+            product={product}
             size="lg"
             className="flex-1 h-12 px-4"
           />
@@ -283,9 +321,15 @@ export default function SingleProductDetails({
           if (!open) setPendingAddProductId(null);
         }}
         onAuthenticated={() => {
-          const targetId = pendingAddProductId || currentVariant?.product_id || product.product_id;
+          const targetId =
+            pendingAddProductId ||
+            currentVariant?.product_id ||
+            product.product_id;
           if (!targetId) return;
-          dispatch(addToCart({ productId: Number(targetId) }));
+          dispatch(
+            addToCart({ productId: Number(targetId), productQTY: quantity })
+          );
+          toast.success(tProducts("added-to-cart"));
           setPendingAddProductId(null);
         }}
       />

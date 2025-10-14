@@ -12,14 +12,17 @@ import { useDispatch, useSelector } from "react-redux";
 import Loading from "@/components/loading";
 import PageWrapper from "@/components/page-wrapper";
 import SectionTitle from "@/components/section-title";
+import { usePathname } from "next/navigation";
 
 export default function page() {
   
   const dispatch = useDispatch();
   const { data, loading } = useSelector((state: any) => state.home);
+  const pathname = usePathname();
+  const currentLocale = pathname.split("/")[1];
   useEffect(() => {
-    dispatch(getHomeData() as any);
-  }, [dispatch]);
+    dispatch(getHomeData(currentLocale || "ar") as any);
+  }, [dispatch, currentLocale]);
 
   const t = useTranslations("home");
 

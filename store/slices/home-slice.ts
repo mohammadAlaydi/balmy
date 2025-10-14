@@ -2,9 +2,9 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 const API_KEY = process.env.NEXT_PUBLIC_API_URL;
 
-const getHomeData = createAsyncThunk("home", async () => {
+const getHomeData = createAsyncThunk("home", async (locale: string) => {
   try {
-    const response = await fetch(`${API_KEY}/v1/home`, {
+    const response = await fetch(`${API_KEY}/v1/home?locale=${locale}`, {
       method: "GET",
       headers: {
         Accept: "application/json",

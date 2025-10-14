@@ -3,7 +3,6 @@
 import { useTranslations } from "next-intl";
 
 export default function page() {
-
   const t = useTranslations("who-we-are");
 
   return (

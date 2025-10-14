@@ -23,23 +23,27 @@ export default function CartProduct({
   deletedProductId,
 }: CartProductProps) {
   const dispatch = useAppDispatch();
-  const { increaseOrDecreaseResponse } = useSelector(
-    (state: any) => state.cart
-  );
+  const { increaseOrDecreaseResponse, data } = useSelector((state: any) => state.cart);
 
   const [loadingProductId, setLoadingProductId] = useState<number | null>(null);
   const isLoading = loadingProductId === product?.id;
   // Derive current quantity from Redux (live) or fall back to prop
   const currentQty: number = useMemo(() => {
-    const fromStore = increaseOrDecreaseResponse?.data?.items?.find(
+    // Prefer the canonical cart items in state.data, then fall back to the last
+    // increase/decrease response mirror, then the prop quantity
+    const fromCartData = data?.data?.items?.find(
+      (i: any) => i?.additional?.product_id === product?.id || i?.product?.id === product?.id
+    )?.quantity;
+
+    const fromMirror = increaseOrDecreaseResponse?.data?.items?.find(
       (i: any) => i?.additional?.product_id === product?.id
     )?.quantity;
 
-    const candidate = fromStore ?? quantity ?? 0;
+    const candidate = fromCartData ?? fromMirror ?? quantity ?? 0;
     const num =
       typeof candidate === "string" ? parseInt(candidate, 10) : candidate;
     return Number.isFinite(num) && num > 0 ? num : 0;
-  }, [increaseOrDecreaseResponse, product?.id, quantity]);
+  }, [data, increaseOrDecreaseResponse, product?.id, quantity]);
 
   // Keep a local, optimistic quantity and batch deltas to avoid a request per click
   const [optimisticQty, setOptimisticQty] = useState<number | null>(null);

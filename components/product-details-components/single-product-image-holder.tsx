@@ -21,29 +21,42 @@ export default function SingleProductImageHolder({
   className,
 }: SingleProductImageHolderProps) {
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
-  const [hoveredImageIndex, setHoveredImageIndex] = useState<number | null>(null);
+  const [hoveredImageIndex, setHoveredImageIndex] = useState<number | null>(
+    null
+  );
 
   // Combine all images: base, hover, and gallery
   const allImages = [
-    { ...baseImage, type: 'base' },
-    { ...hoverImage, type: 'hover' },
-    ...galleryImages.map((img, index) => ({ ...img, type: `gallery-${index}` }))
-  ].filter((img, index) => index === 0 || img.original_image_url !== baseImage.original_image_url);
+    { ...baseImage, type: "base" },
+    { ...hoverImage, type: "hover" },
+    ...galleryImages.map((img, index) => ({
+      ...img,
+      type: `gallery-${index}`,
+    })),
+  ].filter(
+    (img, index) =>
+      index === 0 || img.original_image_url !== baseImage.original_image_url
+  );
 
   // Use hovered image if available, otherwise use selected image
-  const displayImageIndex = hoveredImageIndex !== null ? hoveredImageIndex : selectedImageIndex;
+  const displayImageIndex =
+    hoveredImageIndex !== null ? hoveredImageIndex : selectedImageIndex;
   const currentImage = allImages[displayImageIndex] || baseImage;
   const fallbackImage = "/assets/images/product-card.jpg";
 
   return (
-    <div className={cn("flex flex-col lg:flex-row-reverse gap-4", className)}>
+    <div className={cn("flex flex-col  gap-4 w-full col-span-12", className)}>
       {/* Main Image Display */}
-      <div className="relative w-full lg:w-[calc(100%-100px)] aspect-square overflow-hidden rounded-lg bg-gray-50">
+      <div className="relative w-full lg:w-[calc(100%-100px)] aspect-square overflow-hidden rounded-lg bg-gray-50 grid grid-cols-12">
         <Image
-          src={currentImage.large_image_url || currentImage.original_image_url || fallbackImage}
+          src={
+            currentImage.large_image_url ||
+            currentImage.original_image_url ||
+            fallbackImage
+          }
           alt={`${productName} - Main view`}
           fill
-          className="object-cover object-center transition-all duration-300 hover:scale-105"
+          className="object-cover object-center transition-all duration-300 hover:scale-105 col-span-12"
           priority
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           suppressHydrationWarning
@@ -77,7 +90,11 @@ export default function SingleProductImageHolder({
               )}
             >
               <Image
-                src={image.medium_image_url || image.original_image_url || fallbackImage}
+                src={
+                  image.medium_image_url ||
+                  image.original_image_url ||
+                  fallbackImage
+                }
                 alt={`${productName} - Thumbnail ${index + 1}`}
                 fill
                 className="object-cover object-center"

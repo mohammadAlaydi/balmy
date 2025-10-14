@@ -4,12 +4,8 @@ import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState, AppDispatch } from "@/store/store";
 import { logout } from "@/store/slices/auth-slice";
-import { Button } from "@/components/ui/button";
 import {
-  FaRegUser,
   FaSignOutAlt,
-  FaUser,
-  FaHeart,
   FaShoppingCart,
   FaSignInAlt,
 } from "react-icons/fa";
@@ -24,6 +20,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import toast from "react-hot-toast";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 
 export default function UserMenu({ isMobile = false }: { isMobile?: boolean }) {
   const [isMounted, setIsMounted] = useState(false);
@@ -32,7 +29,8 @@ export default function UserMenu({ isMobile = false }: { isMobile?: boolean }) {
     (state: RootState) => state.auth
   );
   const params = useParams();
-  const locale = (params.locale as string) || "ar";
+  const locale = (params?.locale as string) || "ar";
+  const t = useTranslations("user-menu");
 
   useEffect(() => {
     setIsMounted(true);
@@ -41,18 +39,16 @@ export default function UserMenu({ isMobile = false }: { isMobile?: boolean }) {
   const handleLogout = async () => {
     try {
       await dispatch(logout());
-      toast.success("Logged out successfully");
+      toast.success(t("logged-out-successfully"));
     } catch (error) {
-      toast.error("Logout failed");
+      toast.error(t("logout-failed"));
     }
   };
 
   // Don't render until mounted to avoid SSR issues
   if (!isMounted) {
     return (
-      <Button variant="ghost" size="icon" className={isMobile ? "lg:hidden" : "hidden lg:flex"}>
-        <FaRegUser className="text-xl" />
-      </Button>
+      <Image src="/assets/images/user.svg" alt="user" width={24} height={24} className={`text-xl ${isMobile ? "lg:hidden" : "hidden lg:flex"}`} />
     );
   }
 
@@ -60,47 +56,53 @@ export default function UserMenu({ isMobile = false }: { isMobile?: boolean }) {
     return (
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="ghost" size="icon" className={isMobile ? "lg:hidden" : "hidden lg:flex hover:bg-transparent"}>
-            <Image src="/assets/images/user.svg" alt="user" width={24} height={24} className="cursor-pointer text-black" />
-          </Button>
+          <Image
+            src="/assets/images/user.svg"
+            alt="user"
+            width={24}
+            height={24}
+            className={`cursor-pointer text-black ${
+              isMobile ? "lg:hidden" : "hidden lg:flex"
+            }`}
+          />
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-56">
           <div className="flex items-center justify-start gap-2 p-2">
             <div className="flex flex-col space-y-1 leading-none">
-              <p className="font-medium">Guest User</p>
+              <p className="font-medium">{t("guest-user")}</p>
               <p className="w-[200px] truncate text-sm text-muted-foreground">
-                Sign in to access your account
+                {t("sign-in-to-access")}
               </p>
             </div>
           </div>
           <DropdownMenuSeparator />
           <DropdownMenuItem asChild>
             <Link
-              href="/auth/login"
+              href={`/${locale}/auth/login`}
               className="flex items-center"
               prefetch={true}
             >
               <FaSignInAlt className="mr-2 h-4 w-4" />
-              <span>Sign In</span>
+              <span>{t("sign-in")}</span>
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
             <Link
-              href="/user-profile"
+              href={`/${locale}/user-profile`}
               className="flex items-center"
               prefetch={true}
             >
-              <FaUser className="mr-2 h-4 w-4" />
-              <span>Profile</span>
+              <Image src="/assets/images/user.svg" alt="user" width={24} height={24} />
+              <span>{t("profile")}</span>
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem>
-            <FaHeart className="mr-2 h-4 w-4" />
-            <span>Wishlist</span>
+            <Image src="/assets/images/heart.svg" alt="heart" width={24} height={24} />
+            <span>{t("wishlist")}</span>
           </DropdownMenuItem>
           <DropdownMenuItem>
             <FaShoppingCart className="mr-2 h-4 w-4" />
-            <span>Orders</span>
+            <span>{t("orders")}</span>
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -110,9 +112,7 @@ export default function UserMenu({ isMobile = false }: { isMobile?: boolean }) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" className={isMobile ? "lg:hidden" : "hidden lg:flex"}>
-          <FaRegUser className="text-xl" />
-        </Button>
+        <Image src="/assets/images/user.svg" alt="user" width={24} height={24} className={`${isMobile ? "lg:hidden" : "hidden lg:flex"}`} />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-56">
         <div className="flex items-center justify-start gap-2 p-2">
@@ -128,26 +128,26 @@ export default function UserMenu({ isMobile = false }: { isMobile?: boolean }) {
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild>
           <Link
-            href="/user-profile"
+            href={`/${locale}/user-profile`}
             className="flex items-center"
             prefetch={true}
           >
-            <FaUser className="mr-2 h-4 w-4" />
-            <span>Profile</span>
+            <Image src="/assets/images/user.svg" alt="user" width={24} height={24} />
+            <span>{t("profile")}</span>
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem>
-          <FaHeart className="mr-2 h-4 w-4" />
-          <span>Wishlist</span>
+          <Image src="/assets/images/heart.svg" alt="heart" width={24} height={24} />
+          <span>{t("wishlist")}</span>
         </DropdownMenuItem>
         <DropdownMenuItem>
           <FaShoppingCart className="mr-2 h-4 w-4" />
-          <span>Orders</span>
+          <span>{t("orders")}</span>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={handleLogout}>
           <FaSignOutAlt className="mr-2 h-4 w-4" />
-          <span>Log out</span>
+          <span>{t("log-out")}</span>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

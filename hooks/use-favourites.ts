@@ -15,30 +15,46 @@ import { Product } from "@/types/types";
 
 export const useFavourites = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const { items, isLoading, error } = useSelector(
+  const { items, loading, error } = useSelector(
     (state: any) => state.favourites
   );
 
   const addToFavouritesHandler = useCallback(
-    (product: Product) => {
-      dispatch(addToFavourites(product));
+    async (product: Product) => {
+      const result = await dispatch(addToFavourites(product));
+      if (addToFavourites.rejected.match(result)) {
+        throw (result.payload as string) || "Failed to add to favourites";
+      }
+      return result;
     },
     [dispatch]
   );
 
   const removeFromFavouritesHandler = useCallback(
-    (productId: number) => {
-      dispatch(removeFromFavourites(productId));
+    async (productId: number) => {
+      const result = await dispatch(removeFromFavourites(productId));
+      if (removeFromFavourites.rejected.match(result)) {
+        throw (result.payload as string) || "Failed to remove from favourites";
+      }
+      return result;
     },
     [dispatch]
   );
 
-  const fetchFavouritesHandler = useCallback(() => {
-    dispatch(fetchFavourites());
+  const fetchFavouritesHandler = useCallback(async () => {
+    const result = await dispatch(fetchFavourites());
+    if (fetchFavourites.rejected.match(result)) {
+      throw (result.payload as string) || "Failed to fetch favourites";
+    }
+    return result;
   }, [dispatch]);
 
-  const clearFavouritesHandler = useCallback(() => {
-    dispatch(clearFavourites());
+  const clearFavouritesHandler = useCallback(async () => {
+    const result = await dispatch(clearFavourites());
+    if (clearFavourites.rejected.match(result)) {
+      throw (result.payload as string) || "Failed to clear favourites";
+    }
+    return result;
   }, [dispatch]);
 
   const moveToCartHandler = useCallback(
@@ -69,7 +85,7 @@ export const useFavourites = () => {
 
   const isFavourite = useCallback(
     (productId: number) => {
-      return items.some((item) => item.id === productId);
+      return items.some((item: any) => item.id === productId);
     },
     [items]
   );
@@ -81,7 +97,7 @@ export const useFavourites = () => {
   return {
     // State
     favourites: items,
-    isLoading,
+    isLoading: loading,
     error,
 
     // Actions

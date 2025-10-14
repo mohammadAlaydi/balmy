@@ -24,51 +24,9 @@ interface ProductsState {
   selectedProduct: Product | null;
 }
 
-// Fallback products data for when API is not available
-const fallbackProducts: Product[] = [
-  {
-    id: 1,
-    name: "نعال عربي كلاسيك",
-    nameEn: "Classic Arabic Slippers",
-    price: 150,
-    priceEn: "150 SAR",
-    code: "SLP001",
-    images: ["/assets/images/product-card.jpg"],
-    category: "نعال",
-    inStock: true,
-    rating: 4.5,
-    reviews: 120,
-  },
-  {
-    id: 2,
-    name: "شماغ قطني أصلي",
-    nameEn: "Original Cotton Shemagh",
-    price: 200,
-    priceEn: "200 SAR",
-    code: "SHM001",
-    images: ["/assets/images/product-card.jpg"],
-    category: "شماغ",
-    inStock: true,
-    rating: 4.8,
-    reviews: 85,
-  },
-  {
-    id: 3,
-    name: "حذاء جلد طبيعي",
-    nameEn: "Natural Leather Shoes",
-    price: 350,
-    priceEn: "350 SAR",
-    code: "SHO001",
-    images: ["/assets/images/product-card.jpg"],
-    category: "أحذية",
-    inStock: true,
-    rating: 4.6,
-    reviews: 95,
-  },
-];
 
 const initialState: ProductsState = {
-  products: fallbackProducts, // Start with fallback data
+  products: [], 
   isLoading: false,
   error: null,
   selectedProduct: null,

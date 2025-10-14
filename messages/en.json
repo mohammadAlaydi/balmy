@@ -46,13 +46,21 @@
     "more-variants": "More variants",
     "added-to-cart": "Added to cart",
     "in-stock": "In Stock",
-    "out-of-stock": "Out of Stock"
+    "out-of-stock": "Out of Stock",
+    "choose-color": "Choose product color",
+    "no-product-details": "No product details available",
+    "go-to-favourites": "Go to Favourites",
+    "go-to-cart": "Go to Cart",
+    "cart": "Cart"
   },
   "categories": {
     "footwear": "Footwear",
     "clothing": "Clothing",
     "bags": "Bags",
-    "accessories": "Accessories"
+    "accessories": "Accessories",
+    "النعال": "Slippers",
+    "الاحذية-الرياضية": "Sports Shoes",
+    "الملابس-الشتوية": "Winter Clothing"
   },
   "cart": {
     "quick-cart": "Quick Cart",
@@ -139,6 +147,7 @@
     "legal-terms": "Legal Terms",
     "know-us-more": "Know Us More",
     "at-your-service": "At Your Service",
+    "image-alt": "Footer promotional image",
     "copyright": "© 2025 All Rights Reserved - Coffee Taste"
   },
   "careers": {
@@ -513,7 +522,29 @@
     "simple-product": "Simple Product",
     "customizable-product": "Customizable Product",
     "new": "New",
-    "featured": "Featured"
+    "featured": "Featured",
+    "expand-description": "Show product description",
+    "collapse-description": "Hide product description",
+    "product-summary": "Product Summary",
+    "detailed-description": "Detailed Description",
+    "show-more": "Show more",
+    "show-less": "Show less",
+    "product-features": "Product Features",
+    "feature-high-quality": "High quality and durability",
+    "feature-modern-design": "Modern and elegant design",
+    "feature-easy-use": "Easy to use and maintain",
+    "expand-reviews": "Show product reviews",
+    "collapse-reviews": "Hide product reviews",
+    "rating-out-of": "{rating} out of 5",
+    "choose-rating": "Choose rating",
+    "review-placeholder": "Write your experience with this product...",
+    "review-guidelines": {
+      "title": "Review Guidelines",
+      "item-1": "Write your review based on your personal experience with the product",
+      "item-2": "Be objective and helpful to other customers",
+      "item-3": "Avoid offensive or inappropriate language",
+      "item-4": "Focus on product quality, not delivery service"
+    }
   },
   "search": {
     "search-placeholder": "Search for products...",
@@ -918,5 +949,16 @@
     "faq": "FAQ",
     "return-policy": "Return Policy",
     "shipping-info": "Shipping Info"
+  },
+  "user-menu": {
+    "guest-user": "Guest User",
+    "sign-in-to-access": "Sign in to access your account",
+    "sign-in": "Sign In",
+    "profile": "Profile",
+    "wishlist": "Wishlist",
+    "orders": "Orders",
+    "log-out": "Log out",
+    "logged-out-successfully": "Logged out successfully",
+    "logout-failed": "Logout failed"
   }
 }

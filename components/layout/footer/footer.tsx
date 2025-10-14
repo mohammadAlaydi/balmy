@@ -22,6 +22,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getHomeData } from "@/store/slices/home-slice";
 import { useEffect } from "react";
 import Loading from "@/components/loading";
+import { usePathname } from "next/navigation";
 
 // Components
 const WorkHoursSection = () => {
@@ -40,6 +41,7 @@ const WorkHoursSection = () => {
 };
 
 const LocationSection = () => {
+  
   const t = useTranslations("contact");
   const tFooter = useTranslations("footer");
 
@@ -62,6 +64,7 @@ const LocationSection = () => {
 };
 
 const FooterImage = ({ data }: { data: any }) => {
+  const t = useTranslations("footer");
   // Check if ads array exists and has at least 3 elements
   if (!data?.ads || !Array.isArray(data.ads) || data.ads.length < 3) {
     return null;
@@ -73,7 +76,7 @@ const FooterImage = ({ data }: { data: any }) => {
         width={400}
         height={400}
         src={data.ads[2]?.img_path}
-        alt="footer-image"
+        alt={t("image-alt")}
         className="w-full max-h-[400px] object-cover"
       />
     </div>
@@ -106,7 +109,6 @@ const FooterAccordion = ({
   items: typeof LEGAL_TERMS;
   defaultValue: string;
 }) => {
-  const t = useTranslations();
 
   return (
     <Accordion
@@ -127,12 +129,12 @@ const FooterAccordion = ({
           <div className="flex flex-col gap-2">
             {items?.map((item: any) => (
               <Link
-                href={`/cms/${item?.url_key}`}
-                key={item?.page_title}
+                href={`/${(typeof window !== "undefined" ? window.location.pathname.split("/")[1] : "ar")}/cms/${item?.url_key}`}
+                key={item?.url_key || item?.page_title}
                 prefetch={true}
                 className="text-sm text-white text-end rtl:text-right ltr:text-left rtl:hover:mr-3 ltr:hover:ml-3 transition-all duration-300"
               >
-                {t(item?.page_title)}
+                {item?.page_title ?? item?.title ?? ""}
               </Link>
             ))}
           </div>
@@ -154,12 +156,14 @@ const CopyrightSection = () => {
   );
 };
 
-export default function Footer({ locale = "ar" }: { locale?: string }) {
+export default function Footer({ locale }: { locale?: string }) {
   const { data, loading } = useSelector((state: any) => state.home);
   const dispatch = useDispatch();
+  const pathname = usePathname();
+  const currentLocale = pathname.split("/")[1];
   useEffect(() => {
-    dispatch(getHomeData() as any);
-  }, [dispatch]);
+    dispatch(getHomeData(currentLocale || "ar") as any);
+  }, [dispatch, currentLocale]);
   const t = useTranslations("footer");
   if (loading) {
     return <Loading fullScreen={true} variant="spinner" size="xl" />;

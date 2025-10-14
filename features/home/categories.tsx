@@ -47,13 +47,28 @@ export default function Categories({ categories }: { categories: any }) {
                   className="overflow-hidden cursor-pointer"
                 >
                   <div>
-                    <Image
-                      src={`${category?.banner_url}`}
-                      width={250}
-                      height={250}
-                      className="rounded-full m-auto transform hover:scale-[1.03] transition-all duration-1000 overflow-hidden"
-                      alt={category.name}
-                    />
+                    {(() => {
+                      const rawBannerUrl =
+                        typeof (category as any)?.banner_url === "string"
+                          ? (category as any).banner_url.trim()
+                          : "";
+                      const isLikelyValidUrl =
+                        rawBannerUrl.startsWith("http://") ||
+                        rawBannerUrl.startsWith("https://") ||
+                        rawBannerUrl.startsWith("/");
+                      const imageSrc = isLikelyValidUrl
+                        ? rawBannerUrl
+                        : "/assets/images/no-image.webp";
+                      return (
+                        <Image
+                          src={imageSrc}
+                          width={250}
+                          height={250}
+                          className="rounded-full m-auto transform hover:scale-[1.03] transition-all duration-1000 overflow-hidden"
+                          alt={category.name || "category"}
+                        />
+                      );
+                    })()}
                   </div>
                 </Link>
                 <div className="flex flex-col gap-1 md:gap-3">

@@ -32,7 +32,7 @@ export const addToFavourites = createAsyncThunk(
   'favourites/add',
   async (product: Product, { rejectWithValue, dispatch }) => {
     try {
-      const response = await makeAuthenticatedRequest(`/api/wishlist/${product.id}`, {
+      const response = await makeAuthenticatedRequest(`/api/wishlist/${product.product_id}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

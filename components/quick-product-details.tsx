@@ -37,7 +37,7 @@ export default function QuickProductDetails({
   const [selectedVariantIndex, setSelectedVariantIndex] = useState<
     number | null
   >(null);
-  const [choosenVarianrID, setChoosenVarianrID] = useState(null);
+  const [choosenVarianrID, setChoosenVarianrID] = useState<number | null>(null);
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [pendingAddProductId, setPendingAddProductId] = useState<number | null>(null);
   const t = useTranslations("products");
@@ -57,7 +57,7 @@ export default function QuickProductDetails({
   if (!product) {
     return (
       <div className="flex flex-col gap-4 h-full items-center justify-center">
-        <p className="text-gray-500">No product details available</p>
+        <p className="text-gray-500">{t("no-product-details")}</p>
       </div>
     );
   }
@@ -76,7 +76,7 @@ export default function QuickProductDetails({
 
     if (!productId) return;
     await dispatch(addToCart({ productId }));
-    // Toasts are triggered centrally in the slice based on API response
+    toast.success(t("added-to-cart"));
   };
   const handleVariantSelect = (index: number) => {
     setSelectedVariantIndex(index);
@@ -140,7 +140,7 @@ export default function QuickProductDetails({
             : "bg-red-100 text-red-800 border-red-200"
         }`}
       >
-        {product.in_stock ? "متوفر" : "غير متوفر"}
+        {product.in_stock ? t("in-stock") : t("out-of-stock")}
       </p>
       <p className="text-gray-color font-[600] md:font-[650] md:text-sm text-xs">
         {product.price || 0.0} <i className="icon-rial"></i>
@@ -153,9 +153,7 @@ export default function QuickProductDetails({
 
     return (
       <div className="colors flex flex-col gap-3 flex-wrap">
-        <h2 className="font-[600] md:font-[650] md:text-sm text-xs">
-          اختر لون المنتج
-        </h2>
+        <h2 className="font-[600] md:font-[650] md:text-sm text-xs">{t("choose-color")}</h2>
         <div className="flex items-center gap-3 my-1 transition-all duration-300">
           {/* Base image option */}
           {product?.variants && product.variants.length > 3 ? (
@@ -230,15 +228,14 @@ export default function QuickProductDetails({
           onClick={handleAddToCart}
           className="text-nowrap md:text-sm text-xs bg-black text-white px-4 py-2 rounded-md hover:bg-white border border-black hover:text-black transition-all duration-300"
         >
-          {cartLoading ? <LoadingSpinner size="sm" /> : "إضف للسلة"}
+          {cartLoading ? <LoadingSpinner size="sm" /> : t("add-to-cart")}
         </Button>
         <Link
           prefetch={true}
           href="/favourits"
-          prefetch={true}
           className="text-nowrap md:text-sm text-xs bg-black text-white px-4 py-2 rounded-md hover:bg-white border border-black hover:text-black transition-all duration-300"
         >
-          الذهاب للمفضلة
+          {t("go-to-favourites")}
         </Link>
       </div>
       <Link
@@ -246,7 +243,7 @@ export default function QuickProductDetails({
         prefetch={true}
         className="text-nowrap md:text-sm text-xs bg-black text-white px-4 py-2 rounded-md hover:bg-white border border-black hover:text-black transition-all duration-300 text-center w-full"
       >
-        عربة التسوق
+        {t("cart")}
       </Link>
     </>
   );
@@ -274,6 +271,7 @@ export default function QuickProductDetails({
             : (product as any)?.id);
           if (!pid) return;
           await dispatch(addToCart({ productId: Number(pid) }));
+          toast.success(t("added-to-cart"));
           setPendingAddProductId(null);
         }}
       />

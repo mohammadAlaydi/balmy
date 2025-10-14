@@ -89,17 +89,11 @@ export default function CookiesPage() {
                 <h3 className="font-semibold text-gray-800 mb-2">
                   {t("browser-instructions")}
                 </h3>
-                <ul className="text-gray-700 text-sm space-y-1">
-                  <li>
-                    • Chrome: {t("chrome-instructions")}
-                  </li>
-                  <li>
-                    • Firefox: {t("firefox-instructions")}
-                  </li>
-                  <li>• Safari: {t("safari-instructions")}</li>
-                  <li>
-                    • Edge: {t("edge-instructions")}
-                  </li>
+                <ul className="text-gray-700 text-sm space-y-1 list-disc list-inside">
+                  <li>Chrome: {t("chrome-instructions")}</li>
+                  <li>Firefox: {t("firefox-instructions")}</li>
+                  <li>Safari: {t("safari-instructions")}</li>
+                  <li>Edge: {t("edge-instructions")}</li>
                 </ul>
               </div>
             </section>

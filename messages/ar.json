@@ -46,13 +46,21 @@
     "more-variants": "المزيد من المتغيرات",
     "added-to-cart": "تم إضافة المنتج إلى السلة",
     "in-stock": "متوفر",
-    "out-of-stock": "غير متوفر"
+    "out-of-stock": "غير متوفر",
+    "choose-color": "اختر لون المنتج",
+    "no-product-details": "لا توجد تفاصيل للمنتج",
+    "go-to-favourites": "الذهاب للمفضلة",
+    "go-to-cart": "الذهاب إلى السلة",
+    "cart": "عربة التسوق"
   },
   "categories": {
     "footwear": "أحذية",
     "clothing": "ملابس",
     "bags": "حقائب",
-    "accessories": "إكسسوارات"
+    "accessories": "إكسسوارات",
+    "النعال": "النعال",
+    "الاحذية-الرياضية": "الأحذية الرياضية",
+    "الملابس-الشتوية": "الملابس الشتوية"
   },
   "cart": {
     "quick-cart": "السلة السريعة",
@@ -139,6 +147,7 @@
     "legal-terms": "البنود القانونية",
     "know-us-more": "تعرف علينا أكثر",
     "at-your-service": "بخدمتكم",
+    "image-alt": "صورة ترويجية في التذييل",
     "copyright": "© 2025 جميع الحقوق محفوظة - مذاق القهوة"
   },
   "careers": {
@@ -513,7 +522,29 @@
     "simple-product": "منتج بسيط",
     "customizable-product": "منتج قابل للتخصيص",
     "new": "جديد",
-    "featured": "مميز"
+    "featured": "مميز",
+    "expand-description": "عرض وصف المنتج",
+    "collapse-description": "إخفاء وصف المنتج",
+    "product-summary": "ملخص المنتج",
+    "detailed-description": "الوصف التفصيلي",
+    "show-more": "عرض المزيد",
+    "show-less": "عرض أقل",
+    "product-features": "مميزات المنتج",
+    "feature-high-quality": "جودة عالية ومتانة",
+    "feature-modern-design": "تصميم عصري وأنيق",
+    "feature-easy-use": "سهولة الاستخدام والصيانة",
+    "expand-reviews": "عرض تقييمات المنتج",
+    "collapse-reviews": "إخفاء تقييمات المنتج",
+    "rating-out-of": "{rating} من 5",
+    "choose-rating": "اختر التقييم",
+    "review-placeholder": "اكتب تجربتك مع هذا المنتج...",
+    "review-guidelines": {
+      "title": "إرشادات التقييم",
+      "item-1": "اكتب تقييمك بناءً على تجربتك الشخصية مع المنتج",
+      "item-2": "كن موضوعياً ومفيداً للعملاء الآخرين",
+      "item-3": "تجنب استخدام لغة مسيئة أو غير مناسبة",
+      "item-4": "ركز على جودة المنتج وليس على خدمة التوصيل"
+    }
   },
   "search": {
     "search-placeholder": "البحث عن المنتجات...",
@@ -918,5 +949,16 @@
     "faq": "الأسئلة الشائعة",
     "return-policy": "سياسة الإرجاع",
     "shipping-info": "معلومات الشحن"
+  },
+  "user-menu": {
+    "guest-user": "مستخدم ضيف",
+    "sign-in-to-access": "سجل الدخول للوصول إلى حسابك",
+    "sign-in": "تسجيل الدخول",
+    "profile": "الملف الشخصي",
+    "wishlist": "قائمة الأمنيات",
+    "orders": "الطلبات",
+    "log-out": "تسجيل الخروج",
+    "logged-out-successfully": "تم تسجيل الخروج بنجاح",
+    "logout-failed": "فشل تسجيل الخروج"
   }
 }

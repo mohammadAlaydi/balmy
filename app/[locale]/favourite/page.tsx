@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import { useParams } from "next/navigation";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { Wifi, AlertCircle } from "lucide-react";
@@ -11,33 +11,28 @@ import { Button } from "@/components/ui/button";
 import SectionTitle from "@/components/section-title";
 import toast from "react-hot-toast";
 import { ProtectedRoute } from "@/components/auth/protected-route";
-import { buildApiUrl, API_CONFIG } from "@/lib/config";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import ProductCard from "@/components/product-card";
-import { ProductDetailsResponse } from "@/types/types";
 
 function FavouritePageContent() {
   
   const t = useTranslations("favourites");
-  const router = useRouter();
+  const params = useParams();
+  const locale = (params?.locale as string) || "ar";
 
   const {
     favourites,
-    isLoading,
+    // isLoading is not reliable from the hook; read from store instead
     error,
     fetchFavourites,
     removeFromFavourites,
     clearFavourites,
-    moveToCart,
     getFavouritesCount,
   } = useFavourites();
 
-  const [backendStatus, setBackendStatus] = useState<
-    "connected" | "disconnected" | "checking"
-  >("checking");
-  const [lastSync, setLastSync] = useState<Date | null>(null);
-  const [movingToCart, setMovingToCart] = useState<number | null>(null);
+  // Reliable loading state directly from redux slice
+  const isLoading = useSelector((state: RootState) => state.favourites.loading);
 
   // Authentication state
   const { isAuthenticated: reduxAuth, user } = useSelector(
@@ -47,21 +42,12 @@ function FavouritePageContent() {
 
   // Check backend connectivity
   const checkBackendStatus = async () => {
-    setBackendStatus("checking");
     try {
-      const response = await fetch(`/api/wishlist`, { method: "HEAD" });
-
-      if (response.ok) {
-        setBackendStatus("connected");
-        setLastSync(new Date());
-      } else if (response.status === 401) {
-        setBackendStatus("connected"); // Auth issue, but backend is alive
-      } else {
-        setBackendStatus("disconnected");
-      }
-    } catch (error) {
-      setBackendStatus("disconnected");
+      await fetch(`/api/wishlist`, { method: "HEAD" });
+    } catch (_) {
+      // no-op: just a connectivity poke
     }
+    fetchFavourites();
   };
 
   useEffect(() => {
@@ -69,7 +55,7 @@ function FavouritePageContent() {
       checkBackendStatus();
       fetchFavourites();
     }
-  }, [fetchFavourites, isAuthenticated, reduxAuth, user]);
+  }, [fetchFavourites, isAuthenticated]);
 
   const handleRemoveFromFavourites = async (productId: number) => {
     try {
@@ -99,23 +85,7 @@ function FavouritePageContent() {
     }
   };
 
-  const handleMoveToCart = async (product: ProductDetailsResponse) => {
-    try {
-      setMovingToCart(product.id);
-      const wishlistId = product.wishlistId ?? product.id;
-      await moveToCart(wishlistId);
-      toast.success(t("movedToCart"));
-      setTimeout(() => fetchFavourites(), 500);
-    } catch (error) {
-      if (error && typeof error === "string" && error.includes("login")) {
-        toast.error(t("login-to-move-to-cart"));
-      } else {
-        toast.error(t("errorMovingToCart"));
-      }
-    } finally {
-      setMovingToCart(null);
-    }
-  };
+  // Move to cart handled elsewhere; removed here as unused
 
   if (isLoading && favourites.length === 0) {
     return (
@@ -150,7 +120,7 @@ function FavouritePageContent() {
 
           <div className="flex gap-3 justify-center flex-wrap">
             <Button asChild variant="outline">
-              <Link href="/auth/login" prefetch={true}>
+              <Link href={`/${locale}/auth/login`} prefetch={true}>
                 {t("loginAgain")}
               </Link>
             </Button>
@@ -182,7 +152,7 @@ function FavouritePageContent() {
           </h3>
           <p className="text-gray-500 mb-6">{t("emptySubtitle")}</p>
           <Button asChild>
-            <Link href="/" prefetch={true}>
+            <Link href={`/${locale}`} prefetch={true}>
               {t("startShopping")}
             </Link>
           </Button>
@@ -210,9 +180,9 @@ function FavouritePageContent() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {favourites.map((product) => (
+            {favourites.map((product: any) => (
               <div key={product.id} className="relative group">
-                <ProductCard product={product} cardColSpan="col-span-1" />
+                <ProductCard product={product as any} cardColSpan="col-span-1" />
                 <Button
                   size="sm"
                   variant="destructive"

@@ -6,11 +6,11 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL;
 export async function POST(request: NextRequest) {
   try {
     const cookieStore = await cookies();
-    const token = cookieStore.get('accessToken')?.value;
+    const refreshToken = cookieStore.get('refreshToken')?.value;
 
-    if (!token) {
+    if (!refreshToken) {
       return NextResponse.json(
-        { message: 'No token to refresh' },
+        { message: 'No refresh token' },
         { status: 401 }
       );
     }
@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
     const response = await fetch(`${API_URL}/v1/customer/refresh-token`, {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${token}`,
+        'Authorization': `Bearer ${refreshToken}`,
         'Content-Type': 'application/json',
         'Accept': 'application/json',
       },
@@ -34,14 +34,29 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Set new token in cookie
-    cookieStore.set('accessToken', data.token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: 60 * 60 * 24 * 7, // 7 days
-      path: '/',
-    });
+    // Rotate tokens: set new access token and optionally new refresh token
+    const newAccessToken = data.token || data.accessToken || data.access_token;
+    const newRefreshToken = data.refreshToken || data.refresh_token;
+
+    if (newAccessToken) {
+      cookieStore.set('accessToken', newAccessToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        maxAge: 60 * 60 * 24 * 7, // 7 days
+        path: '/',
+      });
+    }
+
+    if (newRefreshToken) {
+      cookieStore.set('refreshToken', newRefreshToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        maxAge: 60 * 60 * 24 * 30, // 30 days
+        path: '/',
+      });
+    }
 
     return NextResponse.json({
       message: data.message || 'Token refreshed successfully',

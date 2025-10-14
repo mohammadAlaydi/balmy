@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Badge } from "@/components/ui/badge";
 import {
   NavigationMenu,
@@ -16,7 +16,6 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { FaRegUser } from "react-icons/fa";
 import Image from "next/image";
 import SocialMediaIcons from "@/components/social-media-icons";
 import DrawerComponent from "../drawer/drawer-component";
@@ -48,7 +47,6 @@ import {
 import { usePathname, useRouter } from "next/navigation";
 import Loading from "@/components/loading";
 import { useTranslations } from "next-intl";
-import ClientOnly from "@/components/ui/client-only";
 import { getCategories } from "@/store/slices/categories-slice";
 import { getHomeData } from "@/store/slices/home-slice";
 
@@ -80,8 +78,10 @@ const TopBar = ({ data }: { data: any }) => {
 
 const ActionIcons = ({
   languageItems,
+  currentLocale,
 }: {
   languageItems: { title: string; onClick: () => void; className: string }[];
+  currentLocale: string;
 }) => {
   const { getFavouritesCount, fetchFavourites } = useFavourites();
   const favouritesCount = getFavouritesCount();
@@ -98,31 +98,17 @@ const ActionIcons = ({
     (state: RootState) => state.auth
   );
 
-  // Auto-fetch favourites and cart when component mounts if user is authenticated
+  // Auto-fetch favourites and cart when authenticated (Redux-driven only)
   useEffect(() => {
-    // Check both Redux state and localStorage for authentication
-    const hasValidToken =
-      typeof window !== "undefined" && !!localStorage.getItem("accessToken");
-    const isReduxAuthenticated = isAuthenticated && user;
-
-    if (isReduxAuthenticated || hasValidToken) {
-      // Fetch favourites if we have none loaded
+    if (isAuthenticated && user) {
       if (favouritesCount === 0) {
         fetchFavourites();
       }
-      // Fetch cart data if we have none loaded
       if (cartCount === 0) {
         dispatch(getCartProducts() as any);
       }
     }
-  }, [
-    fetchFavourites,
-    favouritesCount,
-    cartCount,
-    isAuthenticated,
-    user,
-    dispatch,
-  ]);
+  }, [fetchFavourites, favouritesCount, cartCount, isAuthenticated, user, dispatch]);
 
   return (
     <>
@@ -149,7 +135,7 @@ const ActionIcons = ({
         </Dialog>
         <UserMenu />
         <Link
-          href="/favourite"
+          href={`/${currentLocale}/favourite`}
           className="relative hidden lg:block"
           prefetch={true}
         >
@@ -215,14 +201,20 @@ const ActionIcons = ({
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-      <Link href="/user-profile" className="block lg:hidden" prefetch={true}>
-        <FaRegUser className="text-xl cursor-pointer text-black" />
+      <Link href={`/${currentLocale}/user-profile`} className="block lg:hidden" prefetch={true}>
+        <Image
+          src="/assets/images/user.svg"
+          alt="user"
+          width={24}
+          height={24}
+          className="text-xl cursor-pointer text-black"
+        />
       </Link>
     </>
   );
 };
 
-const NavigationLinks = ({ navbarCategories }: { navbarCategories: any }) => {
+const NavigationLinks = ({ navbarCategories, currentLocale }: { navbarCategories: any; currentLocale: string }) => {
   const t = useTranslations("navigation");
   // Limit to first 5 categories
   const limitedCategories = navbarCategories?.slice(0, 5) || [];
@@ -231,17 +223,17 @@ const NavigationLinks = ({ navbarCategories }: { navbarCategories: any }) => {
     <NavigationMenu viewport={false} className="hidden lg:block">
       <NavigationMenuList>
         {limitedCategories && limitedCategories.length > 0 ? (
-          limitedCategories.map((link: any) => {
+          limitedCategories.map((link: any, linkIndex: number) => {
             const hasChildren = link?.children && link?.children?.length > 0;
             return hasChildren ? (
-              <NavigationMenuItem key={link?.name}>
+              <NavigationMenuItem key={link?.id ?? link?.slug ?? `cat-${linkIndex}`}>
                 <NavigationMenuTrigger className="cursor-pointer hover:bg-transparent hover:text-red-color">
                   {link?.name}
                 </NavigationMenuTrigger>
                 <NavigationMenuContent className="overflow-hidden min-w-[100px]">
                   <ul className="grid gap-1 p-1">
                     {link?.children?.map((nested: any, index: number) => (
-                      <li key={index}>
+                      <li key={nested?.id ?? nested?.slug ?? `nested-${link?.id ?? linkIndex}-${index}`}>
                         <NavigationMenuLink
                           asChild
                           className="cursor-pointer bg-transparent hover:bg-accent hover:text-accent-foreground"
@@ -249,8 +241,8 @@ const NavigationLinks = ({ navbarCategories }: { navbarCategories: any }) => {
                           <Link
                             href={
                               nested?.slug
-                                ? `/category/${link?.slug}/${nested?.slug}`
-                                : `/category/${link?.slug}/${nested?.id}`
+                                ? `/${currentLocale}/category/${link?.slug}/${nested?.slug}`
+                                : `/${currentLocale}/category/${link?.slug}/${nested?.id}`
                             }
                             prefetch={true}
                             className="block rounded-md px-1.5 py-1 text-sm hover:bg-accent hover:text-accent-foreground text-end"
@@ -264,10 +256,10 @@ const NavigationLinks = ({ navbarCategories }: { navbarCategories: any }) => {
                 </NavigationMenuContent>
               </NavigationMenuItem>
             ) : (
-              <NavigationMenuItem key={link?.name}>
+              <NavigationMenuItem key={link?.id ?? link?.slug ?? `cat-${linkIndex}`}>
                 <NavigationMenuLink asChild>
                   <Link
-                    href={`/category/${link?.slug}/${link?.id}`}
+                    href={`/${currentLocale}/category/${link?.slug}/${link?.id}`}
                     prefetch={true}
                     className="cursor-pointer hover:bg-transparent hover:text-red-color px-4 py-2 text-sm font-medium"
                   >
@@ -305,9 +297,11 @@ const Logo = () => (
 const MobileMenu = ({
   languageItems,
   navbarCategories,
+  currentLocale,
 }: {
   languageItems: { title: string; onClick: () => void; className: string }[];
   navbarCategories: any;
+  currentLocale: string;
 }) => {
   const t = useTranslations("navigation");
   // Limit to first 5 categories
@@ -348,7 +342,7 @@ const MobileMenu = ({
                         <li key={nested.id}>
                           <Link
                             prefetch={true}
-                            href={`/category/${category.slug}/${nested.slug}/${nested.id}`}
+                            href={`/${currentLocale}/category/${category.slug}/${nested.slug}/${nested.id}`}
                             className="block rounded-md px-1.5 py-1 text-sm hover:bg-accent hover:text-accent-foreground"
                           >
                             {nested.name}
@@ -361,7 +355,7 @@ const MobileMenu = ({
               ) : (
                 <Link
                   prefetch={true}
-                  href={`/category/${category.slug}/${category.id}`}
+                  href={`/${currentLocale}/category/${category.slug}/${category.id}`}
                   className="flex items-center py-3 px-3 hover:bg-gray-50 rounded-md text-left w-full"
                 >
                   {category.name}
@@ -374,7 +368,7 @@ const MobileMenu = ({
         {/* ✅ Mobile Action Icons */}
         <div className="pt-6 border-t border-gray-200 flex-shrink-0">
           <div className="flex items-center justify-center gap-6">
-            <Link href="/search" prefetch={true}>
+            <Link href={`/${currentLocale}/search`} prefetch={true}>
               <Image
                 src="/assets/images/search.svg"
                 alt="search"
@@ -384,7 +378,7 @@ const MobileMenu = ({
               />
             </Link>
             <UserMenu isMobile={true} />
-            <Link href="/favourite" prefetch={true} className="relative">
+            <Link href={`/${currentLocale}/favourite`} prefetch={true} className="relative">
               <Image
                 src="/assets/images/heart.svg"
                 alt="heart"
@@ -469,18 +463,14 @@ export default function Header() {
   const dispatch = useDispatch();
   const categories = useSelector((state: any) => state.categories);
   const loading = useSelector((state: any) => state.categories.loading);
-  const { data, loading: homeLoading } = useSelector(
-    (state: any) => state.home
-  );
-
-  useEffect(() => {
-    dispatch(getCategories() as any);
-    dispatch(getHomeData() as any);
-  }, [dispatch]);
-  console.log(data, "🤷‍♂️🤷‍♂️🤷‍♂️👌👌👌👌");
-  const router = useRouter();
+  const { data, loading: homeLoading } = useSelector((state: any) => state.home);   
   const pathname = usePathname();
   const currentLocale = pathname.split("/")[1];
+  useEffect(() => {
+    dispatch(getCategories(currentLocale) as any);
+    dispatch(getHomeData(currentLocale || "ar") as any);
+  }, [dispatch, currentLocale]);
+  const router = useRouter();
   const languageItems = LANGUAGES.map(
     (lang: { code: string; title: string }) => {
       const segments = pathname.split("/");
@@ -503,14 +493,16 @@ export default function Header() {
     <div className="w-full relative z-50">
       <TopBar data={data} />
       <div className="flex justify-between items-center gap-3 py-5 px-3 lg:px-5 scroll-shadow:shadow-[0px_6px_20px_rgba(149,157,165,0.1)] transition-shadow duration-200 bg-white relative z-50">
-        <ActionIcons languageItems={languageItems} />
+        <ActionIcons languageItems={languageItems} currentLocale={currentLocale} />
         <NavigationLinks
           navbarCategories={(categories as any)?.categories?.categories || []}
+          currentLocale={currentLocale}
         />
         <Logo />
         <MobileMenu
           navbarCategories={(categories as any)?.categories?.categories || []}
           languageItems={languageItems}
+          currentLocale={currentLocale}
         />
       </div>
     </div>

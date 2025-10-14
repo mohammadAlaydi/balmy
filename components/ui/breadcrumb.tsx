@@ -9,6 +9,7 @@ import { IoHome } from "react-icons/io5";
 
 import { cn } from "@/lib/utils";
 import { useBreadcrumbData } from "@/hooks/use-breadcrumb-data";
+import { useSelector } from "react-redux";
 
 const Breadcrumb = React.forwardRef<
   HTMLElement,
@@ -104,6 +105,8 @@ const AutoBreadcrumb = ({ className, showHome = true }: AutoBreadcrumbProps) => 
   const pathname = usePathname();
   const t = useTranslations("navigation");
   const tBreadcrumb = useTranslations("breadcrumb");
+  const tCategories = useTranslations("categories");
+  const tGeneral = useTranslations();
   
   // Get current locale from pathname
   const pathSegments = pathname.split('/').filter(Boolean);
@@ -115,10 +118,14 @@ const AutoBreadcrumb = ({ className, showHome = true }: AutoBreadcrumbProps) => 
   
   // Fetch dynamic breadcrumb data for numeric IDs
   const { breadcrumbData, loading } = useBreadcrumbData(segments);
+
+  // Access CMS pages from store (populated by home slice)
+  const homeState = useSelector((state: any) => state.home);
+  const cmsPages = homeState?.data?.cms_pages || [];
   
   // Generate breadcrumb items
   const breadcrumbItems = React.useMemo(() => {
-    const items = [];
+    const items = [] as Array<{ label: string; href?: string; isLast: boolean; isHome: boolean }>;
     let currentPath = `/${locale}`;
     
     // Add home item
@@ -131,8 +138,28 @@ const AutoBreadcrumb = ({ className, showHome = true }: AutoBreadcrumbProps) => 
       });
     }
     
-    // Filter out numeric ID segments first to avoid trailing separators
-    const filteredSegments = segments.filter((seg) => !/^\d+$/.test(decodeURIComponent(seg)));
+    // If path includes 'cms', show Home > CMS page title only
+    const cmsIndex = segments.findIndex((seg) => decodeURIComponent(seg) === 'cms');
+    if (cmsIndex !== -1) {
+      const cmsSlug = segments[cmsIndex + 1] ? decodeURIComponent(segments[cmsIndex + 1]) : '';
+      if (cmsSlug) {
+        const page = cmsPages.find((p: any) => p?.url_key === cmsSlug);
+        const label = page?.page_title ? tGeneral(page.page_title) : cmsSlug.replace(/-/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase());
+        items.push({
+          label,
+          href: undefined,
+          isLast: true,
+          isHome: false,
+        });
+      }
+      return items;
+    }
+
+    const filteredSegments = segments.filter((seg) => {
+      const decoded = decodeURIComponent(seg);
+      if (decoded === 'cms') return false;
+      return !/^\d+$/.test(decoded);
+    });
 
     // Add other segments
     filteredSegments.forEach((segment, index) => {
@@ -141,6 +168,7 @@ const AutoBreadcrumb = ({ className, showHome = true }: AutoBreadcrumbProps) => 
       
       // Decode URL-encoded segments
       const decodedSegment = decodeURIComponent(segment);
+      const previousSegment = index > 0 ? decodeURIComponent(filteredSegments[index - 1]) : undefined;
       
       // Check if it's a numeric ID (like category/product IDs) and hide it entirely
       const isNumericId = /^\d+$/.test(decodedSegment);
@@ -187,15 +215,26 @@ const AutoBreadcrumb = ({ className, showHome = true }: AutoBreadcrumbProps) => 
         // For numeric IDs, try to get the fetched name, otherwise show the ID
         label = breadcrumbData[segment] || decodedSegment;
       } else {
-        // For non-numeric segments, check if it contains Arabic characters
-        const hasArabic = /[\u0600-\u06FF]/.test(decodedSegment);
-        
-        if (hasArabic) {
-          // Keep Arabic text as is
-          label = decodedSegment;
+        // Try translating category slugs when path is /category/<slug>
+        if (previousSegment === 'category') {
+          try {
+            const translatedCategory = tCategories(decodedSegment as any);
+            if (translatedCategory && translatedCategory !== decodedSegment) {
+              label = translatedCategory;
+            } else {
+              label = decodedSegment.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+            }
+          } catch {
+            label = decodedSegment.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+          }
         } else {
-          // Capitalize and replace hyphens with spaces for English segments
-          label = decodedSegment.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+          // For non-numeric segments, check if it contains Arabic characters
+          const hasArabic = /[\u0600-\u06FF]/.test(decodedSegment);
+          if (hasArabic) {
+            label = decodedSegment;
+          } else {
+            label = decodedSegment.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+          }
         }
       }
       

@@ -25,17 +25,33 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Set httpOnly cookie with the token
+    // Set httpOnly cookies with the tokens
     const cookieStore = await cookies();
-    cookieStore.set('accessToken', data.token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: 60 * 60 * 24 * 7, // 7 days
-      path: '/',
-    });
+    const accessToken = data.token || data.accessToken || data.access_token;
+    const refreshToken = data.refreshToken || data.refresh_token;
 
-    // Return user data without token
+    if (accessToken) {
+      cookieStore.set('accessToken', accessToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        maxAge: 60 * 60 * 24 * 7, // 7 days
+        path: '/',
+      });
+    }
+
+    if (refreshToken) {
+      cookieStore.set('refreshToken', refreshToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        // Typically longer-lived than access token
+        maxAge: 60 * 60 * 24 * 30, // 30 days
+        path: '/',
+      });
+    }
+
+    // Return user data without tokens
     return NextResponse.json({
       data: data.data,
       message: data.message,

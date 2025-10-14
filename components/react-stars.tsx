@@ -12,6 +12,8 @@ interface StarRatingProps {
   half?: boolean;
   color1?: string;
   color2?: string;
+  className?: string;
+  inline?: boolean;
 }
 
 export default function StarRating({
@@ -22,6 +24,8 @@ export default function StarRating({
   half = true,
   color1 = "#e4e5e9",
   color2 = "#ffd700",
+  className,
+  inline = false,
 }: StarRatingProps) {
   const [isMobile, setIsMobile] = useState(false);
   const [isTablet, setIsTablet] = useState(false);
@@ -49,19 +53,8 @@ export default function StarRating({
     starSize = 20; // Medium size for tablet
   }
 
-  return isMobile ? (
-    <ReactStars
-      count={count}
-      value={rating}
-      size={starSize}
-      half={half}
-      color1={color1}
-      color2={color2}
-      onChange={onChange}
-      edit={edit}
-    />
-  ) : (
-    <div className="react-stars w-full flex rtl:justify-end ltr:justify-start">
+  const stars = (
+    <span className="inline-flex align-middle" dir="ltr">
       <ReactStars
         count={count}
         value={rating}
@@ -72,6 +65,16 @@ export default function StarRating({
         onChange={onChange}
         edit={edit}
       />
+    </span>
+  );
+
+  if (isMobile || inline) {
+    return <span className={className}>{stars}</span>;
+  }
+
+  return (
+    <div className={`react-stars w-full flex rtl:justify-end ltr:justify-start ${className ?? ""}`}>
+      {stars}
     </div>
   );
 }

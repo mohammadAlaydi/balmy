@@ -6,7 +6,6 @@ import { Badge } from "./ui/badge";
 import { Card, CardContent, CardHeader } from "./ui/card";
 import { Button } from "./ui/button";
 import { MdOutlineShoppingCart } from "react-icons/md";
-import toast from "react-hot-toast";
 import { motion } from "framer-motion";
 import DrawerComponent from "./layout/drawer/drawer-component";
 import QuickProductDetails from "./quick-product-details";
@@ -25,6 +24,7 @@ import { useRouter } from "next/navigation";
 import { FavouriteButton } from "./favourite-button";
 import { FaRegEye } from "react-icons/fa";
 import AuthModal from "./auth/auth-modal";
+import toast from "react-hot-toast";
 
 export default function ProductCard({
   product,
@@ -45,6 +45,7 @@ export default function ProductCard({
 
   const dispatch = useAppDispatch();
   const t = useTranslations("products");
+  const td = useTranslations("product-details");
   const router = useRouter();
 
   const { productDetails } = useSelector((state: any) => state.productDetails);
@@ -94,7 +95,7 @@ export default function ProductCard({
       } else {
         await maybePromise; // fallback if not a thunk
       }
-      // Toasts are triggered centrally in the slice based on API response
+      toast.success(t("added-to-cart"));
     } catch (err) {
       // Errors will be handled by slice rejected toast
     } finally {
@@ -139,7 +140,7 @@ export default function ProductCard({
 
         {product?.new && (
           <Badge className="bg-red-600 text-white font-semibold px-2 py-1 text-xs absolute top-2 ltr:right-2 rtl:left-2 z-10 shadow-md">
-            New
+            {td("new")}
           </Badge>
         )}
 
@@ -157,7 +158,7 @@ export default function ProductCard({
             width={224}
             height={224}
             src={hoverImageUrl}
-            alt={`${product?.name || t("product")} hover - ${
+            alt={`${product?.name || t("product")} ${t("variant-image")} - ${
               product?.sku || ""
             }`}
             className="absolute inset-0 rounded-t-lg w-full h-full aspect-square object-cover transition-all duration-300 opacity-0 group-hover:opacity-100"
@@ -253,7 +254,7 @@ export default function ProductCard({
                   onClick={() => handleVariantSelect(0, product.product_id)}
                 />
               </div>
-            </div> // no variants
+            </div>
           )}
 
           <p className="text-xs md:text-sm mb-3 text-nowrap hidden md:flex items-center gap-2">
@@ -299,6 +300,7 @@ export default function ProductCard({
             } else {
               await maybePromise;
             }
+            toast.success(t("added-to-cart"));
           } finally {
             setIsAdding(false);
             setPendingAddProductId(null);
