@@ -125,14 +125,14 @@ const FooterAccordion = ({
         </AccordionTrigger>
         <AccordionContent>
           <div className="flex flex-col gap-2">
-            {items.map((item) => (
+            {items?.map((item: any) => (
               <Link
-                href={item.path}
-                key={item.title}
+                href={`/cms/${item?.url_key}`}
+                key={item?.page_title}
                 prefetch={true}
                 className="text-sm text-white text-end rtl:text-right ltr:text-left rtl:hover:mr-3 ltr:hover:ml-3 transition-all duration-300"
               >
-                {t(item?.title)}
+                {t(item?.page_title)}
               </Link>
             ))}
           </div>
@@ -164,6 +164,13 @@ export default function Footer({ locale = "ar" }: { locale?: string }) {
   if (loading) {
     return <Loading fullScreen={true} variant="spinner" size="xl" />;
   }
+  const legalTerms = data?.cms_pages?.filter(
+    (page: any) => page.position === 1
+  );
+  const knowUsMore = data?.cms_pages?.filter(
+    (page: any) => page.position === 2
+  );
+  const services = data?.cms_pages?.filter((page: any) => page.position === 3);
   return (
     <div className="bg-black">
       <div className="grid grid-cols-12">
@@ -178,17 +185,17 @@ export default function Footer({ locale = "ar" }: { locale?: string }) {
         <SocialMediaSection data={data} />
         <FooterAccordion
           title={t("legal-terms")}
-          items={LEGAL_TERMS}
+          items={legalTerms}
           defaultValue="item-1"
         />
         <FooterAccordion
           title={t("know-us-more")}
-          items={KNOW_US_MORE}
+          items={knowUsMore}
           defaultValue="item-2"
         />
         <FooterAccordion
           title={t("at-your-service")}
-          items={SERVICES}
+          items={services}
           defaultValue="item-3"
         />
       </div>
