@@ -4,11 +4,7 @@ import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState, AppDispatch } from "@/store/store";
 import { logout } from "@/store/slices/auth-slice";
-import {
-  FaSignOutAlt,
-  FaShoppingCart,
-  FaSignInAlt,
-} from "react-icons/fa";
+import { FaSignOutAlt, FaShoppingCart, FaSignInAlt } from "react-icons/fa";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import {
@@ -21,6 +17,8 @@ import {
 import toast from "react-hot-toast";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
+import { CiLogout } from "react-icons/ci";
+import { CiLogin } from "react-icons/ci";
 
 export default function UserMenu({ isMobile = false }: { isMobile?: boolean }) {
   const [isMounted, setIsMounted] = useState(false);
@@ -48,7 +46,13 @@ export default function UserMenu({ isMobile = false }: { isMobile?: boolean }) {
   // Don't render until mounted to avoid SSR issues
   if (!isMounted) {
     return (
-      <Image src="/assets/images/user.svg" alt="user" width={24} height={24} className={`text-xl ${isMobile ? "lg:hidden" : "hidden lg:flex"}`} />
+      <Image
+        src="/assets/images/user.svg"
+        alt="user"
+        width={24}
+        height={24}
+        className={`text-xl ${isMobile ? "lg:hidden" : "hidden lg:flex"}`}
+      />
     );
   }
 
@@ -76,32 +80,47 @@ export default function UserMenu({ isMobile = false }: { isMobile?: boolean }) {
             </div>
           </div>
           <DropdownMenuSeparator />
-          <DropdownMenuItem asChild>
+          <DropdownMenuItem asChild className="cursor-pointer flex gap-2 items-center" >
             <Link
               href={`/${locale}/auth/login`}
               className="flex items-center"
               prefetch={true}
             >
-              <FaSignInAlt className="mr-2 h-4 w-4" />
+              <CiLogin className="mr-2 h-5 w-5" />
               <span>{t("sign-in")}</span>
             </Link>
           </DropdownMenuItem>
-          <DropdownMenuItem asChild>
+          <DropdownMenuItem asChild className="cursor-pointer flex gap-2 items-center">
             <Link
               href={`/${locale}/user-profile`}
               className="flex items-center"
               prefetch={true}
             >
-              <Image src="/assets/images/user.svg" alt="user" width={24} height={24} />
+              <Image
+                src="/assets/images/user.svg"
+                alt="user"
+                width={22}
+                height={22}
+              />
               <span>{t("profile")}</span>
             </Link>
           </DropdownMenuItem>
-          <DropdownMenuItem>
-            <Image src="/assets/images/heart.svg" alt="heart" width={24} height={24} />
+          <DropdownMenuItem className="cursor-pointer flex gap-2 items-center">
+            <Image
+              src="/assets/images/heart.svg"
+              alt="heart"
+              width={22}
+              height={22}
+            />
             <span>{t("wishlist")}</span>
           </DropdownMenuItem>
-          <DropdownMenuItem>
-            <FaShoppingCart className="mr-2 h-4 w-4" />
+          <DropdownMenuItem className="cursor-pointer flex gap-2 items-center">
+            <Image
+              src="/assets/images/cart.svg"
+              alt="cart"
+              width={22}
+              height={22}
+            />
             <span>{t("orders")}</span>
           </DropdownMenuItem>
         </DropdownMenuContent>
@@ -111,8 +130,14 @@ export default function UserMenu({ isMobile = false }: { isMobile?: boolean }) {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Image src="/assets/images/user.svg" alt="user" width={24} height={24} className={`${isMobile ? "lg:hidden" : "hidden lg:flex"}`} />
+      <DropdownMenuTrigger asChild className="cursor-pointer flex gap-2 items-center">
+        <Image
+          src="/assets/images/user.svg"
+          alt="user"
+          width={22}
+          height={22}
+          className={`${isMobile ? "lg:hidden" : "hidden lg:flex"}`}
+        />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-56">
         <div className="flex items-center justify-start gap-2 p-2">
@@ -126,27 +151,42 @@ export default function UserMenu({ isMobile = false }: { isMobile?: boolean }) {
           </div>
         </div>
         <DropdownMenuSeparator />
-        <DropdownMenuItem asChild>
+        <DropdownMenuItem asChild className="cursor-pointer flex gap-2 items-center">
           <Link
             href={`/${locale}/user-profile`}
             className="flex items-center"
             prefetch={true}
           >
-            <Image src="/assets/images/user.svg" alt="user" width={24} height={24} />
+            <Image
+              src="/assets/images/user.svg"
+              alt="user"
+              width={22}
+              height={22}
+            />
             <span>{t("profile")}</span>
           </Link>
         </DropdownMenuItem>
-        <DropdownMenuItem>
-          <Image src="/assets/images/heart.svg" alt="heart" width={24} height={24} />
+        <DropdownMenuItem className="cursor-pointer flex gap-2 items-center">
+          <Image
+            src="/assets/images/heart.svg"
+            alt="heart"
+            width={22}
+            height={22}
+          />
           <span>{t("wishlist")}</span>
         </DropdownMenuItem>
-        <DropdownMenuItem>
-          <FaShoppingCart className="mr-2 h-4 w-4" />
+        <DropdownMenuItem className="cursor-pointer flex gap-2 items-center">
+          <Image
+            src="/assets/images/cart.svg"
+            alt="cart"
+            width={22}
+            height={22}
+          />
           <span>{t("orders")}</span>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={handleLogout}>
-          <FaSignOutAlt className="mr-2 h-4 w-4" />
+        <DropdownMenuItem onClick={handleLogout} className="cursor-pointer flex gap-2 items-center" >
+          <CiLogout className="mr-2 h-5 w-5" />
           <span>{t("log-out")}</span>
         </DropdownMenuItem>
       </DropdownMenuContent>
