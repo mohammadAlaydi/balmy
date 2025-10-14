@@ -38,7 +38,7 @@ export default function Services() {
     <CarouselComponent
       spaceBetween={20}
       slidesPerView={1}
-      containerClassName="services-carousel my-5"
+      containerClassName="services-carousel"
       breakpoints={{
         1000: { slidesPerView: 4, spaceBetween: 20 },
         768: { slidesPerView: 3, spaceBetween: 20 },

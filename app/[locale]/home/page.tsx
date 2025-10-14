@@ -33,11 +33,12 @@ export default function page() {
   return (
     <>
       <BannerCarousel sliders={data?.sliders} />
-      <PageWrapper>
+      <PageWrapper yPadding="py-5">
         <Services />
         <Categories categories={data?.featured_categories} />
         <SectionTitle title={t("featured-products")} titleStyle="text-xl md:text-3xl my-5"/> 
         <ProductsCarousel products={data?.featured_products} />
+        <SectionTitle title={t("advertising")} titleStyle="text-xl md:text-3xl my-5"/>
         <Ads ads={data?.ads} />
         <SectionTitle title={t("new-arrivals")}  titleStyle="text-xl md:text-3xl my-5"/>
         <ProductsCarousel products={data?.new_products} />

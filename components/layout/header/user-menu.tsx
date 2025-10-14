@@ -73,7 +73,9 @@ export default function UserMenu({ isMobile = false }: { isMobile?: boolean }) {
         <DropdownMenuContent>
           <div className="flex items-center gap-2 p-2">
             <div className="flex flex-col space-y-1 leading-none">
-              <p className="font-medium rtl:text-right ltr:text-left">{t("guest-user")}</p>
+              <p className="font-medium rtl:text-right ltr:text-left">
+                {t("guest-user")}
+              </p>
               <p className="w-[200px] truncate text-sm text-muted-foreground rtl:text-right ltr:text-left">
                 {t("sign-in-to-access")}
               </p>
@@ -95,7 +97,9 @@ export default function UserMenu({ isMobile = false }: { isMobile?: boolean }) {
           </DropdownMenuItem>
           <DropdownMenuItem
             asChild
-            className={`cursor-pointer flex gap-2 items-center ${isRTL ? "flex-row-reverse" : ""}`}
+            className={`cursor-pointer flex gap-2 items-center ${
+              isRTL ? "flex-row-reverse" : ""
+            }`}
           >
             <Link
               href={`/${locale}/user-profile`}
@@ -112,7 +116,11 @@ export default function UserMenu({ isMobile = false }: { isMobile?: boolean }) {
               <span>{t("profile")}</span>
             </Link>
           </DropdownMenuItem>
-          <DropdownMenuItem className={`cursor-pointer flex gap-2 items-center ${isRTL ? "flex-row-reverse" : ""}`}>
+          <DropdownMenuItem
+            className={`cursor-pointer flex gap-2 items-center ${
+              isRTL ? "flex-row-reverse" : ""
+            }`}
+          >
             <Image
               src="/assets/images/heart.svg"
               alt="heart"
@@ -122,7 +130,11 @@ export default function UserMenu({ isMobile = false }: { isMobile?: boolean }) {
             />
             <span>{t("wishlist")}</span>
           </DropdownMenuItem>
-          <DropdownMenuItem className={`cursor-pointer flex gap-2 items-center ${isRTL ? "flex-row-reverse" : ""}`}>
+          <DropdownMenuItem
+            className={`cursor-pointer flex gap-2 items-center ${
+              isRTL ? "flex-row-reverse" : ""
+            }`}
+          >
             <Image
               src="/assets/images/cart.svg"
               alt="cart"
@@ -165,7 +177,9 @@ export default function UserMenu({ isMobile = false }: { isMobile?: boolean }) {
         <DropdownMenuSeparator />
         <DropdownMenuItem
           asChild
-          className={`cursor-pointer flex gap-2 items-center ${isRTL ? "flex-row-reverse" : ""}`}
+          className={`cursor-pointer flex gap-2 items-center ${
+            isRTL ? "flex-row-reverse" : ""
+          }`}
         >
           <Link
             href={`/${locale}/user-profile`}
@@ -182,7 +196,11 @@ export default function UserMenu({ isMobile = false }: { isMobile?: boolean }) {
             <span>{t("profile")}</span>
           </Link>
         </DropdownMenuItem>
-        <DropdownMenuItem className={`cursor-pointer flex gap-2 items-center ${isRTL ? "flex-row-reverse" : ""}`}>
+        <DropdownMenuItem
+          className={`cursor-pointer flex gap-2 items-center ${
+            isRTL ? "flex-row-reverse" : ""
+          }`}
+        >
           <Image
             src="/assets/images/heart.svg"
             alt="heart"
@@ -192,7 +210,11 @@ export default function UserMenu({ isMobile = false }: { isMobile?: boolean }) {
           />
           <span>{t("wishlist")}</span>
         </DropdownMenuItem>
-        <DropdownMenuItem className={`cursor-pointer flex gap-2 items-center ${isRTL ? "flex-row-reverse" : ""}`}>
+        <DropdownMenuItem
+          className={`cursor-pointer flex gap-2 items-center ${
+            isRTL ? "flex-row-reverse" : ""
+          }`}
+        >
           <Image
             src="/assets/images/cart.svg"
             alt="cart"
@@ -205,7 +227,9 @@ export default function UserMenu({ isMobile = false }: { isMobile?: boolean }) {
         <DropdownMenuSeparator />
         <DropdownMenuItem
           onClick={handleLogout}
-          className={`cursor-pointer flex gap-2 items-center ${isRTL ? "flex-row-reverse" : ""}`}
+          className={`cursor-pointer flex gap-2 items-center ${
+            isRTL ? "flex-row-reverse" : ""
+          }`}
         >
           <CiLogout className={`${isRTL ? "ml-2" : "mr-2"} h-5 w-5"`} />
           <span>{t("log-out")}</span>
