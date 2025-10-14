@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState, AppDispatch } from "@/store/store";
 import { logout } from "@/store/slices/auth-slice";
-import { FaSignOutAlt, FaShoppingCart, FaSignInAlt } from "react-icons/fa";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import {
@@ -29,6 +28,7 @@ export default function UserMenu({ isMobile = false }: { isMobile?: boolean }) {
   const params = useParams();
   const locale = (params?.locale as string) || "ar";
   const t = useTranslations("user-menu");
+  const isRTL = locale === "ar";
 
   useEffect(() => {
     setIsMounted(true);
@@ -49,8 +49,8 @@ export default function UserMenu({ isMobile = false }: { isMobile?: boolean }) {
       <Image
         src="/assets/images/user.svg"
         alt="user"
-        width={24}
-        height={24}
+        width={22}
+        height={22}
         className={`text-xl ${isMobile ? "lg:hidden" : "hidden lg:flex"}`}
       />
     );
@@ -70,30 +70,36 @@ export default function UserMenu({ isMobile = false }: { isMobile?: boolean }) {
             }`}
           />
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="w-56">
-          <div className="flex items-center justify-start gap-2 p-2">
+        <DropdownMenuContent>
+          <div className="flex items-center gap-2 p-2">
             <div className="flex flex-col space-y-1 leading-none">
-              <p className="font-medium">{t("guest-user")}</p>
-              <p className="w-[200px] truncate text-sm text-muted-foreground">
+              <p className="font-medium rtl:text-right ltr:text-left">{t("guest-user")}</p>
+              <p className="w-[200px] truncate text-sm text-muted-foreground rtl:text-right ltr:text-left">
                 {t("sign-in-to-access")}
               </p>
             </div>
           </div>
           <DropdownMenuSeparator />
-          <DropdownMenuItem asChild className="cursor-pointer flex gap-2 items-center" >
+          <DropdownMenuItem
+            asChild
+            className={`cursor-pointer flex gap-2 items-center`}
+          >
             <Link
               href={`/${locale}/auth/login`}
-              className="flex items-center"
+              className={`flex items-center ${isRTL ? "flex-row-reverse" : ""}`}
               prefetch={true}
             >
-              <CiLogin className="mr-2 h-5 w-5" />
+              <CiLogin className={`h-6 w-6`} />
               <span>{t("sign-in")}</span>
             </Link>
           </DropdownMenuItem>
-          <DropdownMenuItem asChild className="cursor-pointer flex gap-2 items-center">
+          <DropdownMenuItem
+            asChild
+            className={`cursor-pointer flex gap-2 items-center ${isRTL ? "flex-row-reverse" : ""}`}
+          >
             <Link
               href={`/${locale}/user-profile`}
-              className="flex items-center"
+              className={`flex items-center ${isRTL ? "flex-row-reverse" : ""}`}
               prefetch={true}
             >
               <Image
@@ -101,25 +107,28 @@ export default function UserMenu({ isMobile = false }: { isMobile?: boolean }) {
                 alt="user"
                 width={22}
                 height={22}
+                className={`${isRTL ? "ml-2" : "mr-2"}`}
               />
               <span>{t("profile")}</span>
             </Link>
           </DropdownMenuItem>
-          <DropdownMenuItem className="cursor-pointer flex gap-2 items-center">
+          <DropdownMenuItem className={`cursor-pointer flex gap-2 items-center ${isRTL ? "flex-row-reverse" : ""}`}>
             <Image
               src="/assets/images/heart.svg"
               alt="heart"
               width={22}
               height={22}
+              className={`${isRTL ? "ml-2" : "mr-2"}`}
             />
             <span>{t("wishlist")}</span>
           </DropdownMenuItem>
-          <DropdownMenuItem className="cursor-pointer flex gap-2 items-center">
+          <DropdownMenuItem className={`cursor-pointer flex gap-2 items-center ${isRTL ? "flex-row-reverse" : ""}`}>
             <Image
               src="/assets/images/cart.svg"
               alt="cart"
               width={22}
               height={22}
+              className={`${isRTL ? "ml-2" : "mr-2"}`}
             />
             <span>{t("orders")}</span>
           </DropdownMenuItem>
@@ -130,7 +139,10 @@ export default function UserMenu({ isMobile = false }: { isMobile?: boolean }) {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild className="cursor-pointer flex gap-2 items-center">
+      <DropdownMenuTrigger
+        asChild
+        className="cursor-pointer flex gap-2 items-center"
+      >
         <Image
           src="/assets/images/user.svg"
           alt="user"
@@ -139,8 +151,8 @@ export default function UserMenu({ isMobile = false }: { isMobile?: boolean }) {
           className={`${isMobile ? "lg:hidden" : "hidden lg:flex"}`}
         />
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-56">
-        <div className="flex items-center justify-start gap-2 p-2">
+      <DropdownMenuContent className="w-56">
+        <div className="flex items-center gap-2 p-2">
           <div className="flex flex-col space-y-1 leading-none">
             <p className="font-medium">
               {user?.firstName} {user?.lastName}
@@ -151,10 +163,13 @@ export default function UserMenu({ isMobile = false }: { isMobile?: boolean }) {
           </div>
         </div>
         <DropdownMenuSeparator />
-        <DropdownMenuItem asChild className="cursor-pointer flex gap-2 items-center">
+        <DropdownMenuItem
+          asChild
+          className={`cursor-pointer flex gap-2 items-center ${isRTL ? "flex-row-reverse" : ""}`}
+        >
           <Link
             href={`/${locale}/user-profile`}
-            className="flex items-center"
+            className={`flex items-center ${isRTL ? "flex-row-reverse" : ""}`}
             prefetch={true}
           >
             <Image
@@ -162,31 +177,37 @@ export default function UserMenu({ isMobile = false }: { isMobile?: boolean }) {
               alt="user"
               width={22}
               height={22}
+              className={`${isRTL ? "ml-2" : "mr-2"}`}
             />
             <span>{t("profile")}</span>
           </Link>
         </DropdownMenuItem>
-        <DropdownMenuItem className="cursor-pointer flex gap-2 items-center">
+        <DropdownMenuItem className={`cursor-pointer flex gap-2 items-center ${isRTL ? "flex-row-reverse" : ""}`}>
           <Image
             src="/assets/images/heart.svg"
             alt="heart"
             width={22}
             height={22}
+            className={`${isRTL ? "ml-2" : "mr-2"}`}
           />
           <span>{t("wishlist")}</span>
         </DropdownMenuItem>
-        <DropdownMenuItem className="cursor-pointer flex gap-2 items-center">
+        <DropdownMenuItem className={`cursor-pointer flex gap-2 items-center ${isRTL ? "flex-row-reverse" : ""}`}>
           <Image
             src="/assets/images/cart.svg"
             alt="cart"
             width={22}
             height={22}
+            className={`${isRTL ? "ml-2" : "mr-2"}`}
           />
           <span>{t("orders")}</span>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={handleLogout} className="cursor-pointer flex gap-2 items-center" >
-          <CiLogout className="mr-2 h-5 w-5" />
+        <DropdownMenuItem
+          onClick={handleLogout}
+          className={`cursor-pointer flex gap-2 items-center ${isRTL ? "flex-row-reverse" : ""}`}
+        >
+          <CiLogout className={`${isRTL ? "ml-2" : "mr-2"} h-5 w-5"`} />
           <span>{t("log-out")}</span>
         </DropdownMenuItem>
       </DropdownMenuContent>
