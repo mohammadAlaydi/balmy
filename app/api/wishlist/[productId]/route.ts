@@ -49,3 +49,45 @@ export async function POST(
   }
 }
 
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: { productId: string } }
+) {
+  try {
+    const { productId } = params;
+    if (!productId) {
+      return NextResponse.json(
+        { message: 'Product ID is required' },
+        { status: 400 }
+      );
+    }
+
+    const response = await makeAuthenticatedRequest(
+      `${API_URL}/v1/customer/wishlist/${productId}`,
+      {
+        method: 'DELETE',
+        headers: {
+          'Accept': 'application/json',
+        },
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      return NextResponse.json(
+        { message: data?.message || 'Failed to remove from wishlist' },
+        { status: response.status }
+      );
+    }
+
+    return NextResponse.json(data);
+  } catch (error) {
+    console.error('Wishlist DELETE error:', error);
+    return NextResponse.json(
+      { message: 'Internal server error' },
+      { status: 500 }
+    );
+  }
+}
+

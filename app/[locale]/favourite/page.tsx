@@ -16,21 +16,22 @@ import { RootState } from "@/store/store";
 import ProductCard from "@/components/product-card";
 
 function FavouritePageContent() {
-  
   const t = useTranslations("favourites");
   const params = useParams();
   const locale = (params?.locale as string) || "ar";
 
   const {
     favourites,
-    // isLoading is not reliable from the hook; read from store instead
     error,
     fetchFavourites,
     removeFromFavourites,
     clearFavourites,
     getFavouritesCount,
+    
+
   } = useFavourites();
 
+  console.log(favourites, "👌👌👌👌");
   // Reliable loading state directly from redux slice
   const isLoading = useSelector((state: RootState) => state.favourites.loading);
 
@@ -43,7 +44,7 @@ function FavouritePageContent() {
   // Check backend connectivity
   const checkBackendStatus = async () => {
     try {
-      await fetch(`/api/wishlist`, { method: "HEAD" });
+      await fetch(`/api/wishlist`, { method: "POST" });
     } catch (_) {
       // no-op: just a connectivity poke
     }
@@ -134,6 +135,7 @@ function FavouritePageContent() {
     );
   }
 
+  console.log(favourites, "👌👌👌👌");
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="mb-8">
@@ -182,7 +184,12 @@ function FavouritePageContent() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {favourites.map((product: any) => (
               <div key={product.id} className="relative group">
-                <ProductCard product={product as any} cardColSpan="col-span-1" />
+                <ProductCard
+                  product={product as any}
+                  cardColSpan="col-span-1"
+                  wishlistId={product.item_id}
+
+                />
                 <Button
                   size="sm"
                   variant="destructive"

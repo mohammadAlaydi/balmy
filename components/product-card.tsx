@@ -2,62 +2,106 @@
 
 import Image from "next/image";
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useSelector } from "react-redux";
+import { useTranslations } from "next-intl";
+import { motion } from "framer-motion";
+import toast from "react-hot-toast";
+import { PuffLoader } from "react-spinners";
+import { MdOutlineShoppingCart } from "react-icons/md";
+import { FaCartArrowDown, FaRegEye } from "react-icons/fa";
+
 import { Badge } from "./ui/badge";
 import { Card, CardContent, CardHeader } from "./ui/card";
 import { Button } from "./ui/button";
-import { MdOutlineShoppingCart } from "react-icons/md";
-import { motion } from "framer-motion";
 import DrawerComponent from "./layout/drawer/drawer-component";
 import QuickProductDetails from "./quick-product-details";
+import ReactStars from "./react-stars";
+import ZeroQuantity from "./zero-quantity";
+import { FavouriteButton } from "./favourite-button";
+import AuthModal from "./auth/auth-modal";
+
 import { useAppDispatch } from "@/store/hooks";
 import { addToCart, updateCartQuantity } from "@/store/slices/cart-slice";
 import { getProductDetails } from "@/store/slices/product-details-slice";
-import { useSelector } from "react-redux";
-import { useTranslations } from "next-intl";
-import ReactStars from "./react-stars";
 import { ProductCardProps } from "@/types/types";
 import { getCurrentMainImage, getHoverImage } from "@/static-data/static-data";
-import { PuffLoader } from "react-spinners";
-import ZeroQuantity from "./zero-quantity";
-import { FaCartArrowDown } from "react-icons/fa";
-import { useRouter } from "next/navigation";
-import { FavouriteButton } from "./favourite-button";
-import { FaRegEye } from "react-icons/fa";
-import AuthModal from "./auth/auth-modal";
-import toast from "react-hot-toast";
+import { useFavourites } from "@/hooks/use-favourites";
+
+// Helper functions
+const calculateProductPrice = (product: any): number => {
+  const variants = Array.isArray(product?.variants) ? product.variants : [];
+  const basePrice = Number.isFinite(Number(product?.price)) ? Number(product?.price) : undefined;
+  
+  const variantPrices = variants
+    .map((v: any) => v?.special_price ?? v?.price)
+    .map((x: any) => Number.isFinite(Number(x)) ? Number(x) : undefined)
+    .filter((n: any) => typeof n === "number") as number[];
+  
+  return basePrice ?? (variantPrices.length ? Math.min(...variantPrices) : 0);
+};
+
+const findCartItem = (cartData: any, productId: number) => {
+  if (!cartData?.data?.items) return null;
+  return cartData.data.items.find(
+    (item: any) =>
+      item?.additional?.product_id === productId ||
+      item?.product?.id === productId
+  );
+};
+
+const isProductInCart = (cartData: any, productId: number): boolean => {
+  return findCartItem(cartData, productId) !== undefined;
+};
+
+const getProductCartQuantity = (cartData: any, productId: number): number => {
+  const cartItem = findCartItem(cartData, productId);
+  return cartItem ? Number(cartItem.quantity) : 0;
+};
+
+const resolveProductId = (product: any, chosenVariantId: number | string | null): number | undefined => {
+  if (product?.variants && product?.variants?.length > 0) {
+    return chosenVariantId ? Number(chosenVariantId) : product.variants[0]?.product_id;
+  }
+  return product?.product_id;
+};
 
 export default function ProductCard({
   product,
   cardColSpan,
+  wishlistId,
 }: ProductCardProps) {
-  const [selectedVariantIndex, setSelectedVariantIndex] = useState<
-    number | null
-  >(null);
+  // State
+  const [selectedVariantIndex, setSelectedVariantIndex] = useState<number | null>(null);
   const [isHovered, setIsHovered] = useState(false);
-  const [isAdding, setIsAdding] = useState(false); // <- local spinner state
-  const [chosenVariantId, setChosenVariantId] = useState<
-    number | string | null
-  >(null);
+  const [isAdding, setIsAdding] = useState(false);
+  const [isMovingToCart, setIsMovingToCart] = useState(false);
+  const [chosenVariantId, setChosenVariantId] = useState<number | string | null>(null);
   const [showAuthModal, setShowAuthModal] = useState(false);
-  const [pendingAddProductId, setPendingAddProductId] = useState<number | null>(
-    null
-  );
+  const [pendingAddProductId, setPendingAddProductId] = useState<number | null>(null);
   const [chosenVariantSku, setChosenVariantSku] = useState<string | null>(null);
+
+  // Hooks
   const dispatch = useAppDispatch();
+  const router = useRouter();
+  const { moveToCart } = useFavourites();
   const t = useTranslations("products");
   const td = useTranslations("product-details");
-  const router = useRouter();
 
+  // Selectors
   const { productDetails } = useSelector((state: any) => state.productDetails);
   const { isAuthenticated } = useSelector((state: any) => state.auth);
   const { data: cartData } = useSelector((state: any) => state.cart);
 
+  // Computed values
   const baseImageUrl = getCurrentMainImage(product, selectedVariantIndex ?? 0);
   const hoverImageUrl = getHoverImage(product, selectedVariantIndex ?? 0);
   const isInStock = product?.in_stock ?? product?.inStock ?? false;
+  const productPrice = calculateProductPrice(product);
 
+  // Event handlers
   const handleViewProduct = () => {
-    dispatch(getProductDetails({ id: (product as any).product_id }));
+    dispatch(getProductDetails({ id: product?.product_id }));
   };
 
   const handleVariantSelect = (
@@ -68,94 +112,79 @@ export default function ProductCard({
     setSelectedVariantIndex(index);
     if (variantId != null) setChosenVariantId(variantId);
     if (sku != null) setChosenVariantSku(sku);
-    console.log(chosenVariantSku);
-  };
-
-  const resolveTargetId = () => {
-    if (product?.variants && product?.variants?.length > 0) {
-      return chosenVariantId ?? (product.variants[0] as any)?.product_id;
-    } else if ((product as any).product_id && !product.variants) {
-      return (product as any).product_id;
-    }
-  };
-
-  // Check if product is already in cart
-  const isProductInCart = (productId: number) => {
-    if (!cartData?.data?.items) return false;
-    return cartData.data.items.some(
-      (item: any) =>
-        item?.additional?.product_id === productId ||
-        item?.product?.id === productId
-    );
-  };
-
-  // Get current quantity of product in cart
-  const getProductCartQuantity = (productId: number) => {
-    if (!cartData?.data?.items) return 0;
-    const cartItem = cartData.data.items.find(
-      (item: any) =>
-        item?.additional?.product_id === productId ||
-        item?.product?.id === productId
-    );
-    return cartItem ? Number(cartItem.quantity) : 0;
   };
 
   const handleAddToCart = async () => {
     if (!isInStock || isAdding) return;
 
+    const productId = resolveProductId(product, chosenVariantId);
+    if (!productId) return;
+
     // Check if user is authenticated
     if (!isAuthenticated) {
-      const target = resolveTargetId();
-      if (target != null) setPendingAddProductId(Number(target));
+      setPendingAddProductId(productId);
       setShowAuthModal(true);
       return;
     }
 
-    const productId = resolveTargetId();
-    if (!productId) return;
-
     try {
       setIsAdding(true);
 
-      // Check if product is already in cart
-      if (isProductInCart(Number(productId))) {
+      if (isProductInCart(cartData, productId)) {
         // Update existing cart item quantity
-        const currentQuantity = getProductCartQuantity(Number(productId));
-        const maybePromise: any = dispatch(
+        const currentQuantity = getProductCartQuantity(cartData, productId);
+        const promise = dispatch(
           updateCartQuantity({
-            productId: Number(productId),
+            productId,
             quantity: currentQuantity + 1,
           })
         );
-        if (typeof maybePromise?.unwrap === "function") {
-          await maybePromise.unwrap();
+        
+        if (typeof promise?.unwrap === "function") {
+          await promise.unwrap();
         } else {
-          await maybePromise;
+          await promise;
         }
         toast.success(t("quantity-updated"));
       } else {
         // Add new item to cart
-        const maybePromise: any = dispatch(
-          addToCart({ productId: Number(productId), productQTY: 1 })
+        const promise = dispatch(
+          addToCart({ productId, productQTY: 1 })
         );
-        if (typeof maybePromise?.unwrap === "function") {
-          await maybePromise.unwrap();
+        
+        if (typeof promise?.unwrap === "function") {
+          await promise.unwrap();
         } else {
-          await maybePromise;
+          await promise;
         }
         toast.success(t("added-to-cart"));
       }
-    } catch (err) {
-      const error = err as string;
-      toast.error(error);
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      toast.error(errorMessage);
     } finally {
       setIsAdding(false);
     }
   };
+
+  const handleMoveToCart = async () => {
+    if (!wishlistId) return;
+    
+    try {
+      setIsMovingToCart(true);
+      await moveToCart(wishlistId);
+      toast.success(t("moved-to-cart"));
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : "Failed to move to cart";
+      toast.error(errorMessage);
+    } finally {
+      setIsMovingToCart(false);
+    }
+  };
   return (
     <Card
-      onMouseEnter={() => (isInStock ? setIsHovered(true) : undefined)}
-      onMouseLeave={() => (isInStock ? setIsHovered(false) : undefined)}
+      onMouseEnter={() => isInStock && setIsHovered(true)}
+      onMouseLeave={() => isInStock && setIsHovered(false)}
       className={`product-card shadow-none hover:shadow-[0px_6px_20px_rgba(149,157,165,0.1)] py-0 h-fit gap-0 ${
         isInStock ? "group" : ""
       } relative rounded-t-lg ${
@@ -165,6 +194,7 @@ export default function ProductCard({
       {!isInStock && <ZeroQuantity />}
 
       <CardHeader className="p-0 relative group overflow-hidden rounded-t-lg gap-0">
+        {/* Hover Actions */}
         <motion.div
           initial={{ x: 10, opacity: 0 }}
           animate={isHovered ? { x: 0, opacity: 1 } : { x: 10, opacity: 0 }}
@@ -179,7 +209,7 @@ export default function ProductCard({
                   onClick={handleViewProduct}
                   className="text-3xl cursor-pointer text-black hidden md:flex opacity-80 hover:opacity-100"
                 >
-                  <FaRegEye className="text-xl " />
+                  <FaRegEye className="text-xl" />
                 </Button>
               }
             >
@@ -188,36 +218,36 @@ export default function ProductCard({
           </div>
         </motion.div>
 
+        {/* New Badge */}
         {product?.new && (
           <Badge className="bg-red-600 text-white font-semibold px-2 py-1 text-xs absolute top-2 ltr:right-2 rtl:left-2 z-10 shadow-md">
             {td("new")}
           </Badge>
         )}
 
+        {/* Main Product Image */}
         <Image
           width={224}
           height={224}
           src={baseImageUrl}
           alt={`${product?.name || t("product")} - ${chosenVariantSku || ""}`}
           className="rounded-t-lg w-full h-full aspect-square transition-all duration-300"
-          onClick={() => router.push(`/product/${(product as any).product_id}`)}
+          onClick={() => router.push(`/product/${product?.product_id}`)}
         />
 
+        {/* Hover Image */}
         {hoverImageUrl !== baseImageUrl && (
           <Image
             width={224}
             height={224}
             src={hoverImageUrl}
-            alt={`${product?.name || t("product")} ${t("variant-image")} - ${
-              product?.sku || ""
-            }`}
+            alt={`${product?.name || t("product")} ${t("variant-image")} - ${product?.sku || ""}`}
             className="absolute inset-0 rounded-t-lg w-full h-full aspect-square object-cover transition-all duration-300 opacity-0 group-hover:opacity-100"
-            onClick={() =>
-              router.push(`/product/${(product as any).product_id}`)
-            }
+            onClick={() => router.push(`/product/${product?.product_id}`)}
           />
         )}
 
+        {/* Add to Cart Button */}
         <motion.div
           initial={{ y: 10, opacity: 0 }}
           animate={isHovered ? { y: 0, opacity: 1 } : { y: 10, opacity: 0 }}
@@ -225,11 +255,11 @@ export default function ProductCard({
           className="absolute bottom-1 md:bottom-3 left-[5%] w-[90%] mx-auto"
         >
           <Button
-            onClick={handleAddToCart}
-            disabled={isAdding || !isInStock}
+            onClick={wishlistId ? handleMoveToCart : handleAddToCart}
+            disabled={isAdding || isMovingToCart || !isInStock}
             className="bg-transparent hover:bg-transparent md:hover:bg-black/85 md:bg-black/85 text-white w-full rounded-sm"
           >
-            {isAdding ? (
+            {isAdding || isMovingToCart ? (
               <PuffLoader size={30} />
             ) : (
               <div className="flex items-center gap-2">
@@ -243,59 +273,43 @@ export default function ProductCard({
       </CardHeader>
 
       <CardContent className="px-2 pt-4 flex flex-col gap-2 justify-start">
-        {/* Name and SKU */}
+        {/* Product Name and SKU */}
         <div className="flex justify-between gap-1">
           <p className="font-[600] md:font-[650] md:text-sm text-xs overflow-hidden text-ellipsis whitespace-nowrap">
             {product?.name || t("product-name")}
           </p>
           <p className="font-[600] md:font-[650] md:text-sm text-xs overflow-hidden text-ellipsis whitespace-nowrap">
-            {chosenVariantSku != null
-              ? chosenVariantSku
-              : product?.variants?.length > 0
-              ? product?.variants?.[0]?.sku
-              : product?.sku}
+            {chosenVariantSku ?? 
+              (product?.variants?.length ? product.variants[0]?.sku : product?.sku)}
           </p>
         </div>
 
+        {/* Rating */}
         <ReactStars edit={false} rating={product?.reviews?.total || 0} />
 
-        {/* Variants + desktop price */}
+        {/* Variants and Price */}
         <div className="flex justify-between gap-1 items-center">
+          {/* Variant Images */}
           {product?.variants?.length ? (
             <div className="items-center gap-2 hidden md:flex transition-all duration-300">
-              {product.variants
-                .slice(0, 3)
-                .map((variant: any, index: number) => (
-                  <div
-                    key={(variant as any).product_id}
-                    className="relative mb-3"
-                  >
-                    <Image
-                      width={32}
-                      height={32}
-                      src={
-                        variant.base_image?.original_image_url ||
-                        "/assets/images/no-image.webp"
-                      }
-                      alt={`${product?.name || t("product")} ${t(
-                        "variant-image"
-                      )} ${index + 1}`}
-                      className={`cursor-pointer transition-all duration-200 rounded-full h-[32px] w-[32px] ${
-                        selectedVariantIndex === index ||
-                        (selectedVariantIndex === null && index === 0)
-                          ? "ring-2 ring-gray-300 scale-110"
-                          : "hover:scale-105"
-                      }`}
-                      onClick={() =>
-                        handleVariantSelect(
-                          index,
-                          (variant as any).product_id,
-                          variant?.sku
-                        )
-                      }
-                    />
-                  </div>
-                ))}
+              {product.variants.slice(0, 3).map((variant: any, index: number) => (
+                <div key={variant?.product_id} className="relative mb-3">
+                  <Image
+                    width={32}
+                    height={32}
+                    src={variant.base_image?.original_image_url || "/assets/images/no-image.webp"}
+                    alt={`${product?.name || t("product")} ${t("variant-image")} ${index + 1}`}
+                    className={`cursor-pointer transition-all duration-200 rounded-full h-[32px] w-[32px] ${
+                      selectedVariantIndex === index || (selectedVariantIndex === null && index === 0)
+                        ? "ring-2 ring-gray-300 scale-110"
+                        : "hover:scale-105"
+                    }`}
+                    onClick={() =>
+                      handleVariantSelect(index, variant?.product_id, variant?.sku)
+                    }
+                  />
+                </div>
+              ))}
               {product.variants.length > 3 && (
                 <Badge className="mx-1 bg-transparent text-primary mb-3 ring-2 ring-gray-300 scale-110 w-[32px] h-[32px] p-0 flex items-center rounded-full justify-center shadow-[inset_0_2px_4px_rgba(0,0,0,0.1)] text-xs">
                   +{product.variants.length - 3}
@@ -308,47 +322,25 @@ export default function ProductCard({
                 <Image
                   width={32}
                   height={32}
-                  src={
-                    product?.base_image?.original_image_url ||
-                    "/assets/images/no-image.webp"
-                  }
-                  alt={`${product?.name || t("product")}  `}
+                  src={product?.base_image?.original_image_url || "/assets/images/no-image.webp"}
+                  alt={`${product?.name || t("product")}`}
                   className="cursor-pointer transition-all duration-200 rounded-full ring-2 ring-gray-300 scale-110 h-[32px] w-[32px]"
                   onClick={() =>
-                    handleVariantSelect(
-                      0,
-                      (product as any).product_id,
-                      product?.sku
-                    )
+                    handleVariantSelect(0, product?.product_id, product?.sku)
                   }
                 />
               </div>
             </div>
           )}
 
+          {/* Price */}
           <p className="text-xs md:text-sm mb-3 text-nowrap hidden md:flex items-center gap-2">
-            {(() => {
-              const pv = Array.isArray(product?.variants)
-                ? product.variants
-                : [];
-              const base = Number.isFinite(Number(product?.price))
-                ? Number(product?.price)
-                : undefined;
-              const minVar = pv
-                .map((v: any) => v?.special_price ?? v?.price)
-                .map((x: any) =>
-                  Number.isFinite(Number(x)) ? Number(x) : undefined
-                )
-                .filter((n: any) => typeof n === "number");
-              const price =
-                base ?? (minVar.length ? Math.min(...(minVar as number[])) : 0);
-              return price.toFixed(2);
-            })()}{" "}
-            <i className="icon-rial"></i>
+            {productPrice.toFixed(2)} <i className="icon-rial"></i>
           </p>
         </div>
       </CardContent>
 
+      {/* Authentication Modal */}
       <AuthModal
         isOpen={showAuthModal}
         onOpenChange={(open) => {
@@ -356,37 +348,36 @@ export default function ProductCard({
           if (!open) setPendingAddProductId(null);
         }}
         onAuthenticated={async () => {
-          // Auto add after successful login
-          const targetId = pendingAddProductId ?? Number(resolveTargetId());
+          const targetId = pendingAddProductId ?? resolveProductId(product, chosenVariantId);
           if (!targetId) return;
+          
           try {
             setIsAdding(true);
 
-            // Check if product is already in cart
-            if (isProductInCart(targetId)) {
-              // Update existing cart item quantity
-              const currentQuantity = getProductCartQuantity(targetId);
-              const maybePromise: any = dispatch(
+            if (isProductInCart(cartData, targetId)) {
+              const currentQuantity = getProductCartQuantity(cartData, targetId);
+              const promise = dispatch(
                 updateCartQuantity({
                   productId: targetId,
                   quantity: currentQuantity + 1,
                 })
               );
-              if (typeof maybePromise?.unwrap === "function") {
-                await maybePromise.unwrap();
+              
+              if (typeof promise?.unwrap === "function") {
+                await promise.unwrap();
               } else {
-                await maybePromise;
+                await promise;
               }
               toast.success(t("quantity-updated"));
             } else {
-              // Add new item to cart
-              const maybePromise: any = dispatch(
+              const promise = dispatch(
                 addToCart({ productId: targetId, productQTY: 1 })
               );
-              if (typeof maybePromise?.unwrap === "function") {
-                await maybePromise.unwrap();
+              
+              if (typeof promise?.unwrap === "function") {
+                await promise.unwrap();
               } else {
-                await maybePromise;
+                await promise;
               }
               toast.success(t("added-to-cart"));
             }
