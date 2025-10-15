@@ -31,13 +31,15 @@ import { useFavourites } from "@/hooks/use-favourites";
 // Helper functions
 const calculateProductPrice = (product: any): number => {
   const variants = Array.isArray(product?.variants) ? product.variants : [];
-  const basePrice = Number.isFinite(Number(product?.price)) ? Number(product?.price) : undefined;
-  
+  const basePrice = Number.isFinite(Number(product?.price))
+    ? Number(product?.price)
+    : undefined;
+
   const variantPrices = variants
     .map((v: any) => v?.special_price ?? v?.price)
-    .map((x: any) => Number.isFinite(Number(x)) ? Number(x) : undefined)
+    .map((x: any) => (Number.isFinite(Number(x)) ? Number(x) : undefined))
     .filter((n: any) => typeof n === "number") as number[];
-  
+
   return basePrice ?? (variantPrices.length ? Math.min(...variantPrices) : 0);
 };
 
@@ -59,28 +61,41 @@ const getProductCartQuantity = (cartData: any, productId: number): number => {
   return cartItem ? Number(cartItem.quantity) : 0;
 };
 
-const resolveProductId = (product: any, chosenVariantId: number | string | null): number | undefined => {
+const resolveProductId = (
+  product: any,
+  chosenVariantId: number | string | null
+): number | undefined => {
   if (product?.variants && product?.variants?.length > 0) {
-    return chosenVariantId ? Number(chosenVariantId) : product.variants[0]?.product_id;
+    return chosenVariantId
+      ? Number(chosenVariantId)
+      : product.variants[0]?.product_id;
   }
   return product?.product_id;
 };
 
 export default function ProductCard({
   product,
+  wishlistProductId,
   cardColSpan,
   wishlistId,
 }: ProductCardProps) {
   // State
-  const [selectedVariantIndex, setSelectedVariantIndex] = useState<number | null>(null);
+  const [selectedVariantIndex, setSelectedVariantIndex] = useState<
+    number | null
+  >(null);
   const [isHovered, setIsHovered] = useState(false);
   const [isAdding, setIsAdding] = useState(false);
   const [isMovingToCart, setIsMovingToCart] = useState(false);
-  const [chosenVariantId, setChosenVariantId] = useState<number | string | null>(null);
+  const [chosenVariantId, setChosenVariantId] = useState<
+    number | string | null
+  >(null);
   const [showAuthModal, setShowAuthModal] = useState(false);
-  const [pendingAddProductId, setPendingAddProductId] = useState<number | null>(null);
+  const [pendingAddProductId, setPendingAddProductId] = useState<number | null>(
+    null
+  );
   const [chosenVariantSku, setChosenVariantSku] = useState<string | null>(null);
 
+  console.log(wishlistProductId, "❤️❤️❤️");
   // Hooks
   const dispatch = useAppDispatch();
   const router = useRouter();
@@ -139,7 +154,7 @@ export default function ProductCard({
             quantity: currentQuantity + 1,
           })
         );
-        
+
         if (typeof promise?.unwrap === "function") {
           await promise.unwrap();
         } else {
@@ -148,10 +163,8 @@ export default function ProductCard({
         toast.success(t("quantity-updated"));
       } else {
         // Add new item to cart
-        const promise = dispatch(
-          addToCart({ productId, productQTY: 1 })
-        );
-        
+        const promise = dispatch(addToCart({ productId, productQTY: 1 }));
+
         if (typeof promise?.unwrap === "function") {
           await promise.unwrap();
         } else {
@@ -160,7 +173,8 @@ export default function ProductCard({
         toast.success(t("added-to-cart"));
       }
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : String(error);
+      const errorMessage =
+        error instanceof Error ? error.message : String(error);
       toast.error(errorMessage);
     } finally {
       setIsAdding(false);
@@ -169,13 +183,14 @@ export default function ProductCard({
 
   const handleMoveToCart = async () => {
     if (!wishlistId) return;
-    
+
     try {
       setIsMovingToCart(true);
       await moveToCart(wishlistId);
       toast.success(t("moved-to-cart"));
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : "Failed to move to cart";
+      const errorMessage =
+        error instanceof Error ? error.message : "Failed to move to cart";
       toast.error(errorMessage);
     } finally {
       setIsMovingToCart(false);
@@ -232,7 +247,7 @@ export default function ProductCard({
           src={baseImageUrl}
           alt={`${product?.name || t("product")} - ${chosenVariantSku || ""}`}
           className="rounded-t-lg w-full h-full aspect-square transition-all duration-300"
-          onClick={() => router.push(`/product/${product?.product_id}`)}
+          onClick={() => router.push(`/product/${wishlistProductId ? wishlistProductId : product?.product_id}`)}
         />
 
         {/* Hover Image */}
@@ -241,7 +256,9 @@ export default function ProductCard({
             width={224}
             height={224}
             src={hoverImageUrl}
-            alt={`${product?.name || t("product")} ${t("variant-image")} - ${product?.sku || ""}`}
+            alt={`${product?.name || t("product")} ${t("variant-image")} - ${
+              product?.sku || ""
+            }`}
             className="absolute inset-0 rounded-t-lg w-full h-full aspect-square object-cover transition-all duration-300 opacity-0 group-hover:opacity-100"
             onClick={() => router.push(`/product/${product?.product_id}`)}
           />
@@ -279,8 +296,10 @@ export default function ProductCard({
             {product?.name || t("product-name")}
           </p>
           <p className="font-[600] md:font-[650] md:text-sm text-xs overflow-hidden text-ellipsis whitespace-nowrap">
-            {chosenVariantSku ?? 
-              (product?.variants?.length ? product.variants[0]?.sku : product?.sku)}
+            {chosenVariantSku ??
+              (product?.variants?.length
+                ? product.variants[0]?.sku
+                : product?.sku)}
           </p>
         </div>
 
@@ -292,24 +311,36 @@ export default function ProductCard({
           {/* Variant Images */}
           {product?.variants?.length ? (
             <div className="items-center gap-2 hidden md:flex transition-all duration-300">
-              {product.variants.slice(0, 3).map((variant: any, index: number) => (
-                <div key={variant?.product_id} className="relative mb-3">
-                  <Image
-                    width={32}
-                    height={32}
-                    src={variant.base_image?.original_image_url || "/assets/images/no-image.webp"}
-                    alt={`${product?.name || t("product")} ${t("variant-image")} ${index + 1}`}
-                    className={`cursor-pointer transition-all duration-200 rounded-full h-[32px] w-[32px] ${
-                      selectedVariantIndex === index || (selectedVariantIndex === null && index === 0)
-                        ? "ring-2 ring-gray-300 scale-110"
-                        : "hover:scale-105"
-                    }`}
-                    onClick={() =>
-                      handleVariantSelect(index, variant?.product_id, variant?.sku)
-                    }
-                  />
-                </div>
-              ))}
+              {product.variants
+                .slice(0, 3)
+                .map((variant: any, index: number) => (
+                  <div key={variant?.product_id} className="relative mb-3">
+                    <Image
+                      width={32}
+                      height={32}
+                      src={
+                        variant.base_image?.original_image_url ||
+                        "/assets/images/no-image.webp"
+                      }
+                      alt={`${product?.name || t("product")} ${t(
+                        "variant-image"
+                      )} ${index + 1}`}
+                      className={`cursor-pointer transition-all duration-200 rounded-full h-[32px] w-[32px] ${
+                        selectedVariantIndex === index ||
+                        (selectedVariantIndex === null && index === 0)
+                          ? "ring-2 ring-gray-300 scale-110"
+                          : "hover:scale-105"
+                      }`}
+                      onClick={() =>
+                        handleVariantSelect(
+                          index,
+                          variant?.product_id,
+                          variant?.sku
+                        )
+                      }
+                    />
+                  </div>
+                ))}
               {product.variants.length > 3 && (
                 <Badge className="mx-1 bg-transparent text-primary mb-3 ring-2 ring-gray-300 scale-110 w-[32px] h-[32px] p-0 flex items-center rounded-full justify-center shadow-[inset_0_2px_4px_rgba(0,0,0,0.1)] text-xs">
                   +{product.variants.length - 3}
@@ -322,7 +353,10 @@ export default function ProductCard({
                 <Image
                   width={32}
                   height={32}
-                  src={product?.base_image?.original_image_url || "/assets/images/no-image.webp"}
+                  src={
+                    product?.base_image?.original_image_url ||
+                    "/assets/images/no-image.webp"
+                  }
                   alt={`${product?.name || t("product")}`}
                   className="cursor-pointer transition-all duration-200 rounded-full ring-2 ring-gray-300 scale-110 h-[32px] w-[32px]"
                   onClick={() =>
@@ -348,21 +382,25 @@ export default function ProductCard({
           if (!open) setPendingAddProductId(null);
         }}
         onAuthenticated={async () => {
-          const targetId = pendingAddProductId ?? resolveProductId(product, chosenVariantId);
+          const targetId =
+            pendingAddProductId ?? resolveProductId(product, chosenVariantId);
           if (!targetId) return;
-          
+
           try {
             setIsAdding(true);
 
             if (isProductInCart(cartData, targetId)) {
-              const currentQuantity = getProductCartQuantity(cartData, targetId);
+              const currentQuantity = getProductCartQuantity(
+                cartData,
+                targetId
+              );
               const promise = dispatch(
                 updateCartQuantity({
                   productId: targetId,
                   quantity: currentQuantity + 1,
                 })
               );
-              
+
               if (typeof promise?.unwrap === "function") {
                 await promise.unwrap();
               } else {
@@ -373,7 +411,7 @@ export default function ProductCard({
               const promise = dispatch(
                 addToCart({ productId: targetId, productQTY: 1 })
               );
-              
+
               if (typeof promise?.unwrap === "function") {
                 await promise.unwrap();
               } else {

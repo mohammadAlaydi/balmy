@@ -27,8 +27,6 @@ function FavouritePageContent() {
     removeFromFavourites,
     clearFavourites,
     getFavouritesCount,
-    
-
   } = useFavourites();
 
   console.log(favourites, "👌👌👌👌");
@@ -188,7 +186,7 @@ function FavouritePageContent() {
                   product={product as any}
                   cardColSpan="col-span-1"
                   wishlistId={product.item_id}
-
+                  wishlistProductId={product.id}
                 />
                 <Button
                   size="sm"

@@ -109,10 +109,8 @@ export const fetchFavourites = createAsyncThunk(
       // Handle the actual API response structure: { data: [...] }
       if (data.data && Array.isArray(data.data)) {
         // Extract products from wishlist items
-        console.log(data.data, "😁😁😁")
         const products = data.data.map((item: any) => ({
-          id: item.product.id,
-
+          id: item?.product?.id,
           name: item.product.name,
           nameEn: item.product.name, // Fallback for English name
           price: parseFloat(item.product.price) || 0,

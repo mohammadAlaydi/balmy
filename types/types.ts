@@ -437,6 +437,7 @@ export interface ProductCardProps {
   wishlistId?: number;
   product: ApiProduct;
   cardColSpan?: string;
+  wishlistProductId?: number;
 }
 
 export interface OrderData {

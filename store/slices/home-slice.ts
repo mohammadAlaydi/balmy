@@ -33,8 +33,7 @@ const homeSlice = createSlice({
   },
   reducers: {},
   extraReducers(builder) {
-    builder
-      .addCase(getHomeData.pending, (state) => {
+    builder.addCase(getHomeData.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
