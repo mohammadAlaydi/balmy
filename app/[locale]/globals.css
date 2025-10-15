@@ -250,6 +250,9 @@ body {
     bottom: 20px !important;
   }
 }
+.categories-carousel .swiper-wrapper {
+  padding-block: 10px !important;
+}
 /* ryhal icon */
 @font-face {
   font-family: 'icomoon';

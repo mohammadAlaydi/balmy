@@ -45,6 +45,7 @@
     "variant-image": "Variant Image",
     "more-variants": "More variants",
     "added-to-cart": "Added to cart",
+    "quantity-updated": "Quantity updated",
     "in-stock": "In Stock",
     "out-of-stock": "Out of Stock",
     "choose-color": "Choose product color",
@@ -393,6 +394,8 @@
   },
   "home": {
     "services": "Our Services",
+    "our-services": "Our Services",
+    "featured-categories": "Featured Categories",
     "categories": "Product Categories",
     "featured-products": "Featured Products",
     "advertising": "Advertising",
@@ -639,7 +642,9 @@
     "request-failed": "Request Failed",
     "request-failed-message": "We're sorry, but your request was unsuccessful. Please try again.",
     "try-again": "Try Again",
-    "no-order-data-error": "Error: No order data available. Please check the console for details."
+    "no-order-data-error": "Error: No order data available. Please check the console for details.",
+    "no-checkout-session": "No checkout session found",
+    "complete-checkout-process": "Please complete a checkout process to view the status."
   },
   "validation": {
     "first-name-required": "First name is required",

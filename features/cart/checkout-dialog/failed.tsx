@@ -55,10 +55,10 @@ export default function Failed({
     <div className="flex flex-col items-center justify-center bg-background px-4 py-12 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-md text-center">
         <CircleXIcon className="mx-auto h-12 w-12 text-red-500" />
-        <h1 className="mt-4 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+        <h1 className="mt-4 text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight text-foreground">
           {title || t("request-failed")}
         </h1>
-        <p className="mt-4 text-muted-foreground">{message || t("request-failed-message")}</p>
+        <p className="mt-4 text-sm sm:text-base text-muted-foreground">{message || t("request-failed-message")}</p>
         <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-center">
           <Button onClick={handleTryAgain}>
             {primaryAction?.label || t("try-again")}

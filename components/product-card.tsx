@@ -10,7 +10,7 @@ import { motion } from "framer-motion";
 import DrawerComponent from "./layout/drawer/drawer-component";
 import QuickProductDetails from "./quick-product-details";
 import { useAppDispatch } from "@/store/hooks";
-import { addToCart } from "@/store/slices/cart-slice";
+import { addToCart, updateCartQuantity } from "@/store/slices/cart-slice";
 import { getProductDetails } from "@/store/slices/product-details-slice";
 import { useSelector } from "react-redux";
 import { useTranslations } from "next-intl";
@@ -42,7 +42,7 @@ export default function ProductCard({
   const [pendingAddProductId, setPendingAddProductId] = useState<number | null>(
     null
   );
-
+  const [chosenVariantSku, setChosenVariantSku] = useState<string | null>(null);
   const dispatch = useAppDispatch();
   const t = useTranslations("products");
   const td = useTranslations("product-details");
@@ -50,26 +50,54 @@ export default function ProductCard({
 
   const { productDetails } = useSelector((state: any) => state.productDetails);
   const { isAuthenticated } = useSelector((state: any) => state.auth);
+  const { data: cartData } = useSelector((state: any) => state.cart);
 
   const baseImageUrl = getCurrentMainImage(product, selectedVariantIndex ?? 0);
   const hoverImageUrl = getHoverImage(product, selectedVariantIndex ?? 0);
   const isInStock = product?.in_stock ?? product?.inStock ?? false;
 
   const handleViewProduct = () => {
-    dispatch(getProductDetails({ id: product.product_id }));
+    dispatch(getProductDetails({ id: (product as any).product_id }));
   };
 
-  const handleVariantSelect = (index: number, variantId?: number | string) => {
+  const handleVariantSelect = (
+    index: number,
+    variantId?: number | string,
+    sku?: string
+  ) => {
     setSelectedVariantIndex(index);
     if (variantId != null) setChosenVariantId(variantId);
+    if (sku != null) setChosenVariantSku(sku);
+    console.log(chosenVariantSku);
   };
 
   const resolveTargetId = () => {
     if (product?.variants && product?.variants?.length > 0) {
-      return chosenVariantId ?? product.variants[0]?.product_id;
-    } else if (product.product_id && !product.variants) {
-      return product.product_id;
+      return chosenVariantId ?? (product.variants[0] as any)?.product_id;
+    } else if ((product as any).product_id && !product.variants) {
+      return (product as any).product_id;
     }
+  };
+
+  // Check if product is already in cart
+  const isProductInCart = (productId: number) => {
+    if (!cartData?.data?.items) return false;
+    return cartData.data.items.some(
+      (item: any) =>
+        item?.additional?.product_id === productId ||
+        item?.product?.id === productId
+    );
+  };
+
+  // Get current quantity of product in cart
+  const getProductCartQuantity = (productId: number) => {
+    if (!cartData?.data?.items) return 0;
+    const cartItem = cartData.data.items.find(
+      (item: any) =>
+        item?.additional?.product_id === productId ||
+        item?.product?.id === productId
+    );
+    return cartItem ? Number(cartItem.quantity) : 0;
   };
 
   const handleAddToCart = async () => {
@@ -84,20 +112,42 @@ export default function ProductCard({
     }
 
     const productId = resolveTargetId();
+    if (!productId) return;
+
     try {
       setIsAdding(true);
-      // If addToCart is a createAsyncThunk, unwrap to await rejection properly
-      const maybePromise: any = dispatch(
-        addToCart({ productId: Number(productId), productQTY: 1 })
-      );
-      if (typeof maybePromise?.unwrap === "function") {
-        await maybePromise.unwrap();
+
+      // Check if product is already in cart
+      if (isProductInCart(Number(productId))) {
+        // Update existing cart item quantity
+        const currentQuantity = getProductCartQuantity(Number(productId));
+        const maybePromise: any = dispatch(
+          updateCartQuantity({
+            productId: Number(productId),
+            quantity: currentQuantity + 1,
+          })
+        );
+        if (typeof maybePromise?.unwrap === "function") {
+          await maybePromise.unwrap();
+        } else {
+          await maybePromise;
+        }
+        toast.success(t("quantity-updated"));
       } else {
-        await maybePromise; // fallback if not a thunk
+        // Add new item to cart
+        const maybePromise: any = dispatch(
+          addToCart({ productId: Number(productId), productQTY: 1 })
+        );
+        if (typeof maybePromise?.unwrap === "function") {
+          await maybePromise.unwrap();
+        } else {
+          await maybePromise;
+        }
+        toast.success(t("added-to-cart"));
       }
-      toast.success(t("added-to-cart"));
     } catch (err) {
-      // Errors will be handled by slice rejected toast
+      const error = err as string;
+      toast.error(error);
     } finally {
       setIsAdding(false);
     }
@@ -148,9 +198,9 @@ export default function ProductCard({
           width={224}
           height={224}
           src={baseImageUrl}
-          alt={`${product?.name || t("product")} - ${product?.sku || ""}`}
+          alt={`${product?.name || t("product")} - ${chosenVariantSku || ""}`}
           className="rounded-t-lg w-full h-full aspect-square transition-all duration-300"
-          onClick={() => router.push(`/product/${product.product_id}`)}
+          onClick={() => router.push(`/product/${(product as any).product_id}`)}
         />
 
         {hoverImageUrl !== baseImageUrl && (
@@ -162,7 +212,9 @@ export default function ProductCard({
               product?.sku || ""
             }`}
             className="absolute inset-0 rounded-t-lg w-full h-full aspect-square object-cover transition-all duration-300 opacity-0 group-hover:opacity-100"
-            onClick={() => router.push(`/product/${product.product_id}`)}
+            onClick={() =>
+              router.push(`/product/${(product as any).product_id}`)
+            }
           />
         )}
 
@@ -197,7 +249,11 @@ export default function ProductCard({
             {product?.name || t("product-name")}
           </p>
           <p className="font-[600] md:font-[650] md:text-sm text-xs overflow-hidden text-ellipsis whitespace-nowrap">
-            {product?.sku}
+            {chosenVariantSku != null
+              ? chosenVariantSku
+              : product?.variants?.length > 0
+              ? product?.variants?.[0]?.sku
+              : product?.sku}
           </p>
         </div>
 
@@ -206,11 +262,14 @@ export default function ProductCard({
         {/* Variants + desktop price */}
         <div className="flex justify-between gap-1 items-center">
           {product?.variants?.length ? (
-            <div className="items-center gap-3 hidden md:flex transition-all duration-300">
+            <div className="items-center gap-2 hidden md:flex transition-all duration-300">
               {product.variants
                 .slice(0, 3)
                 .map((variant: any, index: number) => (
-                  <div key={variant.product_id} className="relative mb-3">
+                  <div
+                    key={(variant as any).product_id}
+                    className="relative mb-3"
+                  >
                     <Image
                       width={32}
                       height={32}
@@ -228,13 +287,17 @@ export default function ProductCard({
                           : "hover:scale-105"
                       }`}
                       onClick={() =>
-                        handleVariantSelect(index, variant.product_id)
+                        handleVariantSelect(
+                          index,
+                          (variant as any).product_id,
+                          variant?.sku
+                        )
                       }
                     />
                   </div>
                 ))}
               {product.variants.length > 3 && (
-                <Badge className="bg-transparent text-primary mb-3 ring-2 ring-gray-300 scale-110 w-[32px] h-[32px] p-0 flex items-center rounded-full justify-center shadow-[inset_0_2px_4px_rgba(0,0,0,0.1)] text-xs">
+                <Badge className="mx-1 bg-transparent text-primary mb-3 ring-2 ring-gray-300 scale-110 w-[32px] h-[32px] p-0 flex items-center rounded-full justify-center shadow-[inset_0_2px_4px_rgba(0,0,0,0.1)] text-xs">
                   +{product.variants.length - 3}
                 </Badge>
               )}
@@ -251,7 +314,13 @@ export default function ProductCard({
                   }
                   alt={`${product?.name || t("product")}  `}
                   className="cursor-pointer transition-all duration-200 rounded-full ring-2 ring-gray-300 scale-110 h-[32px] w-[32px]"
-                  onClick={() => handleVariantSelect(0, product.product_id)}
+                  onClick={() =>
+                    handleVariantSelect(
+                      0,
+                      (product as any).product_id,
+                      product?.sku
+                    )
+                  }
                 />
               </div>
             </div>
@@ -292,15 +361,35 @@ export default function ProductCard({
           if (!targetId) return;
           try {
             setIsAdding(true);
-            const maybePromise: any = dispatch(
-              addToCart({ productId: Number(targetId), productQTY: 1 })
-            );
-            if (typeof maybePromise?.unwrap === "function") {
-              await maybePromise.unwrap();
+
+            // Check if product is already in cart
+            if (isProductInCart(targetId)) {
+              // Update existing cart item quantity
+              const currentQuantity = getProductCartQuantity(targetId);
+              const maybePromise: any = dispatch(
+                updateCartQuantity({
+                  productId: targetId,
+                  quantity: currentQuantity + 1,
+                })
+              );
+              if (typeof maybePromise?.unwrap === "function") {
+                await maybePromise.unwrap();
+              } else {
+                await maybePromise;
+              }
+              toast.success(t("quantity-updated"));
             } else {
-              await maybePromise;
+              // Add new item to cart
+              const maybePromise: any = dispatch(
+                addToCart({ productId: targetId, productQTY: 1 })
+              );
+              if (typeof maybePromise?.unwrap === "function") {
+                await maybePromise.unwrap();
+              } else {
+                await maybePromise;
+              }
+              toast.success(t("added-to-cart"));
             }
-            toast.success(t("added-to-cart"));
           } finally {
             setIsAdding(false);
             setPendingAddProductId(null);

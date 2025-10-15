@@ -55,9 +55,7 @@ export default function page({
       </PageWrapper>
     );
   }
-
   const products = categoryProducts?.products?.data || [];
-
   return (
     <PageWrapper>
       <div className="flex items-center gap-5 justify-start my-5">

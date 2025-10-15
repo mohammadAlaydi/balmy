@@ -292,6 +292,7 @@ export interface ProductImage {
 
 export interface ProductVariant {
   id: number;
+  product_id: number; // Add this property for API compatibility
   sku?: string;
   name?: string;
   type?: string;
@@ -411,6 +412,7 @@ export interface ImageUrls {
 
 export interface ApiProduct {
   id: number;
+  product_id: number; // Add this property for API compatibility
   name: string;
   nameEn?: string;
   price: number | string;

@@ -4,12 +4,15 @@ import Image from "next/image";
 import { FaPlus } from "react-icons/fa";
 import { TiMinus } from "react-icons/ti";
 import DeleteProductComponent from "@/components/delete-product-component";
-import { applyLocalQuantityDelta } from "@/store/slices/cart-slice";
+import {
+  applyLocalQuantityDelta,
+  updateCartQuantity,
+} from "@/store/slices/cart-slice";
 import { useAppDispatch } from "@/store/hooks";
 import ReactStars from "./react-stars";
 import { useSelector } from "react-redux";
 import toast from "react-hot-toast";
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 
 interface CartProductProps {
   product: any;
@@ -23,7 +26,9 @@ export default function CartProduct({
   deletedProductId,
 }: CartProductProps) {
   const dispatch = useAppDispatch();
-  const { increaseOrDecreaseResponse, data } = useSelector((state: any) => state.cart);
+  const { increaseOrDecreaseResponse, data } = useSelector(
+    (state: any) => state.cart
+  );
 
   const [loadingProductId, setLoadingProductId] = useState<number | null>(null);
   const isLoading = loadingProductId === product?.id;
@@ -32,7 +37,9 @@ export default function CartProduct({
     // Prefer the canonical cart items in state.data, then fall back to the last
     // increase/decrease response mirror, then the prop quantity
     const fromCartData = data?.data?.items?.find(
-      (i: any) => i?.additional?.product_id === product?.id || i?.product?.id === product?.id
+      (i: any) =>
+        i?.additional?.product_id === product?.id ||
+        i?.product?.id === product?.id
     )?.quantity;
 
     const fromMirror = increaseOrDecreaseResponse?.data?.items?.find(
@@ -48,6 +55,7 @@ export default function CartProduct({
   // Keep a local, optimistic quantity and batch deltas to avoid a request per click
   const [optimisticQty, setOptimisticQty] = useState<number | null>(null);
   const [pendingDelta, setPendingDelta] = useState<number>(0);
+  const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Whenever the store quantity changes (e.g., after a server sync), align the optimistic value
   useEffect(() => {
@@ -58,10 +66,41 @@ export default function CartProduct({
     }
   }, [currentQty, optimisticQty, pendingDelta]);
 
+  // Debounced API call to update quantity
+  useEffect(() => {
+    if (pendingDelta === 0) return;
+
+    // Clear existing timeout
+    if (debounceTimeoutRef.current) {
+      clearTimeout(debounceTimeoutRef.current);
+    }
+
+    // Set new timeout for API call
+    debounceTimeoutRef.current = setTimeout(() => {
+      const newQuantity = optimisticQty ?? currentQty;
+      if (newQuantity > 0) {
+        dispatch(
+          updateCartQuantity({
+            productId: product?.id,
+            quantity: newQuantity,
+          })
+        );
+        setPendingDelta(0);
+      }
+    }, 500); // 500ms debounce
+
+    // Cleanup timeout on unmount
+    return () => {
+      if (debounceTimeoutRef.current) {
+        clearTimeout(debounceTimeoutRef.current);
+      }
+    };
+  }, [pendingDelta, optimisticQty, currentQty, dispatch, product?.id]);
+
   const displayedQty = optimisticQty ?? currentQty;
 
   const handleClickChange = (delta: number) => {
-    // Optimistic local update first (no request)
+    // Optimistic local update first
     try {
       setLoadingProductId(product?.id ?? null);
       // Prevent decreasing below 1 at UI level
@@ -78,7 +117,7 @@ export default function CartProduct({
         applyLocalQuantityDelta({ productId: product?.id, delta }) as any
       );
     } finally {
-      // End the visual loading quickly; no network round-trip here
+      // End the visual loading quickly; API call will happen via debounced effect
       setLoadingProductId(null);
     }
   };

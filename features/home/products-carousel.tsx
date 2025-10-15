@@ -4,7 +4,6 @@ import React from "react";
 import { SwiperSlide } from "swiper/react";
 
 export default function ProductsCarousel({ products }: { products: any }) {
-
   return (
     <CarouselComponent
       containerClassName="w-full h-auto py-5"
@@ -14,21 +13,24 @@ export default function ProductsCarousel({ products }: { products: any }) {
       breakpoints={{
         300: {
           slidesPerView: 2,
-          spaceBetween: 10,
+          spaceBetween: 5,
         },
         350: {
           slidesPerView: 2,
+          spaceBetween: 5,
         },
         700: {
           slidesPerView: 3,
+          spaceBetween: 8,
         },
-        992: {
+        1024: {
           slidesPerView: 4,
+          spaceBetween: 8,
         },
         1500: {
           slidesPerView: 6,
+          spaceBetween: 15,
         },
-      
       }}
       autoPlay={true}
     >

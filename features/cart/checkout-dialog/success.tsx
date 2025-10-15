@@ -8,9 +8,8 @@ import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 
 export default function Success({ data }: SuccessProps) {
-
   const t = useTranslations("order");
-  
+
   // Handle different data structures
   const order = data?.data?.order || data?.data || data;
 
@@ -29,7 +28,10 @@ export default function Success({ data }: SuccessProps) {
     { label: t("shipping-method"), value: order.shipping_method },
     {
       label: t("shipping-amount"),
-      value: order.shipping_amount + " " + ((order as any)?.channel_currency_code || ""),
+      value:
+        order.shipping_amount +
+        " " +
+        ((order as any)?.channel_currency_code || ""),
     },
     { label: t("payment-title"), value: order.payment_title },
   ];
@@ -47,16 +49,16 @@ export default function Success({ data }: SuccessProps) {
 
 function SuccessHeader() {
   const t = useTranslations("order");
-  
+
   return (
     <div className="px-6 py-12 flex flex-col items-center justify-center space-y-4">
       <div className="bg-green-500 p-4 rounded-full">
         <FaCheck className="h-6 w-6 text-white" />
       </div>
-      <h1 className="text-3xl font-bold text-gray-900">
+      <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900">
         {t("shipping-successful")}
       </h1>
-      <p className="text-gray-600 text-center">
+      <p className="text-sm sm:text-base text-gray-600 text-center">
         {t("shipping-successful-desc")}
       </p>
     </div>
@@ -72,11 +74,11 @@ function OrderInfoSection({ orderInfoItems }: OrderInfoSectionProps) {
     <div className="bg-gray-50 px-6 py-4 border-t border-gray-200 flex flex-col gap-4">
       {orderInfoItems.map((item, index) => (
         <div className="flex justify-between gap-3 items-center" key={index}>
-          <p className="text-gray-900 font-medium">
-            {item.value}
-          </p>
-          <p className="text-gray-500 text-sm">
+          <p className="text-xs sm:text-sm text-gray-500 rtl:order-1 rtl:text-right ltr:order-1 ltr:text-left">
             {item.label}
+          </p>
+          <p className="text-sm sm:text-base text-gray-900 font-medium rtl:order-2 rtl:text-right ltr:order-2 ltr:text-left">
+            {item.value}
           </p>
         </div>
       ))}
@@ -85,11 +87,10 @@ function OrderInfoSection({ orderInfoItems }: OrderInfoSectionProps) {
 }
 
 function ActionSection() {
-  
   const dispatch = useDispatch();
   const router = useRouter();
   const t = useTranslations("order");
-  
+
   const handleResetAndClose = () => {
     dispatch(resetStatus());
   };
@@ -103,13 +104,13 @@ function ActionSection() {
     <div className="px-6 py-4 flex flex-col gap-3">
       <button
         onClick={handleGoHome}
-        className="inline-flex h-10 items-center justify-center rounded-md bg-gray-900 px-6 text-sm font-medium text-white shadow transition-colors hover:bg-gray-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900 disabled:pointer-events-none disabled:opacity-50"
+        className="inline-flex h-10 items-center justify-center rounded-md bg-gray-900 px-6 text-xs sm:text-sm font-medium text-white shadow transition-colors hover:bg-gray-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900 disabled:pointer-events-none disabled:opacity-50"
       >
         {t("go-home")}
       </button>
       <button
         onClick={handleResetAndClose}
-        className="inline-flex h-10 items-center justify-center rounded-md bg-gray-200 px-6 text-sm font-medium text-gray-700 shadow transition-colors hover:bg-gray-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-300 disabled:pointer-events-none disabled:opacity-50"
+        className="inline-flex h-10 items-center justify-center rounded-md bg-gray-200 px-6 text-xs sm:text-sm font-medium text-gray-700 shadow transition-colors hover:bg-gray-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-300 disabled:pointer-events-none disabled:opacity-50"
       >
         {t("close-dialog")}
       </button>

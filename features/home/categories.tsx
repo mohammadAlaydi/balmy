@@ -16,7 +16,7 @@ export default function Categories({ categories }: { categories: any }) {
     <CarouselComponent
       spaceBetween={20}
       slidesPerView={1}
-      containerClassName="categories-carousel h-auto mb-5"
+      containerClassName="categories-carousel h-auto"
       autoHeight
       breakpoints={{
         300: {
@@ -64,7 +64,7 @@ export default function Categories({ categories }: { categories: any }) {
                           src={imageSrc}
                           width={250}
                           height={250}
-                          className="rounded-full m-auto transform hover:scale-[1.03] transition-all duration-1000 overflow-hidden"
+                          className="rounded-full m-auto transform hover:scale-[1.02] transition-all duration-1000 "
                           alt={category.name || "category"}
                         />
                       );

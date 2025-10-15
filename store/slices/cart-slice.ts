@@ -1,5 +1,4 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import toast from "react-hot-toast";
 
 const API_KEY = process.env.NEXT_PUBLIC_API_URL;
 
@@ -108,6 +107,72 @@ const removeAllProductsFromCart = createAsyncThunk(
     } catch (error: any) {
       console.error("Clear cart error:", error);
       return rejectWithValue(error.message || "Failed to clear cart");
+    }
+  }
+);
+
+// update product quantity in cart
+const updateCartQuantity = createAsyncThunk(
+  "cart/update/quantity",
+  async (
+    payload: { productId: number; quantity: number },
+    { rejectWithValue, dispatch }
+  ) => {
+    try {
+      const response = await fetch(`/api/cart/update/${payload.productId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          quantity: payload.quantity,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        return rejectWithValue(data.message || "Failed to update cart quantity");
+      }
+
+      // Refetch cart items after successful update
+      dispatch(getCartProducts());
+      return data;
+    } catch (error: any) {
+      console.error("Update cart quantity error:", error);
+      return rejectWithValue(error.message || "Failed to update cart quantity");
+    }
+  }
+);
+
+// bulk update cart quantities
+const bulkUpdateCartQuantities = createAsyncThunk(
+  "cart/bulk-update/quantities",
+  async (
+    payload: { items: Array<{ productId: number; quantity: number }> },
+    { rejectWithValue, dispatch }
+  ) => {
+    try {
+      const response = await fetch("/api/cart/bulk-update", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        return rejectWithValue(data.message || "Failed to bulk update cart quantities");
+      }
+
+      // Refetch cart items after successful update
+      dispatch(getCartProducts());
+      return data;
+    } catch (error: any) {
+      console.error("Bulk update cart quantities error:", error);
+      return rejectWithValue(error.message || "Failed to bulk update cart quantities");
     }
   }
 );
@@ -283,6 +348,35 @@ const cartSlice = createSlice({
       }
     );
 
+    // Update cart quantity
+    builder.addCase(updateCartQuantity.pending, (state) => {
+      state.increaseOrDecreaseLoading = true;
+    });
+    builder.addCase(updateCartQuantity.fulfilled, (state, action) => {
+      state.increaseOrDecreaseLoading = false;
+      state.increaseOrDecreaseResponse = action.payload;
+      state.cartStatus = "success";
+    });
+    builder.addCase(updateCartQuantity.rejected, (state: any, action) => {
+      state.error = action.error.message || null;
+      state.increaseOrDecreaseLoading = false;
+      state.cartStatus = "failed";
+    });
+
+    // Bulk update cart quantities
+    builder.addCase(bulkUpdateCartQuantities.pending, (state) => {
+      state.isLoading = true;
+    });
+    builder.addCase(bulkUpdateCartQuantities.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.cartStatus = "success";
+    });
+    builder.addCase(bulkUpdateCartQuantities.rejected, (state: any, action) => {
+      state.error = action.error.message || null;
+      state.isLoading = false;
+      state.cartStatus = "failed";
+    });
+
     // save order
     builder.addCase(saveOrder.pending, (state) => {
       state.isLoading = true;
@@ -306,6 +400,8 @@ export {
   addToCart,
   removeFromCart,
   removeAllProductsFromCart,
+  updateCartQuantity,
+  bulkUpdateCartQuantities,
   saveOrder,
 };
 export const cartReducer = cartSlice.reducer;

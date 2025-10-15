@@ -34,14 +34,41 @@ export default function OrderSummary({ data }: { data: any }) {
   const router = useRouter();
   const t = useTranslations("cart");
   const dispatch = useDispatch();
-  const { status } = useSelector((state: any) => state.cart);
+  const { status, isLoading } = useSelector((state: any) => state.cart);
   const [open, setOpen] = useState(false);
-
   const form = useForm<CouponFormData>({
     defaultValues: {
       coupon: "",
     },
   });
+
+  // Calculate totals without side effects
+  const calculateTotals = () => {
+    const items = data?.data?.items || [];
+    
+    if (!items.length) {
+      return { subtotal: 0, tax: 0, total: 0, itemCount: 0 };
+    }
+    
+    const subtotal = items.reduce((total: number, item: any) => {
+      const price = Number(item?.product?.price?.value || item?.product?.price?.final_price || item?.product?.price?.base_price || item?.product?.price || 0);
+      const quantity = Number(item?.quantity || 0);
+      return total + (price * quantity);
+    }, 0);
+    
+    const tax = Number(data?.data?.base_tax_total || 0);
+    const total = subtotal + tax;
+    
+    return { 
+      subtotal, 
+      tax, 
+      total, 
+      items
+    };
+  };
+
+  const { subtotal, tax, total, items } = calculateTotals();
+  console.log(subtotal, tax, total, items);
 
   const onSubmit = (data: CouponFormData) => {
     if (!data.coupon.trim()) {
@@ -68,8 +95,20 @@ export default function OrderSummary({ data }: { data: any }) {
       setOpen(false);
     }
   }, [status]);
+  // Show empty cart message if no items
+  if (!data?.data?.items?.length) {
+    return (
+      <div className="col-span-12 lg:col-span-5 xl:col-span-4 p-6 rounded-lg border border-gray-200 h-fit flex flex-col gap-6 bg-white shadow-sm">
+        <h2 className="text-xl font-bold text-gray-900">{t("order-summary")}</h2>
+        <div className="text-center py-8">
+          <p className="text-gray-500">{t("cart-empty")}</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="col-span-12 lg:col-span-5 xl:col-span-4  p-6 rounded-lg border border-gray-200 h-fit flex flex-col gap-6 bg-white shadow-sm">
+    <div className="col-span-12 lg:col-span-5 xl:col-span-4 p-6 rounded-lg border border-gray-200 h-fit flex flex-col gap-6 bg-white shadow-sm">
       <h2 className="text-xl font-bold text-gray-900">{t("order-summary")}</h2>
       {/* Coupon Form */}
       <Form {...form}>
@@ -94,31 +133,30 @@ export default function OrderSummary({ data }: { data: any }) {
         <div className="flex justify-between items-center">
           <Badge
             variant="outline"
-            className="text-sm  bg-transparent text-gray-color border-gray-200"
+            className="text-sm bg-transparent text-gray-color border-gray-200"
           >
-            {Number(data?.data?.sub_total)?.toFixed(2) || 0}{" "}
+            {subtotal.toFixed(2)}{" "}
             <i className="icon-rial"></i>
           </Badge>
           <Badge
             variant="outline"
-            className="text-sm  bg-transparent text-gray-color border-gray-200"
+            className="text-sm bg-transparent text-gray-color border-gray-200"
           >
-            {data?.data?.items?.length}{" "}
-            {data?.data?.items?.length === 1 ? t("item") : t("items")})
+            {items.length === 1 ? t("item") : t("items")}
           </Badge>
         </div>
         {/* TAX */}
         <div className="flex justify-between items-center gap-5">
           <Badge
             variant="outline"
-            className="text-sm  bg-transparent text-gray-color border-gray-200"
+            className="text-sm bg-transparent text-gray-color border-gray-200"
           >
-            {Number(data?.data?.base_tax_total)?.toFixed(2)}{" "}
+            {tax.toFixed(2)}{" "}
             <i className="icon-rial"></i>
           </Badge>
           <Badge
             variant="outline"
-            className="text-sm  bg-transparent text-gray-color border-gray-200"
+            className="text-sm bg-transparent text-gray-color border-gray-200"
           >
             {t("taxes")}
           </Badge>
@@ -130,7 +168,7 @@ export default function OrderSummary({ data }: { data: any }) {
             variant="outline"
             className="text-sm font-semibold bg-transparent text-gray-color border-gray-200"
           >
-            {Number(data?.data?.grand_total)?.toFixed(2)}{" "}
+            {total.toFixed(2)}{" "}
             <i className="icon-rial"></i>
           </Badge>
           <Badge
@@ -153,13 +191,14 @@ export default function OrderSummary({ data }: { data: any }) {
       >
         <DialogTitle className="hidden"></DialogTitle>
         <DialogTrigger
-          className="w-full bg-black text-white hover:bg-gray-800 transition-colors py-2 cursor-pointer text-base font-semibold rounded-md"
+          className="w-full bg-black text-white hover:bg-gray-800 transition-colors py-2 cursor-pointer text-base font-semibold rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
           onClick={handleTriggerClick}
+          disabled={isLoading || !data?.data?.items?.length}
         >
-          {t("proceed-to-checkout")}
+          {isLoading ? t("processing") : t("proceed-to-checkout")}
         </DialogTrigger>
         <DialogContent>
-          <Checkout />
+          <Checkout total={total} data={data?.data?.items || []} />
         </DialogContent>
       </Dialog>
     </div>

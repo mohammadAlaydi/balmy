@@ -45,6 +45,7 @@
     "variant-image": "صورة المتغير",
     "more-variants": "المزيد من المتغيرات",
     "added-to-cart": "تم إضافة المنتج إلى السلة",
+    "quantity-updated": "تم تحديث الكمية",
     "in-stock": "متوفر",
     "out-of-stock": "غير متوفر",
     "choose-color": "اختر لون المنتج",
@@ -393,6 +394,8 @@
   },
   "home": {
     "services": "خدماتنا",
+    "our-services": "خدماتنا",
+    "featured-categories": "الفئات المميزة",
     "categories": "فئات المنتجات",
     "featured-products": "المنتجات المميزة",
     "advertising": "الإعلانات",
@@ -639,7 +642,9 @@
     "request-failed": "فشل الطلب",
     "request-failed-message": "نأسف، لكن طلبك لم ينجح. يرجى المحاولة مرة أخرى.",
     "try-again": "حاول مرة أخرى",
-    "no-order-data-error": "خطأ: لا توجد بيانات طلب متاحة. يرجى التحقق من وحدة التحكم للحصول على التفاصيل."
+    "no-order-data-error": "خطأ: لا توجد بيانات طلب متاحة. يرجى التحقق من وحدة التحكم للحصول على التفاصيل.",
+    "no-checkout-session": "لم يتم العثور على جلسة دفع",
+    "complete-checkout-process": "يرجى إكمال عملية الدفع لعرض الحالة."
   },
   "validation": {
     "first-name-required": "الاسم الأول مطلوب",

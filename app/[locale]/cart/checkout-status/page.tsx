@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import Loading from "@/components/loading";
 import PageWrapper from "@/components/page-wrapper";
+import { useTranslations } from "next-intl";
 
 interface CartState {
   status: string | null;
@@ -22,6 +23,7 @@ interface RootState {
 
 export default function CheckoutStatusPage() {
   const router = useRouter();
+  const t = useTranslations("order");
   const { status, saveOrderData, isLoading } = useSelector((state: RootState) => state.cart);
 
   // Redirect to cart if no checkout status is available
@@ -58,17 +60,17 @@ export default function CheckoutStatusPage() {
     <PageWrapper>
       <div className="flex flex-col items-center justify-center min-h-[400px]">
         <div className="text-center">
-          <h2 className="text-xl font-semibold text-gray-900 mb-2">
-            No checkout session found
+          <h2 className="text-lg sm:text-xl md:text-2xl font-semibold text-gray-900 mb-2">
+            {t("no-checkout-session")}
           </h2>
-          <p className="text-gray-600 mb-4">
-            Please complete a checkout process to view the status.
+          <p className="text-sm sm:text-base text-gray-600 mb-4">
+            {t("complete-checkout-process")}
           </p>
           <button
             onClick={() => router.push("/home")}
-            className="px-4 py-2 bg-gray-900 text-white rounded-md hover:bg-gray-800 transition-colors"
+            className="px-4 py-2 text-sm sm:text-base bg-gray-900 text-white rounded-md hover:bg-gray-800 transition-colors"
           >
-            Go to Home
+            {t("go-home")}
           </button>
         </div>
       </div>
