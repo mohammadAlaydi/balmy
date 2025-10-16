@@ -37,9 +37,9 @@ export default function QuickCart() {
     }
   }, [status, dispatch]);
 
-  if (isLoading) {
-    return <Loading fullScreen={true} variant="spinner" size="xl" />;
-  }
+  // if (isLoading) {
+  //   return <Loading fullScreen={true} variant="spinner" size="xl" />;
+  // }
   return (
    
     <div className="flex flex-col gap-4 items-center justify-between h-full ">

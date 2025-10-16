@@ -111,71 +111,8 @@ const removeAllProductsFromCart = createAsyncThunk(
   }
 );
 
-// update product quantity in cart
-const updateCartQuantity = createAsyncThunk(
-  "cart/update/quantity",
-  async (
-    payload: { productId: number; quantity: number },
-    { rejectWithValue, dispatch }
-  ) => {
-    try {
-      const response = await fetch(`/api/cart/update/${payload.productId}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          quantity: payload.quantity,
-        }),
-      });
 
-      const data = await response.json();
 
-      if (!response.ok) {
-        return rejectWithValue(data.message || "Failed to update cart quantity");
-      }
-
-      // Refetch cart items after successful update
-      dispatch(getCartProducts());
-      return data;
-    } catch (error: any) {
-      console.error("Update cart quantity error:", error);
-      return rejectWithValue(error.message || "Failed to update cart quantity");
-    }
-  }
-);
-
-// bulk update cart quantities
-const bulkUpdateCartQuantities = createAsyncThunk(
-  "cart/bulk-update/quantities",
-  async (
-    payload: { items: Array<{ productId: number; quantity: number }> },
-    { rejectWithValue, dispatch }
-  ) => {
-    try {
-      const response = await fetch("/api/cart/bulk-update", {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        return rejectWithValue(data.message || "Failed to bulk update cart quantities");
-      }
-
-      // Refetch cart items after successful update
-      dispatch(getCartProducts());
-      return data;
-    } catch (error: any) {
-      console.error("Bulk update cart quantities error:", error);
-      return rejectWithValue(error.message || "Failed to bulk update cart quantities");
-    }
-  }
-);
 //save cart order
 const saveOrder = createAsyncThunk(
   "save-order",
@@ -215,80 +152,7 @@ const cartSlice = createSlice({
     status: null as string | null, // Only for order completion (success/failed)
     cartStatus: null as string | null, // For cart operations (add/remove)
   },
-  reducers: {
-    resetStatus: (state) => {
-     
-      // If we just completed an order, clear the saved order and cart data now
-      if (state.status === "success") {
-        state.saveOrderData = {};
-        state.data = null as any;
-      }
-      state.status = null;
-    },
-    // Optimistically update quantity locally without a network request
-    applyLocalQuantityDelta: (
-      state,
-      action: {
-        payload: { productId: number; delta: number };
-      }
-    ) => {
-      const { productId, delta } = action.payload;
-
-      const mutateItems = (items: any[] | undefined | null) => {
-        if (!Array.isArray(items))
-          return { affected: false, unitDeltaTotal: 0 };
-        let affected = false;
-        let unitDeltaTotal = 0;
-        for (const item of items) {
-          const idMatch =
-            item?.additional?.product_id === productId ||
-            item?.product?.id === productId;
-          if (!idMatch) continue;
-          const prevQtyNum = Number(item?.quantity ?? 0) || 0;
-          const priceRaw = item?.product?.price;
-          const unitPrice =
-            typeof priceRaw === "number"
-              ? priceRaw
-              : Number(
-                  priceRaw?.value ??
-                    priceRaw?.final_price ??
-                    priceRaw?.base_price ??
-                    0
-                );
-          const nextQty = Math.max(1, prevQtyNum + delta);
-          const actualAppliedDelta = nextQty - prevQtyNum;
-          if (actualAppliedDelta !== 0) {
-            item.quantity = nextQty;
-            unitDeltaTotal += unitPrice * actualAppliedDelta;
-            affected = true;
-          }
-          break;
-        }
-        return { affected, unitDeltaTotal };
-      };
-
-      // Update both possible sources (server payload mirrors)
-      const itemsA = state?.data?.data?.items;
-      const { affected: affectedA, unitDeltaTotal: deltaTotalA } =
-        mutateItems(itemsA);
-
-      const itemsB = (state as any)?.increaseOrDecreaseResponse?.data?.items;
-      const { affected: affectedB, unitDeltaTotal: deltaTotalB } =
-        mutateItems(itemsB);
-
-      // Adjust summary numbers if we have cart totals in state
-      const cartData = (state as any)?.data?.data;
-      const totalDelta = deltaTotalA || 0 || deltaTotalB || 0;
-      if ((affectedA || affectedB) && cartData) {
-        const prevSub = Number(cartData.sub_total ?? 0) || 0;
-        const nextSub = prevSub + totalDelta;
-        cartData.sub_total = Number(nextSub.toFixed(2));
-        const prevTax = Number(cartData.base_tax_total ?? 0) || 0;
-        // Leave tax unchanged if we don't know rate; recompute grand as sub + tax
-        cartData.grand_total = Number((nextSub + prevTax).toFixed(2));
-      }
-    },
-  },
+  reducers: {},
   extraReducers(builder) {
     // Get cart products
     builder.addCase(getCartProducts?.pending, (state) => {
@@ -348,35 +212,6 @@ const cartSlice = createSlice({
       }
     );
 
-    // Update cart quantity
-    builder.addCase(updateCartQuantity.pending, (state) => {
-      state.increaseOrDecreaseLoading = true;
-    });
-    builder.addCase(updateCartQuantity.fulfilled, (state, action) => {
-      state.increaseOrDecreaseLoading = false;
-      state.increaseOrDecreaseResponse = action.payload;
-      state.cartStatus = "success";
-    });
-    builder.addCase(updateCartQuantity.rejected, (state: any, action) => {
-      state.error = action.error.message || null;
-      state.increaseOrDecreaseLoading = false;
-      state.cartStatus = "failed";
-    });
-
-    // Bulk update cart quantities
-    builder.addCase(bulkUpdateCartQuantities.pending, (state) => {
-      state.isLoading = true;
-    });
-    builder.addCase(bulkUpdateCartQuantities.fulfilled, (state, action) => {
-      state.isLoading = false;
-      state.cartStatus = "success";
-    });
-    builder.addCase(bulkUpdateCartQuantities.rejected, (state: any, action) => {
-      state.error = action.error.message || null;
-      state.isLoading = false;
-      state.cartStatus = "failed";
-    });
-
     // save order
     builder.addCase(saveOrder.pending, (state) => {
       state.isLoading = true;
@@ -400,8 +235,6 @@ export {
   addToCart,
   removeFromCart,
   removeAllProductsFromCart,
-  updateCartQuantity,
-  bulkUpdateCartQuantities,
   saveOrder,
 };
 export const cartReducer = cartSlice.reducer;

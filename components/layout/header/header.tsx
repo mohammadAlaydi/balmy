@@ -58,14 +58,14 @@ const TopBar = ({ data }: { data: any }) => {
     <div className="flex justify-center md:justify-between xl:justify-around items-center gap-5 py-0.5 px-3 lg:px-5 bg-black w-full">
       <div className="flex items-center">
         <Badge className="bg-transparent text-sm lg:text-base hidden md:inline-block">
-          {t("phone")}
+          {data?.channel_data?.phone_number}
         </Badge>
         <Badge className="bg-transparent text-sm lg:text-base hidden md:inline-block">
           {t("call-to-action")}
         </Badge>
       </div>
       <Badge className="bg-transparent text-sm lg:text-base">
-        {t("discount")}
+        {t("discount", { discount: data?.channel_data?.discount_percentage || 0 })}
       </Badge>
       <SocialMediaIcons
         iconStyle="text-white text-lg"
@@ -281,10 +281,10 @@ const NavigationLinks = ({ navbarCategories, currentLocale }: { navbarCategories
   );
 };
 
-const Logo = () => (
+const Logo = ({ data }: { data: any }) => (
   <Link href="/home" prefetch={true}>
     <Image
-      src="/assets/images/logo.svg"
+      src={data?.channel_data?.logo}
       alt="logo"
       className="lg:w-[180px]"
       width={140}
@@ -491,14 +491,14 @@ export default function Header() {
   }
   return (
     <div className="w-full relative z-50">
-      <TopBar data={data} />
+      <TopBar data={data}  />
       <div className="flex justify-between items-center gap-3 py-5 px-3 lg:px-5 scroll-shadow:shadow-[0px_6px_20px_rgba(149,157,165,0.1)] transition-shadow duration-200 bg-white relative z-50">
         <ActionIcons languageItems={languageItems} currentLocale={currentLocale} />
         <NavigationLinks
           navbarCategories={(categories as any)?.categories?.categories || []}
           currentLocale={currentLocale}
         />
-        <Logo />
+        <Logo data={data} />
         <MobileMenu
           navbarCategories={(categories as any)?.categories?.categories || []}
           languageItems={languageItems}

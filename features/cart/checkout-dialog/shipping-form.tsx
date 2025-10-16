@@ -199,7 +199,11 @@ export default function ShippingForm({
               />
             </div>
           </div>
-          <Button type="submit" disabled={isSubmitting} className="w-fit mt-3">
+          <Button 
+            type="submit" 
+            disabled={isSubmitting} 
+            className="w-fit mt-3"
+          >
             {isSubmitting ? (
               <div className="flex items-center gap-2">
                 <PuffLoader color="#ffffff" size={20} />

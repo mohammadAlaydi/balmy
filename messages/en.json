@@ -18,7 +18,7 @@
   "contact": {
     "phone": "01097352356",
     "call-to-action": "Call us today",
-    "discount": "Discounts up to 50%",
+    "discount": "Discounts up to {discount}%",
     "address": "Anas Ibn Malik Road, Sahafa, Riyadh 13321",
     "phone-number": "+966-55-766-5585"
   },

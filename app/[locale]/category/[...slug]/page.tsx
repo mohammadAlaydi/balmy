@@ -14,7 +14,7 @@ export default function page({
 }: {
   params: Promise<{ slug: string[] }>;
 }) {
-  
+
   const t = useTranslations("category");
   const { slug } = use(params);
   const [categorySlug, categoryId] = slug;
@@ -74,7 +74,7 @@ export default function page({
       {filteredProducts.length > 0 ? (
         <div className="grid grid-cols-12 gap-2 md:gap-3 xl:gap-5 flex-wrap min-h-[65vh]">
           {filteredProducts.map((product: any, index: number) => (
-            <ProductCard key={index} product={product} />
+            <ProductCard key={index} product={product} cardColSpan="col-span-6 md:col-span-4 lg:col-span-3 xl:col-span-3" />
           ))}
         </div>
       ) : products.length > 0 ? (

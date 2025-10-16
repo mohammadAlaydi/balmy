@@ -11,7 +11,6 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   saveOrder,
   getCartProducts,
-  bulkUpdateCartQuantities,
 } from "@/store/slices/cart-slice";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -94,34 +93,14 @@ export default function Checkout({
     }
 
     try {
-      // First, sync all cart quantities to ensure they're up to date
-      if (cartData?.data?.items && cartData.data.items.length > 0) {
-        const itemsToUpdate = cartData.data.items.map((item: any) => ({
-          productId: item.additional?.product_id || item.product?.id,
-          quantity: item.quantity || 1,
-        }));
-
-        // Only update if there are items to sync
-        if (itemsToUpdate.length > 0) {
-          await dispatch(
-            bulkUpdateCartQuantities({ items: itemsToUpdate }) as any
-          );
-        }
-      }
-
-      // Then proceed with the order submission
-      const checkoutPayload = toCheckoutPayload(values, data, total);
+      // Proceed directly with the order submission
+      const checkoutPayload = toCheckoutPayload(values);
       console.log("Checkout payload being sent:", checkoutPayload);
       dispatch(saveOrder(checkoutPayload) as any);
     } catch (error) {
-      console.error("Error syncing quantities before checkout:", error);
-      // Still proceed with checkout even if quantity sync fails
-      const checkoutPayload = toCheckoutPayload(
-        values,
-        cartData?.data?.items,
-        total
-      );
-      console.log("Checkout payload (fallback) being sent:", checkoutPayload);
+      console.error("Error during checkout:", error);
+      // Still proceed with checkout even if there's an error
+      const checkoutPayload = toCheckoutPayload(values);
       dispatch(saveOrder(checkoutPayload) as any);
     }
   };
@@ -179,46 +158,12 @@ export default function Checkout({
 }
 export const toCheckoutPayload = (
   values: CheckoutFormValues,
-  cartItems?: any[],
-  total?: number
 ) => {
-  // Calculate subtotal from items
-  const subtotal =
-    cartItems?.reduce((sum: number, item: any) => {
-      const price = Number(
-        item?.product?.price?.value ||
-          item?.product?.price?.final_price ||
-          item?.product?.price?.base_price ||
-          item?.product?.price ||
-          0
-      );
-      const quantity = Number(item?.quantity || 0);
-      return sum + price * quantity;
-    }, 0) || 0;
-
   return {
     billing: values.billing,
     shipping: values.shipping,
     payment: values.payment,
     shipping_method: values.shipping_method,
-    // Include total amount
-    total: total || subtotal,
-    subtotal: subtotal,
-    // Include cart items with quantities for the API
-    items:
-      data?.map((item: any) => ({
-        productId: item.additional?.product_id || item.product?.id,
-        quantity: item.quantity || 1,
-        price: Number(
-          item?.product?.price?.value ||
-            item?.product?.price?.final_price ||
-            item?.product?.price?.base_price ||
-            item?.product?.price ||
-            0
-        ),
-        name: item?.product?.name || item?.product?.title || "",
-        sku: item?.product?.sku || "",
-      })) || [],
   };
 };
 

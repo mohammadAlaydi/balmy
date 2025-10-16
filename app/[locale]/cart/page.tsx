@@ -8,7 +8,6 @@ import {
   getCartProducts,
   removeAllProductsFromCart,
 } from "@/store/slices/cart-slice";
-import { resetStatus } from "@/store/slices/cart-slice";
 import { MdDeleteSweep } from "react-icons/md";
 import Loading from "@/components/loading";
 import { useTranslations } from "next-intl";
@@ -20,10 +19,6 @@ export default function page() {
   const dispatch = useDispatch();
   const { data, isLoading, status } = useSelector((state: any) => state.cart);
 
-  useEffect(() => {
-    // Ensure checkout status starts as null so the shipping form is visible
-    dispatch(resetStatus() as any);
-  }, [dispatch]);
 
   useEffect(() => {
     if (!isLoading && !data) {

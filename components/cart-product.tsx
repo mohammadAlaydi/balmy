@@ -4,15 +4,12 @@ import Image from "next/image";
 import { FaPlus } from "react-icons/fa";
 import { TiMinus } from "react-icons/ti";
 import DeleteProductComponent from "@/components/delete-product-component";
-import {
-  applyLocalQuantityDelta,
-  updateCartQuantity,
-} from "@/store/slices/cart-slice";
+import { addToCart } from "@/store/slices/cart-slice";
 import { useAppDispatch } from "@/store/hooks";
 import ReactStars from "./react-stars";
 import { useSelector } from "react-redux";
 import toast from "react-hot-toast";
-import { useState, useMemo, useEffect, useRef } from "react";
+import { useState, useMemo } from "react";
 
 interface CartProductProps {
   product: any;
@@ -25,99 +22,37 @@ export default function CartProduct({
   quantity,
   deletedProductId,
 }: CartProductProps) {
+  
   const dispatch = useAppDispatch();
-  const { increaseOrDecreaseResponse, data } = useSelector(
+  const { increaseOrDecreaseResponse } = useSelector(
     (state: any) => state.cart
   );
 
   const [loadingProductId, setLoadingProductId] = useState<number | null>(null);
   const isLoading = loadingProductId === product?.id;
+
   // Derive current quantity from Redux (live) or fall back to prop
   const currentQty: number = useMemo(() => {
-    // Prefer the canonical cart items in state.data, then fall back to the last
-    // increase/decrease response mirror, then the prop quantity
-    const fromCartData = data?.data?.items?.find(
-      (i: any) =>
-        i?.additional?.product_id === product?.id ||
-        i?.product?.id === product?.id
-    )?.quantity;
-
-    const fromMirror = increaseOrDecreaseResponse?.data?.items?.find(
+    const fromStore = increaseOrDecreaseResponse?.data?.items?.find(
       (i: any) => i?.additional?.product_id === product?.id
     )?.quantity;
 
-    const candidate = fromCartData ?? fromMirror ?? quantity ?? 0;
+    const candidate = fromStore ?? quantity ?? 0;
     const num =
       typeof candidate === "string" ? parseInt(candidate, 10) : candidate;
     return Number.isFinite(num) && num > 0 ? num : 0;
-  }, [data, increaseOrDecreaseResponse, product?.id, quantity]);
+  }, [increaseOrDecreaseResponse, product?.id, quantity]);
 
-  // Keep a local, optimistic quantity and batch deltas to avoid a request per click
-  const [optimisticQty, setOptimisticQty] = useState<number | null>(null);
-  const [pendingDelta, setPendingDelta] = useState<number>(0);
-  const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-
-  // Whenever the store quantity changes (e.g., after a server sync), align the optimistic value
-  useEffect(() => {
-    if (optimisticQty === null) return; // user hasn't interacted yet
-    // If store reflects the same value, clear local overrides
-    if (currentQty === optimisticQty && pendingDelta === 0) {
-      setOptimisticQty(null);
-    }
-  }, [currentQty, optimisticQty, pendingDelta]);
-
-  // Debounced API call to update quantity
-  useEffect(() => {
-    if (pendingDelta === 0) return;
-
-    // Clear existing timeout
-    if (debounceTimeoutRef.current) {
-      clearTimeout(debounceTimeoutRef.current);
-    }
-
-    // Set new timeout for API call
-    debounceTimeoutRef.current = setTimeout(() => {
-      const newQuantity = optimisticQty ?? currentQty;
-      if (newQuantity > 0) {
-        dispatch(
-          updateCartQuantity({
-            productId: product?.id,
-            quantity: newQuantity,
-          })
-        );
-        setPendingDelta(0);
-      }
-    }, 500); // 500ms debounce
-
-    // Cleanup timeout on unmount
-    return () => {
-      if (debounceTimeoutRef.current) {
-        clearTimeout(debounceTimeoutRef.current);
-      }
-    };
-  }, [pendingDelta, optimisticQty, currentQty, dispatch, product?.id]);
-
-  const displayedQty = optimisticQty ?? currentQty;
-
-  const handleClickChange = (delta: number) => {
-    // Optimistic local update first
+  const handleUpdateQuantity = async (productId: number, qtyChange: number) => {
     try {
-      setLoadingProductId(product?.id ?? null);
-      // Prevent decreasing below 1 at UI level
-      const next = (optimisticQty ?? currentQty) + delta;
-      if (next < 1) {
-        toast.error("لا يمكن أن تكون الكمية أقل من 1");
-        setLoadingProductId(null);
-        return;
-      }
-      setOptimisticQty(next);
-      setPendingDelta((d) => d + delta);
-      // Apply to shared store so Quick Cart and Cart reflect immediately
-      dispatch(
-        applyLocalQuantityDelta({ productId: product?.id, delta }) as any
+      setLoadingProductId(productId);
+      await dispatch(
+        addToCart({
+          productId,
+          productQTY: qtyChange,
+        })
       );
     } finally {
-      // End the visual loading quickly; API call will happen via debounced effect
       setLoadingProductId(null);
     }
   };
@@ -125,7 +60,7 @@ export default function CartProduct({
   return (
     <div className="flex flex-col gap-3 w-full rounded-md border border-gray-200 p-4">
       {/* Product Info */}
-      <div className="image-and-info-container flex flex-col-reverse md:flex-row gap-3 w-full justify-end">
+      <div className="image-and-info-container flex flex-col-reverse lg:flex-row gap-3 w-full justify-end">
         <div className="flex flex-col gap-2 flex-1">
           <p className="text-sm text-gray-color ltr:text-end rtl:text-start">
             {typeof product?.category === "string"
@@ -139,6 +74,7 @@ export default function CartProduct({
           <p className="text-sm text-gray-color ltr:text-start rtl:text-end">
             {product?.price} <i className="icon-rial"></i>
           </p>
+
         </div>
         <Image
           src={product?.base_image?.original_image_url ?? "/placeholder.png"}
@@ -158,24 +94,32 @@ export default function CartProduct({
             className={`text-2xl cursor-pointer border border-gray-200 rounded-full p-1 ${
               isLoading ? "text-gray-400" : ""
             }`}
-            onClick={() => handleClickChange(1)}
+            onClick={() => {
+              if (!isLoading) {
+                handleUpdateQuantity(product?.id, 1);
+              } else {
+                toast.error("يتم تنفيذ العملية الآن، برجاء الانتظار");
+              }
+            }}
           />
 
           {/* Quantity */}
           <span
-            className={`text-base font-[550] ${
-              isLoading ? "text-gray-400" : ""
-            }`}
+            className={`text-base font-[550]`}
           >
-            {displayedQty}
+            {currentQty}
           </span>
 
           {/* Decrease */}
           <TiMinus
             className={`text-2xl cursor-pointer border border-gray-200 rounded-full p-1 ${
-              isLoading || displayedQty <= 1 ? "text-gray-400" : ""
+              isLoading || currentQty <= 1 ? "text-gray-400" : ""
             }`}
-            onClick={() => handleClickChange(-1)}
+            onClick={() => {
+              if (!isLoading && currentQty > 1) {
+                handleUpdateQuantity(product?.id, -1);
+              }
+            }}
           />
         </div>
       </div>

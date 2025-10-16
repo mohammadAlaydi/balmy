@@ -12,10 +12,7 @@ import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
 import Link from "next/link";
 import {
-  KNOW_US_MORE,
   LEGAL_TERMS,
-  SERVICES,
-  WORK_HOURS,
 } from "@/static-data/static-data";
 import { useTranslations } from "next-intl";
 import { useDispatch, useSelector } from "react-redux";
@@ -25,23 +22,27 @@ import Loading from "@/components/loading";
 import { usePathname } from "next/navigation";
 
 // Components
-const WorkHoursSection = () => {
+const WorkHoursSection = ({ data }: { data: any }) => {
   const t = useTranslations("footer");
 
   return (
     <div className="col-span-12 lg:col-span-6 flex flex-col gap-2 ">
       <SectionTitle title={t("working-hours")} titleStyle="text-white/65" />
-      {WORK_HOURS.schedule.map((time, index) => (
+      <p className="text-sm text-white">
+        {data?.channel_data?.work_hours?.days}
+      </p>
+      {data?.channel_data?.work_hours?.hours?.map((item: any, index: number) => (
+
         <p key={index} className="text-sm text-white">
-          {t(time)}
+          from {item.from?.hour} {item.from?.pm_or_am} to {item.to?.hour} {item.to?.pm_or_am}
         </p>
       ))}
     </div>
   );
 };
 
-const LocationSection = () => {
-  
+const LocationSection = ({ data }: { data: any }) => {
+
   const t = useTranslations("contact");
   const tFooter = useTranslations("footer");
 
@@ -51,13 +52,13 @@ const LocationSection = () => {
         title={tFooter("how-to-reach-us")}
         titleStyle="text-white/65"
       />
-      <p className="text-sm text-white">{t("address")}</p>
+      <p className="text-sm text-white">{data?.channel_data?.address}</p>
       <Link
-        href={`tel:${t("phone-number")}`}
+        href={`tel:${data?.channel_data?.phone_number}`}
         prefetch={true}
         className="text-sm text-white"
       >
-        {t("phone-number")}
+        {data?.channel_data?.phone_number}
       </Link>
     </div>
   );
@@ -179,8 +180,8 @@ export default function Footer({ locale }: { locale?: string }) {
     <div className="bg-black">
       <div className="grid grid-cols-12">
         <div className="col-span-12 lg:col-span-6 grid grid-cols-12 justify-end p-5">
-          <WorkHoursSection />
-          <LocationSection />
+          <WorkHoursSection data={data} />
+          <LocationSection data={data} />
         </div>
         <FooterImage data={data} />
       </div>
