@@ -3,7 +3,7 @@
 import React, { useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
 import { useAppDispatch } from "@/store/hooks";
-import { addToCart, applyLocalQuantityDelta } from "@/store/slices/cart-slice";
+import { addToCart, applyLocalQuantityDelta, updateCartQuantity } from "@/store/slices/cart-slice";
 import { FavouriteButton } from "@/components/favourite-button";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -56,12 +56,12 @@ export default function SingleProductDetails({
 
   const handleAddToCart = () => {
     if (!isAuthenticated) {
-      const targetId = currentVariant?.product_id || product.product_id;
+      const targetId = currentVariant?.product_id || product.id;
       if (targetId) setPendingAddProductId(Number(targetId));
       setShowAuthModal(true);
       return;
     }
-    const productIdToAdd = currentVariant?.product_id || product.product_id;
+    const productIdToAdd = currentVariant?.product_id || product.id;
     dispatch(addToCart({ productId: productIdToAdd, productQTY: quantity }));
     toast.success(tProducts("added-to-cart"));
   };
@@ -117,8 +117,8 @@ export default function SingleProductDetails({
 
   // Derive quantity already in cart for this product (if present)
   const targetProductId = useMemo(
-    () => currentVariant?.product_id || product.product_id,
-    [currentVariant?.product_id, product.product_id]
+    () => currentVariant?.product_id || product.id,
+    [currentVariant?.product_id, product.id]
   );
 
   const cartQuantityForProduct = useMemo(() => {
@@ -138,6 +138,7 @@ export default function SingleProductDetails({
     return Number.isFinite(n) && n > 0 ? n : null;
   }, [cartData, increaseOrDecreaseResponse, targetProductId]);
 
+  // Use cart quantity if product is already in cart, otherwise use local quantity
   const displayedQuantity = cartQuantityForProduct ?? quantity;
 
   return (
@@ -225,16 +226,20 @@ export default function SingleProductDetails({
         <div className="flex items-center ">
           <button
             onClick={() => {
-              const targetId = currentVariant?.product_id || product.product_id;
-              if (quantity > 1 && targetId) {
-                dispatch(
-                  applyLocalQuantityDelta({
-                    productId: Number(targetId),
-                    delta: -1,
-                  }) as any
-                );
+              const targetId = currentVariant?.product_id || product.id;
+              if (!targetId) return;
+              
+              if (cartQuantityForProduct) {
+                // Product is already in cart, update cart quantity
+                const newQuantity = Math.max(1, cartQuantityForProduct - 1);
+                dispatch(updateCartQuantity({ 
+                  productId: Number(targetId), 
+                  quantity: newQuantity 
+                }));
+              } else {
+                // Product not in cart, just update local quantity
+                setQuantity((q) => Math.max(1, q - 1));
               }
-              setQuantity((q) => Math.max(1, q - 1));
             }}
             className="w-[40px] h-[40px] cursor-pointer border border-gray-300 rounded-full hover:bg-gray-50 transition-colors flex justify-center items-center"
           >
@@ -245,16 +250,20 @@ export default function SingleProductDetails({
           </span>
           <button
             onClick={() => {
-              const targetId = currentVariant?.product_id || product.product_id;
-              if (targetId) {
-                dispatch(
-                  applyLocalQuantityDelta({
-                    productId: Number(targetId),
-                    delta: 1,
-                  }) as any
-                );
+              const targetId = currentVariant?.product_id || product.id;
+              if (!targetId) return;
+              
+              if (cartQuantityForProduct) {
+                // Product is already in cart, update cart quantity
+                const newQuantity = cartQuantityForProduct + 1;
+                dispatch(updateCartQuantity({ 
+                  productId: Number(targetId), 
+                  quantity: newQuantity 
+                }));
+              } else {
+                // Product not in cart, just update local quantity
+                setQuantity((q) => q + 1);
               }
-              setQuantity((q) => q + 1);
             }}
             className="w-[40px] h-[40px] cursor-pointer border border-gray-300 rounded-full hover:bg-gray-50 transition-colors flex justify-center items-center"
           >
@@ -324,7 +333,7 @@ export default function SingleProductDetails({
           const targetId =
             pendingAddProductId ||
             currentVariant?.product_id ||
-            product.product_id;
+            product.id;
           if (!targetId) return;
           dispatch(
             addToCart({ productId: Number(targetId), productQTY: quantity })

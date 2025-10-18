@@ -18,20 +18,19 @@ export default function BannerCarousel({ sliders }: { sliders: any }) {
         autoPlay={false}
         autoHeight
         swiperClassName="lg:hero h-fit"
+        effect="fade"
       >
         {items.map((slider: any, index: number) => (
           <SwiperSlide
             key={index}
-            className={`w-full h-full relative fade-item-${
-              index + 1
-            } fade-item`}
+            className="w-full h-full relative"
           >
             <Image
               src={slider?.image_url}
               alt={slider?.title || "Banner image"}
               width={500}
               height={400}
-              className="w-full h-[200px] sm:h-[250px] md:h-[300px] lg:h-full lg:max-h-[80vh] object-cover aspect-square lg:aspect-auto"
+              className="w-full h-[300px] sm:h-[350px] md:h-[400px] lg:h-full lg:h-[80vh] object-cover aspect-square lg:aspect-auto"
               quality={100}
               priority={index === 0}
             />

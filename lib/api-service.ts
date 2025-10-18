@@ -2,15 +2,54 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://envaglo-erp.env
 
 class ApiService {
   private baseURL: string;
+  private isRefreshing: boolean = false;
+  private refreshPromise: Promise<boolean> | null = null;
 
   constructor() {
     this.baseURL = API_BASE_URL || '';
     console.log('API Service initialized with base URL:', this.baseURL);
   }
 
+  private async refreshToken(): Promise<boolean> {
+    if (this.isRefreshing && this.refreshPromise) {
+      return this.refreshPromise;
+    }
+
+    this.isRefreshing = true;
+    this.refreshPromise = this.performTokenRefresh();
+
+    try {
+      const result = await this.refreshPromise;
+      return result;
+    } finally {
+      this.isRefreshing = false;
+      this.refreshPromise = null;
+    }
+  }
+
+  private async performTokenRefresh(): Promise<boolean> {
+    try {
+      const response = await fetch('/api/auth/refresh', {
+        method: 'POST',
+      });
+
+      if (response.ok) {
+        console.log('Token refreshed successfully');
+        return true;
+      } else {
+        console.error('Token refresh failed:', response.status);
+        return false;
+      }
+    } catch (error) {
+      console.error('Token refresh error:', error);
+      return false;
+    }
+  }
+
   private async request<T>(
     endpoint: string,
-    options: RequestInit = {}
+    options: RequestInit = {},
+    retryCount: number = 0
   ): Promise<T> {
     console.log(`Making direct API request to: ${this.baseURL}${endpoint}`);
     
@@ -38,6 +77,24 @@ class ApiService {
       const response = await fetch(url, requestOptions);
 
       console.log('Response status:', response.status);
+
+      // Handle 401 errors with automatic token refresh
+      if (response.status === 401 && retryCount === 0) {
+        console.log('Received 401, attempting token refresh...');
+        const refreshSuccess = await this.refreshToken();
+        
+        if (refreshSuccess) {
+          console.log('Token refreshed, retrying request...');
+          return this.request<T>(endpoint, options, retryCount + 1);
+        } else {
+          console.error('Token refresh failed, redirecting to login');
+          // Dispatch logout action or redirect to login
+          if (typeof window !== 'undefined') {
+            window.location.href = '/auth/login';
+          }
+          throw new Error('Authentication failed. Please login again.');
+        }
+      }
 
       if (!response.ok) {
         let errorMessage = `API request failed with status: ${response.status}`;

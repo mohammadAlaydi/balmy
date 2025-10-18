@@ -2,11 +2,12 @@
 
 import React from "react";
 import { Swiper } from "swiper/react";
-import { Pagination, Navigation, Autoplay } from "swiper/modules";
+import { Pagination, Navigation, Autoplay, EffectFade } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 import "swiper/css/autoplay";
+import "swiper/css/effect-fade";
 
 export default function CarouselComponent({
   spaceBetween,
@@ -19,6 +20,7 @@ export default function CarouselComponent({
   autoPlay,
   autoHeight,
   swiperClassName,
+  effect,
 }: {
   spaceBetween: number;
   slidesPerView: number;
@@ -30,11 +32,13 @@ export default function CarouselComponent({
   autoPlay?: boolean;
   autoHeight?: boolean;
   swiperClassName?: string;
+  effect?: string;
 }) {
   const modules = [];
   if (pagination) modules.push(Pagination);
   if (navigation) modules.push(Navigation);
   if (autoPlay) modules.push(Autoplay);
+  if (effect === 'fade') modules.push(EffectFade);
 
   return (
     <div className={`${containerClassName}`}>
@@ -48,6 +52,8 @@ export default function CarouselComponent({
         breakpoints={breakpoints}
         autoplay={autoPlay ? { delay: 5000, disableOnInteraction: false } : false}
         autoHeight={!!autoHeight}
+        effect={effect}
+        fadeEffect={effect === 'fade' ? { crossFade: true } : undefined}
         style={{ width: '100%', height: autoHeight ? 'auto' : '100%' }}
       > 
         {children}

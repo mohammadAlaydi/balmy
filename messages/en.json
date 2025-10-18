@@ -251,7 +251,8 @@
     "confirm": "Confirm",
     "yes": "Yes",
     "no": "No",
-    "ok": "OK"
+    "ok": "OK",
+    "login": "Login"
   },
   "contact-us": {
     "title": "Contact Us",

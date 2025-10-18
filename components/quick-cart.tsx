@@ -42,8 +42,8 @@ export default function QuickCart() {
   // }
   return (
    
-    <div className="flex flex-col gap-4 items-center justify-between h-full ">
-      <div className="flex flex-col gap-4 flex-1 h-full w-full">
+    <div className="flex flex-col gap-4 items-center justify-between min-h-0 h-full">
+      <div className="flex flex-col gap-4 w-full flex-1 min-h-0">
         <SectionTitle
           title={t("quick-look")}
           titleStyle="text-center xl:text-2xl md:text-xl sm:text-lg text-base font-bold"
@@ -57,11 +57,7 @@ export default function QuickCart() {
             {t("no-products-yet")}
           </p>
         )}
-        <div
-          className={`cart-poroduct col-span-12 lg:col-span-7 xl:col-span-8 flex flex-col gap-3 overflow-y-auto items-end max-h-[75vh]
-       
-      `}
-        >
+        <div className="cart-poroduct col-span-12 lg:col-span-7 xl:col-span-8 flex flex-col gap-3 overflow-y-auto items-end flex-1 min-h-0">
           {data?.data?.items &&
             data?.data?.items.length > 0 &&
             data.data.items.map((item: any) => (
@@ -74,25 +70,29 @@ export default function QuickCart() {
             ))}
         </div>
       </div>
-      {data?.data?.items?.length > 0 && (
-        <div className="flex justify-start w-full cursor-pointer">
-          <MdDeleteSweep
-            className="text-red-500 text-3xl"
-            onClick={() => dispatch(removeAllProductsFromCart() as any)}
-          />
-        </div>
-      )}
-      {data?.data?.items?.length > 0 && (
-        <div className="flex gap-2">
-          <Link
-            prefetch={true}
-            href="/cart"
-            className="text-nowrap md:text-sm text-xs bg-black text-white px-4 py-2 rounded-md hover:bg-black/80 border border-black hover:text-white transition-all duration-300"
-          >
-            {t("go-to-cart")}
-          </Link>
-        </div>
-      )}
+      
+      {/* Fixed bottom section for actions */}
+      <div className="flex flex-col gap-3 w-full flex-shrink-0">
+        {data?.data?.items?.length > 0 && (
+          <div className="flex justify-start w-full cursor-pointer">
+            <MdDeleteSweep
+              className="text-red-500 text-3xl"
+              onClick={() => dispatch(removeAllProductsFromCart() as any)}
+            />
+          </div>
+        )}
+        {data?.data?.items?.length > 0 && (
+          <div className="flex gap-2 justify-center">
+            <Link
+              prefetch={true}
+              href="/cart"
+              className="w-full text-center md:text-sm text-xs bg-black text-white px-4 py-2 rounded-md hover:bg-black/80 border border-black hover:text-white transition-all duration-300"
+            >
+              {t("go-to-cart")}
+            </Link>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

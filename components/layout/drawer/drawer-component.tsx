@@ -41,8 +41,8 @@ export default function DrawerComponent({
         <DrawerTitle className="hidden"></DrawerTitle>
         <DrawerTrigger asChild>{trigger}</DrawerTrigger>
         <DrawerContent>
-          <div className="relative h-full">
-            <div className="px-4 py-6 pt-16 h-full">{children}</div>
+          <div className="relative h-full flex flex-col">
+            <div className="px-4 py-6 pt-16 h-full flex flex-col min-h-0">{children}</div>
             <Button
               variant="ghost"
               size="icon"

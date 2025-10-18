@@ -218,16 +218,21 @@ const authSlice = createSlice({
     });
 
     // Refresh Token
+    builder.addCase(refreshToken.pending, (state) => {
+      // Don't set loading state for refresh token to avoid UI flicker
+    });
     builder.addCase(refreshToken.fulfilled, (state) => {
       // Token refreshed successfully, user remains authenticated
       state.isAuthenticated = true;
+      state.error = null;
     });
-    builder.addCase(refreshToken.rejected, (state) => {
+    builder.addCase(refreshToken.rejected, (state, action) => {
       // Refresh failed, user needs to login again
       state.user = null;
       state.accessToken = null;
       state.refreshToken = null;
       state.isAuthenticated = false;
+      state.error = action.payload as string;
     });
   },
 });

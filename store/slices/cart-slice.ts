@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { authenticatedFetch } from "@/lib/authenticated-fetch";
 
 const API_KEY = process.env.NEXT_PUBLIC_API_URL;
 
@@ -8,7 +9,7 @@ const getCartProducts = createAsyncThunk(
   "cart/products",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await fetch("/api/cart", {
+      const response = await authenticatedFetch("/api/cart", {
         method: "GET",
       });
 
@@ -34,7 +35,7 @@ const addToCart = createAsyncThunk(
     { rejectWithValue, dispatch }
   ) => {
     try {
-      const response = await fetch("/api/cart/add", {
+      const response = await authenticatedFetch("/api/cart/add", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -66,7 +67,7 @@ const removeFromCart = createAsyncThunk(
   "cart/remove",
   async (payload: { productId: number }, { rejectWithValue, dispatch }) => {
     try {
-      const response = await fetch(`/api/cart/remove/${payload.productId}`, {
+      const response = await authenticatedFetch(`/api/cart/remove/${payload.productId}`, {
         method: "DELETE",
       });
 
@@ -91,7 +92,7 @@ const removeAllProductsFromCart = createAsyncThunk(
   "cart/remove/all/products",
   async (_, { rejectWithValue, dispatch }) => {
     try {
-      const response = await fetch("/api/cart", {
+      const response = await authenticatedFetch("/api/cart", {
         method: "DELETE",
       });
 
@@ -113,12 +114,46 @@ const removeAllProductsFromCart = createAsyncThunk(
 
 
 
+// update cart quantity
+const updateCartQuantity = createAsyncThunk(
+  "cart/update-quantity",
+  async (
+    payload: { productId: number; quantity: number },
+    { rejectWithValue, dispatch }
+  ) => {
+    try {
+      const response = await authenticatedFetch(`/api/cart/update/${payload.productId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          quantity: payload.quantity,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        return rejectWithValue(data.message || "Failed to update quantity");
+      }
+
+      // Refetch cart items after successful update
+      dispatch(getCartProducts());
+      return data;
+    } catch (error: any) {
+      console.error("Update quantity error:", error);
+      return rejectWithValue(error.message || "Failed to update quantity");
+    }
+  }
+);
+
 //save cart order
 const saveOrder = createAsyncThunk(
   "save-order",
   async (payload: any, { rejectWithValue }) => {
     try {
-      const response = await fetch("/api/cart/checkout", {
+      const response = await authenticatedFetch("/api/cart/checkout", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -152,7 +187,24 @@ const cartSlice = createSlice({
     status: null as string | null, // Only for order completion (success/failed)
     cartStatus: null as string | null, // For cart operations (add/remove)
   },
-  reducers: {},
+  reducers: {
+    applyLocalQuantityDelta: (state: any, action) => {
+      const { productId, delta } = action.payload;
+      
+      // Update local quantity in increaseOrDecreaseResponse for immediate UI feedback
+      if (state.increaseOrDecreaseResponse?.data?.items) {
+        const itemIndex = state.increaseOrDecreaseResponse.data.items.findIndex(
+          (item: any) => item?.additional?.product_id === productId
+        );
+        
+        if (itemIndex !== -1) {
+          const currentQuantity = state.increaseOrDecreaseResponse.data.items[itemIndex].quantity;
+          const newQuantity = Math.max(1, currentQuantity + delta);
+          state.increaseOrDecreaseResponse.data.items[itemIndex].quantity = newQuantity;
+        }
+      }
+    },
+  },
   extraReducers(builder) {
     // Get cart products
     builder.addCase(getCartProducts?.pending, (state) => {
@@ -212,6 +264,20 @@ const cartSlice = createSlice({
       }
     );
 
+    // Update cart quantity
+    builder.addCase(updateCartQuantity.pending, (state) => {
+      state.increaseOrDecreaseLoading = true;
+    });
+    builder.addCase(updateCartQuantity.fulfilled, (state, action) => {
+      state.increaseOrDecreaseLoading = false;
+      state.increaseOrDecreaseResponse = action.payload;
+      state.cartStatus = "success";
+    });
+    builder.addCase(updateCartQuantity.rejected, (state: any, action) => {
+      state.error = action.error.message || null;
+      state.increaseOrDecreaseLoading = false;
+    });
+
     // save order
     builder.addCase(saveOrder.pending, (state) => {
       state.isLoading = true;
@@ -229,12 +295,13 @@ const cartSlice = createSlice({
   },
 });
 
-export const { resetStatus, applyLocalQuantityDelta } = cartSlice.actions;
+export const { applyLocalQuantityDelta } = cartSlice.actions;
 export {
   getCartProducts,
   addToCart,
   removeFromCart,
   removeAllProductsFromCart,
+  updateCartQuantity,
   saveOrder,
 };
 export const cartReducer = cartSlice.reducer;
