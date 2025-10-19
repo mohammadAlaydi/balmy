@@ -3,7 +3,11 @@
 import React, { useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
 import { useAppDispatch } from "@/store/hooks";
-import { addToCart, applyLocalQuantityDelta, updateCartQuantity } from "@/store/slices/cart-slice";
+import {
+  addToCart,
+  applyLocalQuantityDelta,
+  updateCartQuantity,
+} from "@/store/slices/cart-slice";
 import { FavouriteButton } from "@/components/favourite-button";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -38,10 +42,14 @@ export default function SingleProductDetails({
   const [pendingAddProductId, setPendingAddProductId] = useState<number | null>(
     null
   );
+  const [isAddingToCart, setIsAddingToCart] = useState(false);
+  const [loadingProductId, setLoadingProductId] = useState<number | null>(null);
   const { isAuthenticated } = useSelector((state: any) => state.auth);
-  const { data: cartData, increaseOrDecreaseResponse } = useSelector(
-    (state: any) => state.cart
-  );
+  const {
+    data: cartData,
+    increaseOrDecreaseResponse,
+    increaseOrDecreaseLoading,
+  } = useSelector((state: any) => state.cart);
 
   // Use the variant management hook
   const {
@@ -54,16 +62,51 @@ export default function SingleProductDetails({
     handleSizeChange,
   } = variantProps ?? useProductVariants({ product });
 
-  const handleAddToCart = () => {
+  const handleUpdateQuantity = async (productId: number, qtyChange: number) => {
+    try {
+      setLoadingProductId(productId);
+      await dispatch(
+        addToCart({
+          productId,
+          productQTY: qtyChange,
+        })
+      );
+    } finally {
+      setLoadingProductId(null);
+    }
+  };
+
+  const handleAddToCart = async () => {
     if (!isAuthenticated) {
-      const targetId = currentVariant?.product_id || product.id;
+      const targetId = currentVariant?.product_id || product.product_id;
       if (targetId) setPendingAddProductId(Number(targetId));
       setShowAuthModal(true);
       return;
     }
-    const productIdToAdd = currentVariant?.product_id || product.id;
-    dispatch(addToCart({ productId: productIdToAdd, productQTY: quantity }));
-    toast.success(tProducts("added-to-cart"));
+
+    const productIdToAdd = currentVariant?.product_id || product.product_id;
+    if (!productIdToAdd) return;
+
+    try {
+      setIsAddingToCart(true);
+      const promise = dispatch(
+        addToCart({ productId: productIdToAdd, productQTY: quantity })
+      );
+
+      if (typeof promise?.unwrap === "function") {
+        await promise.unwrap();
+      } else {
+        await promise;
+      }
+
+      toast.success(tProducts("added-to-cart"));
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : String(error);
+      toast.error(errorMessage || tProducts("failed-to-add-to-cart"));
+    } finally {
+      setIsAddingToCart(false);
+    }
   };
 
   const handleShare = async () => {
@@ -117,21 +160,21 @@ export default function SingleProductDetails({
 
   // Derive quantity already in cart for this product (if present)
   const targetProductId = useMemo(
-    () => currentVariant?.product_id || product.id,
-    [currentVariant?.product_id, product.id]
+    () => currentVariant?.product_id || product.product_id,
+    [currentVariant?.product_id, product.product_id]
   );
 
   const cartQuantityForProduct = useMemo(() => {
     if (!targetProductId) return null;
+    const fromStore = increaseOrDecreaseResponse?.data?.items?.find(
+      (i: any) => i?.additional?.product_id === Number(targetProductId)
+    )?.quantity;
     const fromCart = cartData?.data?.items?.find(
       (i: any) =>
         i?.additional?.product_id === Number(targetProductId) ||
-        i?.product?.id === Number(targetProductId)
+        i?.product?.product_id === Number(targetProductId)
     )?.quantity;
-    const fromMirror = increaseOrDecreaseResponse?.data?.items?.find(
-      (i: any) => i?.additional?.product_id === Number(targetProductId)
-    )?.quantity;
-    const candidate = fromCart ?? fromMirror;
+    const candidate = fromStore ?? fromCart;
     if (candidate == null) return null;
     const n =
       typeof candidate === "string" ? parseInt(candidate, 10) : candidate;
@@ -226,22 +269,37 @@ export default function SingleProductDetails({
         <div className="flex items-center ">
           <button
             onClick={() => {
-              const targetId = currentVariant?.product_id || product.id;
+              const targetId = currentVariant?.product_id || product.product_id;
               if (!targetId) return;
-              
-              if (cartQuantityForProduct) {
-                // Product is already in cart, update cart quantity
-                const newQuantity = Math.max(1, cartQuantityForProduct - 1);
-                dispatch(updateCartQuantity({ 
-                  productId: Number(targetId), 
-                  quantity: newQuantity 
-                }));
+
+              const isLoading =
+                loadingProductId === Number(targetId) ||
+                increaseOrDecreaseLoading;
+              if (isLoading) {
+                toast.error(t("operation-in-progress"));
+                return;
+              }
+
+              if (cartQuantityForProduct && cartQuantityForProduct > 1) {
+                // Product is already in cart, decrease quantity
+                handleUpdateQuantity(Number(targetId), -1);
+              } else if (cartQuantityForProduct === 1) {
+                // Don't allow decreasing below 1
+                return;
               } else {
                 // Product not in cart, just update local quantity
                 setQuantity((q) => Math.max(1, q - 1));
               }
             }}
-            className="w-[40px] h-[40px] cursor-pointer border border-gray-300 rounded-full hover:bg-gray-50 transition-colors flex justify-center items-center"
+            className={`w-[40px] h-[40px] cursor-pointer border border-gray-300 rounded-full hover:bg-gray-50 transition-colors flex justify-center items-center ${
+              loadingProductId ===
+                Number(currentVariant?.product_id || product.product_id) ||
+              increaseOrDecreaseLoading ||
+              displayedQuantity <= 1
+                ? "text-gray-400"
+                : ""
+            }`}
+            disabled={displayedQuantity <= 1}
           >
             <TiMinus className="text-sm " />
           </button>
@@ -250,22 +308,32 @@ export default function SingleProductDetails({
           </span>
           <button
             onClick={() => {
-              const targetId = currentVariant?.product_id || product.id;
+              const targetId = currentVariant?.product_id || product.product_id;
               if (!targetId) return;
-              
+
+              const isLoading =
+                loadingProductId === Number(targetId) ||
+                increaseOrDecreaseLoading;
+              if (isLoading) {
+                toast.error(t("operation-in-progress"));
+                return;
+              }
+
               if (cartQuantityForProduct) {
-                // Product is already in cart, update cart quantity
-                const newQuantity = cartQuantityForProduct + 1;
-                dispatch(updateCartQuantity({ 
-                  productId: Number(targetId), 
-                  quantity: newQuantity 
-                }));
+                // Product is already in cart, increase quantity
+                handleUpdateQuantity(Number(targetId), 1);
               } else {
                 // Product not in cart, just update local quantity
                 setQuantity((q) => q + 1);
               }
             }}
-            className="w-[40px] h-[40px] cursor-pointer border border-gray-300 rounded-full hover:bg-gray-50 transition-colors flex justify-center items-center"
+            className={`w-[40px] h-[40px] cursor-pointer border border-gray-300 rounded-full hover:bg-gray-50 transition-colors flex justify-center items-center ${
+              loadingProductId ===
+                Number(currentVariant?.product_id || product.product_id) ||
+              increaseOrDecreaseLoading
+                ? "text-gray-400"
+                : ""
+            }`}
           >
             <FaPlus className="text-sm " />
           </button>
@@ -276,13 +344,15 @@ export default function SingleProductDetails({
       <div className="flex flex-col gap-3">
         <Button
           onClick={handleAddToCart}
-          disabled={!(currentVariant?.in_stock ?? product.in_stock)}
-          className="bg-black text-white hover:bg-black/75 hover:text-white border border-black px-5 py-3 rounded-[5px] transition-all duration-300 font-cairo text-[20px] lg:text-[20px] md:text-[18px]"
+          disabled={
+            !(currentVariant?.in_stock ?? product.in_stock) || isAddingToCart
+          }
+          className="bg-black text-white hover:bg-black/75 hover:text-white border border-black px-5 py-3 rounded-[5px] transition-all duration-300 font-cairo text-[20px] lg:text-[20px] md:text-[18px] disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <MdOutlineShoppingCart className="text-xl ml-2" />
           <Badge className="text-base bg-transparent">
             {" "}
-            {t("add-to-cart")}
+            {isAddingToCart ? t("adding-to-cart") : t("add-to-cart")}
           </Badge>
         </Button>
 
@@ -329,17 +399,34 @@ export default function SingleProductDetails({
           setShowAuthModal(open);
           if (!open) setPendingAddProductId(null);
         }}
-        onAuthenticated={() => {
+        onAuthenticated={async () => {
           const targetId =
             pendingAddProductId ||
             currentVariant?.product_id ||
-            product.id;
+            product.product_id;
           if (!targetId) return;
-          dispatch(
-            addToCart({ productId: Number(targetId), productQTY: quantity })
-          );
-          toast.success(tProducts("added-to-cart"));
-          setPendingAddProductId(null);
+
+          try {
+            setIsAddingToCart(true);
+            const promise = dispatch(
+              addToCart({ productId: Number(targetId), productQTY: quantity })
+            );
+
+            if (typeof promise?.unwrap === "function") {
+              await promise.unwrap();
+            } else {
+              await promise;
+            }
+
+            toast.success(tProducts("added-to-cart"));
+          } catch (error) {
+            const errorMessage =
+              error instanceof Error ? error.message : String(error);
+            toast.error(errorMessage || tProducts("failed-to-add-to-cart"));
+          } finally {
+            setIsAddingToCart(false);
+            setPendingAddProductId(null);
+          }
         }}
       />
     </div>
