@@ -67,7 +67,7 @@ export default function CartProduct({
           </p>
 
           <div className="flex flex-col gap-2 flex-1 min-w-0">
-            <h2 className="text-sm md:font-bold line-clamp-2 max-w-[120px] ltr:text-start rtl:text-end overflow-hidden text-ellipsis whitespace-nowrap">
+            <h2 className="text-sm md:font-bold line-clamp-2 ltr:text-start rtl:text-end overflow-hidden text-ellipsis whitespace-nowrap">
               {product?.name}
             </h2>
           </div>
@@ -88,7 +88,7 @@ export default function CartProduct({
           alt={product?.name ?? "product image"}
           width={100}
           height={100}
-          className="rounded-md object-cover w-[80px] sm:w-[80px] md:w-[100px] aspect-square border border-gray-200"
+          className="rounded-md object-cover w-[100px] md:w-[120px] aspect-square border border-gray-200"
         />
       </div>
 
