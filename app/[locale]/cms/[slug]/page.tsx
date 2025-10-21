@@ -28,7 +28,7 @@ export default function Page({ params }: { params: Promise<{ slug: string }> }) 
   }
   return (
     <PageWrapper>
-      <div dangerouslySetInnerHTML={{ __html: page?.html_content }} />
+      <div className='min-h-[65vh]' dangerouslySetInnerHTML={{ __html: page?.html_content }} />
     </PageWrapper>
   )
 }
