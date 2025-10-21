@@ -21,19 +21,23 @@ export default function Categories({ categories }: { categories: any }) {
       breakpoints={{
         300: {
           slidesPerView: 1,
+          spaceBetween: 5,
         },
         301: {
           slidesPerView: 2,
+          spaceBetween: 5,
         },
         600: {
           slidesPerView: 3,
         },
         992: {
           slidesPerView: 3,
+          spaceBetween: 8,
+
         },
-        1000: { slidesPerView: 3, spaceBetween: 20 },
-        1200: { slidesPerView: 4, spaceBetween: 20 },
-        1201: { slidesPerView: 5, spaceBetween: 20 },
+        1000: { slidesPerView: 3, spaceBetween: 15 },
+        1200: { slidesPerView: 4, spaceBetween: 15 },
+        1201: { slidesPerView: 5, spaceBetween: 15 },
       }}
     >
       {categories &&
