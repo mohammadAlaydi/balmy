@@ -232,7 +232,7 @@ export default function ProductCard({
 
         {/* New Badge */}
         {product?.new && (
-          <Badge className="bg-red-600 text-white font-semibold px-2 py-1 text-xs absolute top-2 ltr:right-2 rtl:left-2 z-10 shadow-md">
+          <Badge className="bg-red-600 text-white font-semibold px-2 py-1 text-xs absolute top-2 ltr:left-2 rtl:right-2 z-10 shadow-md">
             {td("new")}
           </Badge>
         )}

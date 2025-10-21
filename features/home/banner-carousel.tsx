@@ -30,7 +30,7 @@ export default function BannerCarousel({ sliders }: { sliders: any }) {
               alt={slider?.title || "Banner image"}
               width={500}
               height={400}
-              className="w-full h-[300px] sm:h-[350px] md:h-[400px] lg:h-full lg:h-[80vh] object-cover aspect-square lg:aspect-auto"
+              className="w-full h-[300px] sm:h-[350px] md:h-[500px] lg:h-full lg:h-[85%] xl:h-[80vh] object-cover"
               quality={100}
               priority={index === 0}
             />
