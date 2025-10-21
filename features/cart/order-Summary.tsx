@@ -45,30 +45,35 @@ export default function OrderSummary({ data }: { data: any }) {
   // Calculate totals without side effects
   const calculateTotals = () => {
     const items = data?.data?.items || [];
-    
+
     if (!items.length) {
       return { subtotal: 0, tax: 0, total: 0, itemCount: 0 };
     }
-    
+
     const subtotal = items.reduce((total: number, item: any) => {
-      const price = Number(item?.product?.price?.value || item?.product?.price?.final_price || item?.product?.price?.base_price || item?.product?.price || 0);
+      const price = Number(
+        item?.product?.price?.value ||
+          item?.product?.price?.final_price ||
+          item?.product?.price?.base_price ||
+          item?.product?.price ||
+          0
+      );
       const quantity = Number(item?.quantity || 0);
-      return total + (price * quantity);
+      return total + price * quantity;
     }, 0);
-    
+
     const tax = Number(data?.data?.base_tax_total || 0);
     const total = subtotal + tax;
-    
-    return { 
-      subtotal, 
-      tax, 
-      total, 
-      items
+
+    return {
+      subtotal,
+      tax,
+      total,
+      items,
     };
   };
 
   const { subtotal, tax, total, items } = calculateTotals();
-  console.log(subtotal, tax, total, items);
 
   const onSubmit = (data: CouponFormData) => {
     if (!data.coupon.trim()) {
@@ -99,7 +104,9 @@ export default function OrderSummary({ data }: { data: any }) {
   if (!data?.data?.items?.length) {
     return (
       <div className="col-span-12 lg:col-span-5 xl:col-span-4 p-6 rounded-lg border border-gray-200 h-fit flex flex-col gap-6 bg-white shadow-sm">
-        <h2 className="text-xl font-bold text-gray-900">{t("order-summary")}</h2>
+        <h2 className="text-xl font-bold text-gray-900">
+          {t("order-summary")}
+        </h2>
         <div className="text-center py-8">
           <p className="text-gray-500">{t("cart-empty")}</p>
         </div>
@@ -135,8 +142,7 @@ export default function OrderSummary({ data }: { data: any }) {
             variant="outline"
             className="text-sm bg-transparent text-gray-color border-gray-200"
           >
-            {subtotal.toFixed(2)}{" "}
-            <i className="icon-rial"></i>
+            {subtotal.toFixed(2)} <i className="icon-rial"></i>
           </Badge>
           <Badge
             variant="outline"
@@ -151,8 +157,7 @@ export default function OrderSummary({ data }: { data: any }) {
             variant="outline"
             className="text-sm bg-transparent text-gray-color border-gray-200"
           >
-            {tax.toFixed(2)}{" "}
-            <i className="icon-rial"></i>
+            {tax.toFixed(2)} <i className="icon-rial"></i>
           </Badge>
           <Badge
             variant="outline"
@@ -168,8 +173,7 @@ export default function OrderSummary({ data }: { data: any }) {
             variant="outline"
             className="text-sm font-semibold bg-transparent text-gray-color border-gray-200"
           >
-            {total.toFixed(2)}{" "}
-            <i className="icon-rial"></i>
+            {total.toFixed(2)} <i className="icon-rial"></i>
           </Badge>
           <Badge
             variant="outline"

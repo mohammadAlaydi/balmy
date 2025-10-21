@@ -3,7 +3,7 @@
 import React from "react";
 import { useTranslations } from "next-intl";
 import { useParams } from "next/navigation";
-import { useForm, FormProvider } from "react-hook-form";
+import { useForm, FormProvider, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useAuth } from "@/hooks/use-auth";
@@ -22,21 +22,29 @@ import LabelAndInput from "@/components/label-and-input";
 import LabelAndSelect from "@/components/label-and-select";
 import toast from "react-hot-toast";
 import { ProtectedRoute } from "@/components/auth/protected-route";
+import { Trash2, Plus } from "lucide-react";
+import { MdDeleteSweep } from "react-icons/md";
 
-// Form validation schema
+// ✅ Updated validation schema
 const profileSchema = z.object({
   first_name: z.string().min(1, "validation.first-name-required"),
   last_name: z.string().min(1, "validation.last-name-required"),
   email: z.string().email("validation.invalid-email"),
   phone: z.string().min(1, "validation.phone-required"),
-  country: z.string().min(1, "validation.country-required"),
-  city: z.string().min(1, "validation.city-required"),
-  address: z.string().min(1, "validation.address-required"),
+  addresses: z
+    .array(
+      z.object({
+        address: z.string().min(1, "validation.address-required"),
+        city: z.string().min(1, "validation.city-required"),
+        country: z.string().min(1, "validation.country-required"),
+      })
+    )
+    .min(1, "validation.at-least-one-address"),
 });
 
 type ProfileFormData = z.infer<typeof profileSchema>;
 
-// City options for Saudi Arabia - will be populated with translations
+// City options for Saudi Arabia
 const getCityOptions = (t: any) => [
   { label: t("cities.riyadh"), value: "riyadh" },
   { label: t("cities.jeddah"), value: "jeddah" },
@@ -60,12 +68,12 @@ const getCityOptions = (t: any) => [
   { label: t("cities.al-kharj"), value: "al-kharj" },
 ];
 
-export default function page() {
+export default function Page() {
   const t = useTranslations("profile");
   const params = useParams();
   const locale = params.locale as string;
   const isRTL = locale === "ar";
-  const { user, isLoading, isAuthenticated, accessToken } = useAuth();
+  const { user, isAuthenticated } = useAuth();
   const dispatch = useDispatch<AppDispatch>();
 
   const form = useForm<ProfileFormData>({
@@ -75,21 +83,23 @@ export default function page() {
       last_name: "",
       email: "",
       phone: "",
-      country: "Saudi Arabia",
-      city: "",
-      address: "",
+      addresses: [{ address: "", city: "", country: "" }],
     },
   });
 
-  // Load user data when component mounts
+  const { control, reset } = form;
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "addresses",
+  });
+
+  console.log(user, "😂😂😂");
   React.useEffect(() => {
     if (isAuthenticated && !user) {
       dispatch(getCurrentUser());
     }
   }, [dispatch, isAuthenticated, user]);
 
-  console.log(user , "🤷‍♂️🤷‍♂️🤷‍♂️")
-  // Update form values when user data changes
   React.useEffect(() => {
     if (user && Object.keys(user).length > 0) {
       const formData = {
@@ -97,46 +107,41 @@ export default function page() {
         last_name: user.last_name || "",
         email: user.email || "",
         phone: user.phone || "",
-        country: "Saudi Arabia", // Default country
-        city: "", // Not provided in API response
-        address: "", // Not provided in API response
+        addresses: [
+          {
+            address: user.address || "",
+            city: user.city || "",
+            country: user.country,
+          },
+        ],
       };
-      form.reset(formData);
+      reset(formData);
     }
-  }, [user, form]);
-
+  }, [user, reset]);
 
   const onSubmit = async (data: ProfileFormData) => {
     try {
-      // Here you would typically make an API call to update the user profile
-      // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 1000));
-
       toast.success(t("changesSaved"));
     } catch (error) {
       toast.error(t("errorSaving"));
     }
   };
 
-
   return (
     <ProtectedRoute>
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto">
           <div className="mb-8 text-center">
-            <h1 className="text-3xl font-bold  mb-2">
-              {t("title")}
-            </h1>
+            <h1 className="text-3xl font-bold mb-2">{t("title")}</h1>
             <p className="text-gray-600">{t("subtitle")}</p>
           </div>
-
           <Card>
             <CardHeader>
-              <CardTitle className="">
-                {t("title")}
-              </CardTitle>
+              <CardTitle>{t("title")}</CardTitle>
               <CardDescription>{t("subtitle")}</CardDescription>
             </CardHeader>
+
             <CardContent>
               <FormProvider {...form}>
                 <form
@@ -144,35 +149,24 @@ export default function page() {
                   className={`space-y-6 ${isRTL ? "rtl" : "ltr"}`}
                 >
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {/* First Name */}
                     <LabelAndInput
                       control={form.control}
                       fieldName="first_name"
                       labelText={t("first-name")}
                       inputPlaceholder={t("first-name")}
                       inputId="first_name"
-                      containerStyle=""
-                      containerColSpan=""
-                      labelColSpan=""
-                      inputColSpan=""
                       inputStyle="w-full"
                     />
 
-                    {/* Last Name */}
                     <LabelAndInput
                       control={form.control}
                       fieldName="last_name"
                       labelText={t("last-name")}
                       inputPlaceholder={t("last-name")}
                       inputId="last_name"
-                      containerStyle=""
-                      containerColSpan=""
-                      labelColSpan=""
-                      inputColSpan=""
                       inputStyle="w-full"
                     />
 
-                    {/* Email */}
                     <LabelAndInput
                       control={form.control}
                       fieldName="email"
@@ -180,13 +174,9 @@ export default function page() {
                       inputPlaceholder={t("email")}
                       inputType="email"
                       inputId="email"
-                      containerStyle=""
-                      containerColSpan=""
-                      labelColSpan=""
                       inputStyle="w-full"
                     />
 
-                    {/* Phone */}
                     <LabelAndInput
                       control={form.control}
                       fieldName="phone"
@@ -194,57 +184,83 @@ export default function page() {
                       inputPlaceholder={t("phone")}
                       inputType="tel"
                       inputId="phone"
-                      containerStyle=""
-                      containerColSpan=""
-                      labelColSpan=""
-                      inputColSpan=""
-                      inputStyle={`w-full ${isRTL ? "text-right rtl" : "text-left ltr"
-                        }`}
-                    />
-
-                    {/* Country */}
-                    <LabelAndInput
-                      control={form.control}
-                      fieldName="country"
-                      labelText={t("country")}
-                      inputPlaceholder={t("country")}
-                      inputId="country"
-                      containerStyle=""
-                      containerColSpan=""
-                      labelColSpan=""
-                      inputColSpan=""
-                      inputStyle="w-full"
-                    />
-
-                    {/* City - Select */}
-                    <LabelAndSelect
-                      control={form.control}
-                      fieldName="city"
-                      labelText={t("city")}
-                      selectOptions={getCityOptions(t)}
-                      containerStyle=""
-                      containerColSpan=""
-                      labelColSpan=""
-                      selectColSpan=""
-                      selectStyle={`${isRTL ? "text-right rtl" : "text-left ltr"
-                        }`}
+                      inputStyle={`w-full ${
+                        isRTL ? "text-right" : "text-left"
+                      }`}
                     />
                   </div>
+                  <hr />
+                  {/* ✅ Address Field Array */}
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-lg font-semibold">
+                        {t("addresses")}
+                      </h3>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={() =>
+                          append({
+                            address: "",
+                            city: "",
+                            country: "Saudi Arabia",
+                          })
+                        }
+                      >
+                        <Plus className="w-4 h-4 mr-2" /> {t("add-address")}
+                      </Button>
+                    </div>
 
-                  {/* Address - Full Width */}
-                  <div className="col-span-full">
-                    <LabelAndInput
-                      control={form.control}
-                      fieldName="address"
-                      labelText={t("address")}
-                      inputPlaceholder={t("address")}
-                      inputId="address"
-                      containerStyle=""
-                      containerColSpan=""
-                      labelColSpan=""
-                      inputColSpan=""
-                      inputStyle="w-full"
-                    />
+                    {fields.map((field, index) => (
+                      <div
+                        key={field.id}
+                        className="border p-4 rounded-lg space-y-4"
+                      >
+                        <div className="flex items-center justify-between">
+                          <h4 className="font-medium">
+                            {t("address")} {t("number")} {index + 1}
+                          </h4>
+                          <Button
+                            type="button"
+                            variant="destructive"
+                            onClick={() => remove(index)}
+                            disabled={fields.length === 1}
+                          >
+                            <MdDeleteSweep size={30} className="text-white" />
+                          </Button>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                          <LabelAndInput
+                            control={form.control}
+                            fieldName={`addresses.${index}.address`}
+                            labelText={t("address")}
+                            inputPlaceholder={t("address")}
+                            inputId={`address-${index}`}
+                            inputStyle="w-full"
+                          />
+
+                          <LabelAndSelect
+                            control={form.control}
+                            fieldName={`addresses.${index}.city`}
+                            labelText={t("city")}
+                            selectOptions={getCityOptions(t)}
+                            selectStyle={`${
+                              isRTL ? "text-right" : "text-left"
+                            }`}
+                          />
+
+                          <LabelAndInput
+                            control={form.control}
+                            fieldName={`addresses.${index}.country`}
+                            labelText={t("country")}
+                            inputPlaceholder={t("country")}
+                            inputId={`country-${index}`}
+                            inputStyle="w-full"
+                          />
+                        </div>
+                      </div>
+                    ))}
                   </div>
 
                   {/* Submit Button */}

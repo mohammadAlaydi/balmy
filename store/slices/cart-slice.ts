@@ -204,6 +204,11 @@ const cartSlice = createSlice({
         }
       }
     },
+    resetStatus: (state) => {
+      state.status = null;
+      state.cartStatus = null;
+      state.error = null;
+    },
   },
   extraReducers(builder) {
     // Get cart products

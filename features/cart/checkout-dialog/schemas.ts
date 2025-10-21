@@ -6,7 +6,10 @@ export const formSchema = z
       first_name: z.string().min(1, "validation.first-name-required").max(50),
       last_name: z.string().min(1, "validation.last-name-required").max(50),
       email: z.string().email("validation.invalid-email"),
-      address1: z.string().min(1, "validation.street-address-required").max(200),
+      address1: z
+        .string()
+        .min(1, "validation.street-address-required")
+        .max(200),
       city: z.string().min(1, "validation.city-required").max(100),
       phone: z
         .string()
@@ -35,7 +38,7 @@ export const formSchema = z
         .or(z.literal("")),
     }),
     payment: z.object({
-      method: z.enum(["cashondelivery", "creditcard", "paypal"]),
+      method: z.enum(["cashondelivery", "tabby", "moyassar"]),
     }),
     shipping_method: z.enum([
       "flatrate_flatrate",

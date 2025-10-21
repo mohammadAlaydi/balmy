@@ -21,10 +21,7 @@ export default function BannerCarousel({ sliders }: { sliders: any }) {
         effect="fade"
       >
         {items.map((slider: any, index: number) => (
-          <SwiperSlide
-            key={index}
-            className="w-full h-full relative"
-          >
+          <SwiperSlide key={index} className="w-full h-full relative">
             <Image
               src={slider?.image_url}
               alt={slider?.title || "Banner image"}

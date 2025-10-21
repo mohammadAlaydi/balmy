@@ -130,7 +130,8 @@
     "placeholder-city": "Los Angeles",
     "placeholder-phone": "+1-555-987-6543",
     "login-required": "Login Required",
-    "please-login-to-checkout": "Please login to proceed with checkout"
+    "please-login-to-checkout": "Please login to proceed with checkout",
+    "online-payment-methods":"Choose Online Payment Method"
   },
   "about": {
     "who-we-are": "Who We Are",
@@ -586,12 +587,15 @@
     "dateOfBirth": "Date of Birth",
     "country": "Country",
     "city": "City",
-    "address": "Detailed Address",
+    "address": "Address",
     "save-changes": "Save Changes",
     "saving": "Saving...",
     "changes-saved": "Changes saved successfully",
     "error-saving": "Error saving changes",
-    "select-gender": "Select gender"
+    "select-gender": "Select gender",
+    "add-address" : "Add Address",
+    "addresses" : "Addresses",
+    "number" : "Number"
   },
   "favourites": {
     "title": "My Favourites",

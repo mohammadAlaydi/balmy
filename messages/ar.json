@@ -130,7 +130,8 @@
     "placeholder-city": "الرياض",
     "placeholder-phone": "+966-50-123-4567",
     "login-required": "تسجيل الدخول مطلوب",
-    "please-login-to-checkout": "يرجى تسجيل الدخول للمتابعة مع الدفع"
+    "please-login-to-checkout": "يرجى تسجيل الدخول للمتابعة مع الدفع",
+    "online-payment-methods" : "إختر طرية الدفع الإلكترونية"
   },
   "about": {
     "who-we-are": "من نحن",
@@ -586,12 +587,15 @@
     "dateOfBirth": "تاريخ الميلاد",
     "country": "الدولة",
     "city": "المدينة",
-    "address": "العنوان بالتفصيل",
+    "address": "عنوان",
     "save-changes": "حفظ التغييرات",
     "saving": "جاري الحفظ...",
     "changes-saved": "تم حفظ التغييرات بنجاح",
     "error-saving": "حدث خطأ أثناء حفظ التغييرات",
-    "select-gender": "إختر النوع"
+    "select-gender": "إختر النوع",
+    "add-address" : "إضافة عنوان",
+    "addresses" : "العناوين",
+    "number" : "رقم"
   },
   "favourites": {
     "title": "المفضلة",
