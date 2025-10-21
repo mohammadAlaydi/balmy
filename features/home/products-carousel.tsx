@@ -13,11 +13,11 @@ export default function ProductsCarousel({ products }: { products: any }) {
       breakpoints={{
         300: {
           slidesPerView: 2,
-          spaceBetween: 5,
+          spaceBetween: 8,
         },
         350: {
           slidesPerView: 2,
-          spaceBetween: 5,
+          spaceBetween: 8,
         },
         700: {
           slidesPerView: 3,
