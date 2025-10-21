@@ -88,7 +88,7 @@ export default function CartProduct({
           alt={product?.name ?? "product image"}
           width={100}
           height={100}
-          className="rounded-md object-cover w-[60px] sm:w-[80px] md:w-[100px] aspect-square border border-gray-200"
+          className="rounded-md object-cover w-[80px] sm:w-[80px] md:w-[100px] aspect-square border border-gray-200"
         />
       </div>
 
