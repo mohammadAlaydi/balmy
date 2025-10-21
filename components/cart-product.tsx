@@ -22,7 +22,6 @@ export default function CartProduct({
   quantity,
   deletedProductId,
 }: CartProductProps) {
-  
   const dispatch = useAppDispatch();
   const { increaseOrDecreaseResponse } = useSelector(
     (state: any) => state.cart
@@ -31,7 +30,6 @@ export default function CartProduct({
   const [loadingProductId, setLoadingProductId] = useState<number | null>(null);
   const isLoading = loadingProductId === product?.id;
 
-  // Derive current quantity from Redux (live) or fall back to prop
   const currentQty: number = useMemo(() => {
     const fromStore = increaseOrDecreaseResponse?.data?.items?.find(
       (i: any) => i?.additional?.product_id === product?.id
@@ -58,40 +56,61 @@ export default function CartProduct({
   };
 
   return (
-    <div className="flex flex-col gap-3 w-full rounded-md border border-gray-200 p-4">
+    <div className="flex flex-col gap-3 w-full rounded-md border border-gray-200 p-3 sm:p-4">
       {/* Product Info */}
-      <div className="image-and-info-container flex flex-col-reverse lg:flex-row gap-3 w-full justify-end">
+      <div className="flex flex-row gap-3 w-full justify-end items-start">
         <div className="flex flex-col gap-2 flex-1">
-          <p className="text-sm text-gray-color ltr:text-end rtl:text-start">
+          <p className="text-xs sm:text-sm text-gray-color ltr:text-end rtl:text-start">
             {typeof product?.category === "string"
               ? product?.category
               : product?.category?.name ?? ""}
           </p>
-          <h2 className="text-sm font-bold ltr:text-start rtl:text-end">
-            {product?.name}
-          </h2>
-          <ReactStars rating={product?.reviews?.total || 0} edit={false} />
-          <p className="text-sm text-gray-color ltr:text-start rtl:text-end">
-            {product?.price} <i className="icon-rial"></i>
-          </p>
 
+          <div className="flex flex-col gap-2 flex-1 min-w-0">
+            <h2 className="text-sm font-bold line-clamp-2 max-w-[200px] ltr:text-start rtl:text-end">
+              {product?.name}
+            </h2>
+          </div>
+
+          <div className="hidden md:flex flex-col">
+            <div className="scale-[0.85] sm:scale-100">
+              <ReactStars rating={product?.reviews?.total || 0} edit={false} />
+            </div>
+
+            <p className="text-xs sm:text-sm md:text-base text-gray-color ltr:text-start rtl:text-end">
+              {product?.price} <i className="icon-rial"></i>
+            </p>
+          </div>
         </div>
+
         <Image
           src={product?.base_image?.original_image_url ?? "/placeholder.png"}
           alt={product?.name ?? "product image"}
-          width={120}
-          height={120}
-          className="photo rounded-md object-cover w-full sm:w-28 aspect-square border border-red-color"
+          width={100}
+          height={100}
+          className="rounded-md object-cover w-[60px] sm:w-[80px] md:w-[100px] aspect-square border border-gray-200"
         />
       </div>
+
+      <div className="flex items-center justify-between md:hidden">
+        <div className="scale-[0.85] sm:scale-100">
+          <ReactStars rating={product?.reviews?.total || 0} edit={false} />
+        </div>
+
+        <p className="text-xs sm:text-sm md:text-base text-gray-color ltr:text-start rtl:text-end">
+          {product?.price} <i className="icon-rial"></i>
+        </p>
+      </div>
+
       {/* Actions */}
-      <div className="flex gap-3 w-full justify-between items-center">
+      <div className="flex gap-3 w-full justify-between items-center mt-1 sm:mt-2">
         <DeleteProductComponent productId={deletedProductId} />
-        {/* increment or decrement */}
-        <div className="flex items-center gap-2">
+
+        {/* Increment / Decrement */}
+        <div className="flex items-center gap-2 sm:gap-3">
           {/* Increase */}
           <FaPlus
-            className={`text-2xl cursor-pointer border border-gray-200 rounded-full p-1 ${
+            className={`text-lg sm:text-xl cursor-pointer border border-gray-200 rounded-full p-1 ${
               isLoading ? "text-gray-400" : ""
             }`}
             onClick={() => {
@@ -104,15 +123,13 @@ export default function CartProduct({
           />
 
           {/* Quantity */}
-          <span
-            className={`text-base font-[550]`}
-          >
+          <span className="text-sm sm:text-base font-semibold">
             {currentQty}
           </span>
 
           {/* Decrease */}
           <TiMinus
-            className={`text-2xl cursor-pointer border border-gray-200 rounded-full p-1 ${
+            className={`text-lg sm:text-xl cursor-pointer border border-gray-200 rounded-full p-1 ${
               isLoading || currentQty <= 1 ? "text-gray-400" : ""
             }`}
             onClick={() => {
