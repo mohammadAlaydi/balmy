@@ -97,12 +97,13 @@ export default function page() {
     }
   }, [dispatch, isAuthenticated, user]);
 
+  console.log(user , "🤷‍♂️🤷‍♂️🤷‍♂️")
   // Update form values when user data changes
   React.useEffect(() => {
     if (user && Object.keys(user).length > 0) {
       const formData = {
-        firstName: user.firstName || "",
-        lastName: user.lastName || "",
+        first_name: user.first_name || "",
+        last_name: user.last_name || "",
         email: user.email || "",
         phone: user.phone || "",
         country: "Saudi Arabia", // Default country
@@ -156,10 +157,10 @@ export default function page() {
                     {/* First Name */}
                     <LabelAndInput
                       control={form.control}
-                      fieldName="firstName"
+                      fieldName="first_name"
                       labelText={t("first-name")}
                       inputPlaceholder={t("first-name")}
-                      inputId="firstName"
+                      inputId="first_name"
                       containerStyle=""
                       containerColSpan=""
                       labelColSpan=""
@@ -170,10 +171,10 @@ export default function page() {
                     {/* Last Name */}
                     <LabelAndInput
                       control={form.control}
-                      fieldName="lastName"
+                      fieldName="last_name"
                       labelText={t("last-name")}
                       inputPlaceholder={t("last-name")}
-                      inputId="lastName"
+                      inputId="last_name"
                       containerStyle=""
                       containerColSpan=""
                       labelColSpan=""
