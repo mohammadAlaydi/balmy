@@ -25,14 +25,13 @@ import { ProtectedRoute } from "@/components/auth/protected-route";
 
 // Form validation schema
 const profileSchema = z.object({
-  firstName: z.string().min(1, "validation.first-name-required"),
-  lastName: z.string().min(1, "validation.last-name-required"),
+  first_name: z.string().min(1, "validation.first-name-required"),
+  last_name: z.string().min(1, "validation.last-name-required"),
   email: z.string().email("validation.invalid-email"),
   phone: z.string().min(1, "validation.phone-required"),
   country: z.string().min(1, "validation.country-required"),
   city: z.string().min(1, "validation.city-required"),
   address: z.string().min(1, "validation.address-required"),
-  gender: z.string().optional(),
 });
 
 type ProfileFormData = z.infer<typeof profileSchema>;
@@ -61,13 +60,6 @@ const getCityOptions = (t: any) => [
   { label: t("cities.al-kharj"), value: "al-kharj" },
 ];
 
-// Gender options
-const getGenderOptions = (t: any) => [
-  { label: t("gender.male"), value: "male" },
-  { label: t("gender.female"), value: "female" },
-  { label: t("gender.other"), value: "other" },
-];
-
 export default function page() {
   const t = useTranslations("profile");
   const params = useParams();
@@ -79,14 +71,13 @@ export default function page() {
   const form = useForm<ProfileFormData>({
     resolver: zodResolver(profileSchema),
     defaultValues: {
-      firstName: "",
-      lastName: "",
+      first_name: "",
+      last_name: "",
       email: "",
       phone: "",
       country: "Saudi Arabia",
       city: "",
       address: "",
-      gender: "",
     },
   });
 
@@ -109,7 +100,6 @@ export default function page() {
         country: "Saudi Arabia", // Default country
         city: "", // Not provided in API response
         address: "", // Not provided in API response
-        gender: "", // Not provided in API response
       };
       form.reset(formData);
     }
