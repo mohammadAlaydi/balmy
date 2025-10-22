@@ -9,14 +9,14 @@ import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { PuffLoader } from "react-spinners";
 import { Label } from "@/components/ui/label";
-import {
-  Accordion,
-  AccordionItem,
-  AccordionTrigger,
-  AccordionContent,
-} from "@/components/ui/accordion";
 import { FaShippingFast, FaAmazonPay, FaCreditCard } from "react-icons/fa";
 import Image from "next/image";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
 interface ShippingFormProps {
   submitLabel?: string;
@@ -32,7 +32,6 @@ export default function ShippingForm({
   status,
   submitLabel,
 }: ShippingFormProps) {
-  
   const t = useTranslations("cart");
   const tButtons = useTranslations("buttons");
 
@@ -165,7 +164,7 @@ export default function ShippingForm({
             {/* Shipping Method */}
             <Accordion type="single" collapsible>
               <AccordionItem value="shipping-method">
-                <AccordionTrigger>
+                <AccordionTrigger className="border border-gray-200 px-3">
                   <div className="flex items-center gap-2">
                     <FaShippingFast size={22} className="text-primary" />
                     <SectionTitle
@@ -174,7 +173,7 @@ export default function ShippingForm({
                     />
                   </div>
                 </AccordionTrigger>
-                <AccordionContent>
+                <AccordionContent className="border border-gray-200 p-3 mt-3 rounded-md">
                   <LabelAndRadio
                     control={form.control}
                     inputName="shipping_method"
@@ -202,7 +201,7 @@ export default function ShippingForm({
             {/* Payment Method */}
             <Accordion type="single" collapsible>
               <AccordionItem value="payment-method">
-                <AccordionTrigger>
+                <AccordionTrigger className="border border-gray-200 px-3">
                   <div className="flex items-center gap-2">
                     <FaAmazonPay size={24} className="text-primary" />
                     <SectionTitle
@@ -211,26 +210,25 @@ export default function ShippingForm({
                     />
                   </div>
                 </AccordionTrigger>
-                <AccordionContent>
+                <AccordionContent className="border border-gray-200 p-3 mt-3 rounded-md">
                   <LabelAndRadio
                     control={form.control}
                     inputName="payment.method"
                     labelText={t("choose-payment-method")}
                     options={[
                       { value: "cashondelivery", label: t("cash-on-delivery") },
-                      { value: "creditcard", label: t("credit-card") },
+                      { value: "onlinepayment", label: t("credit-card") },
                     ]}
-                    itemClassName="justify-end"
                   />
                 </AccordionContent>
               </AccordionItem>
             </Accordion>
 
             {/* Online Payment Methods (if credit card selected) */}
-            {form.watch("payment.method") === "creditcard" && (
+            {form.watch("payment.method") === "onlinepayment" && (
               <Accordion type="single" collapsible>
-                <AccordionItem value="online-payment-methods">
-                  <AccordionTrigger>
+                <AccordionItem value="online-payment-methods" >
+                  <AccordionTrigger className="border border-gray-200 px-3" >
                     <div className="flex items-center gap-2">
                       <FaCreditCard size={24} className="text-primary" />
                       <SectionTitle
@@ -239,20 +237,20 @@ export default function ShippingForm({
                       />
                     </div>
                   </AccordionTrigger>
-                  <AccordionContent>
+                  <AccordionContent className="border border-gray-200 p-3 mt-3 rounded-md">
                     <LabelAndRadio
                       control={form.control}
-                      inputName="payment.onlineMethod"
+                      inputName="payment.online_method"
                       labelText={t("choose-online-payment")}
                       options={[
                         {
-                          value: "moyassar",
+                          value: "moyasar",
                           label: (
                             <Image
                               src="/assets/images/moyassar.svg"
                               alt="Moyassar"
-                              width={50}
-                              height={30}
+                              width={90}
+                              height={90}
                             />
                           ),
                         },
@@ -263,7 +261,7 @@ export default function ShippingForm({
                               src="/assets/images/tabby.svg"
                               alt="Tabby"
                               width={80}
-                              height={40}
+                              height={50}
                               className="object-contain"
                             />
                           ),

@@ -46,6 +46,7 @@ const defaultFormValues: CheckoutFormValues = {
   },
   payment: {
     method: "cashondelivery" as const,
+    online_method : "moyasar" || "tabby"
   },
   shipping_method: "flatrate_flatrate" as const,
 };

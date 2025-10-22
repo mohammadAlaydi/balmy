@@ -45,7 +45,7 @@ export default function LabelAndRadio<T extends Record<string, any>>({
         <FormItem className={`${parentStyle} w-full`}>
           <FormControl className="w-full">
             <RadioGroup
-              className="flex w-full justify-center items-end gap-3 flex-col"
+              className="flex w-full justify-center items-end gap-5 flex-col"
               value={field.value ?? ""}
               onValueChange={(v) => field.onChange(v || undefined)}
             >

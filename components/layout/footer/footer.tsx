@@ -7,13 +7,11 @@ import {
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "@/components/ui/accordion";
+} from "@/components/layout/footer/footer-accordion";
 import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
 import Link from "next/link";
-import {
-  LEGAL_TERMS,
-} from "@/static-data/static-data";
+import { LEGAL_TERMS } from "@/static-data/static-data";
 import { useTranslations } from "next-intl";
 import { useDispatch, useSelector } from "react-redux";
 import { getHomeData } from "@/store/slices/home-slice";
@@ -31,18 +29,19 @@ const WorkHoursSection = ({ data }: { data: any }) => {
       <p className="text-sm text-white">
         {data?.channel_data?.work_hours?.days}
       </p>
-      {data?.channel_data?.work_hours?.hours?.map((item: any, index: number) => (
-
-        <p key={index} className="text-sm text-white">
-          from {item.from?.hour} {item.from?.pm_or_am} to {item.to?.hour} {item.to?.pm_or_am}
-        </p>
-      ))}
+      {data?.channel_data?.work_hours?.hours?.map(
+        (item: any, index: number) => (
+          <p key={index} className="text-sm text-white">
+            from {item.from?.hour} {item.from?.pm_or_am} to {item.to?.hour}{" "}
+            {item.to?.pm_or_am}
+          </p>
+        )
+      )}
     </div>
   );
 };
 
 const LocationSection = ({ data }: { data: any }) => {
-
   const t = useTranslations("contact");
   const tFooter = useTranslations("footer");
 
@@ -110,7 +109,6 @@ const FooterAccordion = ({
   items: typeof LEGAL_TERMS;
   defaultValue: string;
 }) => {
-
   return (
     <Accordion
       className="col-span-12 lg:col-span-3"
@@ -130,7 +128,11 @@ const FooterAccordion = ({
           <div className="flex flex-col gap-2">
             {items?.map((item: any) => (
               <Link
-                href={`/${(typeof window !== "undefined" ? window.location.pathname.split("/")[1] : "ar")}/cms/${item?.url_key}`}
+                href={`/${
+                  typeof window !== "undefined"
+                    ? window.location.pathname.split("/")[1]
+                    : "ar"
+                }/cms/${item?.url_key}`}
                 key={item?.url_key || item?.page_title}
                 prefetch={true}
                 className="text-sm text-white text-end rtl:text-right ltr:text-left rtl:hover:mr-3 ltr:hover:ml-3 transition-all duration-300"
@@ -145,13 +147,13 @@ const FooterAccordion = ({
   );
 };
 
-const CopyrightSection = () => {
+const CopyrightSection = ({ data }: { data: any }) => {
   const t = useTranslations("footer");
 
   return (
     <div className="flex justify-center items-center p-2">
       <Badge className="bg-transparent text-sm lg:text-base text-white">
-        {t("copyright")}
+        {data?.channel_data?.copyright}
       </Badge>
     </div>
   );
@@ -205,7 +207,7 @@ export default function Footer({ locale }: { locale?: string }) {
         />
       </div>
       <hr />
-      <CopyrightSection />
+      <CopyrightSection data={data} />
     </div>
   );
 }

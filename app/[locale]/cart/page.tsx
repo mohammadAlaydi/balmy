@@ -14,11 +14,10 @@ import { useTranslations } from "next-intl";
 import PageWrapper from "@/components/page-wrapper";
 
 export default function page() {
-
+  
   const t = useTranslations("cart");
   const dispatch = useDispatch();
   const { data, isLoading, status } = useSelector((state: any) => state.cart);
-
 
   useEffect(() => {
     if (!isLoading && !data) {
@@ -29,8 +28,7 @@ export default function page() {
   // if (isLoading) {
   //   return <Loading fullScreen={true} variant="spinner" size="xl" />;
   // }
-  
-  
+
   return (
     <PageWrapper>
       {data && data?.data?.items?.length > 0 ? (

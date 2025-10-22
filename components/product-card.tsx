@@ -199,9 +199,11 @@ export default function ProductCard({
     <Card
       onMouseEnter={() => isInStock && setIsHovered(true)}
       onMouseLeave={() => isInStock && setIsHovered(false)}
-      className={`product-card shadow-none hover:shadow-[0px_6px_20px_rgba(149,157,165,0.1)] py-0 h-fit gap-0 ${isInStock ? "group" : ""
-        } relative rounded-t-lg ${cardColSpan || "col-span-6 xl:col-span-2"
-        } border border-gray-200 hover:border-red-color rounded-lg`}
+      className={`product-card shadow-none hover:shadow-[0px_6px_20px_rgba(149,157,165,0.1)] py-0 h-fit gap-0 ${
+        isInStock ? "group" : ""
+      } relative rounded-t-lg ${
+        cardColSpan || "col-span-6 xl:col-span-2"
+      } border border-gray-200 hover:border-red-color rounded-lg`}
     >
       {!isInStock && <ZeroQuantity />}
 
@@ -212,7 +214,7 @@ export default function ProductCard({
           animate={isHovered ? { x: 0, opacity: 1 } : { x: 10, opacity: 0 }}
           transition={{ duration: 0.3, ease: "easeOut", delay: 0.1 }}
         >
-          <div className="absolute top-2 ltr:left-2 rtl:right-2 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          <div className="absolute top-2 rtl:left-2 ltr:right-2 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
             <FavouriteButton product={product} />
             <DrawerComponent
               trigger={
@@ -244,7 +246,13 @@ export default function ProductCard({
           src={baseImageUrl}
           alt={`${product?.name || t("product")} - ${chosenVariantSku || ""}`}
           className="rounded-t-lg w-full h-full aspect-square transition-all duration-300"
-          onClick={() => router.push(`/product/${wishlistProductId ? wishlistProductId : product?.product_id}`)}
+          onClick={() =>
+            router.push(
+              `/product/${
+                wishlistProductId ? wishlistProductId : product?.product_id
+              }`
+            )
+          }
         />
 
         {/* Hover Image */}
@@ -253,8 +261,9 @@ export default function ProductCard({
             width={224}
             height={224}
             src={hoverImageUrl}
-            alt={`${product?.name || t("product")} ${t("variant-image")} - ${product?.sku || ""
-              }`}
+            alt={`${product?.name || t("product")} ${t("variant-image")} - ${
+              product?.sku || ""
+            }`}
             className="absolute inset-0 rounded-t-lg w-full h-full aspect-square object-cover transition-all duration-300 opacity-0 group-hover:opacity-100"
             onClick={() => router.push(`/product/${product?.product_id}`)}
           />
@@ -321,11 +330,12 @@ export default function ProductCard({
                       alt={`${product?.name || t("product")} ${t(
                         "variant-image"
                       )} ${index + 1}`}
-                      className={`cursor-pointer transition-all duration-200 rounded-full h-[32px] w-[32px] ${selectedVariantIndex === index ||
-                          (selectedVariantIndex === null && index === 0)
+                      className={`cursor-pointer transition-all duration-200 rounded-full h-[32px] w-[32px] ${
+                        selectedVariantIndex === index ||
+                        (selectedVariantIndex === null && index === 0)
                           ? "ring-2 ring-gray-300 scale-110"
                           : "hover:scale-105"
-                        }`}
+                      }`}
                       onClick={() =>
                         handleVariantSelect(
                           index,

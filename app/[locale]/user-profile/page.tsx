@@ -22,7 +22,7 @@ import LabelAndInput from "@/components/label-and-input";
 import LabelAndSelect from "@/components/label-and-select";
 import toast from "react-hot-toast";
 import { ProtectedRoute } from "@/components/auth/protected-route";
-import { Trash2, Plus } from "lucide-react";
+import { Plus } from "lucide-react";
 import { MdDeleteSweep } from "react-icons/md";
 
 // ✅ Updated validation schema
