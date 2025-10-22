@@ -255,22 +255,21 @@ body {
 }
 /* ryhal icon */
 @font-face {
-  font-family: 'icomoon';
-  src: url('/fonts/icomoon.eot?c3ysj7');
-  src:
-    url('/fonts/icomoon.eot?c3ysj7#iefix') format('embedded-opentype'),
-    url('/fonts/icomoon.ttf?c3ysj7') format('truetype'),
-    url('/fonts/icomoon.woff?c3ysj7') format('woff'),
-    url('/fonts/icomoon.svg?c3ysj7#icomoon') format('svg');
+  font-family: "icomoon";
+  src: url("/fonts/icomoon.eot?c3ysj7");
+  src: url("/fonts/icomoon.eot?c3ysj7#iefix") format("embedded-opentype"),
+    url("/fonts/icomoon.ttf?c3ysj7") format("truetype"),
+    url("/fonts/icomoon.woff?c3ysj7") format("woff"),
+    url("/fonts/icomoon.svg?c3ysj7#icomoon") format("svg");
   font-weight: normal;
   font-style: normal;
   font-display: block;
 }
 
-[class^='icon-'],
-[class*=' icon-'] {
+[class^="icon-"],
+[class*=" icon-"] {
   /* use !important to prevent issues with browser extensions that change fonts */
-  font-family: 'icomoon' !important;
+  font-family: "icomoon" !important;
   speak: never;
   font-style: normal;
   font-weight: normal;
@@ -284,6 +283,11 @@ body {
 }
 
 .icon-rial:before {
-  content: '\e900';
-  font-family: 'IcoMoon';
+  content: "\e900";
+  font-family: "IcoMoon";
+}
+.swiper-horizontal > .swiper-pagination-bullets .swiper-pagination-bullet,
+.swiper-pagination-horizontal.swiper-pagination-bullets
+  .swiper-pagination-bullet {
+  margin-inline: 10px !important;
 }
