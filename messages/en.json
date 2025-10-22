@@ -256,7 +256,8 @@
     "yes": "Yes",
     "no": "No",
     "ok": "OK",
-    "login": "Login"
+    "login": "Login",
+    "set-default" : "Set Default"
   },
   "contact-us": {
     "title": "Contact Us",

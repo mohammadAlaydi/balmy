@@ -14,7 +14,6 @@ import { useTranslations } from "next-intl";
 import PageWrapper from "@/components/page-wrapper";
 
 export default function page() {
-  
   const t = useTranslations("cart");
   const dispatch = useDispatch();
   const { data, isLoading, status } = useSelector((state: any) => state.cart);
