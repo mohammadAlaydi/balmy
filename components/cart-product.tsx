@@ -59,7 +59,7 @@ export default function CartProduct({
     <div className="flex flex-col gap-3 w-full rounded-md border border-gray-200 p-3 sm:p-4">
       {/* Product Info */}
       <div className="flex flex-row gap-3 w-full justify-end items-start">
-        <div className="flex flex-col gap-2 flex-1">
+        <div className="flex flex-col gap-2 flex-1 items-start">
           <p className="text-xs sm:text-sm text-gray-color ltr:text-end rtl:text-start">
             {typeof product?.category === "string"
               ? product?.category
@@ -72,7 +72,7 @@ export default function CartProduct({
             </h2>
           </div>
 
-          <div className="hidden md:flex flex-col">
+          <div className="hidden sm:flex flex-col">
             <div className="scale-[0.85] sm:scale-100">
               <ReactStars rating={product?.reviews?.total || 0} edit={false} />
             </div>
@@ -92,7 +92,7 @@ export default function CartProduct({
         />
       </div>
 
-      <div className="flex items-center justify-between md:hidden">
+      <div className="flex items-center justify-between sm:hidden">
         <div className="scale-[0.85] sm:scale-100">
           <ReactStars rating={product?.reviews?.total || 0} edit={false} />
         </div>
