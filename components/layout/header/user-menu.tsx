@@ -121,28 +121,40 @@ export default function UserMenu({ isMobile = false }: { isMobile?: boolean }) {
               isRTL ? "flex-row-reverse" : ""
             }`}
           >
-            <Image
-              src="/assets/images/heart.svg"
-              alt="heart"
-              width={22}
-              height={22}
-              className={`${isRTL ? "ml-2" : "mr-2"}`}
-            />
-            <span>{t("wishlist")}</span>
+            <Link
+              href={`/${locale}/favourite`}
+              className={`flex items-center ${isRTL ? "flex-row-reverse" : ""}`}
+              prefetch={true}
+            >
+              <Image
+                src="/assets/images/heart.svg"
+                alt="heart"
+                width={22}
+                height={22}
+                className={`${isRTL ? "ml-2" : "mr-2"}`}
+              />
+              <span>{t("wishlist")}</span>
+            </Link>
           </DropdownMenuItem>
           <DropdownMenuItem
             className={`cursor-pointer flex gap-2 items-center ${
               isRTL ? "flex-row-reverse" : ""
             }`}
           >
-            <Image
-              src="/assets/images/cart.svg"
-              alt="cart"
-              width={22}
-              height={22}
-              className={`${isRTL ? "ml-2" : "mr-2"}`}
-            />
-            <span>{t("orders")}</span>
+            <Link
+              href={`/${locale}/cart`}
+              className={`flex items-center ${isRTL ? "flex-row-reverse" : ""}`}
+              prefetch={true}
+            >
+              <Image
+                src="/assets/images/cart.svg"
+                alt="cart"
+                width={22}
+                height={22}
+                className={`${isRTL ? "ml-2" : "mr-2"}`}
+              />
+              <span>{t("orders")}</span>
+            </Link>
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -201,28 +213,40 @@ export default function UserMenu({ isMobile = false }: { isMobile?: boolean }) {
             isRTL ? "flex-row-reverse" : ""
           }`}
         >
-          <Image
-            src="/assets/images/heart.svg"
-            alt="heart"
-            width={22}
-            height={22}
-            className={`${isRTL ? "ml-2" : "mr-2"}`}
-          />
-          <span>{t("wishlist")}</span>
+          <Link
+            href={`/${locale}/favourite`}
+            className={`flex items-center ${isRTL ? "flex-row-reverse" : ""}`}
+            prefetch={true}
+          >
+            <Image
+              src="/assets/images/heart.svg"
+              alt="heart"
+              width={22}
+              height={22}
+              className={`${isRTL ? "ml-2" : "mr-2"}`}
+            />
+            <span>{t("wishlist")}</span>
+          </Link>
         </DropdownMenuItem>
         <DropdownMenuItem
           className={`cursor-pointer flex gap-2 items-center ${
             isRTL ? "flex-row-reverse" : ""
           }`}
         >
-          <Image
-            src="/assets/images/cart.svg"
-            alt="cart"
-            width={22}
-            height={22}
-            className={`${isRTL ? "ml-2" : "mr-2"}`}
-          />
-          <span>{t("orders")}</span>
+          <Link
+            href={`/${locale}/cart`}
+            className={`flex items-center ${isRTL ? "flex-row-reverse" : ""}`}
+            prefetch={true}
+          >
+            <Image
+              src="/assets/images/cart.svg"
+              alt="cart"
+              width={22}
+              height={22}
+              className={`${isRTL ? "ml-2" : "mr-2"}`}
+            />
+            <span>{t("orders")}</span>
+          </Link>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem
