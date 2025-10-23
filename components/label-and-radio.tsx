@@ -12,8 +12,8 @@ import { Label } from "./ui/label";
 
 type RadioOption = {
   value: string;
-  label: string;
-  customerTypeTrigger: () => void;
+  label: React.ReactNode;
+  action?: () => void; // used for setting state like paymentMethod
 };
 
 type LabelAndRadioProps<T extends Record<string, any>> = {
@@ -24,8 +24,7 @@ type LabelAndRadioProps<T extends Record<string, any>> = {
   labelStyle?: string;
   itemClassName?: string;
   inputId?: string;
-  control: object;
-  action?: () => void;
+  control: any;
 };
 
 export default function LabelAndRadio<T extends Record<string, any>>({
@@ -35,7 +34,6 @@ export default function LabelAndRadio<T extends Record<string, any>>({
   labelStyle = "",
   itemClassName = "",
   control,
-  action,
 }: LabelAndRadioProps<T>) {
   return (
     <FormField
@@ -50,7 +48,7 @@ export default function LabelAndRadio<T extends Record<string, any>>({
               onValueChange={(v) => field.onChange(v || undefined)}
             >
               {options?.map((opt) => {
-                const id = `${String(name)}-${opt.value}`;
+                const id = `${inputName}-${opt.value}`;
                 return (
                   <div
                     key={opt.value}
@@ -59,11 +57,11 @@ export default function LabelAndRadio<T extends Record<string, any>>({
                     <RadioGroupItem
                       id={id}
                       value={opt.value}
-                      className="peer order-2 cursor-pointer  ltr:order-1 rtl:order-2 "
-                      onClick={opt?.action}
+                      className="peer order-2 cursor-pointer ltr:order-1 rtl:order-2"
+                      onClick={opt.action}
                     />
                     <Label
-                      onClick={opt?.action}
+                      onClick={opt.action}
                       htmlFor={id}
                       className={`${labelStyle} text-end text-nowrap cursor-pointer ltr:order-2 rtl:order-1`}
                     >

@@ -45,8 +45,7 @@ const defaultFormValues: CheckoutFormValues = {
     phone: "",
   },
   payment: {
-    method: "cashondelivery" as const,
-    online_method : "moyasar" || "tabby"
+    method: "moyasar" as const,
   },
   shipping_method: "flatrate_flatrate" as const,
 };
@@ -92,19 +91,36 @@ export default function Checkout({
       setShowAuthModal(true);
       return;
     }
-
+  
+    // Remove `use_for_shipping` from billing
+    const { use_for_shipping, ...billingWithoutFlag } = values.billing;
+  
+    // Determine shipping info based on flag
+    const shippingData = use_for_shipping
+      ? {
+          address1: values.billing.address1,
+          city: values.billing.city,
+          phone: values.billing.phone,
+        }
+      : values.shipping;
+  
+    // Create cleaned payload
+    const checkoutPayload = {
+      billing: billingWithoutFlag,
+      shipping: shippingData,
+      payment: values.payment,
+      shipping_method: values.shipping_method,
+    };
+  
     try {
-      // Proceed directly with the order submission
-      const checkoutPayload = toCheckoutPayload(values);
       console.log("Checkout payload being sent:", checkoutPayload);
       dispatch(saveOrder(checkoutPayload) as any);
     } catch (error) {
       console.error("Error during checkout:", error);
-      // Still proceed with checkout even if there's an error
-      const checkoutPayload = toCheckoutPayload(values);
       dispatch(saveOrder(checkoutPayload) as any);
     }
   };
+  
 
   // Navigate to checkout status page once we have a definitive status
   useEffect(() => {

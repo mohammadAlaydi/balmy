@@ -38,8 +38,7 @@ export const formSchema = z
         .or(z.literal("")),
     }),
     payment: z.object({
-      method: z.enum(["cashondelivery", "onlinepayment"]),
-      online_method: z.enum(["moyasar", "tabby"])
+      method: z.enum(["cashondelivery","moyasar", "tabby"]),
     }),
     shipping_method: z.enum([
       "flatrate_flatrate",

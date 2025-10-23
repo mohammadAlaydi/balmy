@@ -17,6 +17,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { useState } from "react";
 
 interface ShippingFormProps {
   submitLabel?: string;
@@ -34,6 +35,7 @@ export default function ShippingForm({
 }: ShippingFormProps) {
   const t = useTranslations("cart");
   const tButtons = useTranslations("buttons");
+  const [paymentMethod, setPaymentMethod] = useState<string | null>(null);
 
   return (
     <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
@@ -213,11 +215,19 @@ export default function ShippingForm({
                 <AccordionContent className="border border-gray-200 p-3 mt-3 rounded-md">
                   <LabelAndRadio
                     control={form.control}
-                    inputName="payment.method"
+                    inputName="payment.methods"
                     labelText={t("choose-payment-method")}
                     options={[
-                      { value: "cashondelivery", label: t("cash-on-delivery") },
-                      { value: "onlinepayment", label: t("credit-card") },
+                      {
+                        value: "cashPayment",
+                        label: t("cash-on-delivery"),
+                        action: () => setPaymentMethod("cashondelivery"),
+                      },
+                      {
+                        value: "onlinePayment",
+                        label: t("credit-card"),
+                        action: () => setPaymentMethod("onlinepayment"),
+                      },
                     ]}
                   />
                 </AccordionContent>
@@ -225,10 +235,10 @@ export default function ShippingForm({
             </Accordion>
 
             {/* Online Payment Methods (if credit card selected) */}
-            {form.watch("payment.method") === "onlinepayment" && (
+            {paymentMethod === "onlinepayment" && (
               <Accordion type="single" collapsible>
-                <AccordionItem value="online-payment-methods" >
-                  <AccordionTrigger className="border border-gray-200 px-3" >
+                <AccordionItem value="online-payment-methods">
+                  <AccordionTrigger className="border border-gray-200 px-3">
                     <div className="flex items-center gap-2">
                       <FaCreditCard size={24} className="text-primary" />
                       <SectionTitle
@@ -240,7 +250,7 @@ export default function ShippingForm({
                   <AccordionContent className="border border-gray-200 p-3 mt-3 rounded-md">
                     <LabelAndRadio
                       control={form.control}
-                      inputName="payment.online_method"
+                      inputName="payment.method"
                       labelText={t("choose-online-payment")}
                       options={[
                         {
