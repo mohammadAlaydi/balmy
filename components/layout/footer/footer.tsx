@@ -27,9 +27,9 @@ const WorkHoursSection = ({ data }: { data: any }) => {
     <div className="col-span-12 lg:col-span-6 flex flex-col gap-2 ">
       <SectionTitle title={t("working-hours")} titleStyle="text-white/65" />
       <p className="text-sm text-white">
-        {data?.channel_data?.work_hours?.days}
+        {data?.work_hours?.days}
       </p>
-      {data?.channel_data?.work_hours?.hours?.map(
+      {data?.work_hours?.hours?.map(
         (item: any, index: number) => (
           <p key={index} className="text-sm text-white">
             from {item.from?.hour} {item.from?.pm_or_am} to {item.to?.hour}{" "}
@@ -51,13 +51,13 @@ const LocationSection = ({ data }: { data: any }) => {
         title={tFooter("how-to-reach-us")}
         titleStyle="text-white/65"
       />
-      <p className="text-sm text-white">{data?.channel_data?.address}</p>
+      <p className="text-sm text-white">{data?.address}</p>
       <Link
-        href={`tel:${data?.channel_data?.phone_number}`}
+        href={`tel:${data?.phone_number}`}
         prefetch={true}
         className="text-sm text-white"
       >
-        {data?.channel_data?.phone_number}
+        {data?.phone_number}
       </Link>
     </div>
   );
@@ -153,7 +153,7 @@ const CopyrightSection = ({ data }: { data: any }) => {
   return (
     <div className="flex justify-center items-center p-2">
       <Badge className="bg-transparent text-sm lg:text-base text-white">
-        {data?.channel_data?.copyright}
+        {data?.copyright}
       </Badge>
     </div>
   );

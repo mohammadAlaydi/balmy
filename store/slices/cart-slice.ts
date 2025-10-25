@@ -153,10 +153,12 @@ const saveOrder = createAsyncThunk(
   "save-order",
   async (payload: any, { rejectWithValue }) => {
     try {
-      const response = await authenticatedFetch("/api/cart/checkout", {
+      const response = await fetch(`${API_KEY}/v1/customer/checkout/save-order`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "accept" : "application/json",
+          Authorization: `Bearer ${localStorage?.getItem("accessToken")}`,
         },
         body: JSON.stringify(payload),
       });

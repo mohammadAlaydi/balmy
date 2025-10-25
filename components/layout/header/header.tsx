@@ -284,7 +284,7 @@ const NavigationLinks = ({ navbarCategories, currentLocale }: { navbarCategories
 const Logo = ({ data }: { data: any }) => (
   <Link href="/home" prefetch={true}>
     <Image
-      src={data?.channel_data?.logo}
+      src={data?.seo_settings?.channel?.logo}
       alt="logo"
       className="lg:w-[180px]"
       width={140}
