@@ -55,21 +55,21 @@ const TopBar = ({ data }: { data: any }) => {
   const t = useTranslations("contact");
 
   return (
-    <div className="flex justify-center md:justify-between xl:justify-around items-center gap-5 py-0.5 px-3 lg:px-5 bg-black w-full">
-      <div className="flex items-center">
+    <div className="flex justify-center md:justify-between xl:justify-around items-center gap-5 py-0.5 px-3 lg:px-10 bg-black w-full">
+      <div className="flex items-center flex-1">
         <Badge className="bg-transparent text-sm lg:text-base hidden md:inline-block">
-          {data?.channel_data?.phone_number}
+          {data?.inventory_source_data?.contact_number}
         </Badge>
         <Badge className="bg-transparent text-sm lg:text-base hidden md:inline-block">
           {t("call-to-action")}
         </Badge>
       </div>
-      <Badge className="bg-transparent text-sm lg:text-base">
-        {t("discount", { discount: data?.channel_data?.discount_percentage || 0 })}
+      <Badge className="bg-transparent text-sm lg:text-base flex-1">
+        {data?.seo_settings?.offer_banner_text}
       </Badge>
       <SocialMediaIcons
         iconStyle="text-white text-lg"
-        containerStyle="hidden md:flex"
+        containerStyle="hidden md:flex flex-1"
         data={data}
       />
     </div>

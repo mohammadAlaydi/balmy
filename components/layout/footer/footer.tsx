@@ -26,17 +26,13 @@ const WorkHoursSection = ({ data }: { data: any }) => {
   return (
     <div className="col-span-12 lg:col-span-6 flex flex-col gap-2 ">
       <SectionTitle title={t("working-hours")} titleStyle="text-white/65" />
-      <p className="text-sm text-white">
-        {data?.work_hours?.days}
-      </p>
-      {data?.work_hours?.hours?.map(
-        (item: any, index: number) => (
-          <p key={index} className="text-sm text-white">
-            from {item.from?.hour} {item.from?.pm_or_am} to {item.to?.hour}{" "}
-            {item.to?.pm_or_am}
-          </p>
-        )
-      )}
+      <p className="text-sm text-white">{data?.work_hours?.days}</p>
+      {data?.work_hours?.hours?.map((item: any, index: number) => (
+        <p key={index} className="text-sm text-white">
+          from {item.from?.hour} {item.from?.pm_or_am} to {item.to?.hour}{" "}
+          {item.to?.pm_or_am}
+        </p>
+      ))}
     </div>
   );
 };
@@ -51,13 +47,13 @@ const LocationSection = ({ data }: { data: any }) => {
         title={tFooter("how-to-reach-us")}
         titleStyle="text-white/65"
       />
-      <p className="text-sm text-white">{data?.address}</p>
+      <p className="text-sm text-white">{`${data?.inventory_source_data?.country} - ${data?.inventory_source_data?.city} - ${data?.inventory_source_data?.state} - ${data?.inventory_source_data?.street}`}</p>
       <Link
-        href={`tel:${data?.phone_number}`}
+        href={`tel:${data?.inventory_source_data?.contact_number}`}
         prefetch={true}
         className="text-sm text-white"
       >
-        {data?.phone_number}
+        {data?.inventory_source_data?.contact_number}
       </Link>
     </div>
   );
