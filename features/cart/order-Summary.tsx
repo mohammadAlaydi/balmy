@@ -31,10 +31,11 @@ interface CartItem {
 }
 
 export default function OrderSummary({ data }: { data: any }) {
-  const router = useRouter();
   const t = useTranslations("cart");
   const dispatch = useDispatch();
-  const { status, isLoading } = useSelector((state: any) => state.cart);
+  const { saveOrderData, status, isLoading } = useSelector(
+    (state: any) => state.cart
+  );
   const [open, setOpen] = useState(false);
   const form = useForm<CouponFormData>({
     defaultValues: {
@@ -94,12 +95,14 @@ export default function OrderSummary({ data }: { data: any }) {
     // Authentication will be handled within the checkout dialog
   };
 
-  // Close the dialog immediately when checkout finishes (success or failed)
   useEffect(() => {
-    if (status === "success" || status === "failed") {
+    if (status == "success") {
+      toast.success(t("order-success"));
       setOpen(false);
+    } else if (status == "failed") {
+      toast.error(t("order-failed"));
     }
-  }, [status]);
+  }, [status, t]);
   // Show empty cart message if no items
   if (!data?.data?.items?.length) {
     return (

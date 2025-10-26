@@ -8,16 +8,25 @@ import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 
 export default function Success({ data }: SuccessProps) {
+  const router = useRouter();
   const t = useTranslations("order");
+  if (data?.data?.data?.success == true && data?.data?.data?.url != null) {
+    router.push(data?.data?.data?.url);
+  }
 
   // Handle different data structures
-  const order = data?.data?.order || data?.data || data;
-
+  const order = data?.data?.data?.order;
+  console.log(order);
   // If no order data, show error
-  if (!order || !order.id) {
+  if (data?.data?.data?.success == true && !order) {
     return (
-      <div className="p-4 bg-red-100 text-red-800 rounded-md">
-        {t("no-order-data-error")}
+      <div className="px-6 py-12 flex flex-col items-center justify-center space-y-4">
+        <div className="bg-green-500 p-4 rounded-full">
+          <FaCheck className="h-6 w-6 text-white" />
+        </div>
+        <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900">
+          {t("shipping-successful")}
+        </h1>
       </div>
     );
   }
