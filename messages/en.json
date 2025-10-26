@@ -653,7 +653,7 @@
     "request-failed": "Request Failed",
     "request-failed-message": "We're sorry, but your request was unsuccessful. Please try again.",
     "try-again": "Try Again",
-    "no-order-data-error": "Error: No order data available. Please check the console for details.",
+    "no-order-data-error": "There Is No Orders To Show Its Payment Details",
     "no-checkout-session": "No checkout session found",
     "complete-checkout-process": "Please complete a checkout process to view the status."
   },

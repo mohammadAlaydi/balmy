@@ -45,6 +45,7 @@ export async function POST(request: NextRequest) {
     // Return user data without tokens
     return NextResponse.json({
       data: data.data,
+      token: accessToken,
       message: data.message,
     });
 

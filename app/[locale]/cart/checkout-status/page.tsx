@@ -24,7 +24,9 @@ interface RootState {
 export default function CheckoutStatusPage() {
   const router = useRouter();
   const t = useTranslations("order");
-  const { status, saveOrderData, isLoading } = useSelector((state: RootState) => state.cart);
+  const { status, saveOrderData, isLoading } = useSelector(
+    (state: RootState) => state.cart
+  );
 
   // Redirect to cart if no checkout status is available
   useEffect(() => {
@@ -37,16 +39,27 @@ export default function CheckoutStatusPage() {
   if (isLoading) {
     return <Loading fullScreen={true} variant="spinner" size="xl" />;
   }
- 
-  if (status === "success") {
+
+  console.log(
+    saveOrderData?.data?.data?.success,
+    saveOrderData?.success,
+    "👌👌👌"
+  );
+  // (saveOrderData?.data?.data?.success == true &&
+  //   saveOrderData?.data?.data?.url == null) ||
+  console.log(saveOrderData , "✔️✔️✔️")
+  if (saveOrderData?.success == true) {
     return (
       <PageWrapper>
         <Success data={saveOrderData} />
       </PageWrapper>
     );
   }
-  
-  if (status === "failed") {
+
+  if (
+    saveOrderData?.data?.data?.success == false ||
+    !saveOrderData?.success == false
+  ) {
     return (
       <PageWrapper>
         <Failed />

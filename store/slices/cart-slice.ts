@@ -1,8 +1,8 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { authenticatedFetch } from "@/lib/authenticated-fetch";
+import { redirect } from "next/navigation";
 
 const API_KEY = process.env.NEXT_PUBLIC_API_URL;
-
 // get cart products
 
 const getCartProducts = createAsyncThunk(
@@ -67,9 +67,12 @@ const removeFromCart = createAsyncThunk(
   "cart/remove",
   async (payload: { productId: number }, { rejectWithValue, dispatch }) => {
     try {
-      const response = await authenticatedFetch(`/api/cart/remove/${payload.productId}`, {
-        method: "DELETE",
-      });
+      const response = await authenticatedFetch(
+        `/api/cart/remove/${payload.productId}`,
+        {
+          method: "DELETE",
+        }
+      );
 
       const data = await response.json();
 
@@ -112,8 +115,6 @@ const removeAllProductsFromCart = createAsyncThunk(
   }
 );
 
-
-
 // update cart quantity
 const updateCartQuantity = createAsyncThunk(
   "cart/update-quantity",
@@ -122,15 +123,18 @@ const updateCartQuantity = createAsyncThunk(
     { rejectWithValue, dispatch }
   ) => {
     try {
-      const response = await authenticatedFetch(`/api/cart/update/${payload.productId}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          quantity: payload.quantity,
-        }),
-      });
+      const response = await authenticatedFetch(
+        `/api/cart/update/${payload.productId}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            quantity: payload.quantity,
+          }),
+        }
+      );
 
       const data = await response.json();
 
@@ -148,30 +152,24 @@ const updateCartQuantity = createAsyncThunk(
   }
 );
 
-//save cart order
 const saveOrder = createAsyncThunk(
   "save-order",
   async (payload: any, { rejectWithValue }) => {
     try {
-      const response = await fetch('/api/cart/checkout', {
+      const response = await fetch("/api/checkout/save-order", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: 'include', // Include httpOnly cookies
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
 
       const data = await response.json();
-
       if (!response.ok) {
         return rejectWithValue(data.message || "Checkout failed");
       }
-
       return data;
     } catch (error: any) {
       console.error("Checkout error:", error);
-      return rejectWithValue(error.message || "Checkout failed");
+      return rejectWithValue(error?.message || "Checkout failed");
     }
   }
 );
@@ -191,17 +189,19 @@ const cartSlice = createSlice({
   reducers: {
     applyLocalQuantityDelta: (state: any, action) => {
       const { productId, delta } = action.payload;
-      
+
       // Update local quantity in increaseOrDecreaseResponse for immediate UI feedback
       if (state.increaseOrDecreaseResponse?.data?.items) {
         const itemIndex = state.increaseOrDecreaseResponse.data.items.findIndex(
           (item: any) => item?.additional?.product_id === productId
         );
-        
+
         if (itemIndex !== -1) {
-          const currentQuantity = state.increaseOrDecreaseResponse.data.items[itemIndex].quantity;
+          const currentQuantity =
+            state.increaseOrDecreaseResponse.data.items[itemIndex].quantity;
           const newQuantity = Math.max(1, currentQuantity + delta);
-          state.increaseOrDecreaseResponse.data.items[itemIndex].quantity = newQuantity;
+          state.increaseOrDecreaseResponse.data.items[itemIndex].quantity =
+            newQuantity;
         }
       }
     },
@@ -232,7 +232,7 @@ const cartSlice = createSlice({
     builder.addCase(addToCart.fulfilled, (state, action) => {
       state.increaseOrDecreaseLoading = false;
       state.increaseOrDecreaseResponse = action.payload;
-      state.cartStatus = "success"; // Use cartStatus instead of status
+      state.cartStatus = "success"; 
     });
     builder.addCase(addToCart.rejected, (state: any, action) => {
       state.error = action.error.message || null;

@@ -1,5 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
+import { NextRequest, NextResponse } from "next/server";
+import { cookies } from "next/headers";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -9,20 +9,20 @@ export async function GET(
 ) {
   try {
     const cookieStore = await cookies();
-    const accessToken = cookieStore.get('accessToken')?.value;
-    const refreshToken = cookieStore.get('refreshToken')?.value;
+    const accessToken = cookieStore.get("accessToken")?.value;
+    const refreshToken = cookieStore.get("refreshToken")?.value;
 
     // Product details endpoint might not require authentication, but we'll include token if available
     const headers: Record<string, string> = {
-      'Accept': 'application/json',
+      Accept: "application/json",
     };
 
     if (accessToken) {
-      headers['Authorization'] = `Bearer ${accessToken}`;
+      headers["Authorization"] = `Bearer ${accessToken}`;
     }
 
     const response = await fetch(`${API_URL}/v1/product-details/${params.id}`, {
-      method: 'GET',
+      method: "GET",
       headers,
     });
 
@@ -32,23 +32,33 @@ export async function GET(
       // If unauthorized and refresh token exists, attempt one refresh then retry once
       if (response.status === 401 && refreshToken && accessToken) {
         try {
-          const refreshResp = await fetch(`${request.nextUrl.origin}/api/auth/refresh`, {
-            method: 'POST',
-          });
+          const refreshResp = await fetch(
+            `${request.nextUrl.origin}/api/auth/refresh`,
+            {
+              method: "POST",
+            }
+          );
           if (refreshResp.ok) {
-            const retry = await fetch(`${API_URL}/v1/product-details/${params.id}`, {
-              method: 'GET',
-              headers: {
-                'Authorization': `Bearer ${cookieStore.get('accessToken')?.value ?? ''}`,
-                'Accept': 'application/json',
-              },
-            });
+            const retry = await fetch(
+              `${API_URL}/v1/product-details/${params.id}`,
+              {
+                method: "GET",
+                headers: {
+                  Authorization: `Bearer ${
+                    cookieStore.get("accessToken")?.value ?? ""
+                  }`,
+                  Accept: "application/json",
+                },
+              }
+            );
             const retryData = await retry.json();
             if (retry.ok) {
               return NextResponse.json(retryData);
             }
             return NextResponse.json(
-              { message: retryData.message || 'Failed to fetch product details' },
+              {
+                message: retryData.message || "Failed to fetch product details",
+              },
               { status: retry.status }
             );
           }
@@ -56,17 +66,16 @@ export async function GET(
       }
 
       return NextResponse.json(
-        { message: data.message || 'Failed to fetch product details' },
+        { message: data.message || "Failed to fetch product details" },
         { status: response.status }
       );
     }
 
     return NextResponse.json(data);
-
   } catch (error) {
-    console.error('Get product details error:', error);
+    console.error("Get product details error:", error);
     return NextResponse.json(
-      { message: 'Internal server error' },
+      { message: "Internal server error" },
       { status: 500 }
     );
   }
