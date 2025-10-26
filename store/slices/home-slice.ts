@@ -1,27 +1,22 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
-const API_KEY = process.env.NEXT_PUBLIC_API_URL;
-
-const getHomeData = createAsyncThunk("home", async (locale: string) => {
+const getHomeData = createAsyncThunk("home", async (locale: string, { rejectWithValue }) => {
   try {
-    const response = await fetch(`${API_KEY}/v1/home?locale=${locale}`, {
+    const response = await fetch(`/api/home?locale=${locale}`, {
       method: "GET",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      credentials: 'include', // This will include cookies
+      credentials: 'include', // Include httpOnly cookies
     });
 
+    const data = await response.json();
+
     if (!response.ok) {
-      throw new Error("Failed to fetch home data");
+      return rejectWithValue(data.message || "Failed to fetch home data");
     }
 
-    const data = await response.json();
     return data;
   } catch (error: any) {
-    console.log(error);
-    throw error;
+    console.error('Home data fetch error:', error);
+    return rejectWithValue(error.message || 'Network error occurred');
   }
 });
 const homeSlice = createSlice({

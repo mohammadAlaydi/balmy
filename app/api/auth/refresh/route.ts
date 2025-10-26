@@ -6,11 +6,11 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL;
 export async function POST(request: NextRequest) {
   try {
     const cookieStore = await cookies();
-    const refreshToken = cookieStore.get('refreshToken')?.value;
+    const accessToken = cookieStore.get('accessToken')?.value;
 
-    if (!refreshToken) {
+    if (!accessToken) {
       return NextResponse.json(
-        { message: 'No refresh token' },
+        { message: 'No access token' },
         { status: 401 }
       );
     }
@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
     const response = await fetch(`${API_URL}/v1/customer/refresh-token`, {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${refreshToken}`,
+        'Authorization': `Bearer ${accessToken}`,
         'Content-Type': 'application/json',
         'Accept': 'application/json',
       },
@@ -34,9 +34,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Rotate tokens: set new access token and optionally new refresh token
+    // Get new access token from refresh response
     const newAccessToken = data.token || data.accessToken || data.access_token;
-    const newRefreshToken = data.refreshToken || data.refresh_token;
 
     if (newAccessToken) {
       cookieStore.set('accessToken', newAccessToken, {
@@ -46,16 +45,9 @@ export async function POST(request: NextRequest) {
         maxAge: 60 * 60 * 24 * 7, // 7 days
         path: '/',
       });
-    }
-
-    if (newRefreshToken) {
-      cookieStore.set('refreshToken', newRefreshToken, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'lax',
-        maxAge: 60 * 60 * 24 * 30, // 30 days
-        path: '/',
-      });
+      console.log('Access token refreshed successfully');
+    } else {
+      console.error('No new access token received from refresh endpoint');
     }
 
     return NextResponse.json({

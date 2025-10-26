@@ -1,26 +1,22 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
-const API_KEY = process.env.NEXT_PUBLIC_API_URL;
-
-const getCategories = createAsyncThunk("categories", async (locale: string) => {
+const getCategories = createAsyncThunk("categories", async (locale: string, { rejectWithValue }) => {
   try {
-    const response = await fetch(`${API_KEY}/v1/categories?locale=${locale}`, {
+    const response = await fetch(`/api/categories?locale=${locale}`, {
       method: "GET",
-      headers: {
-        Authorization: `Bearer ${localStorage?.getItem("accessToken")}`,
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
+      credentials: 'include', // Include httpOnly cookies
     });
 
+    const data = await response.json();
+
     if (!response.ok) {
-      throw new Error("Failed to fetch category products");
+      return rejectWithValue(data.message || "Failed to fetch categories");
     }
 
-    const data = await response.json();
     return data;
   } catch (error: any) {
-    console.log(error);
+    console.error('Categories fetch error:', error);
+    return rejectWithValue(error.message || 'Network error occurred');
   }
 });
 

@@ -28,18 +28,15 @@ export const buildApiUrl = (endpoint: string): string => {
 };
 
 // Helper function to make authenticated API requests
+// DEPRECATED: Use Next.js API routes instead
 export const makeApiRequest = async (
   endpoint: string, 
   options: RequestInit = {},
   requireAuth: boolean = false
 ): Promise<Response> => {
-  const url = buildApiUrl(endpoint);
-  const accessToken = typeof window !== 'undefined' ? localStorage.getItem('accessToken') : null;
+  console.warn('⚠️ makeApiRequest is deprecated. Use Next.js API routes instead.');
   
-  // Check if authentication is required but no token is available
-  if (requireAuth && !accessToken) {
-    throw new Error('يرجى تسجيل الدخول للوصول لهذه الخدمة');
-  }
+  const url = buildApiUrl(endpoint);
   
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
@@ -47,25 +44,16 @@ export const makeApiRequest = async (
     ...(options.headers as Record<string, string>),
   };
   
-  // Add authorization header if token is available
-  if (accessToken) {
-    headers['Authorization'] = `Bearer ${accessToken}`;
-  }
-  
   const response = await fetch(url, {
     ...options,
     headers,
+    credentials: 'include', // Include httpOnly cookies
   });
   
   // Handle common error cases
   if (!response.ok) {
     switch (response.status) {
       case 401:
-        // Clear invalid tokens
-        if (typeof window !== 'undefined') {
-          localStorage.removeItem('accessToken');
-          localStorage.removeItem('refreshToken');
-        }
         throw new Error('انتهت صلاحية جلسة العمل، يرجى تسجيل الدخول مرة أخرى');
       case 403:
         throw new Error('غير مسموح لك بالوصول لهذا المحتوى');
@@ -86,10 +74,14 @@ export const makeApiRequest = async (
 };
 
 // Helper function to check if we're connected to the backend
+// DEPRECATED: Use Next.js API routes instead
 export const checkBackendConnection = async (): Promise<boolean> => {
+  console.warn('⚠️ checkBackendConnection is deprecated. Use Next.js API routes instead.');
+  
   try {
-    const response = await fetch(`${API_CONFIG.BASE_URL}/v1/customer/wishlist`, {
+    const response = await fetch('/api/wishlist', {
       method: 'HEAD',
+      credentials: 'include', // Include httpOnly cookies
     });
     return response.ok || response.status === 401; // 401 means backend is reachable but auth required
   } catch {

@@ -26,8 +26,6 @@ export default function ForgotPasswordForm({
   onEmailSent,
 }: ForgotPasswordFormProps) {
 
-  const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://envaglo-erp.envaglo.net';
-
   const [isLoading, setIsLoading] = useState(false);
 
   const {
@@ -42,7 +40,7 @@ export default function ForgotPasswordForm({
     setIsLoading(true);
 
     try {
-      const response = await fetch(`${API_BASE_URL}/v1/customer/forgot-password`, {
+      const response = await fetch('/api/auth/forgot-password', {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

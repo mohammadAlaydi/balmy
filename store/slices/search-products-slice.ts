@@ -1,18 +1,30 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
-const API_KEY = process.env.NEXT_PUBLIC_API_URL;
 const getSearchProducts = createAsyncThunk(
   "search-products/getSearchProducts",
-  async () => {
-    const response = await fetch(`${API_KEY}/v1/categorysearch`, {
-      headers: {
-        Authorization: `Bearer ${localStorage?.getItem("accessToken")}`,
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-    });
-    const data = await response.json();
-    return data;
+  async (params: { query?: string; category?: string; locale?: string } = {}, { rejectWithValue }) => {
+    try {
+      const searchParams = new URLSearchParams();
+      if (params.locale) searchParams.append('locale', params.locale);
+      if (params.query) searchParams.append('q', params.query);
+      if (params.category) searchParams.append('category', params.category);
+
+      const response = await fetch(`/api/search?${searchParams.toString()}`, {
+        method: 'GET',
+        credentials: 'include', // Include httpOnly cookies
+      });
+      
+      const data = await response.json();
+      
+      if (!response.ok) {
+        return rejectWithValue(data.message || 'Failed to search products');
+      }
+      
+      return data;
+    } catch (error: any) {
+      console.error('Search products error:', error);
+      return rejectWithValue(error.message || 'Network error occurred');
+    }
   }
 );
 const searchProductsSlice = createSlice({

@@ -80,11 +80,13 @@ export default function Checkout({
     data: cartData,
   } = useSelector((state: any) => state.cart);
 
+  // Get authentication status from Redux store
+  const { isAuthenticated: authStatus, user } = useSelector((state: any) => state.auth);
+
   // Check authentication status
   useEffect(() => {
-    const token = localStorage.getItem("accessToken");
-    setIsAuthenticated(!!token);
-  }, []);
+    setIsAuthenticated(authStatus && !!user);
+  }, [authStatus, user]);
 
   const onSubmit = async (values: CheckoutFormValues) => {
     if (!isAuthenticated) {

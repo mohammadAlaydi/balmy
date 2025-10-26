@@ -249,25 +249,25 @@
 
 // export const apiService = new ApiService();
 // lib/api-service.ts
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://envaglo-erp.envaglo.net';
-const accessToken = cookieStore.get('accessToken')?.value;
-console.log(accessToken ,"👌👌👌" )
+// This service is deprecated - use Next.js API routes instead
+// Keeping for backward compatibility but all methods should be migrated
+
 class ApiService {
   private baseURL: string;
   private isRefreshing: boolean = false;
   private refreshPromise: Promise<boolean> | null = null;
 
   constructor() {
-    this.baseURL = API_BASE_URL || '';
+    this.baseURL = process.env.NEXT_PUBLIC_API_URL || 'https://envaglo-erp.envaglo.net';
     console.log('API Service initialized with base URL:', this.baseURL);
+    console.warn('⚠️ ApiService is deprecated. Use Next.js API routes instead.');
   }
 
   // perform token refresh by calling your NEXT.js refresh endpoint (server action)
-  // Expecting the refresh route to set new tokens (or return them in JSON)
+  // This now works with httpOnly cookies - no localStorage operations needed
   private async performTokenRefresh(): Promise<boolean> {
     try {
       // call same-domain refresh endpoint (NextJS API route) to rotate tokens server-side
-      // Keep this as a relative route if you have a Next.js server endpoint at /api/auth/refresh
       const response = await fetch('/api/auth/refresh', {
         method: 'POST',
         credentials: 'include', // send cookies if refresh token is cookie-based
@@ -281,21 +281,7 @@ class ApiService {
         return false;
       }
 
-      // If your refresh endpoint returns JSON with tokens, update localStorage here.
-      // Otherwise if refresh is cookie-based and server sets cookie, you may not get tokens.
-      // Try to parse JSON safely (not critical if endpoint returns nothing)
-      try {
-        const data = await response.json();
-        if (data?.access_token) {
-          localStorage.setItem('access_token', data.access_token);
-        }
-        if (data?.refresh_token) {
-          localStorage.setItem('refresh_token', data.refresh_token);
-        }
-      } catch (err) {
-        // no JSON body - okay if refresh uses httpOnly cookies
-      }
-
+      // No need to handle tokens in response - they're set as httpOnly cookies
       console.log('Token refreshed successfully');
       return true;
     } catch (error) {
@@ -348,13 +334,9 @@ class ApiService {
         baseHeaders['Content-Type'] = 'application/json';
       }
 
-      // attach Authorization header if token exists
-      if (typeof window !== 'undefined') {
-        const token = localStorage.getItem('access_token');
-        if (token) {
-          baseHeaders['Authorization'] = `Bearer ${token}`;
-        }
-      }
+      // Note: This service is deprecated - use Next.js API routes instead
+      // Tokens are now handled via httpOnly cookies in Next.js API routes
+      // This direct backend call approach is no longer recommended
 
       requestOptions.headers = baseHeaders;
 
@@ -372,13 +354,11 @@ class ApiService {
 
         if (refreshSuccess) {
           console.log('Token refreshed, retrying request with new token...');
-          // reload token from storage and attach to options before retrying
-          const newToken = typeof window !== 'undefined' ? localStorage.getItem('access_token') : null;
+          // Retry with same options - tokens are handled via httpOnly cookies
           const newOptions: RequestInit = {
             ...options,
             headers: {
               ...(options.headers as Record<string, any> || {}),
-              Authorization: newToken ? `Bearer ${newToken}` : undefined,
               Accept: 'application/json',
               ...(options.body && !((options.headers as Record<string, any>)?.['Content-Type']) ? { 'Content-Type': 'application/json'} : {}),
             },
@@ -387,9 +367,7 @@ class ApiService {
         } else {
           console.error('Token refresh failed, redirecting to login');
           if (typeof window !== 'undefined') {
-            // clear local tokens
-            localStorage.removeItem('access_token');
-            localStorage.removeItem('refresh_token');
+            // Redirect to login - tokens are cleared by logout API route
             window.location.href = '/auth/login';
           }
           throw new Error('Authentication failed. Please login again.');
@@ -513,15 +491,10 @@ class ApiService {
 
   // Use PUT for profile update (more semantically correct, but adjust if your backend expects POST)
   async updateCustomerProfile(data: any) {
-    console.log(accessToken )
+    console.warn('⚠️ updateCustomerProfile is deprecated. Use /api/customer/profile instead.');
     return this.request('/v1/customer/profile', {
       method: 'POST',
       body: JSON.stringify(data),
-      headers : {
-        "accept" : "application/json",
-        "Content-Type" : "application/json",
-        "Authorization" : `Bearer 2965|LQ3DhxopjUCuJsWZnkEqrEawRRbyevjqvfjjujBY`
-      }
     });
   }
 
@@ -565,5 +538,21 @@ class ApiService {
     }
   }
 }
+
+// DEPRECATED: This service is no longer recommended
+// Use Next.js API routes instead for better security and consistency
+// 
+// Migration Guide:
+// - Replace apiService.getProducts() with fetch('/api/products')
+// - Replace apiService.getProductById(id) with fetch(`/api/products/${id}`)
+// - Replace apiService.getProductDetails(id) with fetch(`/api/product-details/${id}`)
+// - Replace apiService.updateCustomerProfile(data) with fetch('/api/customer/profile', { method: 'POST', body: JSON.stringify(data) })
+// - All requests should include credentials: 'include' for httpOnly cookies
+//
+// Benefits of migration:
+// - Automatic token refresh handling
+// - Better security with httpOnly cookies
+// - Consistent error handling
+// - No localStorage token management needed
 
 export const apiService = new ApiService();

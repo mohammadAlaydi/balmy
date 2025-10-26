@@ -1,40 +1,42 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { cookies } from 'next/headers';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export async function GET(request: NextRequest) {
   try {
-    let token = request.cookies.get('accessToken')?.value;
+    const cookieStore = await cookies();
+    const accessToken = cookieStore.get('accessToken')?.value;
+    const refreshToken = cookieStore.get('refreshToken')?.value;
 
-    if (!token) {
-      return NextResponse.json(
-        { message: 'Not authenticated' },
-        { status: 401 }
-      );
+    // Products endpoint might not require authentication, but we'll include token if available
+    const headers: Record<string, string> = {
+      'Accept': 'application/json',
+    };
+
+    if (accessToken) {
+      headers['Authorization'] = `Bearer ${accessToken}`;
     }
 
-    const response = await fetch(`${API_URL}/v1/customer/get`, {
+    const response = await fetch(`${API_URL}/v1/products`, {
       method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Accept': 'application/json',
-      },
+      headers,
     });
 
     const data = await response.json();
 
     if (!response.ok) {
-      // If unauthorized, attempt one refresh then retry once
-      if (response.status === 401) {
+      // If unauthorized and refresh token exists, attempt one refresh then retry once
+      if (response.status === 401 && refreshToken && accessToken) {
         try {
           const refreshResp = await fetch(`${request.nextUrl.origin}/api/auth/refresh`, {
             method: 'POST',
           });
           if (refreshResp.ok) {
-            const retry = await fetch(`${API_URL}/v1/customer/get`, {
+            const retry = await fetch(`${API_URL}/v1/products`, {
               method: 'GET',
               headers: {
-                'Authorization': `Bearer ${request.cookies.get('accessToken')?.value ?? ''}`,
+                'Authorization': `Bearer ${cookieStore.get('accessToken')?.value ?? ''}`,
                 'Accept': 'application/json',
               },
             });
@@ -43,7 +45,7 @@ export async function GET(request: NextRequest) {
               return NextResponse.json(retryData);
             }
             return NextResponse.json(
-              { message: retryData.message || 'Failed to get user info' },
+              { message: retryData.message || 'Failed to fetch products' },
               { status: retry.status }
             );
           }
@@ -51,7 +53,7 @@ export async function GET(request: NextRequest) {
       }
 
       return NextResponse.json(
-        { message: data.message || 'Failed to get user info' },
+        { message: data.message || 'Failed to fetch products' },
         { status: response.status }
       );
     }
@@ -59,7 +61,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(data);
 
   } catch (error) {
-    console.error('Get user error:', error);
+    console.error('Get products error:', error);
     return NextResponse.json(
       { message: 'Internal server error' },
       { status: 500 }

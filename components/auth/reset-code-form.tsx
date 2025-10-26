@@ -30,9 +30,6 @@ export default function ResetCodeForm({
   onBackToForgotPassword,
   onCodeVerified,
 }: ResetCodeFormProps) {
-  const API_BASE_URL =
-    process.env.NEXT_PUBLIC_API_URL || "https://envaglo-erp.envaglo.net/api";
-
   const [isLoading, setIsLoading] = useState(false);
 
   const {
@@ -48,7 +45,7 @@ export default function ResetCodeForm({
 
     try {
       // API call to verify reset code
-      const response = await fetch(`${API_BASE_URL}/v1/customer/verify-code`, {
+      const response = await fetch('/api/auth/verify-reset-code', {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -56,12 +53,13 @@ export default function ResetCodeForm({
         body: JSON.stringify({ email, code: data.code }),
       });
 
+      const result = await response.json();
+
       if (response.ok) {
         toast.success("Code verified successfully!");
         onCodeVerified(data.code);
       } else {
-        const errorData = await response.json();
-        toast.error(errorData.message || "Invalid code");
+        toast.error(result.message || "Invalid code");
       }
     } catch (error) {
       toast.error("An unexpected error occurred");

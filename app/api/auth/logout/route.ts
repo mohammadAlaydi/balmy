@@ -7,7 +7,6 @@ export async function POST(request: NextRequest) {
   try {
     const cookieStore = await cookies();
     const accessToken = cookieStore.get('accessToken')?.value;
-    const refreshToken = cookieStore.get('refreshToken')?.value;
 
     if (accessToken) {
       // Call backend logout endpoint
@@ -20,7 +19,7 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    // Clear the cookie regardless of backend response
+    // Clear the access token cookie regardless of backend response
     cookieStore.set('accessToken', '', {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
@@ -28,16 +27,6 @@ export async function POST(request: NextRequest) {
       maxAge: 0,
       path: '/',
     });
-
-    if (refreshToken) {
-      cookieStore.set('refreshToken', '', {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'lax',
-        maxAge: 0,
-        path: '/',
-      });
-    }
 
     return NextResponse.json({
       message: 'Logged out successfully',

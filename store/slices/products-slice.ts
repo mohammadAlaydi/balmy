@@ -1,6 +1,5 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { apiService } from '@/lib/api-service';
 import { ProductDetailsApiResponse } from '@/types/types';
 
 export interface Product {
@@ -37,8 +36,18 @@ export const fetchProducts = createAsyncThunk(
   'products/fetchProducts',
   async (_, { rejectWithValue }) => {
     try {
-      const response = await apiService.getProducts();
-      return response as Product[];
+      const response = await fetch('/api/products', {
+        method: 'GET',
+        credentials: 'include', // Include httpOnly cookies
+      });
+      
+      const data = await response.json();
+      
+      if (!response.ok) {
+        return rejectWithValue(data.message || 'Failed to fetch products');
+      }
+      
+      return data as Product[];
     } catch (error: any) {
       console.error('Products fetch error:', error);
       return rejectWithValue(error.message || 'Failed to fetch products');
@@ -51,8 +60,18 @@ export const fetchProductById = createAsyncThunk(
   'products/fetchProductById',
   async (id: number, { rejectWithValue }) => {
     try {
-      const response = await apiService.getProductById(id);
-      return response as Product;
+      const response = await fetch(`/api/products/${id}`, {
+        method: 'GET',
+        credentials: 'include', // Include httpOnly cookies
+      });
+      
+      const data = await response.json();
+      
+      if (!response.ok) {
+        return rejectWithValue(data.message || 'Failed to fetch product');
+      }
+      
+      return data as Product;
     } catch (error: any) {
       console.error('Product fetch error:', error);
       return rejectWithValue(error.message || 'Failed to fetch product');
@@ -60,25 +79,20 @@ export const fetchProductById = createAsyncThunk(
   }
 );
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://envaglo-erp.envaglo.net';
-
-// RTK Query API for product details
+// RTK Query API for product details - now uses Next.js API routes
 export const productApi = createApi({
   reducerPath: 'productApi',
   baseQuery: fetchBaseQuery({ 
-    baseUrl: API_BASE_URL,
+    baseUrl: '', // Use relative URLs for Next.js API routes
     prepareHeaders: (headers) => {
-      const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
-      if (token) {
-        headers.set('authorization', `Bearer ${token}`);
-      }
+      // No need to set authorization header - handled by httpOnly cookies
       return headers;
     },
   }),
   tagTypes: ['Product'],
   endpoints: (builder) => ({
     getProductDetails: builder.query<ProductDetailsApiResponse, number>({
-      query: (id) => `/v1/product-details/${id}`,
+      query: (id) => `/api/product-details/${id}`,
       providesTags: (result, error, id) => [{ type: 'Product', id }],
     }),
   }),
