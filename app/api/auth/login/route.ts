@@ -42,9 +42,10 @@ export async function POST(request: NextRequest) {
       console.error('No access token received from backend');
     }
 
-    // Return user data without tokens
+    // Return user data with token for debugging
     return NextResponse.json({
       data: data.data,
+      token: accessToken, // Include token in response for debugging
       message: data.message,
     });
 

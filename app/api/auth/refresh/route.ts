@@ -51,6 +51,7 @@ export async function POST(request: NextRequest) {
     }
 
     return NextResponse.json({
+      token: newAccessToken, // Include new token in response for debugging
       message: data.message || 'Token refreshed successfully',
     });
 
