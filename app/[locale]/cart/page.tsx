@@ -15,6 +15,7 @@ import PageWrapper from "@/components/page-wrapper";
 import { useRouter } from "next/navigation";
 import { resetStatus } from "@/store/slices/cart-slice";
 export default function page() {
+  
   const t = useTranslations("cart");
   const dispatch = useDispatch();
   const router = useRouter();

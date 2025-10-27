@@ -90,7 +90,7 @@
 // }
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
@@ -132,7 +132,7 @@ export default function CheckoutStatusPage() {
   }, [status, isLoading, saveOrderData, router]);
 
   // ✅ If order is successful and has a payment redirect URL
-  useEffect(() => {
+  useLayoutEffect(() => {
     const success = saveOrderData?.data?.data?.success;
     const url = saveOrderData?.data?.data?.url;
     if (success && url) {

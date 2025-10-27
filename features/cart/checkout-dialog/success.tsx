@@ -11,9 +11,6 @@ import { useEffect } from "react";
 export default function Success({ data }: SuccessProps) {
   const t = useTranslations("order");
 
-// run only when data or router changes
-
-
   // Handle different data structures
   const order = data?.data?.data?.order;
   // If no order data, show error
