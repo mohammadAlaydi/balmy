@@ -124,12 +124,12 @@ export default function CheckoutStatusPage() {
     (state: RootState) => state.cart
   );
 
-  // ✅ Redirect to home if accessed without checkout data
-  useEffect(() => {
-    if (!isLoading && !status && !saveOrderData) {
-      router.replace("/home");
-    }
-  }, [status, isLoading, saveOrderData, router]);
+  // // ✅ Redirect to home if accessed without checkout data
+  // useEffect(() => {
+  //   if (!isLoading && !status && !saveOrderData) {
+  //     router.replace("/home");
+  //   }
+  // }, [status, isLoading, saveOrderData, router]);
 
   // ✅ If order success and has a payment redirect URL
   useEffect(() => {
