@@ -126,7 +126,7 @@ export default function Checkout({
           </PageWrapper>
         );
       } else if (success && url) {
-        router.replace(url);
+        router.push(url);
       }
     }
   };
