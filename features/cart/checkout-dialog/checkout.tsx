@@ -75,7 +75,7 @@ export default function Checkout({
     (state: any) => state.cart
   );
   const success = saveOrderData?.data?.data?.success;
-  const url = saveOrderData?.data?.data?.url;
+  const url = saveOrderData?.data?.data?.url != null;
 
   const { isAuthenticated: authStatus, user } = useSelector(
     (state: any) => state.auth
