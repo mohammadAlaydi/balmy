@@ -329,7 +329,7 @@ export default function Checkout({
   }
 
   // Show Success page if order succeeded and no redirect URL
-  if (success && (paymentMethod === "tabby" || paymentMethod === "cashondelivery")) {
+  if (saveOrderData?.success && (paymentMethod === "tabby" || paymentMethod === "cashondelivery")) {
     return (
       <PageWrapper>
         <Success data={saveOrderData} />
