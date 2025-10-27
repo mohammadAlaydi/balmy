@@ -145,6 +145,7 @@ export default function CheckoutStatusPage() {
     return <Loading fullScreen={true} variant="spinner" size="xl" />;
   }
 
+  console.log(saveOrderData?.success, !saveOrderData?.data?.data?.url)
   // ✅ Order success (no redirect URL)
   if (saveOrderData?.success === true && !saveOrderData?.data?.data?.url) {
     dispatch(getCartProducts() as any);
