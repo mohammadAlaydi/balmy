@@ -8,7 +8,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Form } from "@/components/ui/form";
 import ShippingForm from "./shipping-form";
 import { useDispatch, useSelector } from "react-redux";
-import { saveOrder, getCartProducts, resetStatus } from "@/store/slices/cart-slice";
+import {
+  saveOrder,
+  getCartProducts,
+  resetStatus,
+} from "@/store/slices/cart-slice";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -103,16 +107,13 @@ export default function Checkout({
   };
 
   useEffect(() => {
-    const success =
-      saveOrderData?.data?.data?.success ?? saveOrderData?.success;
-    const isComplete =
-      status === "success" ||
-      status === "failed" ||
-      typeof success === "boolean";
 
-    if (isComplete) {
+    if (saveOrderData?.success) {
       dispatch(getCartProducts() as any);
-      if(saveOrderData?.success === true && saveOrderData?.data?.data?.url == null){
+      if (
+        saveOrderData?.success === true &&
+        saveOrderData?.data?.data?.url == null
+      ) {
         router.push("/cart/checkout-status");
       }
     }
