@@ -304,18 +304,29 @@ export default function Checkout({
   };
 
   // Redirect immediately if URL exists
+  const paymentMethod = watch("payment.method");
   useEffect(() => {
+    dispatch(getCartProducts() as any);
+
     if (success && redirectUrl) {
       setRedirecting(true);
       router.push(redirectUrl);
+    }else (
+      paymentMethod === "tabby" ||
+      (paymentMethod === "cashondelivery" && saveOrderData?.success)
+    ){
+      
     }
-  }, [success, redirectUrl, router]);
+  }, [success, redirectUrl, router , paymentMethod , dispatch]);
 
   // Dispatch getCartProducts when payment method changes
-  const paymentMethod = watch("payment.method");
   useEffect(() => {
-    if (paymentMethod === "tabby" || paymentMethod === "cashondelivery") {
-      dispatch(getCartProducts() as any);
+    dispatch(getCartProducts() as any);
+    if (
+      paymentMethod === "tabby" ||
+      (paymentMethod === "cashondelivery" && saveOrderData?.success)
+    ) {
+      router.push("/cart/checkout-status");
     }
   }, [paymentMethod, dispatch]);
 
@@ -329,7 +340,10 @@ export default function Checkout({
   }
 
   // Show Success page if order succeeded and no redirect URL
-  if (saveOrderData?.success && (paymentMethod === "tabby" || paymentMethod === "cashondelivery")) {
+  if (
+    saveOrderData?.success &&
+    (paymentMethod === "tabby" || paymentMethod === "cashondelivery")
+  ) {
     return (
       <PageWrapper>
         <Success data={saveOrderData} />
