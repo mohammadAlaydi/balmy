@@ -128,6 +128,7 @@ interface SuccessProps {
 }
 
 export default function Success({ data }: SuccessProps) {
+  
   const t = useTranslations("order");
 
   const order = data?.data?.data?.order;
