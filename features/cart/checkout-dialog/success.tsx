@@ -128,32 +128,23 @@ interface SuccessProps {
 }
 
 export default function Success({ data }: SuccessProps) {
-  
+
   const t = useTranslations("order");
 
   const order = data?.data?.data?.order;
-  if (!order) {
-    return (
-      <div className="flex flex-col items-center justify-center p-8">
-        <p className="text-red-500 font-semibold">{t("order-data-missing")}</p>
-      </div>
-    );
-  }
-
+ 
   const orderInfoItems = [
     { label: t("order-number"), value: `#${order.id}` },
     { label: t("order-status"), value: order.status },
     { label: t("shipping-method"), value: order.shipping_method },
     {
       label: t("shipping-amount"),
-      value:
-        order.shipping_amount +
-        " " +
-        (order?.channel_currency_code || ""),
+      value: order.shipping_amount + " " + (order?.channel_currency_code || ""),
     },
     { label: t("payment-title"), value: order.payment_title },
   ];
 
+  
   return (
     <div className="flex flex-col items-center justify-center bg-white p-4 sm:p-6 md:p-8">
       <div className="max-w-md w-full bg-white rounded-xl shadow-lg overflow-hidden">

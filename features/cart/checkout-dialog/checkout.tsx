@@ -53,6 +53,7 @@ export default function Checkout({
   total: number;
   data: any;
 }) {
+  const { watch } = useForm();
   const router = useRouter();
   const t = useTranslations("cart");
   const tButtons = useTranslations("buttons");
@@ -125,7 +126,7 @@ export default function Checkout({
   }
 
   // Show Success page only if order succeeded AND no redirect URL
-  if (saveOrderData?.success && (!saveOrderData?.data?.data?.url || saveOrderData?.data?.data?.url == null)) {
+  if (watch("payement.method") == "tabby" || watch("payement.method") == "cashondelivery" ) {
     dispatch(getCartProducts() as any);
     return (
       <PageWrapper>
