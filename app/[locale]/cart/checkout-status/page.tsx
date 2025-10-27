@@ -147,7 +147,7 @@ export default function CheckoutStatusPage() {
 
   console.log(saveOrderData?.success, !saveOrderData?.data?.data?.url)
   // ✅ Order success (no redirect URL)
-  if (saveOrderData?.success === true && !saveOrderData?.data?.url) {
+  if (saveOrderData?.success === true && (!saveOrderData?.data?.url || saveOrderData?.data?.url == null )) {
     dispatch(getCartProducts() as any);
     return (
       <PageWrapper>
