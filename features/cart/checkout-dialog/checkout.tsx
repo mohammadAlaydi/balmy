@@ -101,23 +101,21 @@ export default function Checkout({
       payment: values.payment,
       shipping_method: values.shipping_method,
     };
-
-    console.log("Checkout payload being sent:", checkoutPayload);
-    dispatch(saveOrder(checkoutPayload) as any);
+    await dispatch(saveOrder(checkoutPayload) as any);
+    dispatch(resetStatus())
   };
 
   useEffect(() => {
-
     if (saveOrderData?.success) {
       dispatch(getCartProducts() as any);
       if (
-        saveOrderData?.success === true &&
-        saveOrderData?.data?.data?.url == null
+        saveOrderData?.data?.data?.url == null &&
+        !saveOrderData?.data?.data?.url
       ) {
         router.push("/cart/checkout-status");
       }
     }
-  }, [status, saveOrderData, dispatch, router]);
+  }, [saveOrderData, dispatch, router]);
 
   return (
     <>
