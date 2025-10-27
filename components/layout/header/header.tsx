@@ -19,7 +19,6 @@ import {
 import Image from "next/image";
 import SocialMediaIcons from "@/components/social-media-icons";
 import DrawerComponent from "../drawer/drawer-component";
-import { LANGUAGES } from "@/lib/constants";
 import {
   Dialog,
   DialogTrigger,
@@ -49,6 +48,7 @@ import Loading from "@/components/loading";
 import { useTranslations } from "next-intl";
 import { getCategories } from "@/store/slices/categories-slice";
 import { getHomeData } from "@/store/slices/home-slice";
+import { LANGUAGES } from "@/static-data/static-data";
 
 // Components
 const TopBar = ({ data }: { data: any }) => {
@@ -281,19 +281,23 @@ const NavigationLinks = ({ navbarCategories, currentLocale }: { navbarCategories
   );
 };
 
-const Logo = ({ data }: { data: any }) => (
-  <Link href="/home" prefetch={true}>
-    <Image
-      src={data?.seo_settings?.channel?.logo}
-      alt="logo"
-      className="lg:w-[180px]"
-      width={140}
-      height={120}
-      priority
-    />
-  </Link>
-);
+const Logo = ({ data }: { data: any }) => {
+  const logo = data?.seo_settings?.channel?.logo;
+  if (!logo) return null; // Nothing to render if logo is missing
 
+  return (
+    <Link href="/home" prefetch={true}>
+      <Image
+        src={logo}
+        alt="logo"
+        className="lg:w-[180px]"
+        width={140}
+        height={70}
+        priority
+      />
+    </Link>
+  );
+};
 const MobileMenu = ({
   languageItems,
   navbarCategories,

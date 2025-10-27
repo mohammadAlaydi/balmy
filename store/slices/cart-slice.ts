@@ -209,6 +209,9 @@ const cartSlice = createSlice({
       state.status = null;
       state.cartStatus = null;
       state.error = null;
+      if (state.saveOrderData) {
+        state.saveOrderData.success = null;
+      }
     },
   },
   extraReducers(builder) {
@@ -232,7 +235,7 @@ const cartSlice = createSlice({
     builder.addCase(addToCart.fulfilled, (state, action) => {
       state.increaseOrDecreaseLoading = false;
       state.increaseOrDecreaseResponse = action.payload;
-      state.cartStatus = "success"; 
+      state.cartStatus = "success";
     });
     builder.addCase(addToCart.rejected, (state: any, action) => {
       state.error = action.error.message || null;
@@ -301,7 +304,7 @@ const cartSlice = createSlice({
   },
 });
 
-export const { applyLocalQuantityDelta } = cartSlice.actions;
+export const { applyLocalQuantityDelta, resetStatus } = cartSlice.actions;
 export {
   getCartProducts,
   addToCart,

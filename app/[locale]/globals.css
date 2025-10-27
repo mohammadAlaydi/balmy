@@ -291,3 +291,15 @@ body {
   .swiper-pagination-bullet {
   margin-inline: 10px !important;
 }
+.swiper-button-prev:after, .swiper-rtl .swiper-button-next:after {
+  font-size: 18px !important;
+  color: black !important;
+  width: 40px;
+  height: 40px;
+  border-radius: 4px ;
+  background-color: rgba(211, 211, 211, 0.85);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+}

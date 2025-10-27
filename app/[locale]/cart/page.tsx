@@ -12,13 +12,17 @@ import { MdDeleteSweep } from "react-icons/md";
 import Loading from "@/components/loading";
 import { useTranslations } from "next-intl";
 import PageWrapper from "@/components/page-wrapper";
-
+import { useRouter } from "next/navigation";
+import { resetStatus } from "@/store/slices/cart-slice";
 export default function page() {
   const t = useTranslations("cart");
   const dispatch = useDispatch();
-  const { data, isLoading, status } = useSelector((state: any) => state.cart);
+  const router = useRouter();
+  const { data, isLoading } = useSelector((state: any) => state.cart);
 
   useEffect(() => {
+    router.refresh()
+    resetStatus();
     if (!isLoading && !data) {
       dispatch(getCartProducts() as any);
     }

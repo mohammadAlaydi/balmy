@@ -3,10 +3,8 @@
 import Link from "next/link";
 import React, { useState } from "react";
 import Image from "next/image";
-import { SwiperSlide } from "swiper/react";
 import { useSelector } from "react-redux";
 import { useTranslations } from "next-intl";
-import CarouselComponent from "./carousel-component";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
 import Loading from "./loading";
@@ -22,33 +20,37 @@ interface QuickProductDetailsProps {
   product: ApiProduct;
 }
 
-// Constants
 const IMAGE_SIZES = {
-  carousel: { width: 100, height: 100 },
+  main: { width: 500, height: 500 },
   thumbnail: { width: 32, height: 32 },
   fallback: "/assets/images/no-image.webp",
 } as const;
 
-const MAX_VISIBLE_VARIANTS = 3;
-
 export default function QuickProductDetails({
   product,
 }: QuickProductDetailsProps) {
+  const t = useTranslations("products");
+  const dispatch = useAppDispatch();
+
+  const { isLoading } = useSelector((state: any) => state.productDetails);
+  const { increaseOrDecreaseLoading: cartLoading } = useSelector(
+    (state: any) => state.cart
+  );
+  const { isAuthenticated } = useSelector((state: any) => state.auth);
+
   const [selectedVariantIndex, setSelectedVariantIndex] = useState<
     number | null
   >(null);
   const [choosenVarianrID, setChoosenVarianrID] = useState<number | null>(null);
   const [showAuthModal, setShowAuthModal] = useState(false);
-  const [pendingAddProductId, setPendingAddProductId] = useState<number | null>(null);
-  const t = useTranslations("products");
-  const dispatch = useAppDispatch();
-
-  const { isLoading } = useSelector((state: any) => state.productDetails);
-  const { increaseOrDecreaseLoading: cartLoading, status } = useSelector(
-    (state: any) => state.cart
+  const [pendingAddProductId, setPendingAddProductId] = useState<number | null>(
+    null
   );
-  const { isAuthenticated } = useSelector((state: any) => state.auth);
-  const baseImageUrl = getCurrentMainImage(product, 0);
+
+  // 👇 this state stores the current main image
+  const [mainImage, setMainImage] = useState<string>(
+    getCurrentMainImage(product, 0) || IMAGE_SIZES.fallback
+  );
 
   if (isLoading) {
     return <Loading fullScreen={true} variant="spinner" size="xl" />;
@@ -61,15 +63,18 @@ export default function QuickProductDetails({
       </div>
     );
   }
+
+  // 🔹 Handle Add to Cart
   const handleAddToCart = async () => {
     if (!isAuthenticated) {
       const pid = product?.variants
-        ? (choosenVarianrID as any) || product?.variants[0]?.id
-        : (product as any)?.id;
+        ? choosenVarianrID || product?.variants[0]?.id
+        : product?.id;
       if (pid) setPendingAddProductId(Number(pid));
       setShowAuthModal(true);
       return;
     }
+
     const productId = product?.variants
       ? choosenVarianrID || product?.variants[0]?.id
       : product?.id;
@@ -78,61 +83,45 @@ export default function QuickProductDetails({
     await dispatch(addToCart({ productId }));
     toast.success(t("added-to-cart"));
   };
+
+  // 🔹 Handle variant click
   const handleVariantSelect = (index: number) => {
     setSelectedVariantIndex(index);
+    const selectedVariant = product?.variants?.[index];
+    const imageUrl =
+      selectedVariant?.base_image?.original_image_url || IMAGE_SIZES.fallback;
+    setMainImage(imageUrl);
+    setChoosenVarianrID(selectedVariant?.id);
   };
 
-  // Helper functions
-  const renderProductImages = () => {
-    const hasVariants = product.variants && product.variants.length > 0;
+  // 🔹 Main product image display
+  const renderProductImage = () => (
+    <div className="w-full flex justify-center items-center">
+      <Image
+        src={mainImage}
+        alt={product.name}
+        width={IMAGE_SIZES.main.width}
+        height={IMAGE_SIZES.main.height}
+        className="w-full  object-cover rounded-xl transition-all duration-300"
+      />
+    </div>
+  );
 
-    return (
-      <CarouselComponent
-        slidesPerView={1}
-        spaceBetween={10}
-        containerClassName="w-full"
-        navigation={true}
-      >
-        {hasVariants ? (
-          product.variants!.map((variant, index) => (
-            <SwiperSlide key={`${variant.id}-${index}`}>
-              <Image
-                src={baseImageUrl}
-                alt={product.name}
-                width={IMAGE_SIZES.carousel.width}
-                height={IMAGE_SIZES.carousel.height}
-                className="w-full object-cover"
-              />
-            </SwiperSlide>
-          ))
-        ) : (
-          <SwiperSlide key={`product-${product.id}`}>
-            <Image
-              src={baseImageUrl}
-              alt={product.name}
-              width={IMAGE_SIZES.carousel.width}
-              height={IMAGE_SIZES.carousel.height}
-              className="w-full h-full object-cover"
-            />
-          </SwiperSlide>
-        )}
-      </CarouselComponent>
-    );
-  };
-
+  // 🔹 Header
   const renderProductHeader = () => (
-    <div className="flex justify-between gap-2">
-      <h2 className="font-[600] md:font-[650] md:text-sm text-xs overflow-hidden text-ellipsis whitespace-nowrap">
+    <div className="flex justify-between gap-2 w-full">
+      <h2 className="font-semibold text-sm md:text-base truncate">
         {product.name}
       </h2>
-      <p className="font-[600] md:font-[650] md:text-sm text-xs overflow-hidden text-ellipsis whitespace-nowrap">
+      <p className="font-semibold text-sm md:text-base truncate">
         {product.sku}
       </p>
     </div>
   );
 
+  // 🔹 Stock & Price
   const renderStockAndPrice = () => (
-    <div className="flex justify-between gap-2">
+    <div className="flex justify-between gap-2 w-full flex-wrap">
       <p
         className={`text-sm px-3 py-1 rounded ${
           product.in_stock
@@ -142,98 +131,65 @@ export default function QuickProductDetails({
       >
         {product.in_stock ? t("in-stock") : t("out-of-stock")}
       </p>
-      <p className="text-gray-color font-[600] md:font-[650] md:text-sm text-xs">
+      <p className="text-gray-700 font-semibold text-sm md:text-base">
         {product.price || 0.0} <i className="icon-rial"></i>
       </p>
     </div>
   );
 
+  // 🔹 Variants (thumbnails)
   const renderColorVariants = () => {
     if (!product.variants || product.variants.length === 0) return null;
 
     return (
-      <div className="colors flex flex-col gap-3 flex-wrap">
-        <h2 className="font-[600] md:font-[650] md:text-sm text-xs">{t("choose-color")}</h2>
-        <div className="flex items-center gap-3 my-1 transition-all duration-300">
-          {/* Base image option */}
-          {product?.variants && product.variants.length > 3 ? (
-            <div className="items-center gap-3 hidden md:flex transition-all duration-300">
-              {/* Variant images */}
-              {product.variants.slice(0, 3).map((variant, index) => (
-                <div
-                  key={variant.id}
-                  className="relative mb-3"
-                  onClick={() => {
-                    setChoosenVarianrID(variant?.id);
-                  }}
-                >
-                  <Image
-                    width={32}
-                    height={32}
-                    src={
-                      variant.base_image?.original_image_url ||
-                      "/assets/images/no-image.webp"
-                    }
-                    alt={`${product?.name || t("product")} ${t(
-                      "variant-image"
-                    )} ${index + 1}`}
-                    className={`cursor-pointer transition-all duration-200 rounded-full h-[32px] w-[32px] ${
-                      selectedVariantIndex === index ||
-                      (selectedVariantIndex === null && index == 0)
-                        ? "ring-2 ring-gray-300 scale-110"
-                        : "hover:scale-105"
-                    }`}
-                    onClick={() => handleVariantSelect(index)}
-                  />
-                </div>
-              ))}
-              {product.variants.length > 3 && (
-                <Badge className="bg-transparent text-primary  mb-3 ring-2 ring-gray-300 scale-110 w-[32px] h-[32px]  p-0 flex items-center rounded-full justify-center shadow-[inset_0_2px_4px_rgba(0,0,0,0.1)] text-xs">
-                  +{product.variants.length - 3}
-                </Badge>
-              )}
+      <div className="colors flex flex-col gap-3 flex-wrap w-full">
+        <h2 className="font-semibold text-sm md:text-base">
+          {t("choose-color")}
+        </h2>
+        <div className="flex items-center gap-4 my-1 flex-wrap">
+          {product.variants.map((variant, index) => (
+            <div key={variant.id} className="relative w-fit">
+              <Image
+                width={IMAGE_SIZES.thumbnail.width}
+                height={IMAGE_SIZES.thumbnail.height}
+                src={
+                  variant.base_image?.original_image_url || IMAGE_SIZES.fallback
+                }
+                alt={`${product.name} variant ${index + 1}`}
+                className={`cursor-pointer transition-all duration-200 rounded-full h-[32px] w-[32px] ${
+                  selectedVariantIndex === index
+                    ? "ring-2 ring-gray-200 scale-110"
+                    : "hover:scale-105 ring-1 ring-gray-200"
+                }`}
+                onClick={() => handleVariantSelect(index)}
+              />
             </div>
-          ) : (
-            product?.variants?.map((variant, index) => (
-              <div
-                key={index}
-                className="justify-between items-center gap-3 w-full hidden md:flex"
-              >
-                <div className="relative mb-3">
-                  <Image
-                    width={32}
-                    height={32}
-                    src={
-                      variant?.base_image?.original_image_url ||
-                      "/assets/images/no-image.webp"
-                    }
-                    alt={`${product?.name || t("product")} ${t(
-                      "variant-image"
-                    )} 1`}
-                    className="cursor-pointer transition-all duration-200 rounded-full ring-2 ring-gray-300 scale-110 h-[32px] w-[32px]"
-                  />
-                </div>
-              </div>
-            ))
+          ))}
+
+          {product.variants.length > 3 && (
+            <Badge className="bg-transparent text-primary ring-1 ring-gray-300 rounded-full w-[32px] h-[32px] flex items-center justify-center text-xs">
+              +{product.variants.length - 3}
+            </Badge>
           )}
         </div>
       </div>
     );
   };
 
+  // 🔹 Action buttons
   const renderActionButtons = () => (
     <>
-      <div className="flex gap-2">
+      <div className="flex gap-2 w-full justify-center items-center flex-wrap">
         <Button
           onClick={handleAddToCart}
-          className="text-nowrap md:text-sm text-xs bg-black text-white px-4 py-2 rounded-md hover:bg-white border border-black hover:text-black transition-all duration-300"
+          className="text-nowrap text-xs md:text-sm bg-black text-white px-4 py-2 rounded-md hover:bg-black/85 transition-all duration-300"
         >
           {cartLoading ? <LoadingSpinner size="sm" /> : t("add-to-cart")}
         </Button>
         <Link
           prefetch={true}
           href="/favourits"
-          className="text-nowrap md:text-sm text-xs bg-black text-white px-4 py-2 rounded-md hover:bg-white border border-black hover:text-black transition-all duration-300"
+          className="text-nowrap text-xs md:text-sm bg-black text-white px-4 py-2 rounded-md hover:bg-black/85 transition-all duration-300 text-center"
         >
           {t("go-to-favourites")}
         </Link>
@@ -241,7 +197,7 @@ export default function QuickProductDetails({
       <Link
         href="/cart"
         prefetch={true}
-        className="text-nowrap md:text-sm text-xs bg-black text-white px-4 py-2 rounded-md hover:bg-white border border-black hover:text-black transition-all duration-300 text-center w-full"
+        className="text-nowrap text-xs md:text-sm bg-black text-white px-4 py-2 rounded-md hover:bg-black/85 transition-all duration-300 text-center w-full"
       >
         {t("cart")}
       </Link>
@@ -249,16 +205,16 @@ export default function QuickProductDetails({
   );
 
   return (
-    <div className="flex flex-col gap-4 h-full items-center">
-      {renderProductImages()}
+    <div className="flex flex-col gap-4 h-full items-center overflow-y-scroll">
+      {renderProductImage()}
       <div className="flex flex-col gap-4 h-full w-full">
         {renderProductHeader()}
         {renderStockAndPrice()}
-        <div className="variant flex flex-col gap-5">
-          {renderColorVariants()}
-        </div>
+        {renderColorVariants()}
       </div>
       {renderActionButtons()}
+
+      {/* Auth Modal */}
       <AuthModal
         isOpen={showAuthModal}
         onOpenChange={(open) => {
@@ -266,9 +222,11 @@ export default function QuickProductDetails({
           if (!open) setPendingAddProductId(null);
         }}
         onAuthenticated={async () => {
-          const pid = pendingAddProductId ?? (product?.variants
-            ? (choosenVarianrID as any) || product?.variants[0]?.id
-            : (product as any)?.id);
+          const pid =
+            pendingAddProductId ??
+            (product?.variants
+              ? choosenVarianrID || product?.variants[0]?.id
+              : product?.id);
           if (!pid) return;
           await dispatch(addToCart({ productId: Number(pid) }));
           toast.success(t("added-to-cart"));

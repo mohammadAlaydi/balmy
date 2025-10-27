@@ -111,7 +111,6 @@ export default function UserMenu({ isMobile = false }: { isMobile?: boolean }) {
                 alt="user"
                 width={22}
                 height={22}
-                className={`${isRTL ? "ml-2" : "mr-2"}`}
               />
               <span>{t("profile")}</span>
             </Link>
@@ -203,7 +202,6 @@ export default function UserMenu({ isMobile = false }: { isMobile?: boolean }) {
               alt="user"
               width={22}
               height={22}
-              className={`${isRTL ? "ml-2" : "mr-2"}`}
             />
             <span>{t("profile")}</span>
           </Link>

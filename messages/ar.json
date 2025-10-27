@@ -131,7 +131,10 @@
     "placeholder-phone": "+966-50-123-4567",
     "login-required": "تسجيل الدخول مطلوب",
     "please-login-to-checkout": "يرجى تسجيل الدخول للمتابعة مع الدفع",
-    "online-payment-methods" : "إختر طرية الدفع الإلكترونية"
+    "online-payment-methods" : "إختر طرية الدفع الإلكترونية",
+    "no-products-yet" : "لا توجد منتجات بعد",
+    "choose-online-payment" : "اختر الدفع عبر الإنترنت",
+    "order-success" : "تم إرسال طلبك بنجاح"
   },
   "about": {
     "who-we-are": "من نحن",

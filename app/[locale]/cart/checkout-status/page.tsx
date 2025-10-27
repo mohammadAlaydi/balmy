@@ -1,14 +1,105 @@
+// "use client";
+
+// import React, { useEffect } from "react";
+// import { useDispatch, useSelector } from "react-redux";
+// import { useRouter } from "next/navigation";
+// import { useTranslations } from "next-intl";
+
+// import PageWrapper from "@/components/page-wrapper";
+// import Loading from "@/components/loading";
+// import Success from "@/features/cart/checkout-dialog/success";
+// import Failed from "@/features/cart/checkout-dialog/failed";
+// import { getCartProducts } from "@/store/slices/cart-slice";
+
+// interface CartState {
+//   status: string | null;
+//   saveOrderData: any;
+//   data: any;
+//   isLoading: boolean;
+// }
+
+// interface RootState {
+//   cart: CartState;
+// }
+
+// export default function CheckoutStatusPage() {
+//   const router = useRouter();
+//   const t = useTranslations("order");
+//   const dispatch = useDispatch();
+//   const { status, saveOrderData, isLoading } = useSelector(
+//     (state: RootState) => state.cart
+//   );
+
+//   useEffect(() => {
+//     if (!status && !isLoading) {
+//       router.push("/home");
+//     }
+//   }, [status, isLoading, router]);
+
+//   useEffect(() => {
+//     const success = saveOrderData?.data?.data?.success;
+//     const url = saveOrderData?.data?.data?.url;
+
+//     if (success && url) {
+//       router.push(url);
+//     }
+//   }, [saveOrderData, router]);
+
+//   if (isLoading) {
+//     return <Loading fullScreen={true} variant="spinner" size="xl" />;
+//   }
+
+//   if (saveOrderData?.success === true && !saveOrderData?.data?.data?.url) {
+//     dispatch(getCartProducts() as any);
+//     router.push("/cart/checkout-status");
+//     return (
+//       <PageWrapper>
+//         <Success data={saveOrderData} />
+//       </PageWrapper>
+//     );
+//   }
+
+//   if (saveOrderData?.success === false) {
+//     return (
+//       <PageWrapper>
+//         <Failed />
+//       </PageWrapper>
+//     );
+//   }
+
+//   return (
+//     <PageWrapper>
+//       <div className="flex flex-col items-center justify-center min-h-[400px]">
+//         <div className="text-center">
+//           <h2 className="text-lg sm:text-xl md:text-2xl font-semibold text-gray-900 mb-2">
+//             {t("no-checkout-session")}
+//           </h2>
+//           <p className="text-sm sm:text-base text-gray-600 mb-4">
+//             {t("complete-checkout-process")}
+//           </p>
+//           <button
+//             onClick={() => router.push("/home")}
+//             className="px-4 py-2 text-sm sm:text-base bg-gray-900 text-white rounded-md hover:bg-gray-800 transition-colors"
+//           >
+//             {t("go-home")}
+//           </button>
+//         </div>
+//       </div>
+//     </PageWrapper>
+//   );
+// }
 "use client";
 
-import Failed from "@/features/cart/checkout-dialog/failed";
-import Success from "@/features/cart/checkout-dialog/success";
-import { useSelector } from "react-redux";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
-import Loading from "@/components/loading";
-import PageWrapper from "@/components/page-wrapper";
 import { useTranslations } from "next-intl";
+
+import PageWrapper from "@/components/page-wrapper";
+import Loading from "@/components/loading";
+import Success from "@/features/cart/checkout-dialog/success";
+import Failed from "@/features/cart/checkout-dialog/failed";
+import { getCartProducts } from "@/store/slices/cart-slice";
 
 interface CartState {
   status: string | null;
@@ -24,31 +115,39 @@ interface RootState {
 export default function CheckoutStatusPage() {
   const router = useRouter();
   const t = useTranslations("order");
+  const dispatch = useDispatch();
   const { status, saveOrderData, isLoading } = useSelector(
     (state: RootState) => state.cart
   );
 
-  // Redirect to cart if no checkout status is available
-  useEffect(() => {
-    if (!status && !isLoading) {
-      router.push("/home");
-    }
-  }, [status, isLoading, router]);
+  const [initialized, setInitialized] = useState(false);
 
-  // Show loading while processing
-  if (isLoading) {
+  // ✅ Redirect to home if accessed without checkout data
+  useEffect(() => {
+    if (!isLoading && !status && !saveOrderData) {
+      router.replace("/home");
+    } else {
+      setInitialized(true);
+    }
+  }, [status, isLoading, saveOrderData, router]);
+
+  // ✅ If order is successful and has a payment redirect URL
+  useEffect(() => {
+    const success = saveOrderData?.data?.data?.success;
+    const url = saveOrderData?.data?.data?.url;
+    if (success && url) {
+      router.replace(url);
+    }
+  }, [saveOrderData, router]);
+
+  // ✅ Loading state
+  if (isLoading || !initialized) {
     return <Loading fullScreen={true} variant="spinner" size="xl" />;
   }
 
-  console.log(
-    saveOrderData?.data?.data?.success,
-    saveOrderData?.success,
-    "👌👌👌"
-  );
-  // (saveOrderData?.data?.data?.success == true &&
-  //   saveOrderData?.data?.data?.url == null) ||
-  console.log(saveOrderData , "✔️✔️✔️")
-  if (saveOrderData?.success == true) {
+  // ✅ Success (no redirect URL)
+  if (saveOrderData?.success === true && !saveOrderData?.data?.data?.url) {
+
     return (
       <PageWrapper>
         <Success data={saveOrderData} />
@@ -56,10 +155,8 @@ export default function CheckoutStatusPage() {
     );
   }
 
-  if (
-    saveOrderData?.data?.data?.success == false ||
-    !saveOrderData?.success == false
-  ) {
+  // ✅ Failed
+  if (saveOrderData?.success === false) {
     return (
       <PageWrapper>
         <Failed />
@@ -67,8 +164,7 @@ export default function CheckoutStatusPage() {
     );
   }
 
-  // Fallback render when status is null but not loading
-  // This handles the case where user navigates directly to this page
+  // ✅ Default / No active checkout session
   return (
     <PageWrapper>
       <div className="flex flex-col items-center justify-center min-h-[400px]">

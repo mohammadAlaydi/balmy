@@ -17,7 +17,10 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@reduxjs/toolkit/query";
+import { resetStatus } from "@/store/slices/cart-slice";
 
 interface ShippingFormProps {
   submitLabel?: string;
@@ -33,15 +36,22 @@ export default function ShippingForm({
   status,
   submitLabel,
 }: ShippingFormProps) {
+  const dispatch = useDispatch();
   const t = useTranslations("cart");
   const tButtons = useTranslations("buttons");
   const [paymentMethod, setPaymentMethod] = useState<string | null>(null);
+  const { saveOrderData } = useSelector((state: RootState) => state.cart);
 
+  useEffect(() => {
+    dispatch(resetStatus());
+  }, []);
   return (
     <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
       <Card
         className={`w-full xl:max-w-3xl mx-auto max-h-[80vh] overflow-y-auto shadow-none ${
-          status === "success" || status === "failed" ? "hidden" : ""
+          saveOrderData?.success === true || saveOrderData?.success == false
+            ? "hidden"
+            : ""
         }`}
       >
         <CardContent>
@@ -219,7 +229,7 @@ export default function ShippingForm({
                     labelText={t("choose-payment-method")}
                     options={[
                       {
-                        value: "cashPayment",
+                        value: "cashondelivery",
                         label: t("cash-on-delivery"),
                         action: () => setPaymentMethod("cashondelivery"),
                       },
@@ -286,7 +296,22 @@ export default function ShippingForm({
           </div>
 
           {/* Submit Button */}
-          <Button type="submit" disabled={isSubmitting} className="w-fit mt-6">
+          {/* <Button type="submit" disabled={isSubmitting} className="w-fit mt-6">
+            {isSubmitting ? (
+              <div className="flex items-center gap-2">
+                <PuffLoader color="#ffffff" size={20} />
+                <span>{tButtons("submitting")}</span>
+              </div>
+            ) : (
+              submitLabel || tButtons("submit")
+            )}
+          </Button> */}
+          <Button
+            type="submit"
+            disabled={isSubmitting}
+            className="w-fit mt-6"
+            formNoValidate
+          >
             {isSubmitting ? (
               <div className="flex items-center gap-2">
                 <PuffLoader color="#ffffff" size={20} />

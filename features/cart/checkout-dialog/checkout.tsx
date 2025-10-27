@@ -8,7 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Form } from "@/components/ui/form";
 import ShippingForm from "./shipping-form";
 import { useDispatch, useSelector } from "react-redux";
-import { saveOrder, getCartProducts } from "@/store/slices/cart-slice";
+import { saveOrder, getCartProducts, resetStatus } from "@/store/slices/cart-slice";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -52,7 +52,6 @@ export default function Checkout({
 
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-
   const { Stepper } = defineStepper(
     { id: "shipping", title: t("shipping") },
     { id: "payment", title: t("payment") }

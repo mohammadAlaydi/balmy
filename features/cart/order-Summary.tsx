@@ -16,7 +16,6 @@ import { useTranslations } from "next-intl";
 import Checkout from "./checkout-dialog/checkout";
 import { useDispatch, useSelector } from "react-redux";
 import { resetStatus } from "@/store/slices/cart-slice";
-import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 interface CouponFormData {
@@ -89,10 +88,6 @@ export default function OrderSummary({ data }: { data: any }) {
     } else {
       toast.error(t("invalid-coupon-code"));
     }
-  };
-  const handleTriggerClick = (e: React.MouseEvent) => {
-    // Allow the dialog to open regardless of authentication status
-    // Authentication will be handled within the checkout dialog
   };
 
   useEffect(() => {
@@ -191,18 +186,16 @@ export default function OrderSummary({ data }: { data: any }) {
         open={open}
         onOpenChange={(nextOpen) => {
           setOpen(nextOpen);
-          if (!nextOpen && status !== "success") {
-            dispatch(resetStatus());
-          }
         }}
       >
         <DialogTitle className="hidden"></DialogTitle>
         <DialogTrigger
-          className="w-full bg-black text-white hover:bg-gray-800 transition-colors py-2 cursor-pointer text-base font-semibold rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
-          onClick={handleTriggerClick}
-          disabled={isLoading || !data?.data?.items?.length}
+          onClick={() => {
+            dispatch(resetStatus());
+          }}
+          className="w-full bg-black text-white hover:bg-gray-800 transition-colors py-2 cursor-pointer text-base font-semibold rounded-md"
         >
-          {isLoading ? t("processing") : t("proceed-to-checkout")}
+          {t("proceed-to-checkout")}
         </DialogTrigger>
         <DialogContent>
           <Checkout total={total} data={data?.data?.items || []} />
