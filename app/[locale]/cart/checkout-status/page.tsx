@@ -146,23 +146,27 @@ export default function CheckoutStatusPage() {
   }
 
   // ✅ Success (no redirect URL)
-  if (saveOrderData?.success === true && !saveOrderData?.data?.data?.url) {
+  useLayoutEffect(()=> {
+    if (saveOrderData?.success === true && !saveOrderData?.data?.data?.url) {
 
-    return (
-      <PageWrapper>
-        <Success data={saveOrderData} />
-      </PageWrapper>
-    );
-  }
-
+      return (
+        <PageWrapper>
+          <Success data={saveOrderData} />
+        </PageWrapper>
+      );
+    }
   // ✅ Failed
-  if (saveOrderData?.success === false) {
-    return (
-      <PageWrapper>
-        <Failed />
-      </PageWrapper>
-    );
-  }
+
+    if (saveOrderData?.success === false) {
+      return (
+        <PageWrapper>
+          <Failed />
+        </PageWrapper>
+      );
+    }
+  }, [])
+
+  
 
   // ✅ Default / No active checkout session
   return (
