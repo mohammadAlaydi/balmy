@@ -11,7 +11,6 @@ import {
 import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
 import Link from "next/link";
-import { LEGAL_TERMS } from "@/static-data/static-data";
 import { useTranslations } from "next-intl";
 import { useDispatch, useSelector } from "react-redux";
 import { getHomeData } from "@/store/slices/home-slice";
@@ -102,7 +101,7 @@ const FooterAccordion = ({
   defaultValue,
 }: {
   title: string;
-  items: typeof LEGAL_TERMS;
+  items: any;
   defaultValue: string;
 }) => {
   return (
