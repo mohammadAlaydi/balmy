@@ -18,6 +18,8 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { useTranslations } from "next-intl";
 import AuthModal from "@/components/auth/auth-modal";
+import PageWrapper from "@/components/page-wrapper";
+import Success from "./success";
 
 export type CheckoutFormValues = z.infer<typeof formSchema>;
 
@@ -102,7 +104,7 @@ export default function Checkout({
       shipping_method: values.shipping_method,
     };
     await dispatch(saveOrder(checkoutPayload) as any);
-    dispatch(resetStatus())
+    dispatch(resetStatus());
   };
 
   useEffect(() => {
@@ -113,6 +115,17 @@ export default function Checkout({
         !saveOrderData?.data?.data?.url
       ) {
         router.push("/cart/checkout-status");
+        return (
+          <PageWrapper>
+            <Success data={saveOrderData} />
+          </PageWrapper>
+        );
+      } else {
+        const success = saveOrderData?.data?.data?.success;
+        const url = saveOrderData?.data?.data?.url;
+        if (success && url) {
+          router.replace(url);
+        }
       }
     }
   }, [saveOrderData, dispatch, router]);
