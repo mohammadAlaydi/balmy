@@ -329,11 +329,6 @@ export default function Checkout({
     (paymentMethod === "tabby" || paymentMethod === "cashondelivery")
   ) {
     router.push("/cart/checkout-status");
-    return (
-      <PageWrapper>
-        <Success data={saveOrderData} />
-      </PageWrapper>
-    );
   }
 
   return (
