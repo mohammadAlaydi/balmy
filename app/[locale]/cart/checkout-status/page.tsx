@@ -31,11 +31,11 @@ export default function CheckoutStatusPage() {
   );
 
   // ✅ Redirect to home if accessed without checkout data
-  useLayoutEffect(() => {
-    if (!isLoading && !status && !saveOrderData) {
-      router.replace("/home");
-    }
-  }, [status, isLoading, saveOrderData, router]);
+  // useLayoutEffect(() => {
+  //   if (!isLoading && !status && !saveOrderData) {
+  //     router.replace("/home");
+  //   }
+  // }, [status, isLoading, saveOrderData, router]);
 
   // ✅ If order is successful and has a payment redirect URL
   useLayoutEffect(() => {
