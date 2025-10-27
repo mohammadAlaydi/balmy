@@ -21,6 +21,7 @@ import AuthModal from "@/components/auth/auth-modal";
 import PageWrapper from "@/components/page-wrapper";
 import Success from "./success";
 import Failed from "./failed";
+import Loading from "@/components/loading";
 
 export type CheckoutFormValues = z.infer<typeof formSchema>;
 
@@ -56,6 +57,7 @@ export default function Checkout({
   const t = useTranslations("cart");
   const tButtons = useTranslations("buttons");
   const dispatch = useDispatch();
+  const [redirecting, setRedirecting] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const { Stepper } = defineStepper(
@@ -109,32 +111,38 @@ export default function Checkout({
     dispatch(resetStatus());
   };
 
-  const chooseSuccesPage = async () => {
-    if (saveOrderData?.success) {
-      await dispatch(getCartProducts() as any);
-      if (success && (!url || url == null)) {
-        router.push("/cart/checkout-status");
-        return (
-          <PageWrapper>
-            <Success data={saveOrderData} />
-          </PageWrapper>
-        );
-      } else if (saveOrderData?.success === false) {
-        return (
-          <PageWrapper>
-            <Failed />
-          </PageWrapper>
-        );
-      } else if (success && url) {
+    // ✅ Redirect if success URL exists
+    useEffect(() => {
+      if (success && url) {
+        setRedirecting(true);
         router.push(url);
       }
+    }, [success, url, router]);
+  
+    // ✅ Show loading during redirect
+    if (isLoading || redirecting) {
+      return <Loading fullScreen={true} variant="spinner" size="xl" />;
     }
-  };
-
-  useEffect(() => {
-    chooseSuccesPage();
-  }, [saveOrderData, dispatch, router]);
-
+  
+    // ✅ Show Success page if order successful and no redirect URL
+    if (saveOrderData?.success && !url) {
+      dispatch(getCartProducts() as any);
+      return (
+        <PageWrapper>
+          <Success data={saveOrderData} />
+        </PageWrapper>
+      );
+    }
+  
+    // ✅ Show Failed page if order failed
+    if (saveOrderData?.success === false) {
+      return (
+        <PageWrapper>
+          <Failed />
+        </PageWrapper>
+      );
+    }
+  
   return (
     <>
       {!isAuthenticated ? (
