@@ -18,7 +18,8 @@ interface RootState {
   cart: CartState;
 }
 
-export default function CheckoutStatusPage() {
+export default function page() {
+
   const router = useRouter();
   const t = useTranslations("order");
   const { isLoading } = useSelector(
