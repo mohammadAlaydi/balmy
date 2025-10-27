@@ -115,7 +115,7 @@ export default function Checkout({
     useEffect(() => {
       if (success && url) {
         setRedirecting(true);
-        router.push(url);
+        router.push(saveOrderData?.data?.data?.url);
       }
     }, [success, url, router]);
   
