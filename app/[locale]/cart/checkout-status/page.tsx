@@ -1,15 +1,11 @@
 "use client";
 
-import React, { useEffect, useLayoutEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React from "react";
+import { useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
-
 import PageWrapper from "@/components/page-wrapper";
 import Loading from "@/components/loading";
-import Success from "@/features/cart/checkout-dialog/success";
-import Failed from "@/features/cart/checkout-dialog/failed";
-import { getCartProducts } from "@/store/slices/cart-slice";
 
 interface CartState {
   status: string | null;
@@ -25,36 +21,13 @@ interface RootState {
 export default function CheckoutStatusPage() {
   const router = useRouter();
   const t = useTranslations("order");
-  const dispatch = useDispatch();
-  const { status, saveOrderData, isLoading } = useSelector(
+  const { isLoading } = useSelector(
     (state: RootState) => state.cart
   );
 
-  // ✅ Show loading spinner
   if (isLoading) {
     return <Loading fullScreen={true} variant="spinner" size="xl" />;
   }
-
-  // // ✅ Order success (no redirect URL)
-  // if (saveOrderData?.success === true && !saveOrderData?.data?.data?.url) {
-  //   dispatch(getCartProducts() as any);
-  //   return (
-  //     <PageWrapper>
-  //       <Success data={saveOrderData} isLoading={isLoading} />
-  //     </PageWrapper>
-  //   );
-  // }
-
-  // ✅ Order failed
-  if (saveOrderData?.success === false) {
-    return (
-      <PageWrapper>
-        <Failed />
-      </PageWrapper>
-    );
-  }
-
-  // ✅ Default / No active checkout session
   return (
     <PageWrapper>
       <div className="flex flex-col items-center justify-center min-h-[400px]">

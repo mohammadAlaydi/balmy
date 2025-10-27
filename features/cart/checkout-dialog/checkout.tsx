@@ -20,6 +20,7 @@ import { useTranslations } from "next-intl";
 import AuthModal from "@/components/auth/auth-modal";
 import PageWrapper from "@/components/page-wrapper";
 import Success from "./success";
+import Failed from "./failed";
 
 export type CheckoutFormValues = z.infer<typeof formSchema>;
 
@@ -55,7 +56,6 @@ export default function Checkout({
   const t = useTranslations("cart");
   const tButtons = useTranslations("buttons");
   const dispatch = useDispatch();
-
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const { Stepper } = defineStepper(
@@ -72,6 +72,8 @@ export default function Checkout({
   const { saveOrderData, isLoading, status } = useSelector(
     (state: any) => state.cart
   );
+  const success = saveOrderData?.data?.data?.success;
+  const url = saveOrderData?.data?.data?.url;
 
   const { isAuthenticated: authStatus, user } = useSelector(
     (state: any) => state.auth
@@ -107,27 +109,30 @@ export default function Checkout({
     dispatch(resetStatus());
   };
 
-  useEffect(() => {
+  const chooseSuccesPage = async () => {
     if (saveOrderData?.success) {
-      dispatch(getCartProducts() as any);
-      if (
-        saveOrderData?.data?.data?.url == null &&
-        !saveOrderData?.data?.data?.url
-      ) {
+      await dispatch(getCartProducts() as any);
+      if (success && (!url || url == null)) {
         router.push("/cart/checkout-status");
         return (
           <PageWrapper>
             <Success data={saveOrderData} />
           </PageWrapper>
         );
-      } else {
-        const success = saveOrderData?.data?.data?.success;
-        const url = saveOrderData?.data?.data?.url;
-        if (success && url) {
-          router.replace(url);
-        }
+      } else if (saveOrderData?.success === false) {
+        return (
+          <PageWrapper>
+            <Failed />
+          </PageWrapper>
+        );
+      } else if (success && url) {
+        router.replace(url);
       }
     }
+  };
+
+  useEffect(() => {
+    chooseSuccesPage();
   }, [saveOrderData, dispatch, router]);
 
   return (
