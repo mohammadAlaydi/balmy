@@ -311,24 +311,8 @@ export default function Checkout({
     if (success && redirectUrl) {
       setRedirecting(true);
       router.push(redirectUrl);
-    }else (
-      paymentMethod === "tabby" ||
-      (paymentMethod === "cashondelivery" && saveOrderData?.success)
-    ){
-      
     }
   }, [success, redirectUrl, router , paymentMethod , dispatch]);
-
-  // Dispatch getCartProducts when payment method changes
-  useEffect(() => {
-    dispatch(getCartProducts() as any);
-    if (
-      paymentMethod === "tabby" ||
-      (paymentMethod === "cashondelivery" && saveOrderData?.success)
-    ) {
-      router.push("/cart/checkout-status");
-    }
-  }, [paymentMethod, dispatch]);
 
   // Show Failed page if order failed
   if (saveOrderData?.success === false) {
@@ -344,6 +328,7 @@ export default function Checkout({
     saveOrderData?.success &&
     (paymentMethod === "tabby" || paymentMethod === "cashondelivery")
   ) {
+    router.push("/cart/checkout-status");
     return (
       <PageWrapper>
         <Success data={saveOrderData} />
