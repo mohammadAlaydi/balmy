@@ -56,7 +56,7 @@ export default function CheckoutStatusPage() {
     dispatch(getCartProducts() as any);
     return (
       <PageWrapper>
-        <Success data={saveOrderData} />
+        <Success data={saveOrderData} isLoading={isLoading} />
       </PageWrapper>
     );
   }

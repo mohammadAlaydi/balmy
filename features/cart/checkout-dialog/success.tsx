@@ -6,8 +6,9 @@ import { useDispatch } from "react-redux";
 import { resetStatus } from "@/store/slices/cart-slice";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
+import Loading from "@/components/loading";
 
-export default function Success({ data }: SuccessProps) {
+export default function Success({ data  , isLoading}: SuccessProps) {
   const t = useTranslations("order");
 
   // Handle different data structures
@@ -27,20 +28,23 @@ export default function Success({ data }: SuccessProps) {
     },
     { label: t("payment-title"), value: order.payment_title },
   ];
-
-  return (
-    <div className="flex flex-col items-center justify-center bg-white p-4 sm:p-6 md:p-8">
-      <div className="max-w-md w-full bg-white rounded-xl shadow-lg overflow-hidden">
-        <SuccessHeader />
-        <OrderInfoSection orderInfoItems={orderInfoItems} />
-        <ActionSection />
+  if (data?.data?.data?.success && data?.data?.data?.url && isLoading) {
+    return <Loading fullScreen={true} variant="spinner" size="xl" />;
+  }
+  if (data?.data?.success && data?.data?.data?.url == null) {
+    return (
+      <div className="flex flex-col items-center justify-center bg-white p-4 sm:p-6 md:p-8">
+        <div className="max-w-md w-full bg-white rounded-xl shadow-lg overflow-hidden">
+          <SuccessHeader />
+          <OrderInfoSection orderInfoItems={orderInfoItems} />
+          <ActionSection />
+        </div>
       </div>
-    </div>
-  );
+    );
+  }
 }
 
 function SuccessHeader() {
-
   const t = useTranslations("order");
 
   return (

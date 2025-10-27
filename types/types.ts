@@ -456,6 +456,7 @@ export interface SuccessData {
 
 export interface SuccessProps {
   data: SuccessData;
+  isLoading : boolean
 }
 export interface ShadowLayerProps {
   children: ReactNode;
