@@ -6,7 +6,6 @@ import { useDispatch } from "react-redux";
 import { resetStatus } from "@/store/slices/cart-slice";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { useEffect } from "react";
 
 export default function Success({ data }: SuccessProps) {
   const t = useTranslations("order");
@@ -41,6 +40,7 @@ export default function Success({ data }: SuccessProps) {
 }
 
 function SuccessHeader() {
+
   const t = useTranslations("order");
 
   return (

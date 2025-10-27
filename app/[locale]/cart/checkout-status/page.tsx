@@ -123,13 +123,13 @@ export default function CheckoutStatusPage() {
   const [initialized, setInitialized] = useState(false);
 
   // ✅ Redirect to home if accessed without checkout data
-  useEffect(() => {
-    if (!isLoading && !status && !saveOrderData) {
-      router.replace("/home");
-    } else {
-      setInitialized(true);
-    }
-  }, [status, isLoading, saveOrderData, router]);
+  // useEffect(() => {
+  //   if (!isLoading && !status && !saveOrderData) {
+  //     router.replace("/home");
+  //   } else {
+  //     setInitialized(true);
+  //   }
+  // }, [status, isLoading, saveOrderData, router]);
 
   // ✅ If order is successful and has a payment redirect URL
   useLayoutEffect(() => {
@@ -141,7 +141,7 @@ export default function CheckoutStatusPage() {
   }, [saveOrderData, router]);
 
   // ✅ Loading state
-  if (isLoading || !initialized) {
+  if (isLoading) {
     return <Loading fullScreen={true} variant="spinner" size="xl" />;
   }
 
