@@ -111,38 +111,37 @@ export default function Checkout({
     dispatch(resetStatus());
   };
 
-    // ✅ Redirect if success URL exists
-    useEffect(() => {
-      if (success && url) {
-        setRedirecting(true);
-        router.push(saveOrderData?.data?.data?.url);
-      }
-    }, [success, url, router]);
-  
-    // ✅ Show loading during redirect
-    if (isLoading || redirecting) {
-      return <Loading fullScreen={true} variant="spinner" size="xl" />;
+  // Redirect immediately if URL exists
+  useEffect(() => {
+    if (success && saveOrderData?.data?.data?.url) {
+      setRedirecting(true);
+      router.push(saveOrderData?.data?.data?.url);
     }
-  
-    // ✅ Show Success page if order successful and no redirect URL
-    if (saveOrderData?.success && !url) {
-      dispatch(getCartProducts() as any);
-      return (
-        <PageWrapper>
-          <Success data={saveOrderData} />
-        </PageWrapper>
-      );
-    }
-  
-    // ✅ Show Failed page if order failed
-    if (saveOrderData?.success === false) {
-      return (
-        <PageWrapper>
-          <Failed />
-        </PageWrapper>
-      );
-    }
-  
+  }, [success, saveOrderData?.data?.data?.url, router]);
+
+  // Show loading during redirect or while saving
+  if (isLoading || redirecting) {
+    return <Loading fullScreen={true} variant="spinner" size="xl" />;
+  }
+
+  // Show Success page only if order succeeded AND no redirect URL
+  if (saveOrderData?.success && (!saveOrderData?.data?.data?.url || saveOrderData?.data?.data?.url == null)) {
+    dispatch(getCartProducts() as any);
+    return (
+      <PageWrapper>
+        <Success data={saveOrderData} />
+      </PageWrapper>
+    );
+  }
+
+  // Show Failed page if order failed
+  if (saveOrderData?.success === false) {
+    return (
+      <PageWrapper>
+        <Failed />
+      </PageWrapper>
+    );
+  }
   return (
     <>
       {!isAuthenticated ? (
