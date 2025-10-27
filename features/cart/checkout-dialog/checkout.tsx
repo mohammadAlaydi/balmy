@@ -112,7 +112,9 @@ export default function Checkout({
 
     if (isComplete) {
       dispatch(getCartProducts() as any);
-      router.push("/cart/checkout-status");
+      if(saveOrderData?.success === true && saveOrderData?.data?.data?.url == null){
+        router.push("/cart/checkout-status");
+      }
     }
   }, [status, saveOrderData, dispatch, router]);
 

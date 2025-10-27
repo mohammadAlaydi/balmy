@@ -22,13 +22,6 @@ interface CouponFormData {
   coupon: string;
 }
 
-interface CartItem {
-  id: number;
-  name: string;
-  price: number;
-  quantity: number;
-}
-
 export default function OrderSummary({ data }: { data: any }) {
   const t = useTranslations("cart");
   const dispatch = useDispatch();
