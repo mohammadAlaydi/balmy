@@ -4,12 +4,17 @@ import Image from "next/image";
 import { FaPlus } from "react-icons/fa";
 import { TiMinus } from "react-icons/ti";
 import DeleteProductComponent from "@/components/delete-product-component";
-import { addToCart } from "@/store/slices/cart-slice";
+import {
+  addToCart,
+  getCartProducts,
+  removeFromCart,
+} from "@/store/slices/cart-slice";
 import { useAppDispatch } from "@/store/hooks";
 import ReactStars from "./react-stars";
 import { useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import { useState, useMemo } from "react";
+import { useTranslations } from "next-intl";
 
 interface CartProductProps {
   product: any;
@@ -26,6 +31,8 @@ export default function CartProduct({
   const { increaseOrDecreaseResponse } = useSelector(
     (state: any) => state.cart
   );
+  const tToast = useTranslations("toast");
+  const [isOpen, setIsOpen] = useState(false);
 
   const [loadingProductId, setLoadingProductId] = useState<number | null>(null);
   const isLoading = loadingProductId === product?.id;
@@ -54,7 +61,18 @@ export default function CartProduct({
       setLoadingProductId(null);
     }
   };
-
+  const handleDelete = async (productId: number | string) => {
+    try {
+      await dispatch(removeFromCart({ productId: Number(productId) })).unwrap();
+      await dispatch(getCartProducts());
+      toast.success(tToast("product-deleted"));
+      if (status === "success") {
+        setIsOpen(false);
+      }
+    } catch (error) {
+      console.error("Failed to remove product from cart:", error);
+    }
+  };
   return (
     <div className="flex flex-col gap-3 w-full rounded-md border border-gray-200 p-3 sm:p-4">
       {/* Product Info */}
@@ -104,7 +122,11 @@ export default function CartProduct({
 
       {/* Actions */}
       <div className="flex gap-3 w-full justify-between items-center mt-1 sm:mt-2">
-        <DeleteProductComponent productId={deletedProductId} />
+        <DeleteProductComponent
+          isOpen={isOpen}
+          setIsOpen={setIsOpen}
+          action={() => handleDelete(deletedProductId)}
+        />
 
         {/* Increment / Decrement */}
         <div className="flex items-center gap-2 sm:gap-3">

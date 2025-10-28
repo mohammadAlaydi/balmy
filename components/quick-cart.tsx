@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getCartProducts,
@@ -12,10 +12,13 @@ import SectionTitle from "./section-title";
 import Loading from "./loading";
 import CartProduct from "./cart-product";
 import { MdDeleteSweep } from "react-icons/md";
+import DeleteProductComponent from "./delete-product-component";
 
 export default function QuickCart() {
   const t = useTranslations("cart");
   const dispatch = useDispatch();
+  const [isOpen, setIsOpen] = useState(false);
+
   const { data, isLoading, status, cartStatus } = useSelector(
     (state: any) => state.cart
   );
@@ -41,7 +44,6 @@ export default function QuickCart() {
   //   return <Loading fullScreen={true} variant="spinner" size="xl" />;
   // }
   return (
-   
     <div className="flex flex-col gap-4 items-center justify-between min-h-0 h-full">
       <div className="flex flex-col gap-4 w-full flex-1 min-h-0">
         <SectionTitle
@@ -70,16 +72,11 @@ export default function QuickCart() {
             ))}
         </div>
       </div>
-      
+
       {/* Fixed bottom section for actions */}
       <div className="flex flex-col gap-3 w-full flex-shrink-0">
         {data?.data?.items?.length > 0 && (
-          <div className="flex justify-start w-full cursor-pointer">
-            <MdDeleteSweep
-              className="text-red-500 text-3xl"
-              onClick={() => dispatch(removeAllProductsFromCart() as any)}
-            />
-          </div>
+         <DeleteProductComponent setIsOpen={setIsOpen} isOpen={isOpen} action={() => dispatch(removeAllProductsFromCart() as any)} text="مسح جميع المنتجات" />
         )}
         {data?.data?.items?.length > 0 && (
           <div className="flex gap-2 justify-center">

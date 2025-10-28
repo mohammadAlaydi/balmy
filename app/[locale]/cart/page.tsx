@@ -3,26 +3,26 @@
 import CartProduct from "@/components/cart-product";
 import OrderSummary from "@/features/cart/order-Summary";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
   getCartProducts,
   removeAllProductsFromCart,
 } from "@/store/slices/cart-slice";
-import { MdDeleteSweep } from "react-icons/md";
 import Loading from "@/components/loading";
 import { useTranslations } from "next-intl";
 import PageWrapper from "@/components/page-wrapper";
 import { useRouter } from "next/navigation";
 import { resetStatus } from "@/store/slices/cart-slice";
+import DeleteProductComponent from "@/components/delete-product-component";
 export default function page() {
-  
   const t = useTranslations("cart");
   const dispatch = useDispatch();
   const router = useRouter();
   const { data, isLoading } = useSelector((state: any) => state.cart);
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
-    router.refresh()
+    router.refresh();
     resetStatus();
     if (!isLoading && !data) {
       dispatch(getCartProducts() as any);
@@ -39,7 +39,7 @@ export default function page() {
         <div className="grid grid-cols-12 xl:max-w-7xl mx-auto gap-5 justify-between">
           <OrderSummary data={data} />
           <div
-            className={`cart-poroduct col-span-12 lg:col-span-7 xl:col-span-8 flex flex-col gap-3 overflow-y-auto items-end h-full`}
+            className={`cart-poroduct col-span-12 lg:col-span-7 xl:col-span-8 flex flex-col gap-3 items-end h-full`}
           >
             {data?.data?.items &&
               data.data.items.length > 0 &&
@@ -54,10 +54,12 @@ export default function page() {
                     />
                   )
               )}
-            <div className="flex justify-end w-full cursor-pointer">
-              <MdDeleteSweep
-                className="text-red-500 text-3xl"
-                onClick={() => dispatch(removeAllProductsFromCart() as any)}
+            <div className="flex w-full cursor-pointer">
+              <DeleteProductComponent
+                setIsOpen={setIsOpen}
+                isOpen={isOpen}
+                action={() => dispatch(removeAllProductsFromCart() as any)}
+                text="مسح جميع المنتجات"
               />
             </div>
           </div>

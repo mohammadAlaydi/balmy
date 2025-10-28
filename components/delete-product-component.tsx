@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import { Button } from "./ui/button";
 import {
   Dialog,
@@ -10,43 +10,29 @@ import {
   DialogTrigger,
 } from "./ui/dialog";
 import { MdDeleteSweep } from "react-icons/md";
-import { useAppDispatch } from "@/store/hooks";
-import { getCartProducts, removeFromCart } from "@/store/slices/cart-slice";
 import LoadingSpinner from "./ui/loading-spinner";
 import { useSelector } from "react-redux";
 import { useTranslations } from "next-intl";
-import toast from "react-hot-toast";
 
 export default function DeleteProductComponent({
-  productId,
+  action,
+  setIsOpen,
+  isOpen,
+  text,
 }: {
-  productId: number | string;
+  action: () => void;
+  setIsOpen: any;
+  isOpen: boolean;
+  text?: string;
 }) {
-
   const t = useTranslations("buttons");
-  const tToast = useTranslations("toast");
-  const dispatch = useAppDispatch();
   const isLoading = useSelector((state: any) => state.cart.isLoading);
-  const status = useSelector((state: any) => state.cart.status);
-  const [isOpen, setIsOpen] = useState(false);
 
-  const handleDelete = async (productId: number | string) => {
-    try {
-      await dispatch(removeFromCart({ productId: Number(productId) })).unwrap();
-      await dispatch(getCartProducts());
-      toast.success(tToast("product-deleted"));
-      if (status === "success") {
-        setIsOpen(false);
-      }
-    } catch (error) {
-      console.error("Failed to remove product from cart:", error);
-    }
-  };
-  
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger>
+      <DialogTrigger className="flex items-center gap-2">
         <MdDeleteSweep className="text-2xl cursor-pointer text-red-500" />
+        {text && <p className="font-[550]">{text}</p>}
       </DialogTrigger>
       <DialogContent
         className="flex flex-col gap-8"
@@ -58,7 +44,7 @@ export default function DeleteProductComponent({
           <DialogClose asChild>
             <Button variant="outline">{t("cancel")}</Button>
           </DialogClose>
-          <Button type="submit" onClick={() => handleDelete(productId)}>
+          <Button type="submit" onClick={action}>
             {isLoading ? <LoadingSpinner size="sm" /> : t("delete")}
           </Button>
         </DialogFooter>
