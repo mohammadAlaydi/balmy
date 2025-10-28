@@ -312,7 +312,7 @@ export default function Checkout({
       setRedirecting(true);
       router.push(redirectUrl);
     }
-  }, [success, redirectUrl, router , paymentMethod , dispatch]);
+  }, [success, redirectUrl, router, paymentMethod, dispatch]);
 
   // Show Failed page if order failed
   if (saveOrderData?.success === false) {
