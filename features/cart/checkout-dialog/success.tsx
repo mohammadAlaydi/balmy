@@ -6,8 +6,7 @@ import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { resetStatus } from "@/store/slices/cart-slice";
 
-export default function Success({data} : any) {
-
+export default function Success({ data }: any) {
   const t = useTranslations("order");
 
   const order = data?.data?.data?.order;
@@ -18,7 +17,8 @@ export default function Success({data} : any) {
     { label: t("shipping-method"), value: order?.shipping_method },
     {
       label: t("shipping-amount"),
-      value: order?.shipping_amount + " " + (order?.channel_currency_code || ""),
+      value:
+        order?.shipping_amount + " " + (order?.channel_currency_code || ""),
     },
     { label: t("payment-title"), value: order?.payment_title },
   ];
@@ -35,7 +35,6 @@ export default function Success({data} : any) {
 }
 
 function SuccessHeader() {
-
   const t = useTranslations("order");
 
   return (
@@ -73,7 +72,6 @@ function OrderInfoSection({ orderInfoItems }: OrderInfoSectionProps) {
 }
 
 function ActionSection() {
-
   const dispatch = useDispatch();
   const router = useRouter();
   const t = useTranslations("order");
@@ -94,12 +92,6 @@ function ActionSection() {
         className="inline-flex h-10 items-center justify-center rounded-md bg-gray-900 px-6 text-xs sm:text-sm font-medium text-white shadow hover:bg-gray-800 transition-colors"
       >
         {t("go-home")}
-      </button>
-      <button
-        onClick={handleClose}
-        className="inline-flex h-10 items-center justify-center rounded-md bg-gray-200 px-6 text-xs sm:text-sm font-medium text-gray-700 shadow hover:bg-gray-300 transition-colors"
-      >
-        {t("close-dialog")}
       </button>
     </div>
   );
