@@ -28,11 +28,10 @@ export function FavouriteButton({
   showText = false,
   FaRegHeartColor,
 }: FavouriteButtonProps) {
-
   const { isFavourite, addToFavourites, removeFromFavourites } =
     useFavourites();
   const targetId = (product?.id ?? product?.product_id) as number;
-  console.log(targetId , "✔️✔️✔️")
+  console.log(targetId, "✔️✔️✔️");
   const normalizedProduct = product?.id
     ? product
     : { ...product, id: targetId };
@@ -46,7 +45,7 @@ export function FavouriteButton({
 
   const handleToggle = async (e: React.MouseEvent) => {
     console.log("✅ normalizedProduct", normalizedProduct);
-console.log("✅ targetId", targetId);
+    console.log("✅ targetId", targetId);
 
     e.preventDefault();
     e.stopPropagation();
@@ -116,8 +115,10 @@ console.log("✅ targetId", targetId);
           <FaHeart
             className={cn(
               iconSizes[size],
-              "transition-all duration-200 text-red-500"
+              "transition-all duration-200 text-red-500 "
             )}
+            size={15}
+            color="#fff"
           />
         ) : (
           <FaRegHeart

@@ -114,7 +114,9 @@ svg {
 .text-white {
   color: white !important;
 }
-
+.rating-color {
+  color: #fead20 !important;
+}
 /* Custom color utilities */
 
 /* RTL and LTR text direction utilities */
@@ -291,15 +293,15 @@ body {
   .swiper-pagination-bullet {
   margin-inline: 10px !important;
 }
-.swiper-button-prev:after, .swiper-rtl .swiper-button-next:after {
+.swiper-button-prev:after,
+.swiper-rtl .swiper-button-next:after {
   font-size: 18px !important;
   color: black !important;
   width: 40px;
   height: 40px;
-  border-radius: 4px ;
+  border-radius: 4px;
   background-color: rgba(211, 211, 211, 0.85);
   display: flex;
   justify-content: center;
   align-items: center;
-
 }

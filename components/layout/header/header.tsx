@@ -108,7 +108,14 @@ const ActionIcons = ({
         dispatch(getCartProducts() as any);
       }
     }
-  }, [fetchFavourites, favouritesCount, cartCount, isAuthenticated, user, dispatch]);
+  }, [
+    fetchFavourites,
+    favouritesCount,
+    cartCount,
+    isAuthenticated,
+    user,
+    dispatch,
+  ]);
 
   return (
     <>
@@ -201,7 +208,11 @@ const ActionIcons = ({
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-      <Link href={`/${currentLocale}/user-profile`} className="block lg:hidden" prefetch={true}>
+      <Link
+        href={`/${currentLocale}/user-profile`}
+        className="block lg:hidden"
+        prefetch={true}
+      >
         <Image
           src="/assets/images/user.svg"
           alt="user"
@@ -214,7 +225,13 @@ const ActionIcons = ({
   );
 };
 
-const NavigationLinks = ({ navbarCategories, currentLocale }: { navbarCategories: any; currentLocale: string }) => {
+const NavigationLinks = ({
+  navbarCategories,
+  currentLocale,
+}: {
+  navbarCategories: any;
+  currentLocale: string;
+}) => {
   const t = useTranslations("navigation");
   // Limit to first 5 categories
   const limitedCategories = navbarCategories?.slice(0, 5) || [];
@@ -226,14 +243,22 @@ const NavigationLinks = ({ navbarCategories, currentLocale }: { navbarCategories
           limitedCategories.map((link: any, linkIndex: number) => {
             const hasChildren = link?.children && link?.children?.length > 0;
             return hasChildren ? (
-              <NavigationMenuItem key={link?.id ?? link?.slug ?? `cat-${linkIndex}`}>
+              <NavigationMenuItem
+                key={link?.id ?? link?.slug ?? `cat-${linkIndex}`}
+              >
                 <NavigationMenuTrigger className="cursor-pointer hover:bg-transparent hover:text-red-color">
                   {link?.name}
                 </NavigationMenuTrigger>
                 <NavigationMenuContent className="overflow-hidden min-w-[100px]">
                   <ul className="grid gap-1 p-1">
                     {link?.children?.map((nested: any, index: number) => (
-                      <li key={nested?.id ?? nested?.slug ?? `nested-${link?.id ?? linkIndex}-${index}`}>
+                      <li
+                        key={
+                          nested?.id ??
+                          nested?.slug ??
+                          `nested-${link?.id ?? linkIndex}-${index}`
+                        }
+                      >
                         <NavigationMenuLink
                           asChild
                           className="cursor-pointer bg-transparent hover:bg-accent hover:text-accent-foreground"
@@ -256,7 +281,9 @@ const NavigationLinks = ({ navbarCategories, currentLocale }: { navbarCategories
                 </NavigationMenuContent>
               </NavigationMenuItem>
             ) : (
-              <NavigationMenuItem key={link?.id ?? link?.slug ?? `cat-${linkIndex}`}>
+              <NavigationMenuItem
+                key={link?.id ?? link?.slug ?? `cat-${linkIndex}`}
+              >
                 <NavigationMenuLink asChild>
                   <Link
                     href={`/${currentLocale}/category/${link?.slug}/${link?.id}`}
@@ -330,7 +357,7 @@ const MobileMenu = ({
 
         {/* ✅ Mobile Navigation Links */}
         <Accordion className="w-full flex-1 overflow-y-auto">
-          { navbarCategories?.map((category: any, index: number) => (
+          {navbarCategories?.map((category: any, index: number) => (
             <AccordionItem key={category.id} value={`item-${index}`}>
               {category.children && category.children.length > 0 ? (
                 <>
@@ -379,7 +406,11 @@ const MobileMenu = ({
               />
             </Link>
             <UserMenu isMobile={true} />
-            <Link href={`/${currentLocale}/favourite`} prefetch={true} className="relative">
+            <Link
+              href={`/${currentLocale}/favourite`}
+              prefetch={true}
+              className="relative"
+            >
               <Image
                 src="/assets/images/heart.svg"
                 alt="heart"
@@ -464,7 +495,9 @@ export default function Header() {
   const dispatch = useDispatch();
   const categories = useSelector((state: any) => state.categories);
   const loading = useSelector((state: any) => state.categories.loading);
-  const { data, loading: homeLoading } = useSelector((state: any) => state.home);   
+  const { data, loading: homeLoading } = useSelector(
+    (state: any) => state.home
+  );
   const pathname = usePathname();
   const currentLocale = pathname.split("/")[1];
   useEffect(() => {
@@ -492,9 +525,12 @@ export default function Header() {
   }
   return (
     <div className="w-full relative z-50">
-      <TopBar data={data}  />
+      <TopBar data={data} />
       <div className="flex justify-between items-center gap-3 py-5 px-3 lg:px-5 scroll-shadow:shadow-[0px_6px_20px_rgba(149,157,165,0.1)] transition-shadow duration-200 bg-white relative z-50">
-        <ActionIcons languageItems={languageItems} currentLocale={currentLocale} />
+        <ActionIcons
+          languageItems={languageItems}
+          currentLocale={currentLocale}
+        />
         <NavigationLinks
           navbarCategories={(categories as any)?.categories?.categories || []}
           currentLocale={currentLocale}

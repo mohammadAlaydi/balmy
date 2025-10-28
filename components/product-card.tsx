@@ -8,8 +8,7 @@ import { useTranslations } from "next-intl";
 import { motion } from "framer-motion";
 import toast from "react-hot-toast";
 import { PuffLoader } from "react-spinners";
-import { MdOutlineShoppingCart } from "react-icons/md";
-import { FaCartArrowDown, FaRegEye } from "react-icons/fa";
+import { FaRegEye } from "react-icons/fa";
 import { Badge } from "./ui/badge";
 import { Card, CardContent, CardHeader } from "./ui/card";
 import { Button } from "./ui/button";
@@ -25,10 +24,12 @@ import { getProductDetails } from "@/store/slices/product-details-slice";
 import { ProductCardProps } from "@/types/types";
 import { getCurrentMainImage, getHoverImage } from "@/static-data/static-data";
 import { useFavourites } from "@/hooks/use-favourites";
+import { FaRegStar } from "react-icons/fa";
+import { FaStar } from "react-icons/fa";
+import { FaPlus } from "react-icons/fa6";
 
 // Helper functions
 const calculateProductPrice = (product: any): number => {
-
   const variants = Array.isArray(product?.variants) ? product.variants : [];
   const basePrice = Number.isFinite(Number(product?.price))
     ? Number(product?.price)
@@ -193,6 +194,7 @@ export default function ProductCard({
       setIsMovingToCart(false);
     }
   };
+
   return (
     <Card
       onMouseEnter={() => isInStock && setIsHovered(true)}
@@ -221,7 +223,7 @@ export default function ProductCard({
                   onClick={handleViewProduct}
                   className="text-3xl cursor-pointer text-black hidden md:flex opacity-80 hover:opacity-100"
                 >
-                  <FaRegEye className="text-xl" />
+                  <FaRegEye />
                 </Button>
               }
             >
@@ -243,7 +245,7 @@ export default function ProductCard({
           height={224}
           src={baseImageUrl}
           alt={`${product?.name || t("product")} - ${chosenVariantSku || ""}`}
-          className="rounded-t-lg w-full h-full aspect-square transition-all duration-300"
+          className="rounded-t-lg w-full h-full aspect-square transition-all duration-500 hover:scale-[1.05] cursor-pointer"
           onClick={() =>
             router.push(
               `/product/${
@@ -262,40 +264,34 @@ export default function ProductCard({
             alt={`${product?.name || t("product")} ${t("variant-image")} - ${
               product?.sku || ""
             }`}
-            className="absolute inset-0 rounded-t-lg w-full h-full aspect-square object-cover transition-all duration-300 opacity-0 group-hover:opacity-100"
-            onClick={() => router.push(
-              `/product/${
-                wishlistProductId ? wishlistProductId : product?.product_id
-              }`)}
+            className="absolute inset-0 rounded-t-lg w-full h-full aspect-square object-cover transition-all duration-500 opacity-0 group-hover:opacity-100 hover:scale-[1.05] cursor-pointer"
+            onClick={() =>
+              router.push(
+                `/product/${
+                  wishlistProductId ? wishlistProductId : product?.product_id
+                }`
+              )
+            }
           />
         )}
 
         {/* Add to Cart Button */}
-        <motion.div
-          initial={{ y: 10, opacity: 0 }}
-          animate={isHovered ? { y: 0, opacity: 1 } : { y: 10, opacity: 0 }}
-          transition={{ duration: 0.3, ease: "easeOut", delay: 0.1 }}
-          className="absolute bottom-1 md:bottom-3 left-[5%] w-[90%] mx-auto"
+        <Button
+          onClick={wishlistId ? handleMoveToCart : handleAddToCart}
+          disabled={isAdding || isMovingToCart || !isInStock}
+          className="absolute right-2 bottom-2  hover:bg-black/85 bg-black/85 text-white w-[30px] h-[30px] md:w-[40px] md:h-[40px] p-0 rounded-full shadow-lg flex items-center justify-center"
         >
-          <Button
-            onClick={wishlistId ? handleMoveToCart : handleAddToCart}
-            disabled={isAdding || isMovingToCart || !isInStock}
-            className="bg-transparent hover:bg-transparent md:hover:bg-black/85 md:bg-black/85 text-white w-full rounded-sm"
-          >
-            {isAdding || isMovingToCart ? (
-              <PuffLoader size={30} />
-            ) : (
-              <div className="flex items-center gap-2">
-                <span className="hidden md:flex">{t("add-to-cart")}</span>
-                <FaCartArrowDown className="text-3xl text-black md:text-white flex md:hidden" />
-                <MdOutlineShoppingCart className="text-xl text-white hidden md:flex" />
-              </div>
-            )}
-          </Button>
-        </motion.div>
+          {isAdding || isMovingToCart ? (
+            <div className="flex items-center justify-center w-full h-full">
+              <PuffLoader size={15} color="#fff" />
+            </div>
+          ) : (
+            <FaPlus size={10} />
+          )}
+        </Button>
       </CardHeader>
 
-      <CardContent className="px-2 pt-4 flex flex-col gap-2 justify-start">
+      <CardContent className="px-2 pt-4 flex flex-col gap-4 justify-start">
         {/* Product Name and SKU */}
         <div className="flex justify-between gap-1">
           <p className="font-[600] md:font-[650] md:text-sm text-xs overflow-hidden text-ellipsis whitespace-nowrap">
@@ -309,9 +305,6 @@ export default function ProductCard({
           </p>
         </div>
 
-        {/* Rating */}
-        <ReactStars edit={false} rating={product?.reviews?.total || 0} />
-
         {/* Variants and Price */}
         <div className="flex justify-between gap-1 items-center">
           {/* Variant Images */}
@@ -320,7 +313,7 @@ export default function ProductCard({
               {product.variants
                 .slice(0, 3)
                 .map((variant: any, index: number) => (
-                  <div key={variant?.product_id} className="relative mb-3">
+                  <div key={variant?.product_id} className="relative">
                     <Image
                       width={32}
                       height={32}
@@ -355,7 +348,7 @@ export default function ProductCard({
             </div>
           ) : (
             <div className="justify-between items-center gap-3 w-full hidden md:flex">
-              <div className="relative mb-3">
+              <div className="relative">
                 <Image
                   width={32}
                   height={32}
@@ -372,12 +365,26 @@ export default function ProductCard({
               </div>
             </div>
           )}
+          {/* Rating */}
 
-          {/* Price */}
-          <p className="text-xs md:text-sm mb-3 text-nowrap hidden md:flex items-center gap-2">
-            {productPrice.toFixed(2)} <i className="icon-rial"></i>
-          </p>
+          <div className="flex items-center gap-1 bg-gray-100 px-2 rounded-md w-fit mb-2 md:mb-0 shadow-md">
+            <Badge className="bg-transparent text-gray-500 p-0 font-[550]">
+              (810)
+            </Badge>{" "}
+            {product?.reviews?.total == 0 ? (
+              <FaRegStar className="rating-color" />
+            ) : (
+              <FaStar className="rating-color" />
+            )}
+            <Badge className="bg-transparent text-gray-500 p-0 text-base font-[550]">
+              {product?.reviews?.total}
+            </Badge>{" "}
+          </div>
         </div>
+        {/* Price */}
+        <p className="text-sm md:text-base mb-3 text-nowrap hidden md:flex items-center gap-2 font-[650]">
+          {productPrice.toFixed(2)} <i className="icon-rial"></i>
+        </p>
       </CardContent>
 
       {/* Authentication Modal */}
