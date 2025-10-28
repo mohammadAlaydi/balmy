@@ -48,11 +48,7 @@ export default function ShippingForm({
   return (
     <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
       <Card
-        className={`w-full xl:max-w-3xl mx-auto max-h-[80vh] overflow-y-auto shadow-none ${
-          saveOrderData?.success === true || saveOrderData?.success == false
-            ? "hidden"
-            : ""
-        }`}
+        className={`w-full xl:max-w-3xl mx-auto max-h-[80vh] overflow-y-auto shadow-none`}
       >
         <CardContent>
           {/* Billing Information */}

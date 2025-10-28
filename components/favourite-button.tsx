@@ -28,9 +28,11 @@ export function FavouriteButton({
   showText = false,
   FaRegHeartColor,
 }: FavouriteButtonProps) {
+
   const { isFavourite, addToFavourites, removeFromFavourites } =
     useFavourites();
   const targetId = (product?.id ?? product?.product_id) as number;
+  console.log(targetId , "✔️✔️✔️")
   const normalizedProduct = product?.id
     ? product
     : { ...product, id: targetId };
@@ -43,6 +45,9 @@ export function FavouriteButton({
   const tButtons = useTranslations("buttons");
 
   const handleToggle = async (e: React.MouseEvent) => {
+    console.log("✅ normalizedProduct", normalizedProduct);
+console.log("✅ targetId", targetId);
+
     e.preventDefault();
     e.stopPropagation();
 

@@ -263,7 +263,10 @@ export default function ProductCard({
               product?.sku || ""
             }`}
             className="absolute inset-0 rounded-t-lg w-full h-full aspect-square object-cover transition-all duration-300 opacity-0 group-hover:opacity-100"
-            onClick={() => router.push(`/product/${product?.product_id}`)}
+            onClick={() => router.push(
+              `/product/${
+                wishlistProductId ? wishlistProductId : product?.product_id
+              }`)}
           />
         )}
 

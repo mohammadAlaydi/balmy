@@ -32,8 +32,15 @@ export const addToFavourites = createAsyncThunk(
   "favourites/add",
   async (product: Product, { rejectWithValue, dispatch }) => {
     try {
-      const response = await makeAuthenticatedRequest(
-        `/api/wishlist/${product.product_id}`,
+const productId = product.product_id ?? product.id;
+
+if (!productId) {
+  throw new Error("Missing product_id or id in product");
+}
+
+const response = await makeAuthenticatedRequest(
+  `/api/wishlist/${productId}`,
+
         {
           method: "POST",
           headers: {
