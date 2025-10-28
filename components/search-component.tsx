@@ -13,19 +13,21 @@ import Loading from "./loading";
 import { IoClose } from "react-icons/io5";
 
 const SearchComponent = ({ maxHeight }: { maxHeight?: string }) => {
+
   const t = useTranslations("search");
-  const [categoryIndex, setCategoryIndex] = useState<number | null>(null);
+  const dispatch = useDispatch();
   const { products, isLoading, error } = useSelector(
     (state: any) => state.searchProducts
   );
   const categories = useSelector((state: any) => state.categories);
   const loading = useSelector((state: any) => state.categories.loading);
+ 
   const [search, setSearch] = useState("");
   const [searchCategory, setSearchCategory] = useState("");
   const [filteredProducts, setFilteredProducts] = useState(
     products?.data || []
   );
-  const dispatch = useDispatch();
+  const [categoryIndex, setCategoryIndex] = useState<number | null>(null);
 
   useEffect(() => {
     dispatch(getSearchProducts() as any);
@@ -60,6 +62,7 @@ const SearchComponent = ({ maxHeight }: { maxHeight?: string }) => {
 
     setFilteredProducts(filtered);
   }, [search, products, searchCategory]);
+  
   if (isLoading || loading) {
     return (
       <div className="min-h-[40vh]">

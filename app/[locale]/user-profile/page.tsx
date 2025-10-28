@@ -304,7 +304,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import LabelAndInput from "@/components/label-and-input";
+import LabelAndInput from "@/components/form-components/label-and-input";
 import toast from "react-hot-toast";
 import { ProtectedRoute } from "@/components/auth/protected-route";
 import { Plus } from "lucide-react";

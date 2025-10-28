@@ -13,10 +13,10 @@ import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { useTranslations } from "next-intl";
-import Checkout from "./checkout-dialog/checkout";
 import { useDispatch, useSelector } from "react-redux";
 import { resetStatus } from "@/store/slices/cart-slice";
 import { useEffect, useState } from "react";
+import Checkout from "./checkout";
 
 interface CouponFormData {
   coupon: string;

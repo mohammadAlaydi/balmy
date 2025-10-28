@@ -257,7 +257,7 @@ export default function Checkout({
     defaultValues: defaultFormValues,
   });
 
-  const { watch, handleSubmit } = form;
+  const { watch, handleSubmit , formState} = form;
 
   const { saveOrderData, isLoading, status } = useSelector(
     (state: any) => state.cart
@@ -353,7 +353,7 @@ export default function Checkout({
           >
             <ShippingForm
               form={form}
-              isSubmitting={isLoading}
+              isSubmitting={formState?.isSubmitting || false}
               status={status}
               data={saveOrderData || null}
             />

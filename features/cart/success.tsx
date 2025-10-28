@@ -1,7 +1,7 @@
 "use client";
 
 import { FaCheck } from "react-icons/fa";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { resetStatus } from "@/store/slices/cart-slice";
@@ -79,10 +79,6 @@ function ActionSection() {
   const handleGoHome = () => {
     dispatch(resetStatus());
     router.push("/home");
-  };
-
-  const handleClose = () => {
-    dispatch(resetStatus());
   };
 
   return (

@@ -10,9 +10,9 @@ import {
   DialogTrigger,
 } from "./ui/dialog";
 import { MdDeleteSweep } from "react-icons/md";
-import LoadingSpinner from "./ui/loading-spinner";
 import { useSelector } from "react-redux";
 import { useTranslations } from "next-intl";
+import { PuffLoader } from "react-spinners";
 
 export default function DeleteProductComponent({
   action,
@@ -45,7 +45,7 @@ export default function DeleteProductComponent({
             <Button variant="outline">{t("cancel")}</Button>
           </DialogClose>
           <Button type="submit" onClick={action}>
-            {isLoading ? <LoadingSpinner size="sm" /> : t("delete")}
+            {isLoading ? <PuffLoader size={30} /> : t("delete")}
           </Button>
         </DialogFooter>
       </DialogContent>

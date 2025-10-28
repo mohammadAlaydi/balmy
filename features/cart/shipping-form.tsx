@@ -2,8 +2,8 @@
 
 import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
-import LabelAndInput from "@/components/label-and-input";
-import LabelAndRadio from "@/components/label-and-radio";
+import LabelAndInput from "@/components/form-components/label-and-input";
+import LabelAndRadio from "@/components/form-components/label-and-radio";
 import SectionTitle from "@/components/section-title";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";

@@ -10,7 +10,6 @@ import toast from "react-hot-toast";
 import { PuffLoader } from "react-spinners";
 import { MdOutlineShoppingCart } from "react-icons/md";
 import { FaCartArrowDown, FaRegEye } from "react-icons/fa";
-
 import { Badge } from "./ui/badge";
 import { Card, CardContent, CardHeader } from "./ui/card";
 import { Button } from "./ui/button";
@@ -20,7 +19,6 @@ import ReactStars from "./react-stars";
 import ZeroQuantity from "./zero-quantity";
 import { FavouriteButton } from "./favourite-button";
 import AuthModal from "./auth/auth-modal";
-
 import { useAppDispatch } from "@/store/hooks";
 import { addToCart } from "@/store/slices/cart-slice";
 import { getProductDetails } from "@/store/slices/product-details-slice";
@@ -30,6 +28,7 @@ import { useFavourites } from "@/hooks/use-favourites";
 
 // Helper functions
 const calculateProductPrice = (product: any): number => {
+
   const variants = Array.isArray(product?.variants) ? product.variants : [];
   const basePrice = Number.isFinite(Number(product?.price))
     ? Number(product?.price)
@@ -95,7 +94,6 @@ export default function ProductCard({
   );
   const [chosenVariantSku, setChosenVariantSku] = useState<string | null>(null);
 
-  console.log(wishlistProductId, "❤️❤️❤️");
   // Hooks
   const dispatch = useAppDispatch();
   const router = useRouter();

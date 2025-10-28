@@ -41,6 +41,14 @@ export default function page() {
           <div
             className={`cart-poroduct col-span-12 lg:col-span-7 xl:col-span-8 flex flex-col gap-3 items-end h-full`}
           >
+            <div className="flex w-full cursor-pointer mb-5">
+              <DeleteProductComponent
+                setIsOpen={setIsOpen}
+                isOpen={isOpen}
+                action={() => dispatch(removeAllProductsFromCart() as any)}
+                text="مسح جميع المنتجات"
+              />
+            </div>
             {data?.data?.items &&
               data.data.items.length > 0 &&
               data.data.items.map(
@@ -54,14 +62,6 @@ export default function page() {
                     />
                   )
               )}
-            <div className="flex w-full cursor-pointer">
-              <DeleteProductComponent
-                setIsOpen={setIsOpen}
-                isOpen={isOpen}
-                action={() => dispatch(removeAllProductsFromCart() as any)}
-                text="مسح جميع المنتجات"
-              />
-            </div>
           </div>
         </div>
       ) : (

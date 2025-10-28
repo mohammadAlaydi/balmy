@@ -29,6 +29,7 @@ const IMAGE_SIZES = {
 export default function QuickProductDetails({
   product,
 }: QuickProductDetailsProps) {
+  
   const t = useTranslations("products");
   const dispatch = useAppDispatch();
 

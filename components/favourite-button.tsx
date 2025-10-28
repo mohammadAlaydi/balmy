@@ -17,6 +17,7 @@ interface FavouriteButtonProps {
   variant?: "default" | "outline" | "ghost";
   className?: string;
   showText?: boolean;
+  FaRegHeartColor?: string;
 }
 
 export function FavouriteButton({
@@ -25,6 +26,7 @@ export function FavouriteButton({
   variant = "ghost",
   className,
   showText = false,
+  FaRegHeartColor,
 }: FavouriteButtonProps) {
   const { isFavourite, addToFavourites, removeFromFavourites } =
     useFavourites();
@@ -87,14 +89,16 @@ export function FavouriteButton({
         size={size}
         onClick={handleToggle}
         className={cn(
-          "transition-all duration-200",
+          "transition-all duration-200 bg-trasnparent",
           isFav && "text-red-500 hover:text-red-600",
           !isFav && "text-gray-400 hover:text-red-500",
           size === "sm" && "p-1",
           !isAuthenticated && "opacity-80 hover:opacity-100",
           className
         )}
-        aria-label={isFav ? tPD("remove-from-favorites") : tPD("add-to-favorites")}
+        aria-label={
+          isFav ? tPD("remove-from-favorites") : tPD("add-to-favorites")
+        }
         title={
           !isAuthenticated
             ? tFav("login-to-manage-favourites")
@@ -114,12 +118,16 @@ export function FavouriteButton({
           <FaRegHeart
             className={cn(
               iconSizes[size],
-              "transition-all duration-200 text-gray-500 group-hover:text-red-500"
+              `transition-all duration-200 ${
+                FaRegHeartColor ? FaRegHeartColor : "text-gray-500"
+              } group-hover:text-red-500`
             )}
           />
         )}
         {showText && (
-          <span className="ml-2">{isFav ? tPD("remove-from-favorites") : tPD("add-to-favorites")}</span>
+          <span className="ml-2">
+            {isFav ? tPD("remove-from-favorites") : tPD("add-to-favorites")}
+          </span>
         )}
       </Button>
 

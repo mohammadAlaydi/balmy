@@ -4,7 +4,7 @@ import React from "react";
 import { useSelector } from "react-redux";
 import PageWrapper from "@/components/page-wrapper";
 import Loading from "@/components/loading";
-import Success from "@/features/cart/checkout-dialog/success";
+import Success from "@/features/cart/success";
 
 interface CartState {
   status: string | null;

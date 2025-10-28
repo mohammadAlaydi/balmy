@@ -1,8 +1,8 @@
 'use client';
 
-import { Checkbox } from './ui/checkbox';
-import { FormControl, FormField, FormItem, FormMessage } from './ui/form';
-import { Label } from './ui/label';
+import { Checkbox } from '../ui/checkbox';
+import { FormControl, FormField, FormItem, FormMessage } from '../ui/form';
+import { Label } from '../ui/label';
 import { CheckBoxOrRadioInterFace } from '@/types/types';
 
 export default function LabelAndCheckbox({

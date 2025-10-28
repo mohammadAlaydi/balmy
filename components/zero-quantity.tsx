@@ -4,7 +4,9 @@ import Image from "next/image";
 import { useParams } from "next/navigation";
 
 export default function ZeroQuantity() {
+
   const {locale} = useParams();   
+  
   return (
     <div className="absolute inset-0 bg-black/50 flex items-center justify-center rounded-lg z-50">
       <Image

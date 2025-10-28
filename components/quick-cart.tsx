@@ -9,19 +9,13 @@ import {
 } from "@/store/slices/cart-slice";
 import { useTranslations } from "next-intl";
 import SectionTitle from "./section-title";
-import Loading from "./loading";
 import CartProduct from "./cart-product";
-import { MdDeleteSweep } from "react-icons/md";
 import DeleteProductComponent from "./delete-product-component";
 
 export default function QuickCart() {
   const t = useTranslations("cart");
   const dispatch = useDispatch();
-  const [isOpen, setIsOpen] = useState(false);
-
-  const { data, isLoading, status, cartStatus } = useSelector(
-    (state: any) => state.cart
-  );
+  const { data, status } = useSelector((state: any) => state.cart);
   const hasFetchedRef = useRef(false);
   useEffect(() => {
     if (
@@ -40,9 +34,12 @@ export default function QuickCart() {
     }
   }, [status, dispatch]);
 
+  const [isOpen, setIsOpen] = useState(false);
+
   // if (isLoading) {
   //   return <Loading fullScreen={true} variant="spinner" size="xl" />;
   // }
+
   return (
     <div className="flex flex-col gap-4 items-center justify-between min-h-0 h-full">
       <div className="flex flex-col gap-4 w-full flex-1 min-h-0">
@@ -76,7 +73,12 @@ export default function QuickCart() {
       {/* Fixed bottom section for actions */}
       <div className="flex flex-col gap-3 w-full flex-shrink-0">
         {data?.data?.items?.length > 0 && (
-         <DeleteProductComponent setIsOpen={setIsOpen} isOpen={isOpen} action={() => dispatch(removeAllProductsFromCart() as any)} text="مسح جميع المنتجات" />
+          <DeleteProductComponent
+            setIsOpen={setIsOpen}
+            isOpen={isOpen}
+            action={() => dispatch(removeAllProductsFromCart() as any)}
+            text="مسح جميع المنتجات"
+          />
         )}
         {data?.data?.items?.length > 0 && (
           <div className="flex gap-2 justify-center">

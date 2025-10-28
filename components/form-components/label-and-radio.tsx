@@ -6,9 +6,9 @@ import {
   FormField,
   FormItem,
   FormMessage,
-} from "./ui/form";
-import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
-import { Label } from "./ui/label";
+} from "../ui/form";
+import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
+import { Label } from "../ui/label";
 
 type RadioOption = {
   value: string;

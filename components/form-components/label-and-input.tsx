@@ -7,8 +7,8 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "./ui/form";
-import { Input } from "./ui/input";
+} from "../ui/form";
+import { Input } from "../ui/input";
 
 export default function LabelAndInput({
   containerStyle,

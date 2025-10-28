@@ -15,6 +15,8 @@ import { useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import { useState, useMemo } from "react";
 import { useTranslations } from "next-intl";
+import { FavouriteButton } from "./favourite-button";
+import { useRouter } from "next/navigation";
 
 interface CartProductProps {
   product: any;
@@ -27,6 +29,7 @@ export default function CartProduct({
   quantity,
   deletedProductId,
 }: CartProductProps) {
+  const router = useRouter();
   const dispatch = useAppDispatch();
   const { increaseOrDecreaseResponse } = useSelector(
     (state: any) => state.cart
@@ -95,19 +98,31 @@ export default function CartProduct({
               <ReactStars rating={product?.reviews?.total || 0} edit={false} />
             </div>
 
-            <p className="text-xs sm:text-sm md:text-base text-gray-color ltr:text-start rtl:text-end">
+            <p className="text-xs sm:text-sm md:text-base text-gray-color">
               {product?.price} <i className="icon-rial"></i>
             </p>
           </div>
         </div>
-
-        <Image
-          src={product?.base_image?.original_image_url ?? "/placeholder.png"}
-          alt={product?.name ?? "product image"}
-          width={100}
-          height={100}
-          className="rounded-md object-cover w-[110px] md:w-[120px] aspect-square border border-gray-200"
-        />
+        <div className="relative group">
+          <Image
+            src={product?.base_image?.original_image_url ?? "/placeholder.png"}
+            alt={product?.name ?? "product image"}
+            width={100}
+            height={100}
+            className="rounded-md object-cover w-[110px] md:w-[140px] aspect-square border border-gray-200 cursor-pointer"
+          />
+          {/* Hover overlay with Favorite button */}
+          <div
+            onClick={() => router.push(`/product/${product?.id}`)}
+            className="absolute inset-0 flex items-center justify-center invisible opacity-0 transition-all duration-200 group-hover:visible group-hover:opacity-100 cursor-pointer"
+          >
+            <FavouriteButton
+              product={product}
+              FaRegHeartColor="text-black"
+              className="absolute right-0 top-0 rounded-none"
+            />
+          </div>
+        </div>
       </div>
 
       <div className="flex items-center justify-between sm:hidden">
