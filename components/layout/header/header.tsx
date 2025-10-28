@@ -308,9 +308,6 @@ const MobileMenu = ({
   currentLocale: string;
 }) => {
   const t = useTranslations("navigation");
-  // Limit to first 5 categories
-  const limitedCategories = navbarCategories?.slice(0, 5) || [];
-
   return (
     <DrawerComponent
       trigger={
@@ -333,7 +330,7 @@ const MobileMenu = ({
 
         {/* ✅ Mobile Navigation Links */}
         <Accordion className="w-full flex-1 overflow-y-auto">
-          {limitedCategories?.map((category: any, index: number) => (
+          { navbarCategories?.map((category: any, index: number) => (
             <AccordionItem key={category.id} value={`item-${index}`}>
               {category.children && category.children.length > 0 ? (
                 <>
