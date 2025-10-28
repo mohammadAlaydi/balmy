@@ -257,7 +257,7 @@ export default function Checkout({
     defaultValues: defaultFormValues,
   });
 
-  const { watch, handleSubmit , formState} = form;
+  const { watch, handleSubmit, formState } = form;
 
   const { saveOrderData, isLoading, status } = useSelector(
     (state: any) => state.cart
@@ -314,22 +314,13 @@ export default function Checkout({
     }
   }, [success, redirectUrl, router, paymentMethod, dispatch]);
 
-  // Show Failed page if order failed
-  if (saveOrderData?.success === false) {
-    return (
-      <PageWrapper>
-        <Failed />
-      </PageWrapper>
-    );
-  }
-
   // Show Success page if order succeeded and no redirect URL
-  if (
-    saveOrderData?.success &&
-    (paymentMethod === "tabby" || paymentMethod === "cashondelivery")
-  ) {
-    router.push("/cart/checkout-status");
-  }
+  useEffect(() => {
+    if (saveOrderData?.success && saveOrderData?.data?.data?.order?.id) {
+      const orderId = saveOrderData?.data?.data?.order?.id;
+      router.push(`/cart/checkout-status/${orderId}`);
+    }
+  }, [saveOrderData, router]); // re-run when saveOrderData updates
 
   return (
     <>

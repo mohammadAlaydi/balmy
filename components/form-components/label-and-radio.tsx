@@ -1,12 +1,7 @@
 "use client";
 
 import * as React from "react";
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormMessage,
-} from "../ui/form";
+import { FormControl, FormField, FormItem, FormMessage } from "../ui/form";
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 import { Label } from "../ui/label";
 
@@ -59,6 +54,7 @@ export default function LabelAndRadio<T extends Record<string, any>>({
                       value={opt.value}
                       className="peer order-2 cursor-pointer ltr:order-1 rtl:order-2"
                       onClick={opt.action}
+                      disabled={opt?.disable}
                     />
                     <Label
                       onClick={opt.action}

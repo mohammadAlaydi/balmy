@@ -1,9 +1,25 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { authenticatedFetch } from "@/lib/authenticated-fetch";
-import { redirect } from "next/navigation";
+// get specific order by ID
+const getOrderById = createAsyncThunk(
+  "cart/getOrderById",
+  async (orderId: string | number, { rejectWithValue }) => {
+    try {
+      const response = await authenticatedFetch(`/api/cart/order/${orderId}`, {
+        method: "GET",
+      });
 
-const API_KEY = process.env.NEXT_PUBLIC_API_URL;
-// get cart products
+      const data = await response.json();
+      if (!response.ok) {
+        return rejectWithValue(data.message || "Failed to fetch order details");
+      }
+
+      return data;
+    } catch (error: any) {
+      return rejectWithValue(error.message || "Failed to fetch order details");
+    }
+  }
+);
 
 const getCartProducts = createAsyncThunk(
   "cart/products",
@@ -185,6 +201,7 @@ const cartSlice = createSlice({
     error: null,
     status: null as string | null, // Only for order completion (success/failed)
     cartStatus: null as string | null, // For cart operations (add/remove)
+    orderDetails: null,
   },
   reducers: {
     applyLocalQuantityDelta: (state: any, action) => {
@@ -301,6 +318,20 @@ const cartSlice = createSlice({
       state.isLoading = false;
       state.status = "failed";
     });
+    // Get order by ID
+    builder.addCase(getOrderById.pending, (state) => {
+      state.isLoading = true;
+    });
+    builder.addCase(getOrderById.fulfilled, (state, action) => {
+      state.orderDetails = action.payload;
+      state.isLoading = false;
+      state.status = "success";
+    });
+    builder.addCase(getOrderById.rejected, (state: any, action) => {
+      state.error = action.error.message || null;
+      state.isLoading = false;
+      state.status = "failed";
+    });
   },
 });
 
@@ -312,5 +343,6 @@ export {
   removeAllProductsFromCart,
   updateCartQuantity,
   saveOrder,
+  getOrderById,
 };
 export const cartReducer = cartSlice.reducer;

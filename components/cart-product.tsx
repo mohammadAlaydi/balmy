@@ -77,7 +77,6 @@
         console.error("Failed to remove product from cart:", error);
       }
     };
-    {console.log(product, "❤️❤️❤️❤️")}
 
     return (
       <div className="flex flex-col gap-3 w-full rounded-md border border-gray-200 p-3 sm:p-4">

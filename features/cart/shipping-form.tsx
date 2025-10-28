@@ -194,10 +194,12 @@ export default function ShippingForm({
                       {
                         value: "freeshipping_freeshipping",
                         label: t("free-shipping"),
+                        disable : true
                       },
                       {
                         value: "tablerate_bestway",
                         label: t("express-shipping"),
+                        disable : true
                       },
                     ]}
                     itemClassName="justify-end"

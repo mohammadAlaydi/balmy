@@ -20,35 +20,15 @@ interface RequestFailedProps {
 export default function Failed({
   title,
   message,
-  primaryAction,
-  secondaryAction,
   showHomeButton = true,
 }: RequestFailedProps) {
   const router = useRouter();
   const dispatch = useDispatch();
   const t = useTranslations("order");
-  const handleTryAgain = () => {
-    // Reset the status to allow retry
-    dispatch(resetStatus());
-    // If primary action is provided, use it; otherwise, just reset status
-    // This allows the user to retry the payment form
-    if (primaryAction?.onClick) {
-      primaryAction.onClick();
-    }
-    // Don't navigate away - let user retry the payment
-  };
-
-  const handleSecondaryAction = () => {
-    secondaryAction?.onClick();
-  };
 
   const handleGoHome = () => {
     dispatch(resetStatus());
     router.push("/home");
-  };
-
-  const handleCloseDialog = () => {
-    dispatch(resetStatus());
   };
 
   return (
@@ -58,24 +38,15 @@ export default function Failed({
         <h1 className="mt-4 text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight text-foreground">
           {title || t("request-failed")}
         </h1>
-        <p className="mt-4 text-sm sm:text-base text-muted-foreground">{message || t("request-failed-message")}</p>
+        <p className="mt-4 text-sm sm:text-base text-muted-foreground">
+          {message || t("request-failed-message")}
+        </p>
         <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-center">
-          <Button onClick={handleTryAgain}>
-            {primaryAction?.label || t("try-again")}
-          </Button>
-          {secondaryAction && (
-            <Button variant="outline" onClick={handleSecondaryAction}>
-              {secondaryAction.label}
-            </Button>
-          )}
           {showHomeButton && (
-            <Button variant="ghost" onClick={handleGoHome}>
+            <Button variant="default" onClick={handleGoHome}>
               {t("go-home")}
             </Button>
           )}
-          <Button variant="outline" onClick={handleCloseDialog}>
-            {t("close-dialog")}
-          </Button>
         </div>
       </div>
     </div>

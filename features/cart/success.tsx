@@ -7,9 +7,8 @@ import { useTranslations } from "next-intl";
 import { resetStatus } from "@/store/slices/cart-slice";
 
 export default function Success({ data }: any) {
+  const order = data?.data;
   const t = useTranslations("order");
-
-  const order = data?.data?.data?.order;
 
   const orderInfoItems = [
     { label: t("order-number"), value: `#${order?.id}` },

@@ -31,7 +31,6 @@ export function FavouriteButton({
   const { isFavourite, addToFavourites, removeFromFavourites } =
     useFavourites();
   const targetId = (product?.id ?? product?.product_id) as number;
-  console.log(targetId, "✔️✔️✔️");
   const normalizedProduct = product?.id
     ? product
     : { ...product, id: targetId };
