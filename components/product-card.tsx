@@ -79,14 +79,20 @@ export default function ProductCard({
   cardColSpan,
   wishlistId,
 }: ProductCardProps) {
-  const [selectedVariantIndex, setSelectedVariantIndex] = useState<number | null>(null);
+  const [selectedVariantIndex, setSelectedVariantIndex] = useState<
+    number | null
+  >(null);
   const [isHovered, setIsHovered] = useState(false);
   const [isAdding, setIsAdding] = useState(false);
   const [isMovingToCart, setIsMovingToCart] = useState(false);
-  const [chosenVariantId, setChosenVariantId] = useState<number | string | null>(null);
+  const [chosenVariantId, setChosenVariantId] = useState<
+    number | string | null
+  >(null);
   const [chosenVariantSku, setChosenVariantSku] = useState<string | null>(null);
   const [showAuthModal, setShowAuthModal] = useState(false);
-  const [pendingAddProductId, setPendingAddProductId] = useState<number | null>(null);
+  const [pendingAddProductId, setPendingAddProductId] = useState<number | null>(
+    null
+  );
   const [showIncDec, setShowIncDec] = useState(false);
 
   const dispatch = useAppDispatch();
@@ -139,10 +145,16 @@ export default function ProductCard({
 
     try {
       setIsAdding(true);
-      const promise = dispatch(addToCart({ productId: targetId, productQTY: 1 }));
+      const promise = dispatch(
+        addToCart({ productId: targetId, productQTY: 1 })
+      );
       await (typeof promise.unwrap === "function" ? promise.unwrap() : promise);
 
-      toast.success(isProductInCart(cartData, targetId) ? t("quantity-updated") : t("added-to-cart"));
+      toast.success(
+        isProductInCart(cartData, targetId)
+          ? t("quantity-updated")
+          : t("added-to-cart")
+      );
       setShowIncDec(true);
     } catch (error) {
       toast.error(error instanceof Error ? error.message : String(error));
@@ -166,9 +178,9 @@ export default function ProductCard({
 
   /* ---------------- Cart Button Variants ---------------- */
   const motionVariants = {
-    initial: { opacity: 0, scale: 0.8 },
-    animate: { opacity: 1, scale: 1 },
-    exit: { opacity: 0, scale: 0.8 },
+    initial: { scaleX: 0 },
+    animate: { scaleX: 1 },
+    exit: { scaleX: 0 },
   };
 
   return (
@@ -247,7 +259,7 @@ export default function ProductCard({
               >
                 <Button
                   onClick={() => setShowIncDec(true)}
-                  className="bg-[#3866df] hover:bg-[#3866df]/85 text-white flex items-center gap-1 px-3 py-1 mb-2 rounded-full"
+                  className="bg-[#3866df] hover:bg-[#3866df]/85 text-white flex items-center gap-1 p-0 mb-2 rounded-md"
                 >
                   <MdOutlineShoppingCart /> {cartQuantity}
                 </Button>
@@ -261,8 +273,11 @@ export default function ProductCard({
                 exit="exit"
                 transition={{ duration: 0.2 }}
               >
-                <div className="mb-2 bg-[#3866df] hover:bg-[#3866df]/85 text-white py-1 px-2 rounded-full">
-                  <ProductIncementOrDecrement product={product} quantity={cartQuantity} />
+                <div className="mb-2 bg-[#3866df] text-white py-1 px-2 rounded-md">
+                  <ProductIncementOrDecrement
+                    product={product}
+                    quantity={cartQuantity}
+                  />
                 </div>
               </motion.div>
             ) : (
@@ -295,7 +310,9 @@ export default function ProductCard({
       <CardContent className="px-3 pb-3 flex flex-col gap-2 sm:gap-3">
         <div className="flex justify-between items-center">
           <p className="font-semibold text-sm truncate">{product?.name}</p>
-          <p className="text-xs text-gray-500 truncate">{chosenVariantSku ?? product?.sku}</p>
+          <p className="text-xs text-gray-500 truncate">
+            {chosenVariantSku ?? product?.sku}
+          </p>
         </div>
 
         {/* Variant Selector */}
@@ -303,22 +320,36 @@ export default function ProductCard({
           <div className="flex justify-between gap-1 items-center">
             {product?.variants?.length ? (
               <div className="items-center gap-2 hidden sm:flex transition-all duration-300">
-                {product.variants.slice(0, 2).map((variant: any, index: number) => (
-                  <div key={variant?.product_id} className="relative">
-                    <Image
-                      width={28}
-                      height={28}
-                      src={variant.base_image?.original_image_url || "/assets/images/no-image.webp"}
-                      alt={`${product?.name || t("product")} ${t("variant-image")} ${index + 1}`}
-                      className={`cursor-pointer transition-all duration-200 rounded-full h-[28px] w-[28px] ${
-                        selectedVariantIndex === index || (selectedVariantIndex === null && index === 0)
-                          ? "ring-2 ring-gray-300"
-                          : "border-2 border-dotted border-gray-300"
-                      }`}
-                      onClick={() => handleVariantSelect(index, variant?.product_id, variant?.sku)}
-                    />
-                  </div>
-                ))}
+                {product.variants
+                  .slice(0, 2)
+                  .map((variant: any, index: number) => (
+                    <div key={variant?.product_id} className="relative">
+                      <Image
+                        width={28}
+                        height={28}
+                        src={
+                          variant.base_image?.original_image_url ||
+                          "/assets/images/no-image.webp"
+                        }
+                        alt={`${product?.name || t("product")} ${t(
+                          "variant-image"
+                        )} ${index + 1}`}
+                        className={`cursor-pointer transition-all duration-200 rounded-full h-[28px] w-[28px] ${
+                          selectedVariantIndex === index ||
+                          (selectedVariantIndex === null && index === 0)
+                            ? "ring-2 ring-gray-300"
+                            : "border-2 border-dotted border-gray-300"
+                        }`}
+                        onClick={() =>
+                          handleVariantSelect(
+                            index,
+                            variant?.product_id,
+                            variant?.sku
+                          )
+                        }
+                      />
+                    </div>
+                  ))}
                 {product.variants.length > 2 && (
                   <Badge className="mx-1 bg-transparent text-primary ring-2 ring-gray-300 w-[28px] h-[28px] p-0 flex items-center rounded-full justify-center shadow-[inset_0_2px_4px_rgba(0,0,0,0.1)] text-xs">
                     +{product.variants.length - 2}
@@ -331,14 +362,19 @@ export default function ProductCard({
                   <Image
                     width={28}
                     height={28}
-                    src={product?.base_image?.original_image_url || "/assets/images/no-image.webp"}
+                    src={
+                      product?.base_image?.original_image_url ||
+                      "/assets/images/no-image.webp"
+                    }
                     alt={`${product?.name || t("product")}`}
                     className={`${
                       selectedVariantIndex === 0 || selectedVariantIndex == null
                         ? "ring-2 ring-gray-300"
                         : "border-2 border-dotted border-gray-300"
                     } cursor-pointer transition-all duration-200 rounded-full ring-2 ring-gray-300 h-[28px] w-[28px]`}
-                    onClick={() => handleVariantSelect(0, product?.product_id, product?.sku)}
+                    onClick={() =>
+                      handleVariantSelect(0, product?.product_id, product?.sku)
+                    }
                   />
                 </div>
               </div>
@@ -348,9 +384,13 @@ export default function ProductCard({
 
         {/* Price + Rating */}
         <div className="flex items-center justify-between">
-          <p className="font-bold text-sm sm:text-base">{productPrice.toFixed(2)} <i className="icon-rial"></i></p>
+          <p className="font-bold text-sm sm:text-base">
+            {productPrice.toFixed(2)} <i className="icon-rial"></i>
+          </p>
           <div className="hidden sm:flex items-center gap-1 bg-gray-100 px-2 rounded-full w-fit shadow-sm">
-            <Badge className="bg-transparent text-gray-500 p-0 text-base font-[550]">{product?.reviews?.total}</Badge>{" "}
+            <Badge className="bg-transparent text-gray-500 p-0 text-base font-[550]">
+              {product?.reviews?.total}
+            </Badge>{" "}
             <ReactStars edit={false} />
           </div>
         </div>
@@ -364,12 +404,17 @@ export default function ProductCard({
           if (!open) setPendingAddProductId(null);
         }}
         onAuthenticated={async () => {
-          const targetId = pendingAddProductId ?? resolveProductId(product, chosenVariantId);
+          const targetId =
+            pendingAddProductId ?? resolveProductId(product, chosenVariantId);
           if (!targetId) return;
           try {
             setIsAdding(true);
-            const promise = dispatch(addToCart({ productId: targetId, productQTY: 1 }));
-            await (typeof promise.unwrap === "function" ? promise.unwrap() : promise);
+            const promise = dispatch(
+              addToCart({ productId: targetId, productQTY: 1 })
+            );
+            await (typeof promise.unwrap === "function"
+              ? promise.unwrap()
+              : promise);
             toast.success(t("added-to-cart"));
             setShowIncDec(true);
           } finally {
