@@ -7,7 +7,7 @@ import LabelAndRadio from "@/components/form-components/label-and-radio";
 import SectionTitle from "@/components/section-title";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
-import { PuffLoader } from "react-spinners";
+import { BeatLoader } from "react-spinners";
 import { Label } from "@/components/ui/label";
 import { FaShippingFast, FaAmazonPay, FaCreditCard } from "react-icons/fa";
 import Image from "next/image";
@@ -312,7 +312,7 @@ export default function ShippingForm({
           >
             {isSubmitting ? (
               <div className="flex items-center gap-2">
-                <PuffLoader color="#ffffff" size={20} />
+                <BeatLoader color="#ffffff" size={3} />
                 <span>{tButtons("submitting")}</span>
               </div>
             ) : (

@@ -1,6 +1,6 @@
 import React from "react";
 import { FaSpinner } from "react-icons/fa";
-import { PuffLoader } from "react-spinners";
+import { BeatLoader } from "react-spinners";
 
 interface LoadingProps {
   size?: "sm" | "md" | "lg" | "xl";
@@ -84,8 +84,8 @@ const Loading: React.FC<LoadingProps> = ({
 
   if (fullScreen) {
     return (
-      <div className="fixed inset-0 bg-white flex items-center justify-center z-50 rounded-md">
-        <PuffLoader />
+      <div className="fixed inset-0 bg-white flex items-center justify-center z-[3000] rounded-md">
+        <BeatLoader />
       </div>
     );
   }

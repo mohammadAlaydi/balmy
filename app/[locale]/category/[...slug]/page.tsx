@@ -1,20 +1,220 @@
+// // "use client";
+
+// // import Loading from "@/components/loading";
+// // import ProductCard from "@/components/product-card";
+// // import CategoryFilter from "@/components/category-filter";
+// // import { getCategoryProducts } from "@/store/slices/category-products-slice";
+// // import { use, useEffect, useState } from "react";
+// // import { useDispatch, useSelector } from "react-redux";
+// // import { useTranslations } from "next-intl";
+// // import PageWrapper from "@/components/page-wrapper";
+
+// // export default function page({
+// //   params,
+// // }: {
+// //   params: Promise<{ slug: string[] }>;
+// // }) {
+// //   const t = useTranslations("category");
+// //   const { slug } = use(params);
+// //   const [categorySlug, categoryId] = slug;
+// //   const [filteredProducts, setFilteredProducts] = useState<any[]>([]);
+// //   const {
+// //     products: categoryProducts,
+// //     loading,
+// //     error,
+// //   } = useSelector((state: any) => state.categoryProducts);
+
+// //   const dispatch = useDispatch();
+
+// //   useEffect(() => {
+// //     if (categoryId) {
+// //       dispatch(getCategoryProducts({ categoryId }) as any);
+// //     }
+// //   }, [dispatch, categoryId, categorySlug]);
+
+// //   // Update filtered products when products change
+// //   useEffect(() => {
+// //     const products = categoryProducts?.data || [];
+// //     setFilteredProducts(products);
+// //   }, [categoryProducts, categorySlug, categoryId]);
+
+// //   if (loading) {
+// //     return <Loading fullScreen={true} variant="spinner" size="xl" />;
+// //   }
+
+// //   if (error) {
+// //     return (
+// //       <PageWrapper>
+// //         <div className="flex items-center justify-center h-full w-full min-h-[65vh]">
+// //           <p className="text-base md:text-lg xl:text-xl text-center text-red-600">
+// //             {t("error-loading-products") ||
+// //               "Error loading products. Please try again."}
+// //           </p>
+// //         </div>
+// //       </PageWrapper>
+// //     );
+// //   }
+// //   const products = categoryProducts?.products?.data || [];
+
+// //   return (
+// //     <PageWrapper>
+// //       <div className="flex items-center gap-5 justify-start my-5">
+// //         {/* {products.length > 0 && ( */}
+// //         <CategoryFilter
+// //           products={products}
+// //           onFilterChange={handleFilterChange}
+// //         />
+// //         {/* )} */}
+// //         {products.length > 0 && (
+// //           <p className="text-gray-600 text-nowrap">
+// //             {t("products-count", { count: filteredProducts.length })}
+// //           </p>
+// //         )}
+// //       </div>
+// //       {filteredProducts.length > 0 ? (
+// //         <div className="grid grid-cols-12 gap-2 md:gap-3 xl:gap-5 flex-wrap min-h-[65vh]">
+// //           {filteredProducts.map((product: any, index: number) => (
+// //             <ProductCard
+// //               key={index}
+// //               product={product}
+// //               cardColSpan="col-span-6 md:col-span-4 lg:col-span-3 xl:col-span-3"
+// //             />
+// //           ))}
+// //         </div>
+// //       ) : products.length > 0 ? (
+// //         <div className="flex items-center justify-center h-full w-full min-h-[65vh]">
+// //           <p className="text-base md:text-lg xl:text-xl text-center text-gray-600">
+// //             {t("no-products-match-filters")}
+// //           </p>
+// //         </div>
+// //       ) : (
+// //         <div className="flex items-center justify-center h-full w-full min-h-[65vh]">
+// //           <p className="text-base md:text-lg xl:text-xl text-center text-gray-600">
+// //             {t("no-products-found")}
+// //           </p>
+// //         </div>
+// //       )}
+// //     </PageWrapper>
+// //   );
+// // }
+// "use client";
+
+// import Loading from "@/components/loading";
+// import ProductCard from "@/components/product-card";
+// import CategoryFilter from "@/components/category-filter";
+// import { getCategoryProducts } from "@/store/slices/category-products-slice";
+// import { use, useEffect, useState } from "react";
+// import { useDispatch, useSelector } from "react-redux";
+// import { useTranslations } from "next-intl";
+// import PageWrapper from "@/components/page-wrapper";
+
+// export default function Page({
+//   params,
+// }: {
+//   params: Promise<{ slug: string[] }>;
+// }) {
+//   const t = useTranslations("category");
+//   const { slug } = use(params);
+//   const [categorySlug, categoryId] = slug;
+//   const [filteredProducts, setFilteredProducts] = useState<any[]>([]);
+//   const {
+//     products: categoryProducts,
+//     loading,
+//     error,
+//   } = useSelector((state: any) => state.categoryProducts);
+
+//   const dispatch = useDispatch();
+
+//   useEffect(() => {
+//     if (categoryId) {
+//       dispatch(getCategoryProducts({ categoryId }) as any);
+//     }
+//   }, [dispatch, categoryId]);
+
+//   // Update filtered products when products change
+//   useEffect(() => {
+//     const products = categoryProducts?.data || [];
+//     setFilteredProducts(products);
+//   }, [categoryProducts]);
+
+//   const handleFilterChange = (filteredProducts: any[]) => {
+//     setFilteredProducts(filteredProducts);
+//   };
+
+//   if (loading) {
+//     return <Loading fullScreen={true} variant="spinner" size="xl" />;
+//   }
+
+//   if (error) {
+//     return (
+//       <PageWrapper>
+//         <div className="flex items-center justify-center h-full w-full min-h-[65vh]">
+//           <p className="text-base md:text-lg xl:text-xl text-center text-red-600">
+//             {t("error-loading-products") ||
+//               "Error loading products. Please try again."}
+//           </p>
+//         </div>
+//       </PageWrapper>
+//     );
+//   }
+
+//   const products = categoryProducts?.data || [];
+
+//   return (
+//     <PageWrapper>
+//       <div className="flex items-center gap-5 justify-start my-5">
+//         <CategoryFilter
+//           products={products}
+//           onFilterChange={handleFilterChange}
+//         />
+//         {products.length > 0 && (
+//           <p className="text-gray-600 text-nowrap">
+//             {t("products-count", { count: filteredProducts.length })}
+//           </p>
+//         )}
+//       </div>
+//       {filteredProducts.length > 0 ? (
+//         <div className="grid grid-cols-12 gap-2 md:gap-3 xl:gap-5 flex-wrap min-h-[65vh]">
+//           {filteredProducts.map((product: any, index: number) => (
+//             <ProductCard
+//               key={product.id || index}
+//               product={product}
+//               cardColSpan="col-span-6 md:col-span-4 lg:col-span-3 xl:col-span-3"
+//             />
+//           ))}
+//         </div>
+//       ) : products.length > 0 ? (
+//         <div className="flex items-center justify-center h-full w-full min-h-[65vh]">
+//           <p className="text-base md:text-lg xl:text-xl text-center text-gray-600">
+//             {t("no-products-match-filters")}
+//           </p>
+//         </div>
+//       ) : (
+//         <div className="flex items-center justify-center h-full w-full min-h-[65vh]">
+//           <p className="text-base md:text-lg xl:text-xl text-center text-gray-600">
+//             {t("no-products-found")}
+//           </p>
+//         </div>
+//       )}
+//     </PageWrapper>
+//   );
+// }
 "use client";
 
 import Loading from "@/components/loading";
 import ProductCard from "@/components/product-card";
 import CategoryFilter from "@/components/category-filter";
 import { getCategoryProducts } from "@/store/slices/category-products-slice";
-import { use, useEffect, useState } from "react";
+import { use, useEffect, useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useTranslations } from "next-intl";
 import PageWrapper from "@/components/page-wrapper";
 
-export default function page({
+export default function Page({
   params,
 }: {
   params: Promise<{ slug: string[] }>;
 }) {
-
   const t = useTranslations("category");
   const { slug } = use(params);
   const [categorySlug, categoryId] = slug;
@@ -31,13 +231,18 @@ export default function page({
     if (categoryId) {
       dispatch(getCategoryProducts({ categoryId }) as any);
     }
-  }, [dispatch, categoryId, categorySlug]);
+  }, [dispatch, categoryId]);
 
   // Update filtered products when products change
   useEffect(() => {
     const products = categoryProducts?.data || [];
     setFilteredProducts(products);
-  }, [categoryProducts, categorySlug, categoryId]);
+  }, [categoryProducts]);
+
+  // Use useCallback to prevent infinite re-renders
+  const handleFilterChange = useCallback((filteredProducts: any[]) => {
+    setFilteredProducts(filteredProducts);
+  }, []);
 
   if (loading) {
     return <Loading fullScreen={true} variant="spinner" size="xl" />;
@@ -55,14 +260,16 @@ export default function page({
       </PageWrapper>
     );
   }
-  const products = categoryProducts?.products?.data || [];
+
+  const products = categoryProducts?.data || [];
+
   return (
     <PageWrapper>
-      <div className="flex items-center gap-5 justify-start my-5">
+      <div className="flex items-center gap-5 justify-start mb-10">
         {products.length > 0 && (
           <CategoryFilter
             products={products}
-            onFilterChange={setFilteredProducts}
+            onFilterChange={handleFilterChange}
           />
         )}
         {products.length > 0 && (
@@ -74,7 +281,11 @@ export default function page({
       {filteredProducts.length > 0 ? (
         <div className="grid grid-cols-12 gap-2 md:gap-3 xl:gap-5 flex-wrap min-h-[65vh]">
           {filteredProducts.map((product: any, index: number) => (
-            <ProductCard key={index} product={product} cardColSpan="col-span-6 md:col-span-4 lg:col-span-3 xl:col-span-3" />
+            <ProductCard
+              key={product.id || index}
+              product={product}
+              cardColSpan="col-span-6 md:col-span-4 lg:col-span-3 xl:col-span-3"
+            />
           ))}
         </div>
       ) : products.length > 0 ? (

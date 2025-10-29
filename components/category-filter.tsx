@@ -12,7 +12,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import {
   Drawer,
@@ -20,7 +19,6 @@ import {
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
-  DrawerClose,
 } from "@/components/ui/drawer";
 import { useTranslations } from "next-intl";
 import { usePathname } from "next/navigation";
@@ -49,6 +47,7 @@ export default function CategoryFilter({
   const pathname = usePathname();
   const currentLocale = pathname.split("/")[1];
   const isRTL = currentLocale === "ar";
+
   const [filters, setFilters] = useState<FilterOptions>({
     priceRange: [0, 1000],
     availability: [],
@@ -62,8 +61,18 @@ export default function CategoryFilter({
       const price = parseFloat(product.price) || 0;
       return [Math.min(acc[0], price), Math.max(acc[1], price)];
     },
-    [0, 1000]
+    [0, 0]
   );
+
+  // Initialize price range when products are loaded
+  useEffect(() => {
+    if (products.length > 0 && priceRange[1] > 0) {
+      setFilters((prev) => ({
+        ...prev,
+        priceRange: priceRange as [number, number],
+      }));
+    }
+  }, [products]);
 
   // Get unique availability options
   const availabilityOptions = Array.from(
@@ -136,7 +145,7 @@ export default function CategoryFilter({
 
   const clearFilters = () => {
     setFilters({
-      priceRange: priceRange,
+      priceRange: priceRange as [number, number],
       availability: [],
       sortBy: "name",
       inStock: false,
@@ -147,8 +156,8 @@ export default function CategoryFilter({
     filters.availability.length > 0 ||
     filters.inStock ||
     filters.sortBy !== "name" ||
-    filters.priceRange[0] !== priceRange[0] ||
-    filters.priceRange[1] !== priceRange[1];
+    (filters.priceRange[0] !== priceRange[0] && priceRange[0] !== 0) ||
+    (filters.priceRange[1] !== priceRange[1] && priceRange[1] !== 0);
 
   return (
     <div className={`${className}`}>
@@ -202,15 +211,15 @@ export default function CategoryFilter({
               {/* Price Range */}
               <div className="space-y-4">
                 <Label className="text-base font-semibold text-gray-700 flex items-center gap-2">
-                  <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                  <div className="w-2 h-2 bg-[#3866df] rounded-full"></div>
                   {t("price-range")}
                 </Label>
                 <div className="px-2 sm:px-4 py-2 sm:py-3 bg-white rounded-lg border border-gray-200 shadow-sm">
                   <Slider
                     value={filters.priceRange}
                     onValueChange={handlePriceRangeChange}
-                    max={priceRange[1]}
-                    min={priceRange[0]}
+                    max={priceRange[1] || 1000}
+                    min={priceRange[0] || 0}
                     step={10}
                     className="w-full my-4"
                   />

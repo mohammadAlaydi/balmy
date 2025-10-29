@@ -133,7 +133,6 @@ function FavouritePageContent() {
     );
   }
 
-  console.log(favourites, "👌👌👌👌");
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="mb-8">
@@ -191,7 +190,7 @@ function FavouritePageContent() {
                 <Button
                   size="sm"
                   variant="destructive"
-                  className="absolute top-2 right-2 z-10 opacity-0 group-hover:opacity-100 transition-opacity"
+                  className="absolute top-2 ltr:left-2 rtl:right-2 z-10 opacity-0 group-hover:opacity-100 transition-opacity"
                   onClick={() => handleRemoveFromFavourites(product.id)}
                 >
                   <FaTrashAlt className="h-4 w-4" />

@@ -23,7 +23,6 @@ interface FavouriteButtonProps {
 export function FavouriteButton({
   product,
   size = "default",
-  variant = "ghost",
   className,
   showText = false,
   FaRegHeartColor,
@@ -73,12 +72,6 @@ export function FavouriteButton({
     }
   };
 
-  const sizeClasses = {
-    sm: "h-8 w-8",
-    default: "h-10 w-10",
-    lg: "h-12 w-12",
-  };
-
   const iconSizes = {
     sm: "h-4 w-4",
     default: "h-5 w-5",
@@ -87,14 +80,13 @@ export function FavouriteButton({
 
   return (
     <>
-      <Button
-        variant={variant}
+      <div
         size={size}
         onClick={handleToggle}
         className={cn(
           "transition-all duration-200 bg-trasnparent",
           isFav && "text-red-500 hover:text-red-600",
-          !isFav && "text-gray-400 hover:text-red-500",
+          !isFav && "text-black hover:text-red-500",
           size === "sm" && "p-1",
           !isAuthenticated && "opacity-80 hover:opacity-100",
           className
@@ -114,27 +106,29 @@ export function FavouriteButton({
           <FaHeart
             className={cn(
               iconSizes[size],
-              "transition-all duration-200 text-red-500 "
+              "transition-all duration-200 text-red-500"
             )}
             size={15}
-            color="#fff"
           />
         ) : (
           <FaRegHeart
             className={cn(
               iconSizes[size],
               `transition-all duration-200 ${
-                FaRegHeartColor ? FaRegHeartColor : "text-gray-500"
+                FaRegHeartColor
+                  ? FaRegHeartColor
+                  : "text-black hover:text-red-500"
               } group-hover:text-red-500`
             )}
           />
         )}
+
         {showText && (
           <span className="ml-2">
             {isFav ? tPD("remove-from-favorites") : tPD("add-to-favorites")}
           </span>
         )}
-      </Button>
+      </div>
 
       <AuthModal
         isOpen={authModalOpen}

@@ -7,28 +7,30 @@ import { useSelector } from "react-redux";
 import { useTranslations } from "next-intl";
 import { motion } from "framer-motion";
 import toast from "react-hot-toast";
-import { PuffLoader } from "react-spinners";
-import { FaRegEye } from "react-icons/fa";
+import { BeatLoader } from "react-spinners";
 import { Badge } from "./ui/badge";
 import { Card, CardContent, CardHeader } from "./ui/card";
 import { Button } from "./ui/button";
 import DrawerComponent from "./layout/drawer/drawer-component";
 import QuickProductDetails from "./quick-product-details";
-import ReactStars from "./react-stars";
 import ZeroQuantity from "./zero-quantity";
 import { FavouriteButton } from "./favourite-button";
 import AuthModal from "./auth/auth-modal";
 import { useAppDispatch } from "@/store/hooks";
-import { addToCart } from "@/store/slices/cart-slice";
+import { addToCart, updateCartQuantity } from "@/store/slices/cart-slice";
 import { getProductDetails } from "@/store/slices/product-details-slice";
 import { ProductCardProps } from "@/types/types";
 import { getCurrentMainImage, getHoverImage } from "@/static-data/static-data";
 import { useFavourites } from "@/hooks/use-favourites";
-import { FaRegStar } from "react-icons/fa";
-import { FaStar } from "react-icons/fa";
+import { FaRegStar, FaStar } from "react-icons/fa";
 import { FaPlus } from "react-icons/fa6";
+import { GrView } from "react-icons/gr";
+import ProductIncementOrDecrement from "./product-increment-or-decrement";
+import { MdOutlineShoppingCart } from "react-icons/md";
+import ReactStars from "react-stars";
 
-// Helper functions
+/* ---------------- Helper Functions ---------------- */
+
 const calculateProductPrice = (product: any): number => {
   const variants = Array.isArray(product?.variants) ? product.variants : [];
   const basePrice = Number.isFinite(Number(product?.price))
@@ -52,9 +54,8 @@ const findCartItem = (cartData: any, productId: number) => {
   );
 };
 
-const isProductInCart = (cartData: any, productId: number): boolean => {
-  return findCartItem(cartData, productId) !== undefined;
-};
+const isProductInCart = (cartData: any, productId: number): boolean =>
+  !!findCartItem(cartData, productId);
 
 const getProductCartQuantity = (cartData: any, productId: number): number => {
   const cartItem = findCartItem(cartData, productId);
@@ -65,7 +66,7 @@ const resolveProductId = (
   product: any,
   chosenVariantId: number | string | null
 ): number | undefined => {
-  if (product?.variants && product?.variants?.length > 0) {
+  if (product?.variants?.length) {
     return chosenVariantId
       ? Number(chosenVariantId)
       : product.variants[0]?.product_id;
@@ -73,13 +74,14 @@ const resolveProductId = (
   return product?.product_id;
 };
 
+/* ---------------- Component ---------------- */
+
 export default function ProductCard({
   product,
   wishlistProductId,
   cardColSpan,
   wishlistId,
 }: ProductCardProps) {
-  // State
   const [selectedVariantIndex, setSelectedVariantIndex] = useState<
     number | null
   >(null);
@@ -89,31 +91,28 @@ export default function ProductCard({
   const [chosenVariantId, setChosenVariantId] = useState<
     number | string | null
   >(null);
+  const [chosenVariantSku, setChosenVariantSku] = useState<string | null>(null);
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [pendingAddProductId, setPendingAddProductId] = useState<number | null>(
     null
   );
-  const [chosenVariantSku, setChosenVariantSku] = useState<string | null>(null);
+  const [showIncDec, setShowIncDec] = useState(false);
 
-  // Hooks
   const dispatch = useAppDispatch();
   const router = useRouter();
   const { moveToCart } = useFavourites();
   const t = useTranslations("products");
   const td = useTranslations("product-details");
 
-  // Selectors
   const { productDetails } = useSelector((state: any) => state.productDetails);
   const { isAuthenticated } = useSelector((state: any) => state.auth);
   const { data: cartData } = useSelector((state: any) => state.cart);
 
-  // Computed values
   const baseImageUrl = getCurrentMainImage(product, selectedVariantIndex ?? 0);
   const hoverImageUrl = getHoverImage(product, selectedVariantIndex ?? 0);
   const isInStock = product?.in_stock ?? product?.inStock ?? false;
   const productPrice = calculateProductPrice(product);
 
-  // Event handlers
   const handleViewProduct = () => {
     dispatch(getProductDetails({ id: product?.product_id }));
   };
@@ -124,8 +123,8 @@ export default function ProductCard({
     sku?: string
   ) => {
     setSelectedVariantIndex(index);
-    if (variantId != null) setChosenVariantId(variantId);
-    if (sku != null) setChosenVariantSku(sku);
+    if (variantId) setChosenVariantId(variantId);
+    if (sku) setChosenVariantSku(sku);
   };
 
   const handleAddToCart = async () => {
@@ -134,7 +133,6 @@ export default function ProductCard({
     const productId = resolveProductId(product, chosenVariantId);
     if (!productId) return;
 
-    // Check if user is authenticated
     if (!isAuthenticated) {
       setPendingAddProductId(productId);
       setShowAuthModal(true);
@@ -145,35 +143,21 @@ export default function ProductCard({
       setIsAdding(true);
 
       if (isProductInCart(cartData, productId)) {
-        // Update existing cart item quantity
-        const promise = dispatch(
-          addToCart({
-            productId,
-            productQTY: 1,
-          })
-        );
-
-        if (typeof promise?.unwrap === "function") {
-          await promise.unwrap();
-        } else {
-          await promise;
-        }
+        const promise = dispatch(addToCart({ productId, productQTY: 1 }));
+        await (typeof promise.unwrap === "function"
+          ? promise.unwrap()
+          : promise);
         toast.success(t("quantity-updated"));
       } else {
-        // Add new item to cart
         const promise = dispatch(addToCart({ productId, productQTY: 1 }));
-
-        if (typeof promise?.unwrap === "function") {
-          await promise.unwrap();
-        } else {
-          await promise;
-        }
+        await (typeof promise.unwrap === "function"
+          ? promise.unwrap()
+          : promise);
         toast.success(t("added-to-cart"));
+        setShowIncDec(true);
       }
     } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : String(error);
-      toast.error(errorMessage);
+      toast.error(error instanceof Error ? error.message : String(error));
     } finally {
       setIsAdding(false);
     }
@@ -181,55 +165,53 @@ export default function ProductCard({
 
   const handleMoveToCart = async () => {
     if (!wishlistId) return;
-
     try {
       setIsMovingToCart(true);
       await moveToCart(wishlistId);
       toast.success(t("moved-to-cart"));
-    } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : "Failed to move to cart";
-      toast.error(errorMessage);
+    } catch {
+      toast.error("Failed to move to cart");
     } finally {
       setIsMovingToCart(false);
     }
   };
 
+  const productId = resolveProductId(product, chosenVariantId);
+  const isInCart = productId ? isProductInCart(cartData, productId) : false;
+  const cartQuantity = productId
+    ? getProductCartQuantity(cartData, productId)
+    : 0;
+
   return (
     <Card
       onMouseEnter={() => isInStock && setIsHovered(true)}
       onMouseLeave={() => isInStock && setIsHovered(false)}
-      className={`product-card shadow-none hover:shadow-[0px_6px_20px_rgba(149,157,165,0.1)] py-0 h-fit gap-0 ${
-        isInStock ? "group" : ""
-      } relative rounded-t-lg ${
+      className={`product-card shadow-none hover:shadow-[0px_10px_30px_rgba(149,157,165,0.1)] py-0 h-fit rounded-lg gap-3 ${
         cardColSpan || "col-span-6 xl:col-span-2"
-      } border border-gray-200 hover:border-red-color rounded-lg`}
+      } border border-gray-200 hover:border-red-color`}
     >
       {!isInStock && <ZeroQuantity />}
 
-      <CardHeader className="p-0 relative group overflow-hidden rounded-t-lg gap-0">
+      <CardHeader className="p-0 relative overflow-hidden rounded-t-lg">
         {/* Hover Actions */}
         <motion.div
-          initial={{ x: 10, opacity: 0 }}
-          animate={isHovered ? { x: 0, opacity: 1 } : { x: 10, opacity: 0 }}
-          transition={{ duration: 0.3, ease: "easeOut", delay: 0.1 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: isHovered ? 1 : 0 }}
+          transition={{ duration: 0.3 }}
+          className="absolute top-2 rtl:left-2 ltr:right-2 z-10 flex flex-col gap-3"
         >
-          <div className="absolute top-2 rtl:left-2 ltr:right-2 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            <FavouriteButton product={product} />
-            <DrawerComponent
-              trigger={
-                <Button
-                  variant="ghost"
-                  onClick={handleViewProduct}
-                  className="text-3xl cursor-pointer text-black hidden md:flex opacity-80 hover:opacity-100"
-                >
-                  <FaRegEye />
-                </Button>
-              }
-            >
-              <QuickProductDetails product={productDetails?.data} />
-            </DrawerComponent>
-          </div>
+          <FavouriteButton product={product} className="cursor-pointer" />
+          <DrawerComponent
+            trigger={
+              <GrView
+                size={20}
+                onClick={handleViewProduct}
+                className="cursor-pointer text-black hover:text-red-500 transition"
+              />
+            }
+          >
+            <QuickProductDetails product={productDetails?.data} />
+          </DrawerComponent>
         </motion.div>
 
         {/* New Badge */}
@@ -239,19 +221,15 @@ export default function ProductCard({
           </Badge>
         )}
 
-        {/* Main Product Image */}
+        {/* Main Image */}
         <Image
           width={224}
           height={224}
           src={baseImageUrl}
-          alt={`${product?.name || t("product")} - ${chosenVariantSku || ""}`}
-          className="rounded-t-lg w-full h-full aspect-square transition-all duration-500 hover:scale-[1.05] cursor-pointer"
+          alt={product?.name || ""}
+          className="rounded-t-lg w-full aspect-square object-cover transition-transform duration-500 hover:scale-[1.05] cursor-pointer"
           onClick={() =>
-            router.push(
-              `/product/${
-                wishlistProductId ? wishlistProductId : product?.product_id
-              }`
-            )
+            router.push(`/product/${wishlistProductId || product?.product_id}`)
           }
         />
 
@@ -261,133 +239,129 @@ export default function ProductCard({
             width={224}
             height={224}
             src={hoverImageUrl}
-            alt={`${product?.name || t("product")} ${t("variant-image")} - ${
-              product?.sku || ""
-            }`}
-            className="absolute inset-0 rounded-t-lg w-full h-full aspect-square object-cover transition-all duration-500 opacity-0 group-hover:opacity-100 hover:scale-[1.05] cursor-pointer"
-            onClick={() =>
-              router.push(
-                `/product/${
-                  wishlistProductId ? wishlistProductId : product?.product_id
-                }`
-              )
-            }
+            alt={`${product?.name} hover`}
+            className="absolute inset-0 rounded-t-lg w-full h-full object-cover transition-opacity duration-500 opacity-0 group-hover:opacity-100"
           />
         )}
 
-        {/* Add to Cart Button */}
-        <Button
-          onClick={wishlistId ? handleMoveToCart : handleAddToCart}
-          disabled={isAdding || isMovingToCart || !isInStock}
-          className="absolute right-2 bottom-2  hover:bg-black/85 bg-black/85 text-white w-[30px] h-[30px] md:w-[40px] md:h-[40px] p-0 rounded-full shadow-lg flex items-center justify-center"
-        >
-          {isAdding || isMovingToCart ? (
-            <div className="flex items-center justify-center w-full h-full">
-              <PuffLoader size={15} color="#fff" />
+        {/* Cart Buttons */}
+        <div className="absolute right-2 bottom-2">
+          {isInCart && !showIncDec ? (
+            <Button
+              onClick={() => setShowIncDec(true)}
+              className="bg-[#3866df] hover:bg-[#3866df]/85 text-white flex items-center gap-1 px-3 py-1 mb-2 rounded-full"
+            >
+              <MdOutlineShoppingCart /> {cartQuantity}
+            </Button>
+          ) : showIncDec && isInCart ? (
+            <div className="mb-2 bg-[#3866df] hover:bg-[#3866df]/85 bg-[#3866df]/85 text-white py-1 px-2 rounded-full">
+              <ProductIncementOrDecrement
+                product={product}
+                quantity={cartQuantity}
+              />
             </div>
           ) : (
-            <FaPlus size={10} />
+            <Button
+              onClick={wishlistId ? handleMoveToCart : handleAddToCart}
+              disabled={isAdding || isMovingToCart || !isInStock}
+              className="bg-white hover:bg-white/85 text-[#3866df]  w-[35px] h-[35px] flex items-center justify-center shadow-md mb-2 rounded-full"
+            >
+              {isAdding || isMovingToCart ? (
+                <BeatLoader color="#fff" size={3} />
+              ) : (
+                <FaPlus size={10} />
+              )}
+            </Button>
           )}
-        </Button>
+        </div>
       </CardHeader>
 
-      <CardContent className="px-2 pt-4 flex flex-col gap-4 justify-start">
-        {/* Product Name and SKU */}
-        <div className="flex justify-between gap-1">
-          <p className="font-[600] md:font-[650] md:text-sm text-xs overflow-hidden text-ellipsis whitespace-nowrap">
-            {product?.name || t("product-name")}
-          </p>
-          <p className="font-[600] md:font-[650] md:text-sm text-xs overflow-hidden text-ellipsis whitespace-nowrap">
-            {chosenVariantSku ??
-              (product?.variants?.length
-                ? product.variants[0]?.sku
-                : product?.sku)}
+      <CardContent className="px-3 pb-3 flex flex-col gap-2 sm:gap-3">
+        <div className="flex justify-between items-center">
+          <p className="font-semibold text-sm truncate">{product?.name}</p>
+          <p className="text-xs text-gray-500 truncate">
+            {chosenVariantSku ?? product?.sku}
           </p>
         </div>
-
-        {/* Variants and Price */}
-        <div className="flex justify-between gap-1 items-center">
-          {/* Variant Images */}
-          {product?.variants?.length ? (
-            <div className="items-center gap-2 hidden md:flex transition-all duration-300">
-              {product.variants
-                .slice(0, 3)
-                .map((variant: any, index: number) => (
-                  <div key={variant?.product_id} className="relative">
-                    <Image
-                      width={32}
-                      height={32}
-                      src={
-                        variant.base_image?.original_image_url ||
-                        "/assets/images/no-image.webp"
-                      }
-                      alt={`${product?.name || t("product")} ${t(
-                        "variant-image"
-                      )} ${index + 1}`}
-                      className={`cursor-pointer transition-all duration-200 rounded-full h-[32px] w-[32px] ${
-                        selectedVariantIndex === index ||
-                        (selectedVariantIndex === null && index === 0)
-                          ? "ring-2 ring-gray-300 scale-110"
-                          : "hover:scale-105"
-                      }`}
-                      onClick={() =>
-                        handleVariantSelect(
-                          index,
-                          variant?.product_id,
-                          variant?.sku
-                        )
-                      }
-                    />
-                  </div>
-                ))}
-              {product.variants.length > 3 && (
-                <Badge className="mx-1 bg-transparent text-primary mb-3 ring-2 ring-gray-300 scale-110 w-[32px] h-[32px] p-0 flex items-center rounded-full justify-center shadow-[inset_0_2px_4px_rgba(0,0,0,0.1)] text-xs">
-                  +{product.variants.length - 3}
-                </Badge>
-              )}
-            </div>
-          ) : (
-            <div className="justify-between items-center gap-3 w-full hidden md:flex">
-              <div className="relative">
-                <Image
-                  width={32}
-                  height={32}
-                  src={
-                    product?.base_image?.original_image_url ||
-                    "/assets/images/no-image.webp"
-                  }
-                  alt={`${product?.name || t("product")}`}
-                  className="cursor-pointer transition-all duration-200 rounded-full ring-2 ring-gray-300 scale-110 h-[32px] w-[32px]"
-                  onClick={() =>
-                    handleVariantSelect(0, product?.product_id, product?.sku)
-                  }
-                />
+        <div className="scale-[0.85] sm:scale-100 flex items-center justify-between">
+          <div className="flex justify-between gap-1 items-center">
+            {/* Variant Images */}
+            {product?.variants?.length ? (
+              <div className="items-center gap-2 hidden sm:flex transition-all duration-300">
+                {product.variants
+                  .slice(0, 2)
+                  .map((variant: any, index: number) => (
+                    <div key={variant?.product_id} className="relative">
+                      <Image
+                        width={28}
+                        height={28}
+                        src={
+                          variant.base_image?.original_image_url ||
+                          "/assets/images/no-image.webp"
+                        }
+                        alt={`${product?.name || t("product")} ${t(
+                          "variant-image"
+                        )} ${index + 1}`}
+                        className={`cursor-pointer transition-all duration-200 rounded-full h-[28px] w-[28px] ${
+                          selectedVariantIndex === index ||
+                          (selectedVariantIndex === null && index === 0)
+                            ? "ring-2 ring-gray-300"
+                            : "border-2 border-dotted border-gray-300"
+                        }`}
+                        onClick={() =>
+                          handleVariantSelect(
+                            index,
+                            variant?.product_id,
+                            variant?.sku
+                          )
+                        }
+                      />
+                    </div>
+                  ))}
+                {product.variants.length > 2 && (
+                  <Badge className="mx-1 bg-transparent text-primary ring-2 ring-gray-300  w-[28px] h-[28px] p-0 flex items-center rounded-full justify-center shadow-[inset_0_2px_4px_rgba(0,0,0,0.1)] text-xs">
+                    +{product.variants.length - 2}
+                  </Badge>
+                )}
               </div>
-            </div>
-          )}
-          {/* Rating */}
-
-          <div className="flex items-center gap-1 bg-gray-100 px-2 rounded-md w-fit mb-2 md:mb-0 shadow-md">
-            <Badge className="bg-transparent text-gray-500 p-0 font-[550]">
-              (810)
-            </Badge>{" "}
-            {product?.reviews?.total == 0 ? (
-              <FaRegStar className="rating-color" />
             ) : (
-              <FaStar className="rating-color" />
+              <div className="justify-between items-center gap-3 w-full hidden sm:flex">
+                <div className="relative">
+                  <Image
+                    width={28}
+                    height={28}
+                    src={
+                      product?.base_image?.original_image_url ||
+                      "/assets/images/no-image.webp"
+                    }
+                    alt={`${product?.name || t("product")}`}
+                    className={` ${
+                      selectedVariantIndex === 0 || selectedVariantIndex == null
+                        ? "ring-2 ring-gray-300"
+                        : "border-2 border-dotted border-gray-300"
+                    } cursor-pointer transition-all duration-200 rounded-full ring-2 ring-gray-300 h-[28px] w-[28px]`}
+                    onClick={() =>
+                      handleVariantSelect(0, product?.product_id, product?.sku)
+                    }
+                  />
+                </div>
+              </div>
             )}
+            {/* Rating */}
+          </div>
+          <div className="hidden sm:flex items-center gap-1 bg-gray-100 px-2 rounded-full w-fit shadow-sm">
             <Badge className="bg-transparent text-gray-500 p-0 text-base font-[550]">
               {product?.reviews?.total}
             </Badge>{" "}
+            <ReactStars edit={false} />
           </div>
         </div>
-        {/* Price */}
-        <p className="text-sm md:text-base mb-3 text-nowrap hidden md:flex items-center gap-2 font-[650]">
+        {/* Price + Favourite */}
+        <p className="font-bold text-sm sm:text-base">
           {productPrice.toFixed(2)} <i className="icon-rial"></i>
         </p>
       </CardContent>
 
-      {/* Authentication Modal */}
       <AuthModal
         isOpen={showAuthModal}
         onOpenChange={(open) => {
@@ -398,40 +372,15 @@ export default function ProductCard({
           const targetId =
             pendingAddProductId ?? resolveProductId(product, chosenVariantId);
           if (!targetId) return;
-
           try {
             setIsAdding(true);
-
-            if (isProductInCart(cartData, targetId)) {
-              const currentQuantity = getProductCartQuantity(
-                cartData,
-                targetId
-              );
-              const promise = dispatch(
-                updateCartQuantity({
-                  productId: targetId,
-                  quantity: currentQuantity + 1,
-                })
-              );
-
-              if (typeof promise?.unwrap === "function") {
-                await promise.unwrap();
-              } else {
-                await promise;
-              }
-              toast.success(t("quantity-updated"));
-            } else {
-              const promise = dispatch(
-                addToCart({ productId: targetId, productQTY: 1 })
-              );
-
-              if (typeof promise?.unwrap === "function") {
-                await promise.unwrap();
-              } else {
-                await promise;
-              }
-              toast.success(t("added-to-cart"));
-            }
+            const promise = dispatch(
+              addToCart({ productId: targetId, productQTY: 1 })
+            );
+            await (typeof promise.unwrap === "function"
+              ? promise.unwrap()
+              : promise);
+            toast.success(t("added-to-cart"));
           } finally {
             setIsAdding(false);
             setPendingAddProductId(null);

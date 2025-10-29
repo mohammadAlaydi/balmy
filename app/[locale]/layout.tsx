@@ -9,6 +9,7 @@ import ReduxProvider from "@/store/redux-provider";
 import Providers from "@/components/providers";
 import AuthInitializer from "@/components/auth/auth-initializer";
 import BreadcrumbWrapper from "@/components/layout/breadcrumb-wrapper";
+import ToTop from "@/components/layout/to-top/to-top";
 
 const cairo = Cairo({
   variable: "--font-cairo",
@@ -18,29 +19,59 @@ const cairo = Cairo({
   preload: true,
 });
 
-export const metadata: Metadata = {
-  title: "Farada - Premium E-commerce Store",
-  description: "Discover high-quality products with exceptional service",
-  keywords: ["e-commerce", "shopping", "products", "quality"],
-  authors: [{ name: "Farada Team" }],
-  openGraph: {
-    title: "Farada - Premium E-commerce Store",
-    description: "Discover high-quality products with exceptional service",
-    type: "website",
-  },
-};
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
+// ✅ فقط generateMetadata (بدون metadata)
+export async function generateMetadata({
+  params,
+}: {
+  params: { locale: string };
+}): Promise<Metadata> {
+  const locale = params.locale || "ar";
+
+  try {
+    const response = await fetch(`${API_URL}/v1/home?locale=${locale}`, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      next: { revalidate: 3600 },
+    });
+
+    const data = await response.json();
+    const seo = data?.seo_settings?.channel?.meta_data;
+
+    return {
+      title: seo?.meta_title || "Farada - Premium E-commerce Store",
+      description: seo?.meta_description || "",
+      keywords: seo?.meta_keywords || [
+        "e-commerce",
+        "shopping",
+        "products",
+        "quality",
+      ],
+      openGraph: {
+        title: seo?.meta_title || "",
+        description: seo?.meta_description || "",
+        type: "website",
+      },
+    };
+  } catch (error) {
+    console.error("SEO metadata fetch failed:", error);
+  }
+}
 
 export default async function RootLayout({
   children,
   params,
 }: Readonly<{
   children: React.ReactNode;
-  params: Promise<{ locale: string }>;
+  params: { locale: string };
 }>) {
-  const { locale } = await params;
+  const locale = params.locale || "ar";
   const messages = await getMessages({ locale });
+
   return (
-    <html lang={locale} dir={locale == "ar" ? "rtl" : "ltr"}>
+    <html lang={locale} dir={locale === "ar" ? "rtl" : "ltr"}>
       <body className={`${cairo.variable} font-cairo`}>
         <ReduxProvider>
           <NextIntlClientProvider messages={messages}>
@@ -49,6 +80,7 @@ export default async function RootLayout({
             <AuthInitializer />
             <Providers>{children}</Providers>
             <Footer />
+            <ToTop />
           </NextIntlClientProvider>
         </ReduxProvider>
       </body>

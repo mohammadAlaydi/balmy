@@ -15,7 +15,6 @@ import SectionTitle from "@/components/section-title";
 import { usePathname } from "next/navigation";
 
 export default function page() {
-  
   const dispatch = useDispatch();
   const { data, loading } = useSelector((state: any) => state.home);
   const pathname = usePathname();
@@ -35,12 +34,21 @@ export default function page() {
       <BannerCarousel sliders={data?.sliders} />
       <PageWrapper yPadding="py-5">
         <Services />
-        <SectionTitle title={t("featured-categories")} titleStyle="text-xl md:text-3xl mb-5"/>
+        <SectionTitle
+          title={t("featured-categories")}
+          titleStyle="text-xl md:text-3xl mb-5"
+        />
         <Categories categories={data?.featured_categories} />
-        <SectionTitle title={t("featured-products")} titleStyle="text-xl md:text-3xl mb-5"/> 
+        <SectionTitle
+          title={t("featured-products")}
+          titleStyle="text-xl md:text-3xl mb-5"
+        />
         <ProductsCarousel products={data?.featured_products} />
         <Ads ads={data?.ads} />
-        <SectionTitle title={t("new-arrivals")}  titleStyle="text-xl md:text-3xl my-5"/>
+        <SectionTitle
+          title={t("new-arrivals")}
+          titleStyle="text-xl md:text-3xl my-5"
+        />
         <ProductsCarousel products={data?.new_products} />
       </PageWrapper>
     </>

@@ -170,7 +170,7 @@ const ActionIcons = ({
                 className="cursor-pointer text-black"
               />
               {cartCount > 0 && (
-                <Badge className="absolute -top-2 -right-2 h-5 w-5 p-0 text-xs flex items-center justify-center bg-blue-500 text-white">
+                <Badge className="absolute -top-2 -right-2 h-5 w-5 p-0 text-xs flex items-center justify-center bg-[#3866df] text-white">
                   {cartCount}
                 </Badge>
               )}
@@ -319,7 +319,7 @@ const Logo = ({ data }: { data: any }) => {
         alt="logo"
         className="lg:w-[180px]"
         width={140}
-        height={70}
+        height={50}
         priority
       />
     </Link>
@@ -371,7 +371,7 @@ const MobileMenu = ({
                           <Link
                             prefetch={true}
                             href={`/${currentLocale}/category/${category.slug}/${nested.slug}/${nested.id}`}
-                            className="block rounded-md px-1.5 py-1 text-sm hover:bg-accent hover:text-accent-foreground"
+                            className="block rounded-md px-1.5 py-1 text-lg font-[550] hover:bg-accent hover:text-accent-foreground"
                           >
                             {nested.name}
                           </Link>
@@ -384,7 +384,7 @@ const MobileMenu = ({
                 <Link
                   prefetch={true}
                   href={`/${currentLocale}/category/${category.slug}/${category.id}`}
-                  className="flex items-center py-3 px-3 hover:bg-gray-50 rounded-md text-left w-full"
+                  className="flex items-center py-3 px-3 hover:bg-gray-50 rounded-md text-left w-full text-lg font-[550]"
                 >
                   {category.name}
                 </Link>
@@ -477,7 +477,7 @@ const MobileMenu = ({
                     <QuickCart />
                   </DrawerComponent>
                   {cartCount > 0 ? (
-                    <span className="absolute -top-2 -right-2 h-5 w-5 p-0 text-xs flex items-center justify-center bg-blue-500 text-white rounded-full">
+                    <span className="absolute -top-2 -right-2 h-5 w-5 p-0 text-xs flex items-center justify-center bg-[#3866df] text-white rounded-full">
                       {cartCount}
                     </span>
                   ) : null}
@@ -526,21 +526,23 @@ export default function Header() {
   return (
     <div className="w-full relative z-50">
       <TopBar data={data} />
-      <div className="flex justify-between items-center gap-3 py-5 px-3 lg:px-5 scroll-shadow:shadow-[0px_6px_20px_rgba(149,157,165,0.1)] transition-shadow duration-200 bg-white relative z-50">
-        <ActionIcons
-          languageItems={languageItems}
-          currentLocale={currentLocale}
-        />
-        <NavigationLinks
-          navbarCategories={(categories as any)?.categories?.categories || []}
-          currentLocale={currentLocale}
-        />
-        <Logo data={data} />
-        <MobileMenu
-          navbarCategories={(categories as any)?.categories?.categories || []}
-          languageItems={languageItems}
-          currentLocale={currentLocale}
-        />
+      <div className="sticky top-0 z-50 bg-white shadow-sm transition-shadow duration-200">
+        <div className="flex justify-between items-center gap-3 py-5 px-3 lg:px-5 scroll-shadow:shadow-[0px_6px_20px_rgba(149,157,165,0.1)] transition-shadow duration-200 bg-white relative">
+          <ActionIcons
+            languageItems={languageItems}
+            currentLocale={currentLocale}
+          />
+          <NavigationLinks
+            navbarCategories={(categories as any)?.categories?.categories || []}
+            currentLocale={currentLocale}
+          />
+          <Logo data={data} />
+          <MobileMenu
+            navbarCategories={(categories as any)?.categories?.categories || []}
+            languageItems={languageItems}
+            currentLocale={currentLocale}
+          />
+        </div>
       </div>
     </div>
   );

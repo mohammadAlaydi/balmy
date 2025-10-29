@@ -12,7 +12,7 @@ import {
 import { MdDeleteSweep } from "react-icons/md";
 import { useSelector } from "react-redux";
 import { useTranslations } from "next-intl";
-import { PuffLoader } from "react-spinners";
+import { BeatLoader } from "react-spinners";
 
 export default function DeleteProductComponent({
   action,
@@ -45,7 +45,7 @@ export default function DeleteProductComponent({
             <Button variant="outline">{t("cancel")}</Button>
           </DialogClose>
           <Button type="submit" onClick={action}>
-            {isLoading ? <PuffLoader size={30} /> : t("delete")}
+            {isLoading ? <BeatLoader size={3} /> : t("delete")}
           </Button>
         </DialogFooter>
       </DialogContent>
