@@ -48,7 +48,7 @@ export default function ProductIncementOrDecrement({
     <div className="flex items-center gap-2 sm:gap-3">
       {/* Increase */}
       <FaPlus
-        className={`text-lg sm:text-xl cursor-pointer border border-gray-200 rounded-full p-1 ${
+        className={`text-lg sm:text-xl cursor-pointer p-1 ${
           isLoading ? "text-gray-400" : ""
         }`}
         onClick={() => {
@@ -65,7 +65,7 @@ export default function ProductIncementOrDecrement({
 
       {/* Decrease */}
       <TiMinus
-        className={`text-lg sm:text-xl cursor-pointer border border-gray-200 rounded-full p-1 ${
+        className={`text-lg sm:text-xl cursor-pointer  p-1 ${
           isLoading || currentQty <= 1 ? "text-gray-400" : ""
         }`}
         onClick={() => {

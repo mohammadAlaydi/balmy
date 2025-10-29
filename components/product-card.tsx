@@ -5,7 +5,7 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
 import { useTranslations } from "next-intl";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import toast from "react-hot-toast";
 import { BeatLoader } from "react-spinners";
 import { Badge } from "./ui/badge";
@@ -17,12 +17,11 @@ import ZeroQuantity from "./zero-quantity";
 import { FavouriteButton } from "./favourite-button";
 import AuthModal from "./auth/auth-modal";
 import { useAppDispatch } from "@/store/hooks";
-import { addToCart, updateCartQuantity } from "@/store/slices/cart-slice";
+import { addToCart } from "@/store/slices/cart-slice";
 import { getProductDetails } from "@/store/slices/product-details-slice";
 import { ProductCardProps } from "@/types/types";
 import { getCurrentMainImage, getHoverImage } from "@/static-data/static-data";
 import { useFavourites } from "@/hooks/use-favourites";
-import { FaRegStar, FaStar } from "react-icons/fa";
 import { FaPlus } from "react-icons/fa6";
 import { GrView } from "react-icons/gr";
 import ProductIncementOrDecrement from "./product-increment-or-decrement";
@@ -30,7 +29,6 @@ import { MdOutlineShoppingCart } from "react-icons/md";
 import ReactStars from "react-stars";
 
 /* ---------------- Helper Functions ---------------- */
-
 const calculateProductPrice = (product: any): number => {
   const variants = Array.isArray(product?.variants) ? product.variants : [];
   const basePrice = Number.isFinite(Number(product?.price))
@@ -75,27 +73,20 @@ const resolveProductId = (
 };
 
 /* ---------------- Component ---------------- */
-
 export default function ProductCard({
   product,
   wishlistProductId,
   cardColSpan,
   wishlistId,
 }: ProductCardProps) {
-  const [selectedVariantIndex, setSelectedVariantIndex] = useState<
-    number | null
-  >(null);
+  const [selectedVariantIndex, setSelectedVariantIndex] = useState<number | null>(null);
   const [isHovered, setIsHovered] = useState(false);
   const [isAdding, setIsAdding] = useState(false);
   const [isMovingToCart, setIsMovingToCart] = useState(false);
-  const [chosenVariantId, setChosenVariantId] = useState<
-    number | string | null
-  >(null);
+  const [chosenVariantId, setChosenVariantId] = useState<number | string | null>(null);
   const [chosenVariantSku, setChosenVariantSku] = useState<string | null>(null);
   const [showAuthModal, setShowAuthModal] = useState(false);
-  const [pendingAddProductId, setPendingAddProductId] = useState<number | null>(
-    null
-  );
+  const [pendingAddProductId, setPendingAddProductId] = useState<number | null>(null);
   const [showIncDec, setShowIncDec] = useState(false);
 
   const dispatch = useAppDispatch();
@@ -113,6 +104,13 @@ export default function ProductCard({
   const isInStock = product?.in_stock ?? product?.inStock ?? false;
   const productPrice = calculateProductPrice(product);
 
+  const productId = resolveProductId(product, chosenVariantId);
+  const isInCart = productId ? isProductInCart(cartData, productId) : false;
+  const cartQuantity = productId
+    ? getProductCartQuantity(cartData, productId)
+    : 0;
+
+  /* ---------------- Handlers ---------------- */
   const handleViewProduct = () => {
     dispatch(getProductDetails({ id: product?.product_id }));
   };
@@ -130,32 +128,22 @@ export default function ProductCard({
   const handleAddToCart = async () => {
     if (!isInStock || isAdding) return;
 
-    const productId = resolveProductId(product, chosenVariantId);
-    if (!productId) return;
+    const targetId = resolveProductId(product, chosenVariantId);
+    if (!targetId) return;
 
     if (!isAuthenticated) {
-      setPendingAddProductId(productId);
+      setPendingAddProductId(targetId);
       setShowAuthModal(true);
       return;
     }
 
     try {
       setIsAdding(true);
+      const promise = dispatch(addToCart({ productId: targetId, productQTY: 1 }));
+      await (typeof promise.unwrap === "function" ? promise.unwrap() : promise);
 
-      if (isProductInCart(cartData, productId)) {
-        const promise = dispatch(addToCart({ productId, productQTY: 1 }));
-        await (typeof promise.unwrap === "function"
-          ? promise.unwrap()
-          : promise);
-        toast.success(t("quantity-updated"));
-      } else {
-        const promise = dispatch(addToCart({ productId, productQTY: 1 }));
-        await (typeof promise.unwrap === "function"
-          ? promise.unwrap()
-          : promise);
-        toast.success(t("added-to-cart"));
-        setShowIncDec(true);
-      }
+      toast.success(isProductInCart(cartData, targetId) ? t("quantity-updated") : t("added-to-cart"));
+      setShowIncDec(true);
     } catch (error) {
       toast.error(error instanceof Error ? error.message : String(error));
     } finally {
@@ -176,11 +164,12 @@ export default function ProductCard({
     }
   };
 
-  const productId = resolveProductId(product, chosenVariantId);
-  const isInCart = productId ? isProductInCart(cartData, productId) : false;
-  const cartQuantity = productId
-    ? getProductCartQuantity(cartData, productId)
-    : 0;
+  /* ---------------- Cart Button Variants ---------------- */
+  const motionVariants = {
+    initial: { opacity: 0, scale: 0.8 },
+    animate: { opacity: 1, scale: 1 },
+    exit: { opacity: 0, scale: 0.8 },
+  };
 
   return (
     <Card
@@ -246,80 +235,92 @@ export default function ProductCard({
 
         {/* Cart Buttons */}
         <div className="absolute right-2 bottom-2">
-          {isInCart && !showIncDec ? (
-            <Button
-              onClick={() => setShowIncDec(true)}
-              className="bg-[#3866df] hover:bg-[#3866df]/85 text-white flex items-center gap-1 px-3 py-1 mb-2 rounded-full"
-            >
-              <MdOutlineShoppingCart /> {cartQuantity}
-            </Button>
-          ) : showIncDec && isInCart ? (
-            <div className="mb-2 bg-[#3866df] hover:bg-[#3866df]/85 bg-[#3866df]/85 text-white py-1 px-2 rounded-full">
-              <ProductIncementOrDecrement
-                product={product}
-                quantity={cartQuantity}
-              />
-            </div>
-          ) : (
-            <Button
-              onClick={wishlistId ? handleMoveToCart : handleAddToCart}
-              disabled={isAdding || isMovingToCart || !isInStock}
-              className="bg-white hover:bg-white/85 text-[#3866df]  w-[35px] h-[35px] flex items-center justify-center shadow-md mb-2 rounded-full"
-            >
-              {isAdding || isMovingToCart ? (
-                <BeatLoader color="#fff" size={3} />
-              ) : (
-                <FaPlus size={10} />
-              )}
-            </Button>
-          )}
+          <AnimatePresence mode="wait">
+            {isInCart && !showIncDec ? (
+              <motion.div
+                key="cart-btn"
+                variants={motionVariants}
+                initial="initial"
+                animate="animate"
+                exit="exit"
+                transition={{ duration: 0.2 }}
+              >
+                <Button
+                  onClick={() => setShowIncDec(true)}
+                  className="bg-[#3866df] hover:bg-[#3866df]/85 text-white flex items-center gap-1 px-3 py-1 mb-2 rounded-full"
+                >
+                  <MdOutlineShoppingCart /> {cartQuantity}
+                </Button>
+              </motion.div>
+            ) : showIncDec && isInCart ? (
+              <motion.div
+                key="inc-dec-btn"
+                variants={motionVariants}
+                initial="initial"
+                animate="animate"
+                exit="exit"
+                transition={{ duration: 0.2 }}
+              >
+                <div className="mb-2 bg-[#3866df] hover:bg-[#3866df]/85 text-white py-1 px-2 rounded-full">
+                  <ProductIncementOrDecrement product={product} quantity={cartQuantity} />
+                </div>
+              </motion.div>
+            ) : (
+              <motion.div
+                key="add-btn"
+                variants={motionVariants}
+                initial="initial"
+                animate="animate"
+                exit="exit"
+                transition={{ duration: 0.2 }}
+              >
+                <Button
+                  onClick={wishlistId ? handleMoveToCart : handleAddToCart}
+                  disabled={isAdding || isMovingToCart || !isInStock}
+                  className="bg-black hover:bg-black/85 text-white w-[35px] h-[35px] flex items-center justify-center shadow-md mb-2 rounded-full"
+                >
+                  {isAdding || isMovingToCart ? (
+                    <BeatLoader color="#fff" size={3} />
+                  ) : (
+                    <FaPlus size={10} />
+                  )}
+                </Button>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </CardHeader>
 
+      {/* Content */}
       <CardContent className="px-3 pb-3 flex flex-col gap-2 sm:gap-3">
         <div className="flex justify-between items-center">
           <p className="font-semibold text-sm truncate">{product?.name}</p>
-          <p className="text-xs text-gray-500 truncate">
-            {chosenVariantSku ?? product?.sku}
-          </p>
+          <p className="text-xs text-gray-500 truncate">{chosenVariantSku ?? product?.sku}</p>
         </div>
+
+        {/* Variant Selector */}
         <div className="scale-[0.85] sm:scale-100 flex items-center justify-between">
           <div className="flex justify-between gap-1 items-center">
-            {/* Variant Images */}
             {product?.variants?.length ? (
               <div className="items-center gap-2 hidden sm:flex transition-all duration-300">
-                {product.variants
-                  .slice(0, 2)
-                  .map((variant: any, index: number) => (
-                    <div key={variant?.product_id} className="relative">
-                      <Image
-                        width={28}
-                        height={28}
-                        src={
-                          variant.base_image?.original_image_url ||
-                          "/assets/images/no-image.webp"
-                        }
-                        alt={`${product?.name || t("product")} ${t(
-                          "variant-image"
-                        )} ${index + 1}`}
-                        className={`cursor-pointer transition-all duration-200 rounded-full h-[28px] w-[28px] ${
-                          selectedVariantIndex === index ||
-                          (selectedVariantIndex === null && index === 0)
-                            ? "ring-2 ring-gray-300"
-                            : "border-2 border-dotted border-gray-300"
-                        }`}
-                        onClick={() =>
-                          handleVariantSelect(
-                            index,
-                            variant?.product_id,
-                            variant?.sku
-                          )
-                        }
-                      />
-                    </div>
-                  ))}
+                {product.variants.slice(0, 2).map((variant: any, index: number) => (
+                  <div key={variant?.product_id} className="relative">
+                    <Image
+                      width={28}
+                      height={28}
+                      src={variant.base_image?.original_image_url || "/assets/images/no-image.webp"}
+                      alt={`${product?.name || t("product")} ${t("variant-image")} ${index + 1}`}
+                      className={`cursor-pointer transition-all duration-200 rounded-full h-[28px] w-[28px] ${
+                        selectedVariantIndex === index || (selectedVariantIndex === null && index === 0)
+                          ? "ring-2 ring-gray-300"
+                          : "border-2 border-dotted border-gray-300"
+                      }`}
+                      onClick={() => handleVariantSelect(index, variant?.product_id, variant?.sku)}
+                    />
+                  </div>
+                ))}
                 {product.variants.length > 2 && (
-                  <Badge className="mx-1 bg-transparent text-primary ring-2 ring-gray-300  w-[28px] h-[28px] p-0 flex items-center rounded-full justify-center shadow-[inset_0_2px_4px_rgba(0,0,0,0.1)] text-xs">
+                  <Badge className="mx-1 bg-transparent text-primary ring-2 ring-gray-300 w-[28px] h-[28px] p-0 flex items-center rounded-full justify-center shadow-[inset_0_2px_4px_rgba(0,0,0,0.1)] text-xs">
                     +{product.variants.length - 2}
                   </Badge>
                 )}
@@ -330,38 +331,32 @@ export default function ProductCard({
                   <Image
                     width={28}
                     height={28}
-                    src={
-                      product?.base_image?.original_image_url ||
-                      "/assets/images/no-image.webp"
-                    }
+                    src={product?.base_image?.original_image_url || "/assets/images/no-image.webp"}
                     alt={`${product?.name || t("product")}`}
-                    className={` ${
+                    className={`${
                       selectedVariantIndex === 0 || selectedVariantIndex == null
                         ? "ring-2 ring-gray-300"
                         : "border-2 border-dotted border-gray-300"
                     } cursor-pointer transition-all duration-200 rounded-full ring-2 ring-gray-300 h-[28px] w-[28px]`}
-                    onClick={() =>
-                      handleVariantSelect(0, product?.product_id, product?.sku)
-                    }
+                    onClick={() => handleVariantSelect(0, product?.product_id, product?.sku)}
                   />
                 </div>
               </div>
             )}
-            {/* Rating */}
           </div>
+        </div>
+
+        {/* Price + Rating */}
+        <div className="flex items-center justify-between">
+          <p className="font-bold text-sm sm:text-base">{productPrice.toFixed(2)} <i className="icon-rial"></i></p>
           <div className="hidden sm:flex items-center gap-1 bg-gray-100 px-2 rounded-full w-fit shadow-sm">
-            <Badge className="bg-transparent text-gray-500 p-0 text-base font-[550]">
-              {product?.reviews?.total}
-            </Badge>{" "}
+            <Badge className="bg-transparent text-gray-500 p-0 text-base font-[550]">{product?.reviews?.total}</Badge>{" "}
             <ReactStars edit={false} />
           </div>
         </div>
-        {/* Price + Favourite */}
-        <p className="font-bold text-sm sm:text-base">
-          {productPrice.toFixed(2)} <i className="icon-rial"></i>
-        </p>
       </CardContent>
 
+      {/* Auth Modal */}
       <AuthModal
         isOpen={showAuthModal}
         onOpenChange={(open) => {
@@ -369,18 +364,14 @@ export default function ProductCard({
           if (!open) setPendingAddProductId(null);
         }}
         onAuthenticated={async () => {
-          const targetId =
-            pendingAddProductId ?? resolveProductId(product, chosenVariantId);
+          const targetId = pendingAddProductId ?? resolveProductId(product, chosenVariantId);
           if (!targetId) return;
           try {
             setIsAdding(true);
-            const promise = dispatch(
-              addToCart({ productId: targetId, productQTY: 1 })
-            );
-            await (typeof promise.unwrap === "function"
-              ? promise.unwrap()
-              : promise);
+            const promise = dispatch(addToCart({ productId: targetId, productQTY: 1 }));
+            await (typeof promise.unwrap === "function" ? promise.unwrap() : promise);
             toast.success(t("added-to-cart"));
+            setShowIncDec(true);
           } finally {
             setIsAdding(false);
             setPendingAddProductId(null);
