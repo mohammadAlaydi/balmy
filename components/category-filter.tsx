@@ -251,7 +251,7 @@ export default function CategoryFilter({
                   {availabilityOptions.map((availability) => (
                     <div
                       key={availability}
-                      className="flex items-center space-x-3 p-2 sm:p-3 bg-white rounded-lg border border-gray-200 hover:border-green-300 hover:bg-green-50 transition-all duration-200"
+                      className="flex items-center gap-2 space-x-3 p-2 sm:p-3 bg-white rounded-lg border border-gray-200 hover:border-green-300 hover:bg-green-50 transition-all duration-200"
                     >
                       <input
                         type="checkbox"
@@ -280,7 +280,7 @@ export default function CategoryFilter({
 
               {/* Stock Filter */}
               <div className="space-y-4">
-                <div className="flex items-center space-x-3 p-3 sm:p-4 bg-white rounded-lg border border-gray-200 hover:border-orange-300 hover:bg-orange-50 transition-all duration-200">
+                <div className="flex items-center gap-2 space-x-3 p-3 sm:p-4 bg-white rounded-lg border border-gray-200 hover:border-orange-300 hover:bg-orange-50 transition-all duration-200">
                   <input
                     type="checkbox"
                     id="in-stock"
