@@ -50,7 +50,7 @@ export default function CarouselComponent({
         spaceBetween={spaceBetween || 30}
         slidesPerView={slidesPerView || 1}
         breakpoints={breakpoints}
-        autoplay={autoPlay ? { delay: 5000, disableOnInteraction: false } : false}
+        autoplay={autoPlay ? { delay: 10000, disableOnInteraction: false } : false}
         autoHeight={!!autoHeight}
         effect={effect}
         fadeEffect={effect === 'fade' ? { crossFade: true } : undefined}
