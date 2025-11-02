@@ -33,7 +33,6 @@ export default function Categories({ categories }: { categories: any }) {
         992: {
           slidesPerView: 3,
           spaceBetween: 8,
-
         },
         1000: { slidesPerView: 3, spaceBetween: 15 },
         1200: { slidesPerView: 4, spaceBetween: 15 },
@@ -66,16 +65,16 @@ export default function Categories({ categories }: { categories: any }) {
                       return (
                         <Image
                           src={imageSrc}
-                          width={250}
-                          height={250}
-                          className="rounded-full m-auto transform hover:scale-[1.02] transition-all duration-1000 "
+                          width={230}
+                          height={230}
+                          className="rounded-full m-auto transform hover:scale-[1.02] transition-all duration-1000 aspect-square"
                           alt={category.name || "category"}
                         />
                       );
                     })()}
                   </div>
                 </Link>
-                <div className="flex flex-col gap-1 md:gap-3">
+                <div className="flex flex-col gap-1 md:gap-2">
                   <h2 className="text-center text-lg md:text-xl font-semibold text-primary mt-2">
                     {category.name}
                   </h2>
