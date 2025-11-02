@@ -1,16 +1,34 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { FaAngleDoubleUp } from "react-icons/fa";
 
 export default function ToTop() {
+  const [isVisible, setIsVisible] = useState(false);
+
   const scrollToTop = useCallback(() => {
     window.scrollTo({
       top: 0,
       behavior: "smooth",
     });
   }, []);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 1000) {
+        setIsVisible(true);
+      } else {
+        setIsVisible(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  if (!isVisible) return null;
+
   return (
     <Button
       onClick={scrollToTop}
