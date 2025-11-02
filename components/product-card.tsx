@@ -27,6 +27,7 @@ import { GrView } from "react-icons/gr";
 import ProductIncementOrDecrement from "./product-increment-or-decrement";
 import { MdOutlineShoppingCart } from "react-icons/md";
 import ReactStars from "react-stars";
+import StarRating from "./react-stars";
 
 /* ---------------- Helper Functions ---------------- */
 const calculateProductPrice = (product: any): number => {
@@ -393,10 +394,11 @@ export default function ProductCard({
             {productPrice.toFixed(2)} <i className="icon-rial"></i>
           </p>
           <div className="hidden sm:flex items-center gap-1 bg-gray-100 px-2 rounded-full w-fit shadow-sm">
-            <Badge className="bg-transparent text-gray-500 p-0 text-base font-[550]">
-              {product?.reviews?.total}
+            <StarRating edit={false} rating={4.5} />
+            <Badge className="bg-transparent text-gray-500 p-0 text-sm font-[550]">
+              {/* {product?.reviews?.total} */}
+              4.5
             </Badge>{" "}
-            <ReactStars edit={false} />
           </div>
         </div>
       </CardContent>

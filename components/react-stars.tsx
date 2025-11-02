@@ -5,25 +5,24 @@ import ReactStars from "react-stars";
 
 interface StarRatingProps {
   rating?: number;
-  size?: number;
   onChange?: (newRating: number) => void;
   edit?: boolean;
   count?: number;
   half?: boolean;
-  color1?: string;
-  color2?: string;
+  color1?: string; // empty stars
+  color2?: string; // filled stars
   className?: string;
   inline?: boolean;
 }
 
 export default function StarRating({
-  rating = 0,
+  rating = 4.5,
   onChange,
   edit = false,
   count = 5,
   half = true,
-  color1 = "#e4e5e9",
-  color2 = "#ffd700",
+  color1 = "#e4e5e9", // light gray
+  color2 = "#ffd700", // yellow
   className,
   inline = false,
 }: StarRatingProps) {
@@ -32,26 +31,19 @@ export default function StarRating({
 
   useEffect(() => {
     const checkScreenSize = () => {
-      setIsMobile(window.innerWidth <= 640);
-      setIsTablet(window.innerWidth > 640 && window.innerWidth <= 768);
+      const width = window.innerWidth;
+      setIsMobile(width <= 640);
+      setIsTablet(width > 640 && width <= 768);
     };
-    // Check on mount
-    checkScreenSize();
-    // Add event listener
-    window.addEventListener("resize", checkScreenSize);
 
-    // Cleanup
+    checkScreenSize();
+    window.addEventListener("resize", checkScreenSize);
     return () => window.removeEventListener("resize", checkScreenSize);
   }, []);
 
-  // Determine star size based on screen size
-  let starSize = 24; // Default size for desktop
-
-  if (isMobile) {
-    starSize = 19; // Smaller size for mobile
-  } else if (isTablet) {
-    starSize = 20; // Medium size for tablet
-  }
+  let starSize = 18; // default desktop
+  if (isMobile) starSize = 15;
+  else if (isTablet) starSize = 18;
 
   const stars = (
     <span className="inline-flex align-middle" dir="ltr">
@@ -60,20 +52,22 @@ export default function StarRating({
         value={rating}
         size={starSize}
         half={half}
-        color1={color1}
-        color2={color2}
-        onChange={onChange}
+        color1={color1} // empty star color
+        color2={color2} // filled star color (yellow)
         edit={edit}
+        onChange={onChange}
       />
     </span>
   );
 
-  if (isMobile || inline) {
-    return <span className={className}>{stars}</span>;
-  }
+  if (isMobile || inline) return <span className={className}>{stars}</span>;
 
   return (
-    <div className={`react-stars w-full flex rtl:justify-end ltr:justify-start ${className ?? ""}`}>
+    <div
+      className={`react-stars w-full flex rtl:justify-end ltr:justify-start ${
+        className ?? ""
+      }`}
+    >
       {stars}
     </div>
   );

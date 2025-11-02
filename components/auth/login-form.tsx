@@ -16,6 +16,7 @@ import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { FaSpinner } from "react-icons/fa";
 import { Badge } from "../ui/badge";
+import { BeatLoader } from "react-spinners";
 
 interface LoginFormProps {
   onSwitchToRegister: () => void;
@@ -118,7 +119,7 @@ export default function LoginForm({
                 <Badge className="text-base bg-transparent text-white">
                   {t("sign-in")}
                 </Badge>{" "}
-                <FaSpinner className="animate-spin" />
+                <BeatLoader color="#fff" size={3} />
               </p>
             ) : (
               t("sign-in")
