@@ -18,8 +18,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "@reduxjs/toolkit/query";
+import { useDispatch } from "react-redux";
 import { resetStatus } from "@/store/slices/cart-slice";
 
 interface ShippingFormProps {
@@ -33,7 +32,6 @@ interface ShippingFormProps {
 export default function ShippingForm({
   isSubmitting,
   form,
-  status,
   submitLabel,
 }: ShippingFormProps) {
   const dispatch = useDispatch();
@@ -222,7 +220,7 @@ export default function ShippingForm({
                 <AccordionContent className="border border-gray-200 p-3 mt-3 rounded-md">
                   <LabelAndRadio
                     control={form.control}
-                    inputName="payment.methods"
+                    inputName="payment.method" // must match CheckoutFormValues
                     labelText={t("choose-payment-method")}
                     options={[
                       {
