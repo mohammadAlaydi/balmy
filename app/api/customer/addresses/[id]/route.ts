@@ -45,10 +45,11 @@ export async function DELETE(
       { status: response.status }
     );
   } catch (err: any) {
-    console.error("❌ Delete address error:", err);
+
     return NextResponse.json(
       { success: false, message: err.message || "Server error" },
       { status: 500 }
     );
+    
   }
 }

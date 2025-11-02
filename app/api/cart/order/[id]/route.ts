@@ -1,4 +1,3 @@
-// app/api/orders/[id]/route.ts
 import { cookies } from "next/headers";
 
 const API_KEY = process.env.NEXT_PUBLIC_API_URL;

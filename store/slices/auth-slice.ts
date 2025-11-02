@@ -1,15 +1,20 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { AuthState, LoginCredentials, RegisterCredentials, User } from '@/types/types';
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import {
+  AuthState,
+  LoginCredentials,
+  RegisterCredentials,
+  User,
+} from "@/types/types";
 
 // Login action - now uses internal API route that sets httpOnly cookies
 export const login = createAsyncThunk(
-  'auth/login',
+  "auth/login",
   async (credentials: LoginCredentials, { rejectWithValue }) => {
     try {
-      const response = await fetch('/api/auth/login', {
-        method: 'POST',
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(credentials),
       });
@@ -17,28 +22,28 @@ export const login = createAsyncThunk(
       const data = await response.json();
 
       if (!response.ok) {
-        return rejectWithValue(data.message || 'Login failed');
+        return rejectWithValue(data.message || "Login failed");
       }
-      
+
       return {
         user: data.data,
         message: data.message,
       };
     } catch (error) {
-      return rejectWithValue('Network error occurred');
+      return rejectWithValue("Network error occurred");
     }
   }
 );
 
 // Register action - now uses internal API route that sets httpOnly cookies
 export const register = createAsyncThunk(
-  'auth/register',
+  "auth/register",
   async (userData: RegisterCredentials, { rejectWithValue }) => {
     try {
-      const response = await fetch('/api/auth/register', {
-        method: 'POST',
+      const response = await fetch("/api/auth/register", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(userData),
       });
@@ -46,73 +51,76 @@ export const register = createAsyncThunk(
       const data = await response.json();
 
       if (!response.ok) {
-        return rejectWithValue(data.message || 'Registration failed');
+        return rejectWithValue(data.message || "Registration failed");
       }
-      
+
       return {
         user: data.data,
         message: data.message,
       };
     } catch (error) {
-      return rejectWithValue('Network error occurred');
+      return rejectWithValue("Network error occurred");
     }
   }
 );
 
 // Logout action - now uses internal API route that clears httpOnly cookies
-export const logout = createAsyncThunk('auth/logout', async (_, { rejectWithValue }) => {
-  try {
-    const response = await fetch('/api/auth/logout', {
-      method: 'POST',
-    });
+export const logout = createAsyncThunk(
+  "auth/logout",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await fetch("/api/auth/logout", {
+        method: "POST",
+      });
 
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    return rejectWithValue('Logout failed');
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      return rejectWithValue("Logout failed");
+    }
   }
-});
+);
 
 // Get current user action - now uses internal API route
 export const getCurrentUser = createAsyncThunk(
-  'auth/getCurrentUser',
+  "auth/getCurrentUser",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await fetch('/api/auth/me', {
-        method: 'GET',
+      const response = await fetch("/api/auth/me", {
+        method: "GET",
       });
 
       const data = await response.json();
 
       if (!response.ok) {
-        return rejectWithValue(data.message || 'Failed to get user info');
+        return rejectWithValue(data.message || "Failed to get user info");
       }
 
       return data.data;
     } catch (error) {
-      return rejectWithValue('Network error occurred');
+      return rejectWithValue("Network error occurred");
     }
   }
 );
 
 // Refresh token action
 export const refreshToken = createAsyncThunk(
-  'auth/refreshToken',
+  "auth/refreshToken",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await fetch('/api/auth/refresh', {
-        method: 'POST',
+      const response = await fetch("/api/auth/refresh", {
+        method: "POST",
       });
 
       const data = await response.json();
 
       if (!response.ok) {
-        return rejectWithValue(data.message || 'Token refresh failed');
+        return rejectWithValue(data.message || "Token refresh failed");
       }
 
       return data;
     } catch (error) {
-      return rejectWithValue('Network error occurred');
+      return rejectWithValue("Network error occurred");
     }
   }
 );
@@ -127,7 +135,7 @@ const initialState: AuthState = {
 };
 
 const authSlice = createSlice({
-  name: 'auth',
+  name: "auth",
   initialState,
   reducers: {
     clearError: (state) => {
@@ -150,7 +158,7 @@ const authSlice = createSlice({
     builder.addCase(login.fulfilled, (state, action) => {
       state.isLoading = false;
       state.user = action.payload.user;
-      state.accessToken = 'stored-in-cookie'; // Placeholder to indicate auth
+      state.accessToken = "stored-in-cookie"; // Placeholder to indicate auth
       state.refreshToken = null;
       state.isAuthenticated = true;
       state.error = null;
@@ -169,7 +177,7 @@ const authSlice = createSlice({
     builder.addCase(register.fulfilled, (state, action) => {
       state.isLoading = false;
       state.user = action.payload.user;
-      state.accessToken = 'stored-in-cookie'; // Placeholder to indicate auth
+      state.accessToken = "stored-in-cookie"; // Placeholder to indicate auth
       state.refreshToken = null;
       state.isAuthenticated = true;
       state.error = null;
@@ -204,7 +212,7 @@ const authSlice = createSlice({
     builder.addCase(getCurrentUser.fulfilled, (state, action) => {
       state.isLoading = false;
       state.user = action.payload;
-      state.accessToken = 'stored-in-cookie';
+      state.accessToken = "stored-in-cookie";
       state.isAuthenticated = true;
       state.error = null;
     });

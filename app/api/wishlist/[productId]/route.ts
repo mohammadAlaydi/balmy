@@ -41,7 +41,6 @@ export async function POST(
 
     return NextResponse.json(data);
   } catch (error) {
-    console.error('Wishlist POST error:', error);
     return NextResponse.json(
       { message: 'Internal server error' },
       { status: 500 }
@@ -83,7 +82,6 @@ export async function DELETE(
 
     return NextResponse.json(data);
   } catch (error) {
-    console.error('Wishlist DELETE error:', error);
     return NextResponse.json(
       { message: 'Internal server error' },
       { status: 500 }

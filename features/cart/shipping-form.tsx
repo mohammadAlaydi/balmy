@@ -40,7 +40,6 @@ export default function ShippingForm({
   const t = useTranslations("cart");
   const tButtons = useTranslations("buttons");
   const [paymentMethod, setPaymentMethod] = useState<string | null>(null);
-  const { saveOrderData } = useSelector((state: RootState) => state.cart);
 
   useEffect(() => {
     dispatch(resetStatus());
@@ -194,12 +193,12 @@ export default function ShippingForm({
                       {
                         value: "freeshipping_freeshipping",
                         label: t("free-shipping"),
-                        disable : true
+                        disable: true,
                       },
                       {
                         value: "tablerate_bestway",
                         label: t("express-shipping"),
-                        disable : true
+                        disable: true,
                       },
                     ]}
                     itemClassName="justify-end"
@@ -293,17 +292,6 @@ export default function ShippingForm({
             )}
           </div>
 
-          {/* Submit Button */}
-          {/* <Button type="submit" disabled={isSubmitting} className="w-fit mt-6">
-            {isSubmitting ? (
-              <div className="flex items-center gap-2">
-                <PuffLoader color="#ffffff" size={20} />
-                <span>{tButtons("submitting")}</span>
-              </div>
-            ) : (
-              submitLabel || tButtons("submit")
-            )}
-          </Button> */}
           <Button
             type="submit"
             disabled={isSubmitting}

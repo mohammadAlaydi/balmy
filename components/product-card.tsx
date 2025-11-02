@@ -57,7 +57,7 @@ const isProductInCart = (cartData: any, productId: number): boolean =>
 
 const getProductCartQuantity = (cartData: any, productId: number): number => {
   const cartItem = findCartItem(cartData, productId);
-  return cartItem ? Number(cartItem.quantity) : 0;
+  return cartItem ? Number(cartItem?.total_quantity || cartItem?.quantity) : 0;
 };
 
 const resolveProductId = (
@@ -241,7 +241,12 @@ export default function ProductCard({
             height={224}
             src={hoverImageUrl}
             alt={`${product?.name} hover`}
-            className="absolute inset-0 rounded-t-lg w-full h-full object-cover transition-opacity duration-500 opacity-0 group-hover:opacity-100"
+            className="absolute inset-0 rounded-t-lg w-full h-full object-cover transition-opacity duration-500 opacity-0 group-hover:opacity-100 cursor-pointer"
+            onClick={() =>
+              router.push(
+                `/product/${wishlistProductId || product?.product_id}`
+              )
+            }
           />
         )}
 
@@ -310,7 +315,7 @@ export default function ProductCard({
       <CardContent className="px-3 pb-3 flex flex-col gap-2 sm:gap-3">
         <div className="flex justify-between items-center">
           <p className="font-semibold text-sm truncate">{product?.name}</p>
-          <p className="text-xs text-gray-500 truncate">
+          <p className="text-xs text-gray-500 truncate max-w-[100px]">
             {chosenVariantSku ?? product?.sku}
           </p>
         </div>

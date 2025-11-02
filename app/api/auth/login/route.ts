@@ -5,8 +5,8 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export async function POST(request: NextRequest) {
   try {
+
     const body = await request.json();
-    
     const response = await fetch(`${API_URL}/v1/customer/login`, {
       method: 'POST',
       headers: {
@@ -19,10 +19,12 @@ export async function POST(request: NextRequest) {
     const data = await response.json();
 
     if (!response.ok) {
+
       return NextResponse.json(
         { message: data.message || 'Login failed' },
         { status: response.status }
       );
+
     }
 
     // Set httpOnly cookie with the access token
@@ -50,10 +52,11 @@ export async function POST(request: NextRequest) {
     });
 
   } catch (error) {
-    console.error('Login error:', error);
+
     return NextResponse.json(
       { message: 'Internal server error' },
       { status: 500 }
     );
+    
   }
 }

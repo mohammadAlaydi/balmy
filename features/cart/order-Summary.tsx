@@ -191,7 +191,7 @@ export default function OrderSummary({ data }: { data: any }) {
           {t("proceed-to-checkout")}
         </DialogTrigger>
         <DialogContent>
-          <Checkout total={total} data={data?.data?.items || []} />
+          <Checkout  />
         </DialogContent>
       </Dialog>
     </div>

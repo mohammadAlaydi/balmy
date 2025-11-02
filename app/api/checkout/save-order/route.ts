@@ -4,6 +4,7 @@ import { cookies } from "next/headers";
 
 export async function POST(req: NextRequest) {
   try {
+    
     const cookieStore = cookies();
     const accessToken = cookieStore.get("accessToken")?.value;
     const payload = await req.json();
@@ -34,10 +35,11 @@ export async function POST(req: NextRequest) {
       { status: response.status }
     );
   } catch (err: any) {
-    console.error("Checkout error:", err);
+
     return NextResponse.json(
       { success: false, message: err.message || "Checkout failed" },
       { status: 500 }
     );
+
   }
 }

@@ -4,8 +4,8 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export async function GET(request: NextRequest) {
   try {
-    let token = request.cookies.get('accessToken')?.value;
 
+    let token = request.cookies.get('accessToken')?.value;
     if (!token) {
       return NextResponse.json(
         { message: 'Not authenticated' },
@@ -59,10 +59,11 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(data);
 
   } catch (error) {
-    console.error('Get user error:', error);
+
     return NextResponse.json(
       { message: 'Internal server error' },
       { status: 500 }
     );
+    
   }
 }

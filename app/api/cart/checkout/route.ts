@@ -5,8 +5,8 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
 
+    const body = await request.json();
     const response = await makeAuthenticatedRequest(
       `${API_URL}/v1/customer/checkout/save-order`,
       {
@@ -26,10 +26,11 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(data);
   } catch (error) {
-    console.error('Checkout error:', error);
+
     return NextResponse.json(
       { message: 'Internal server error' },
       { status: 500 }
     );
+    
   }
 }

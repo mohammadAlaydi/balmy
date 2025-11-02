@@ -41,7 +41,7 @@ export async function generateMetadata({
     const seo = data?.seo_settings?.channel?.meta_data;
 
     return {
-      title: seo?.meta_title || "Farada - Premium E-commerce Store",
+      title: seo?.meta_title,
       description: seo?.meta_description || "",
       keywords: seo?.meta_keywords || [
         "e-commerce",
@@ -49,6 +49,9 @@ export async function generateMetadata({
         "products",
         "quality",
       ],
+      twitter: {
+        card: "summary_large_image",
+      },
       openGraph: {
         title: seo?.meta_title || "",
         description: seo?.meta_description || "",

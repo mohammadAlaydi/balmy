@@ -4,8 +4,8 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export async function POST(request: NextRequest) {
   try {
+
     const body = await request.json();
-    
     const response = await fetch(`${API_URL}/v1/customer/verify-code`, {
       method: 'POST',
       headers: {
@@ -27,10 +27,11 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(data);
 
   } catch (error) {
-    console.error('Verify reset code error:', error);
+
     return NextResponse.json(
       { message: 'Internal server error' },
       { status: 500 }
     );
+    
   }
 }

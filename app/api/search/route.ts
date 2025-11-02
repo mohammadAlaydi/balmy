@@ -5,6 +5,7 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export async function GET(request: NextRequest) {
   try {
+
     const cookieStore = await cookies();
     const accessToken = cookieStore.get('accessToken')?.value;
     const refreshToken = cookieStore.get('refreshToken')?.value;
@@ -72,10 +73,11 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(data);
 
   } catch (error) {
-    console.error('Search products error:', error);
+
     return NextResponse.json(
       { message: 'Internal server error' },
       { status: 500 }
     );
+    
   }
 }

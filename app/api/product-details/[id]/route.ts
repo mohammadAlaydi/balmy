@@ -8,6 +8,7 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
+
     const cookieStore = await cookies();
     const accessToken = cookieStore.get("accessToken")?.value;
     const refreshToken = cookieStore.get("refreshToken")?.value;
@@ -72,11 +73,13 @@ export async function GET(
     }
 
     return NextResponse.json(data);
+    
   } catch (error) {
-    console.error("Get product details error:", error);
+
     return NextResponse.json(
       { message: "Internal server error" },
       { status: 500 }
     );
+
   }
 }

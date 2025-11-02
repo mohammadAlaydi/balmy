@@ -5,8 +5,8 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export async function POST(request: NextRequest) {
   try {
+
     const body = await request.json();
-    
     const response = await fetch(`${API_URL}/v1/customer/register`, {
       method: 'POST',
       headers: {
@@ -57,10 +57,11 @@ export async function POST(request: NextRequest) {
     });
 
   } catch (error) {
-    console.error('Registration error:', error);
+
     return NextResponse.json(
       { message: 'Internal server error' },
       { status: 500 }
     );
+    
   }
 }

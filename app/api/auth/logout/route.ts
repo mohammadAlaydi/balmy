@@ -4,7 +4,9 @@ import { cookies } from 'next/headers';
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export async function POST(request: NextRequest) {
+
   try {
+
     const cookieStore = await cookies();
     const accessToken = cookieStore.get('accessToken')?.value;
 
@@ -33,10 +35,11 @@ export async function POST(request: NextRequest) {
     });
 
   } catch (error) {
-    console.error('Logout error:', error);
+
     return NextResponse.json(
       { message: 'Internal server error' },
       { status: 500 }
     );
+    
   }
 }

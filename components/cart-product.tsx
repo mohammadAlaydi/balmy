@@ -56,7 +56,9 @@ export default function CartProduct({
           </p>
 
           <div className="flex flex-col gap-2 flex-1 min-w-0">
-            <h2 className="tfont-semibold text-sm truncate">{product?.name}</h2>
+            <h2 className="tfont-semibold text-sm truncate max-w-[150px]">
+              {product?.name}
+            </h2>
           </div>
 
           <div className="hidden sm:flex flex-col gap-2">
@@ -114,14 +116,16 @@ export default function CartProduct({
       </div>
 
       {/* Actions */}
-      <div className="flex gap-3 w-full justify-between items-center mt-1 sm:mt-2">
+      <div className="flex gap-3 w-full justify-between items-end mt-1 sm:mt-2">
         <DeleteProductComponent
           isOpen={isOpen}
           setIsOpen={setIsOpen}
           action={() => handleDelete(deletedProductId)}
         />
         {/* Increment / Decrement */}
-        <ProductIncementOrDecrement product={product} quantity={quantity} />
+        <div className="bg-[#3866df] text-white py-1 px-2 rounded-md">
+          <ProductIncementOrDecrement product={product} quantity={quantity} />
+        </div>
       </div>
     </div>
   );

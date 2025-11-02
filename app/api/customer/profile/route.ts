@@ -135,10 +135,11 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(data);
 
   } catch (error) {
-    console.error('Update customer profile error:', error);
+
     return NextResponse.json(
       { message: 'Internal server error' },
       { status: 500 }
     );
+    
   }
 }

@@ -27,7 +27,6 @@ export async function DELETE() {
 
     return NextResponse.json(data);
   } catch (error) {
-    console.error('Wishlist CLEAR error:', error);
     return NextResponse.json(
       { message: 'Internal server error' },
       { status: 500 }

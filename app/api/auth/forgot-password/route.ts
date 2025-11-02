@@ -1,16 +1,16 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from "next/server";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export async function POST(request: NextRequest) {
   try {
+
     const body = await request.json();
-    
     const response = await fetch(`${API_URL}/v1/customer/forgot-password`, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
+        "Content-Type": "application/json",
+        Accept: "application/json",
       },
       body: JSON.stringify(body),
     });
@@ -19,7 +19,7 @@ export async function POST(request: NextRequest) {
 
     if (!response.ok) {
       return NextResponse.json(
-        { message: data.message || 'Failed to send reset code' },
+        { message: data.message || "Failed to send reset code" },
         { status: response.status }
       );
     }
@@ -27,10 +27,11 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(data);
 
   } catch (error) {
-    console.error('Forgot password error:', error);
+
     return NextResponse.json(
-      { message: 'Internal server error' },
+      { message: "Internal server error" },
       { status: 500 }
     );
+    
   }
 }

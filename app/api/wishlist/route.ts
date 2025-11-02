@@ -1,20 +1,20 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { makeAuthenticatedRequest } from '@/lib/auth-middleware';
+import { NextRequest, NextResponse } from "next/server";
+import { makeAuthenticatedRequest } from "@/lib/auth-middleware";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 export const revalidate = 0;
-export const fetchCache = 'force-no-store';
+export const fetchCache = "force-no-store";
 
 export async function GET() {
   try {
     const response = await makeAuthenticatedRequest(
       `${API_URL}/v1/customer/wishlist`,
       {
-        method: 'GET',
+        method: "GET",
         headers: {
-          'Accept': 'application/json',
+          Accept: "application/json",
         },
       }
     );
@@ -23,16 +23,16 @@ export async function GET() {
 
     if (!response.ok) {
       return NextResponse.json(
-        { message: data?.message || 'Failed to fetch wishlist' },
+        { message: data?.message || "Failed to fetch wishlist" },
         { status: response.status }
       );
     }
 
     return NextResponse.json(data);
   } catch (error) {
-    console.error('Wishlist GET error:', error);
+    console.error("Wishlist GET error:", error);
     return NextResponse.json(
-      { message: 'Internal server error' },
+      { message: "Internal server error" },
       { status: 500 }
     );
   }
@@ -43,7 +43,7 @@ export async function HEAD() {
     const response = await makeAuthenticatedRequest(
       `${API_URL}/v1/customer/wishlist`,
       {
-        method: 'HEAD',
+        method: "HEAD",
       }
     );
     return new NextResponse(null, { status: response.status });
@@ -51,4 +51,3 @@ export async function HEAD() {
     return new NextResponse(null, { status: 500 });
   }
 }
-

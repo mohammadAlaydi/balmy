@@ -24,7 +24,6 @@ export default function VariantSelector({
   onSizeChange,
   className,
 }: VariantSelectorProps) {
-  
   const t = useTranslations("product-details");
   const hasColorVariants = colorVariants.length > 0;
   const hasSizeVariants = availableSizesForSelectedColor.length > 0;
