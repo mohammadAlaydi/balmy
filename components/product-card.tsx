@@ -242,7 +242,7 @@ export default function ProductCard({
             height={224}
             src={hoverImageUrl}
             alt={`${product?.name} hover`}
-            className="absolute inset-0 rounded-t-lg w-full h-full object-cover transition-opacity duration-500 opacity-0 group-hover:opacity-100 cursor-pointer"
+            className="absolute inset-0 rounded-t-lg w-full h-full object-cover transition-transform duration-500 hover:scale-[1.05] opacity-0 group-hover:opacity-100 cursor-pointer"
             onClick={() =>
               router.push(
                 `/product/${wishlistProductId || product?.product_id}`

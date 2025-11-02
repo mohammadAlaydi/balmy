@@ -18,7 +18,9 @@ export default function page() {
   const t = useTranslations("cart");
   const dispatch = useDispatch();
   const router = useRouter();
-  const { data, isLoading } = useSelector((state: any) => state.cart);
+  const { data, isLoading, status, cartStatus } = useSelector(
+    (state: any) => state.cart
+  );
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {

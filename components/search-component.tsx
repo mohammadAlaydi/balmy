@@ -13,17 +13,17 @@ import Loading from "./loading";
 import { IoClose } from "react-icons/io5";
 
 const SearchComponent = ({ maxHeight }: { maxHeight?: string }) => {
-
   const t = useTranslations("search");
   const dispatch = useDispatch();
-  const { products, isLoading, error } = useSelector(
+  const { products, isLoading } = useSelector(
     (state: any) => state.searchProducts
   );
   const categories = useSelector((state: any) => state.categories);
   const loading = useSelector((state: any) => state.categories.loading);
- 
+  
   const [search, setSearch] = useState("");
   const [searchCategory, setSearchCategory] = useState("");
+  console.log(searchCategory, "🤷‍♂️😒");
   const [filteredProducts, setFilteredProducts] = useState(
     products?.data || []
   );
@@ -62,7 +62,7 @@ const SearchComponent = ({ maxHeight }: { maxHeight?: string }) => {
 
     setFilteredProducts(filtered);
   }, [search, products, searchCategory]);
-  
+
   if (isLoading || loading) {
     return (
       <div className="min-h-[40vh]">
@@ -96,7 +96,7 @@ const SearchComponent = ({ maxHeight }: { maxHeight?: string }) => {
                 index == categoryIndex ? "bg-black text-white" : ""
               }`}
               onClick={() => {
-                setSearchCategory(String(suggestion?.id ?? ""));
+                setSearchCategory(suggestion?.id ?? "");
                 setCategoryIndex(index);
               }}
             >
@@ -114,7 +114,7 @@ const SearchComponent = ({ maxHeight }: { maxHeight?: string }) => {
           }}
           className="gap-2 cursor-pointer text-base bg-red-500 flex items-center px-2 py-1 rounded-md w-fit text-white"
         >
-          {t("clear-filters")} {" "}
+          {t("clear-filters")}{" "}
           <IoClose className="text-base text-white font-bold" />
         </div>
       )}
@@ -124,7 +124,7 @@ const SearchComponent = ({ maxHeight }: { maxHeight?: string }) => {
           <ProductCard
             key={index}
             product={product}
-            cardColSpan="col-span-6 sm:col-span-4 md:col-span-3 xl:col-span-3"
+            cardColSpan="col-span-6 sm:col-span-4 md:col-span-3 xl:col-span-3 relative"
           />
         ))}
       </div>

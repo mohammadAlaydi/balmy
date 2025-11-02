@@ -23,11 +23,16 @@ export default function ProductsCarousel({ products }: { products: any }) {
           slidesPerView: 3,
           spaceBetween: 8,
         },
-        1024: {
+
+        1200: {
           slidesPerView: 4,
-          spaceBetween: 8,
+          spaceBetween: 15,
         },
         1500: {
+          slidesPerView: 5,
+          spaceBetween: 15,
+        },
+        1800: {
           slidesPerView: 6,
           spaceBetween: 15,
         },

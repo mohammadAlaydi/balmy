@@ -1,11 +1,11 @@
 "use client";
 
-import React, { useEffect, useLayoutEffect } from "react";
+import React, { useLayoutEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import PageWrapper from "@/components/page-wrapper";
 import Loading from "@/components/loading";
 import Success from "@/features/cart/success";
-import { getOrderById } from "@/store/slices/cart-slice";
+import { getCartProducts, getOrderById } from "@/store/slices/cart-slice";
 import type { RootState, AppDispatch } from "@/store";
 import Failed from "@/features/cart/failed";
 
@@ -18,13 +18,14 @@ export default function Page({ params }: { params: { id: string } }) {
   useLayoutEffect(() => {
     if (params?.id) {
       dispatch(getOrderById(params.id) as any);
+      dispatch(getCartProducts() as any);
     }
   }, [params?.id, dispatch]);
 
   if (isLoading) {
     return <Loading fullScreen variant="spinner" size="xl" />;
   }
-  console.log(orderDetails, "🤷‍♂️😂");
+
   if (orderDetails != null) {
     return (
       <PageWrapper>

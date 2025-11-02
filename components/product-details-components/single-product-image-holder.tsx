@@ -45,7 +45,7 @@ export default function SingleProductImageHolder({
   const fallbackImage = "/assets/images/product-card.jpg";
 
   return (
-    <div className={cn("flex flex-col  gap-4 w-full col-span-12", className)}>
+    <div className={cn("flex gap-5 w-full col-span-12", className)}>
       {/* Main Image Display */}
       <div className="relative w-full lg:w-[calc(100%-100px)] aspect-square overflow-hidden rounded-lg bg-gray-50 grid grid-cols-12">
         <Image
@@ -75,7 +75,7 @@ export default function SingleProductImageHolder({
 
       {/* Thumbnail Gallery */}
       {allImages.length > 1 && (
-        <div className="w-full lg:w-[88px] flex lg:flex-col gap-2 overflow-x-auto lg:overflow-y-auto lg:max-h-[500px]">
+        <div className="w-full lg:w-[100px] flex lg:flex-col items-center gap-2 overflow-x-auto lg:overflow-y-auto lg:max-h-[500px]">
           {allImages.map((image, index) => (
             <button
               key={index}
@@ -83,7 +83,7 @@ export default function SingleProductImageHolder({
               onMouseEnter={() => setHoveredImageIndex(index)}
               onMouseLeave={() => setHoveredImageIndex(null)}
               className={cn(
-                "relative w-[80px] h-[80px] lg:w-[80px] lg:h-[80px] flex-shrink-0 overflow-hidden rounded-md border-2 transition-all duration-200 hover:scale-110",
+                "relative w-[80px] h-[80px] lg:w-[80px] lg:h-[80px] flex-shrink-0 overflow-hidden rounded-md border-2 transition-all duration-200 hover:scale-105",
                 selectedImageIndex === index
                   ? "border-[#D07A51] ring-2 ring-[#D07A51]/20"
                   : "border-gray-200 hover:border-gray-300"

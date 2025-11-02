@@ -270,8 +270,8 @@ const NavigationLinks = ({
                                 : `/${currentLocale}/category/${link?.slug}/${nested?.id}`
                             }
                             prefetch={true}
-                            className="block rounded-md px-1.5 py-1 text-sm hover:bg-accent hover:text-accent-foreground text-end"
-                          >
+                            className="cursor-pointer hover:bg-transparent  px-4 py-2 text-lg font-[600] hover:text-red-500 transition-all duration-300"
+                            >
                             {nested.name}
                           </Link>
                         </NavigationMenuLink>
@@ -288,7 +288,7 @@ const NavigationLinks = ({
                   <Link
                     href={`/${currentLocale}/category/${link?.slug}/${link?.id}`}
                     prefetch={true}
-                    className="cursor-pointer hover:bg-transparent hover:text-red-color px-4 py-2 text-sm font-medium"
+                    className="cursor-pointer hover:bg-transparent  px-4 py-2 text-lg font-[600] hover:text-red-500 transition-all duration-300"
                   >
                     {link?.name}
                   </Link>

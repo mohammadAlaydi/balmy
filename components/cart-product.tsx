@@ -104,11 +104,13 @@ export default function CartProduct({
         </p>
         <div className="scale-[0.85] sm:scale-100">
           <div className="flex items-center gap-1 bg-gray-100 px-2 rounded-md w-fit mb-2 md:mb-0 shadow-md">
-            {product?.reviews?.total == 0 ? (
-              <FaRegStar className="rating-color" />
-            ) : (
-              <FaStar className="rating-color" />
-            )}
+            <ReactStars
+              rating={
+                // product?.reviews?.total
+                4.5
+              }
+              count={1}
+            />
             <Badge className="bg-transparent text-gray-500 p-0 text-sm font-[550]">
               {/* {product?.reviews?.total} */}
               4.5
