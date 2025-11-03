@@ -63,13 +63,14 @@ export default function Categories({ categories }: { categories: any }) {
                         ? rawBannerUrl
                         : "/assets/images/no-image.webp";
                       return (
-                        <Image
-                          src={imageSrc}
-                          width={230}
-                          height={230}
-                          className="rounded-full m-auto transform hover:scale-[1.02] transition-all duration-1000 aspect-square"
-                          alt={category.name || "category"}
-                        />
+                        <div className="relative w-full aspect-square rounded-full overflow-hidden m-auto">
+                          <Image
+                            src={imageSrc}
+                            alt={category.name || "category"}
+                            fill
+                            className="object-cover hover:scale-[1.02] transition-all duration-1000"
+                          />
+                        </div>
                       );
                     })()}
                   </div>
