@@ -26,7 +26,6 @@ import { FaPlus } from "react-icons/fa6";
 import { GrView } from "react-icons/gr";
 import ProductIncementOrDecrement from "./product-increment-or-decrement";
 import { MdOutlineShoppingCart } from "react-icons/md";
-import ReactStars from "react-stars";
 import StarRating from "./react-stars";
 
 /* ---------------- Helper Functions ---------------- */
