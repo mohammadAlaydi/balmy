@@ -9,21 +9,21 @@ export default function Ads({ ads }) {
 
   return (
     <div className="cross-body flex flex-col md:flex-row justify-between m-auto gap-3 px-3 md:px-0  w-full  xl:max-w-[75%] py-[20px] md:py-[30px]">
-      <Link href={`/${ads[0]?.ads_path}`} className="cursor-pointer w-full overflow-hidden">
+      <Link href={`/${ads[0]?.ads_path}`} className="cursor-pointer w-full overflow-hidden rounded-lg">
         <Image
           width={400}
           height={400}
-          className="w-full h-full transform transition-all duration-500 relative hover:scale-105"
+          className="w-full h-full transform transition-all duration-500 relative hover:scale-105 rounded-lg"
           src={`${ads[0]?.img_path}` || "/assets/images/no-image.webp"}
           alt="..."
           quality={100}
         />
       </Link>
-      <Link className="cursor-pointer w-full overflow-hidden" href={`/${ads[1]?.ads_path}`}>
+      <Link className="cursor-pointer w-full overflow-hidden rounded-lg" href={`/${ads[1]?.ads_path}`}>
         <Image
           width={400}
           height={400}
-          className="w-full h-full transform transition-all duration-500 cursor-pointer relative hover:scale-105"
+          className="w-full h-full transform transition-all duration-500 cursor-pointer relative hover:scale-105 rounded-lg"
           src={`${ads[1]?.img_path}` || "/assets/images/no-image.webp"}
           alt="..."
           quality={100}

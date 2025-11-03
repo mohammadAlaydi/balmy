@@ -21,13 +21,15 @@ export default function BannerCarousel({ sliders }: { sliders: any }) {
         effect="fade"
       >
         {items.map((slider: any, index: number) => (
-          <SwiperSlide key={index} className="w-full h-full relative">
+          <SwiperSlide
+            key={index}
+            className="w-full h-full relative aspect-[15/10] md:aspect-[16/6]"
+          >
             <Image
               src={slider?.image_url}
               alt={slider?.title || "Banner image"}
-              width={500}
-              height={400}
-              className="w-full h-[300px] sm:h-[350px] md:h-[500px] lg:h-full lg:h-[85%] xl:h-[80vh] object-cover"
+              fill
+              className="object-fill md:object-cover rounded-lg"
               quality={100}
               priority={index === 0}
             />

@@ -34,14 +34,10 @@ export default function page() {
       <BannerCarousel sliders={data?.sliders} />
       <PageWrapper yPadding="py-5">
         <Services />
-        <SectionTitle
-          title={t("featured-categories")}
-          titleStyle="text-xl md:text-3xl mb-5"
-        />
         <Categories categories={data?.featured_categories} />
         <SectionTitle
           title={t("featured-products")}
-          titleStyle="text-xl md:text-3xl mb-5"
+          titleStyle="text-xl md:text-3xl my-5"
         />
         <ProductsCarousel products={data?.featured_products} />
         <Ads ads={data?.ads} />
