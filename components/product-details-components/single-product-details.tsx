@@ -360,7 +360,7 @@ export default function SingleProductDetails({
           <FavouriteButton
             product={product}
             size="lg"
-            className="flex-1 h-12 px-4"
+            className="flex-1 h-12 px-4 flex justify-center items-center cursor-pointer"
           />
 
           <Button

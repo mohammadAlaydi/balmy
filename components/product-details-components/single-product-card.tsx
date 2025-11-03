@@ -41,9 +41,9 @@ export default function SingleProductCard({
       {/* Main Product Section */}
       <div className="w-full">
         {/* Product Image and Details Row */}
-        <div className="flex flex-col md:flex-row justify-between gap-8 mb-12">
+        <div className="flex flex-col xl:flex-row justify-between gap-8 mb-12">
           {/* Image Holder - 65% width on desktop, 100% on mobile */}
-          <div className="w-full order-1 lg:order-1 md:w-[48%] grid grid-cols-12">
+          <div className="w-full order-1 lg:order-1 xl:w-[48%] grid grid-cols-12">
             <SingleProductImageHolder
               baseImage={baseImage}
               hoverImage={hoverImage}
@@ -53,7 +53,7 @@ export default function SingleProductCard({
           </div>
 
           {/* Product Details - 35% width on desktop, 100% on mobile */}
-          <div className="w-full order-2 lg:order-2 md:w-[48%]">
+          <div className="w-full order-2 lg:order-2 xl:w-[48%]">
             <SingleProductDetails
               product={product}
               variantProps={variantProps}

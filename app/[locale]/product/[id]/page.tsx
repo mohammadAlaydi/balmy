@@ -1,4 +1,3 @@
-// Server Component: ProductDetailsPage.tsx
 import React from "react";
 import { notFound } from "next/navigation";
 import ProductDetailsClient from "./product-details-client";
@@ -25,18 +24,19 @@ export async function generateMetadata({
     );
 
     if (!res.ok) {
-      throw new Error("Product not found" , params?.id);
+      throw new Error("Product not found", params?.id);
     }
 
-    const product = await res.json(); // ✅ call json() directly on response
-    console.log(product, "😘❓"); // ✅ now product will log correctly
+    const product = await res.json();
 
     return {
       title: `${product?.data?.name} | My Store`,
-      description: product?.data?.description || "Check out this amazing product!",
+      description:
+        product?.data?.description || "Check out this amazing product!",
       openGraph: {
         title: product?.data?.name,
-        description: product?.data?.description || "Check out this amazing product!",
+        description:
+          product?.data?.description || "Check out this amazing product!",
         url: `${process.env.NEXT_PUBLIC_SITE_URL}/${params.locale}/product/${params.id}`,
         images: [
           {
@@ -54,7 +54,8 @@ export async function generateMetadata({
       twitter: {
         card: "summary_large_image",
         title: product?.data?.name,
-        description: product?.data?.description || "Check out this amazing product!",
+        description:
+          product?.data?.description || "Check out this amazing product!",
         images: [
           product?.data?.base_image?.original_image_url ||
             "/assets/images/no-image.webp",
@@ -62,7 +63,6 @@ export async function generateMetadata({
       },
     };
   } catch (error) {
-    console.error(error); // Optional: log the error for debugging
     return {
       title: "Product not found",
       description: "The requested product could not be found.",

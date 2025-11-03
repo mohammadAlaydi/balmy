@@ -75,7 +75,7 @@ export default function SingleProductImageHolder({
 
       {/* Thumbnail Gallery */}
       {allImages.length > 1 && (
-        <div className="w-full lg:w-[100px] flex lg:flex-col items-center gap-2 overflow-x-auto lg:overflow-y-auto lg:max-h-[500px]">
+        <div className="w-[100px] flex flex-col items-center gap-2  lg:max-h-[500px]">
           {allImages.map((image, index) => (
             <button
               key={index}
