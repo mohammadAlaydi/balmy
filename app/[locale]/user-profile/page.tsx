@@ -1024,7 +1024,7 @@ export default function ProfilePage() {
                             onClick={() => handleDeleteAddress(index, field.address_id)}
                           >
                             {deletingAddressIndex === index ? (
-                              <BeatLoader color="#fff" size={6} />
+                              <BeatLoader color="#fff" size={3} />
                             ) : (
                               <MdDeleteSweep className="w-4 h-4" />
                             )}
