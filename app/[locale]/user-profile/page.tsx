@@ -809,8 +809,12 @@ export default function ProfilePage() {
   const { user, isAuthenticated } = useAuth();
   const dispatch = useDispatch<AppDispatch>();
 
-  const [savingAddressIndex, setSavingAddressIndex] = React.useState<number | null>(null);
-  const [deletingAddressIndex, setDeletingAddressIndex] = React.useState<number | null>(null);
+  const [savingAddressIndex, setSavingAddressIndex] = React.useState<
+    number | null
+  >(null);
+  const [deletingAddressIndex, setDeletingAddressIndex] = React.useState<
+    number | null
+  >(null);
 
   // 🧾 Personal Info Form
   const personalForm = useForm<PersonalInfoFormData>({
@@ -834,7 +838,10 @@ export default function ProfilePage() {
   });
 
   const { control, handleSubmit: handleAddressesSubmit } = addressForm;
-  const { fields, append, remove } = useFieldArray({ control, name: "addresses" });
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "addresses",
+  });
 
   // 🔄 Fetch user
   React.useEffect(() => {
@@ -905,7 +912,9 @@ export default function ProfilePage() {
       const data = await res.json();
 
       if (data.success) {
-        toast.success(address.address_id ? t("addressUpdated") : t("addressAdded"));
+        toast.success(
+          address.address_id ? t("addressUpdated") : t("addressAdded")
+        );
         dispatch(getCurrentUser());
       } else {
         toast.error(data.message || t("updateFailed"));
@@ -918,7 +927,10 @@ export default function ProfilePage() {
   };
 
   // ✅ Delete address
-  const handleDeleteAddress = async (index: number, addressId: number | null | undefined) => {
+  const handleDeleteAddress = async (
+    index: number,
+    addressId: number | null | undefined
+  ) => {
     if (!addressId) {
       remove(index);
       return;
@@ -926,7 +938,9 @@ export default function ProfilePage() {
 
     setDeletingAddressIndex(index);
     try {
-      const res = await fetch(`/api/customer/addresses/${addressId}`, { method: "DELETE" });
+      const res = await fetch(`/api/customer/addresses/${addressId}`, {
+        method: "DELETE",
+      });
       const data = await res.json();
 
       if (data.success) {
@@ -960,15 +974,41 @@ export default function ProfilePage() {
                   className={`space-y-6 ${isRTL ? "rtl" : "ltr"}`}
                 >
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <LabelAndInput control={personalForm.control} fieldName="first_name" labelText={t("first-name")} />
-                    <LabelAndInput control={personalForm.control} fieldName="last_name" labelText={t("last-name")} />
-                    <LabelAndInput control={personalForm.control} fieldName="email" labelText={t("email")} inputType="email" />
-                    <LabelAndInput control={personalForm.control} fieldName="phone" labelText={t("phone")} inputType="tel" />
+                    <LabelAndInput
+                      control={personalForm.control}
+                      fieldName="first_name"
+                      labelText={t("first-name")}
+                    />
+                    <LabelAndInput
+                      control={personalForm.control}
+                      fieldName="last_name"
+                      labelText={t("last-name")}
+                    />
+                    <LabelAndInput
+                      control={personalForm.control}
+                      fieldName="email"
+                      labelText={t("email")}
+                      inputType="email"
+                    />
+                    <LabelAndInput
+                      control={personalForm.control}
+                      fieldName="phone"
+                      labelText={t("phone")}
+                      inputType="tel"
+                    />
                   </div>
 
                   <div className="flex justify-end pt-6">
-                    <Button type="submit" disabled={personalForm.formState.isSubmitting} className="px-8 py-3">
-                      {personalForm.formState.isSubmitting ? <BeatLoader color="#fff" size={6} /> : t("save-changes")}
+                    <Button
+                      type="submit"
+                      disabled={personalForm.formState.isSubmitting}
+                      className="px-8 py-3"
+                    >
+                      {personalForm.formState.isSubmitting ? (
+                        <BeatLoader color="#fff" size={6} />
+                      ) : (
+                        t("save-changes")
+                      )}
                     </Button>
                   </div>
                 </form>
@@ -988,13 +1028,20 @@ export default function ProfilePage() {
                 <form className={`space-y-6 ${isRTL ? "rtl" : "ltr"}`}>
                   <div className="flex items-center justify-between">
                     <h3 className="text-lg font-semibold">{t("addresses")}</h3>
-                    <Button type="button" variant="outline" onClick={handleAddAddress}>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={handleAddAddress}
+                    >
                       <Plus className="w-4 h-4 mr-2" /> {t("add-address")}
                     </Button>
                   </div>
 
                   {fields.map((field, index) => (
-                    <div key={field.id} className="border p-4 rounded-lg space-y-4">
+                    <div
+                      key={field.id}
+                      className="border p-4 rounded-lg space-y-4"
+                    >
                       <div className="flex items-center justify-between">
                         <h4 className="font-medium">
                           {t("address")} #{index + 1}
@@ -1020,8 +1067,13 @@ export default function ProfilePage() {
                             type="button"
                             variant="destructive"
                             size="sm"
-                            disabled={fields.length === 1 || deletingAddressIndex === index}
-                            onClick={() => handleDeleteAddress(index, field.address_id)}
+                            disabled={
+                              fields.length === 1 ||
+                              deletingAddressIndex === index
+                            }
+                            onClick={() =>
+                              handleDeleteAddress(index, field.address_id)
+                            }
                           >
                             {deletingAddressIndex === index ? (
                               <BeatLoader color="#fff" size={3} />
@@ -1033,9 +1085,21 @@ export default function ProfilePage() {
                       </div>
 
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <LabelAndInput control={addressForm.control} fieldName={`addresses.${index}.address1`} labelText={t("address")} />
-                        <LabelAndInput control={addressForm.control} fieldName={`addresses.${index}.city`} labelText={t("city")} />
-                        <LabelAndInput control={addressForm.control} fieldName={`addresses.${index}.country`} labelText={t("country")} />
+                        <LabelAndInput
+                          control={addressForm.control}
+                          fieldName={`addresses.${index}.address1`}
+                          labelText={t("address")}
+                        />
+                        <LabelAndInput
+                          control={addressForm.control}
+                          fieldName={`addresses.${index}.city`}
+                          labelText={t("city")}
+                        />
+                        <LabelAndInput
+                          control={addressForm.control}
+                          fieldName={`addresses.${index}.country`}
+                          labelText={t("country")}
+                        />
                       </div>
                     </div>
                   ))}
