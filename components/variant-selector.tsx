@@ -51,7 +51,7 @@ export default function VariantSelector({
                   disabled={isDisabled}
                   className={cn(
                     "relative w-[50px] h-[50px] rounded-full border-2 transition-all duration-300 overflow-hidden",
-                    "focus:outline-none focus:ring-2 focus:ring-[#D07A51] focus:ring-offset-2",
+                    "focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2",
                     isActive
                       ? "border-black ring-2 ring-black/20 scale-110"
                       : "border-gray-300 hover:border-gray-400 hover:scale-105",
@@ -106,7 +106,7 @@ export default function VariantSelector({
                   disabled={isDisabled}
                   className={cn(
                     "w-[45px] h-[45px] rounded border-2 transition-all duration-300 text-sm font-medium",
-                    "focus:outline-none focus:ring-2 focus:ring-[#D07A51] focus:ring-offset-2",
+                    "focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2",
                     isActive
                       ? "border-black bg-black text-white scale-105"
                       : "border-gray-300 hover:border-gray-400 hover:bg-gray-50",

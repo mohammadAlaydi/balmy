@@ -85,7 +85,7 @@ export default function SingleProductImageHolder({
               className={cn(
                 "relative w-[80px] h-[80px] lg:w-[80px] lg:h-[80px] flex-shrink-0 overflow-hidden rounded-md border-2 transition-all duration-200 hover:scale-105",
                 selectedImageIndex === index
-                  ? "border-[#D07A51] ring-2 ring-[#D07A51]/20"
+                  ? "border-red-500 ring-2 ring-red-500/20"
                   : "border-gray-200 hover:border-gray-300"
               )}
             >
@@ -102,7 +102,7 @@ export default function SingleProductImageHolder({
                 suppressHydrationWarning
               />
               {selectedImageIndex === index && (
-                <div className="absolute inset-0 bg-[#D07A51]/10" />
+                <div className="absolute inset-0 bg-red-500/10" />
               )}
             </button>
           ))}

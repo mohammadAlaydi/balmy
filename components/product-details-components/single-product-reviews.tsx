@@ -62,7 +62,7 @@ export default function SingleProductReviews({
           <h2 className="text-[22px] lg:text-[22px] md:text-[18px] font-[600] md:font-[400] text-black font-cairo">
             {t("product-reviews")}
           </h2>
-          <div className="text-[#D07A51] hover:text-[#b86a41] transition-colors">
+          <div className="text-red-500 hover:text-[#b86a41] transition-colors">
             {isCollapsed ? (
               <MdExpandMore className="text-xl" />
             ) : (
@@ -81,7 +81,7 @@ export default function SingleProductReviews({
           {/* Overall Rating Summary */}
           <div className="flex items-center gap-4 mb-6 p-4 bg-gray-50 rounded-lg">
             <div className="text-center">
-              <div className="text-3xl font-bold text-[#D07A51]">
+              <div className="text-3xl font-bold text-red-500">
                 {reviews.average_rating
                   ? reviews.average_rating.toFixed(1)
                   : "0.0"}
@@ -145,7 +145,7 @@ export default function SingleProductReviews({
                   value={reviewText}
                   onChange={(e) => setReviewText(e.target.value)}
                   placeholder={t("review-placeholder")}
-                  className="w-full h-24 px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#D07A51] focus:border-transparent resize-none font-cairo text-[18px] lg:text-[18px] md:text-[16px]"
+                  className="w-full h-24 px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-red-500 focus:border-transparent resize-none font-cairo text-[18px] lg:text-[18px] md:text-[16px]"
                   maxLength={500}
                 />
                 <div className="text-xs text-gray-500 mt-1 text-left">
@@ -157,7 +157,7 @@ export default function SingleProductReviews({
               <Button
                 onClick={handleSubmitReview}
                 disabled={!userRating || !reviewText.trim() || isSubmitting}
-                className="bg-[#D07A51] hover:bg-[#b86a41] text-white px-6 py-2 rounded-[5px] transition-all duration-300 font-cairo text-[18px] lg:text-[18px] md:text-[16px]"
+                className="bg-red-500 hover:bg-red-500/20 text-white px-6 py-2 rounded-[5px] transition-all duration-300 font-cairo text-[18px] lg:text-[18px] md:text-[16px]"
               >
                 {isSubmitting ? tButtons("submitting") : t("submit-review")}
               </Button>

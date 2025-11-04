@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { MdExpandMore, MdExpandLess } from "react-icons/md";
 import ShadowLayer from "../shadow-layer";
 import { useTranslations } from "next-intl";
+import { Button } from "../ui/button";
 
 interface SingleProductDescriptionProps {
   description: string;
@@ -40,7 +41,7 @@ export default function SingleProductDescription({
           <h2 className="text-[20px] lg:text-[20px] md:text-[16px] font-[600] md:font-[400] text-black font-cairo ">
             {t("product-description")}
           </h2>
-          <div className="text-[#D07A51] hover:text-[#b86a41] transition-colors">
+          <div className="text-red-500 hover:text-[#b86a41] transition-colors">
             {isCollapsed ? (
               <MdExpandMore className="text-xl" />
             ) : (
@@ -84,12 +85,13 @@ export default function SingleProductDescription({
                 />
 
                 {description.length > 200 && (
-                  <button
+                  <Button
+                    variant="destructive"
                     onClick={() => setIsExpanded(!isExpanded)}
-                    className="text-[#D07A51] hover:text-[#b86a41] font-medium text-sm mt-2 transition-colors"
+                    className="text-white font-medium text-sm mt-4 transition-colors"
                   >
                     {isExpanded ? t("show-less") : t("show-more")}
-                  </button>
+                  </Button>
                 )}
               </div>
             </div>

@@ -503,10 +503,6 @@ class ApiService {
   }
 
   async updateCustomerProfile(data: any) {
-    console.warn(
-      "⚠️ updateCustomerProfile is deprecated. Use /api/user-profile instead."
-    );
-
     return fetch("/api/user-profile", {
       method: "POST",
       headers: {

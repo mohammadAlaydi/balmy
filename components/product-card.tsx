@@ -193,7 +193,7 @@ export default function ProductCard({
     >
       {!isInStock && <ZeroQuantity />}
 
-      <CardHeader className="p-0 relative overflow-hidden rounded-t-lg">
+      <CardHeader className="p-0 relative overflow-hidden rounded-t-lg group">
         {/* Hover Actions */}
         <motion.div
           initial={{ opacity: 0 }}
@@ -228,7 +228,7 @@ export default function ProductCard({
           height={224}
           src={baseImageUrl}
           alt={product?.name || ""}
-          className="rounded-t-lg w-full aspect-square object-cover transition-transform duration-500 hover:scale-[1.05] cursor-pointer"
+          className="rounded-t-lg w-full aspect-square object-cover transition-transform duration-500 transform group-hover:scale-[1.05] cursor-pointer"
           onClick={() =>
             router.push(`/product/${wishlistProductId || product?.product_id}`)
           }
@@ -241,7 +241,7 @@ export default function ProductCard({
             height={224}
             src={hoverImageUrl}
             alt={`${product?.name} hover`}
-            className="absolute inset-0 rounded-t-lg w-full h-full object-cover transition-transform duration-500 hover:scale-[1.05] opacity-0 group-hover:opacity-100 cursor-pointer"
+            className="absolute inset-0 rounded-t-lg w-full h-full object-cover transition-transform duration-500 transform group-hover:scale-[1.05] opacity-0 group-hover:opacity-100 cursor-pointer"
             onClick={() =>
               router.push(
                 `/product/${wishlistProductId || product?.product_id}`
@@ -314,10 +314,10 @@ export default function ProductCard({
       {/* Content */}
       <CardContent className="px-3 pb-3 flex flex-col gap-2 sm:gap-3">
         <div className="flex justify-between items-center">
-          <p className="font-semibold text-sm truncate">{product?.name}</p>
           <p className="text-xs text-gray-500 truncate max-w-[100px]">
             {chosenVariantSku ?? product?.sku}
           </p>
+          <p className="font-semibold text-sm truncate">{product?.name}</p>
         </div>
 
         {/* Variant Selector */}
