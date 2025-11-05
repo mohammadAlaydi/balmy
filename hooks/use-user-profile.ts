@@ -57,7 +57,7 @@ export function useUserProfile() {
   const addressForm = useForm<AddressesFormData>({
     resolver: zodResolver(addressesSchema),
     defaultValues: {
-      addresses: [{ address_id: null, address1: "", city: "", country: "Egypt" }],
+      addresses: [{ address_id: null, address1: "", city: "", country: "" }],
     },
   });
 
