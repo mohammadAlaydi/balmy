@@ -13,6 +13,7 @@ import {
 import type { AppDispatch, RootState } from "@/store/store";
 
 export default function useCart() {
+  
   const t = useTranslations("cart");
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();

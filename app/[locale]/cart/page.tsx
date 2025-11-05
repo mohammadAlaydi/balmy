@@ -9,7 +9,6 @@ import DeleteProductComponent from "@/components/delete-product-component";
 import UseCart from "@/hooks/use-cart";
 
 export default function page() {
-  
   const { t, data, isOpen, setIsOpen, dispatch } = UseCart();
 
   // if (isLoading) {

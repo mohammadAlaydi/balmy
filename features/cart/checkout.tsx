@@ -36,7 +36,8 @@ const defaultFormValues: CheckoutFormValues = {
     phone: "",
   },
   payment: {
-    method: "cashondelivery" as const,
+    way : "cashondelivery",
+    method: "cashondelivery",
   },
   shipping_method: "flatrate_flatrate" as const,
 };
@@ -50,6 +51,8 @@ export default function Checkout() {
 
   const success = saveOrderData?.data?.data?.success;
   const redirectUrl = saveOrderData?.data?.data?.url;
+
+  console.log(redirectUrl, "❤️");
 
   const dispatch = useDispatch();
   const [showAuthModal, setShowAuthModal] = useState(false);
@@ -92,7 +95,7 @@ export default function Checkout() {
     const checkoutPayload = {
       billing: billingWithoutFlag,
       shipping: shippingData,
-      payment: values.payment,
+      payment: values.payment?.method,
       shipping_method: values.shipping_method,
     };
 
@@ -100,19 +103,24 @@ export default function Checkout() {
     dispatch(resetStatus());
   };
 
-  // Redirect immediately if URL exists
-  const paymentMethod = watch("payment.method");
   useEffect(() => {
     dispatch(getCartProducts() as any);
-  }, [success, redirectUrl, router, paymentMethod, dispatch]);
+  }, [success, redirectUrl, router, dispatch]);
 
   // Show Success page if order succeeded and no redirect URL
   useEffect(() => {
-    if (saveOrderData?.success && saveOrderData?.data?.data?.order?.id) {
+    if (
+      saveOrderData?.success &&
+      saveOrderData?.data?.data?.order?.id &&
+      (watch("payment.method") == "cashondelivery" ||
+        watch("payment.method") == "tabby")
+    ) {
       const orderId = saveOrderData?.data?.data?.order?.id;
       router.push(`/cart/checkout-status/${orderId}`);
+    } else {
+      router.push(redirectUrl);
     }
-  }, [saveOrderData, router]); // re-run when saveOrderData updates
+  }, [saveOrderData, router, redirectUrl]); // re-run when saveOrderData updates
 
   return (
     <>
@@ -139,6 +147,7 @@ export default function Checkout() {
               isSubmitting={formState?.isSubmitting || false}
               status={status}
               data={saveOrderData || null}
+              watch={watch}
             />
           </form>
         </Form>

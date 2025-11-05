@@ -12,7 +12,7 @@ type RadioOption = {
 };
 
 type LabelAndRadioProps<T extends Record<string, any>> = {
-  inputName: string;
+  inputName?: string;
   options?: RadioOption[];
   labelText?: string;
   parentStyle?: string;

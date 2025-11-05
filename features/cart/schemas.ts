@@ -18,27 +18,13 @@ export const formSchema = z
       use_for_shipping: z.boolean(),
     }),
     shipping: z.object({
-      address1: z
-        .string()
-        .min(1, "validation.street-address-required")
-        .max(200)
-        .optional()
-        .or(z.literal("")),
-      city: z
-        .string()
-        .min(1, "validation.city-required")
-        .max(100)
-        .optional()
-        .or(z.literal("")),
-      phone: z
-        .string()
-        .min(1, "validation.phone-required")
-        .regex(/^[+]?[- 0-9()]{7,30}$/i, "validation.phone-invalid")
-        .optional()
-        .or(z.literal("")),
+      address1: z.string().optional().or(z.literal("")),
+      city: z.string().optional().or(z.literal("")),
+      phone: z.string().optional().or(z.literal("")),
     }),
     payment: z.object({
-      method: z.enum(["cashondelivery","moyasar", "tabby"]),
+      way: z.enum(["cashondelivery", "online"]),
+      method: z.enum(["cashondelivery", "moyasar", "tabby"]),
     }),
     shipping_method: z.enum([
       "flatrate_flatrate",
@@ -48,21 +34,21 @@ export const formSchema = z
   })
   .superRefine((data, ctx) => {
     if (!data.billing.use_for_shipping) {
-      if (!data.shipping.address1 || data.shipping.address1.trim() === "") {
+      if (!data.shipping.address1?.trim()) {
         ctx.addIssue({
           path: ["shipping", "address1"],
           code: z.ZodIssueCode.custom,
           message: "validation.street-address-required",
         });
       }
-      if (!data.shipping.city || data.shipping.city.trim() === "") {
+      if (!data.shipping.city?.trim()) {
         ctx.addIssue({
           path: ["shipping", "city"],
           code: z.ZodIssueCode.custom,
           message: "validation.city-required",
         });
       }
-      if (!data.shipping.phone || data.shipping.phone.trim() === "") {
+      if (!data.shipping.phone?.trim()) {
         ctx.addIssue({
           path: ["shipping", "phone"],
           code: z.ZodIssueCode.custom,
@@ -71,3 +57,5 @@ export const formSchema = z
       }
     }
   });
+
+export type CheckoutFormValues = z.infer<typeof formSchema>;

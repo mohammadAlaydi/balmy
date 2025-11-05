@@ -27,12 +27,14 @@ interface ShippingFormProps {
   form: any;
   status: string | null;
   data: any;
+  watch: any;
 }
 
 export default function ShippingForm({
   isSubmitting,
   form,
   submitLabel,
+  watch,
 }: ShippingFormProps) {
   const dispatch = useDispatch();
   const t = useTranslations("cart");
@@ -207,7 +209,7 @@ export default function ShippingForm({
 
             {/* Payment Method */}
             <Accordion type="single" collapsible>
-              <AccordionItem value="payment-method">
+              <AccordionItem value="payment-way">
                 <AccordionTrigger className="border border-gray-200 px-3">
                   <div className="flex items-center gap-2">
                     <FaAmazonPay size={24} className="text-primary" />
@@ -220,7 +222,7 @@ export default function ShippingForm({
                 <AccordionContent className="border border-gray-200 p-3 mt-3 rounded-md">
                   <LabelAndRadio
                     control={form.control}
-                    inputName="payment.method" // must match CheckoutFormValues
+                    inputName="payment.way" // must match CheckoutFormValues
                     labelText={t("choose-payment-method")}
                     options={[
                       {
@@ -229,7 +231,7 @@ export default function ShippingForm({
                         action: () => setPaymentMethod("cashondelivery"),
                       },
                       {
-                        value: "onlinePayment",
+                        value: "online",
                         label: t("credit-card"),
                         action: () => setPaymentMethod("onlinepayment"),
                       },
@@ -240,7 +242,7 @@ export default function ShippingForm({
             </Accordion>
 
             {/* Online Payment Methods (if credit card selected) */}
-            {paymentMethod === "onlinepayment" && (
+            {watch("payment.way") === "onlinepayment" && (
               <Accordion type="single" collapsible>
                 <AccordionItem value="online-payment-methods">
                   <AccordionTrigger className="border border-gray-200 px-3">
