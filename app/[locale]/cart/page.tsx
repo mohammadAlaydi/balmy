@@ -2,34 +2,15 @@
 
 import CartProduct from "@/components/cart-product";
 import OrderSummary from "@/features/cart/order-Summary";
-import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useState } from "react";
-import {
-  getCartProducts,
-  removeAllProductsFromCart,
-} from "@/store/slices/cart-slice";
+import { removeAllProductsFromCart } from "@/store/slices/cart-slice";
 import Loading from "@/components/loading";
-import { useTranslations } from "next-intl";
 import PageWrapper from "@/components/page-wrapper";
-import { useRouter } from "next/navigation";
-import { resetStatus } from "@/store/slices/cart-slice";
 import DeleteProductComponent from "@/components/delete-product-component";
-export default function page() {
-  const t = useTranslations("cart");
-  const dispatch = useDispatch();
-  const router = useRouter();
-  const { data, isLoading, status, cartStatus } = useSelector(
-    (state: any) => state.cart
-  );
-  const [isOpen, setIsOpen] = useState(false);
+import UseCart from "@/hooks/use-cart";
 
-  useEffect(() => {
-    router.refresh();
-    resetStatus();
-    if (!isLoading && !data) {
-      dispatch(getCartProducts() as any);
-    }
-  }, [dispatch, isLoading, data]);
+export default function page() {
+  
+  const { t, data, isOpen, setIsOpen, dispatch } = UseCart();
 
   // if (isLoading) {
   //   return <Loading fullScreen={true} variant="spinner" size="xl" />;

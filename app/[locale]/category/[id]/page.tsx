@@ -7,8 +7,14 @@ import PageWrapper from "@/components/page-wrapper";
 import useCategory from "@/hooks/use-category";
 
 export default function CategoryPage() {
-  const { loading, error, t, categoryProducts, filteredProducts, handleFilterChange } =
-    useCategory();
+  const {
+    loading,
+    error,
+    t,
+    categoryProducts,
+    filteredProducts,
+    handleFilterChange,
+  } = useCategory();
 
   const products = categoryProducts?.data || [];
   const hasProducts = products.length > 0;
@@ -38,7 +44,10 @@ export default function CategoryPage() {
     <PageWrapper>
       {hasProducts && (
         <div className="flex flex-wrap items-center gap-5 justify-start mb-10">
-          <CategoryFilter products={products} onFilterChange={handleFilterChange} />
+          <CategoryFilter
+            products={products}
+            onFilterChange={handleFilterChange}
+          />
           <p className="text-gray-600 whitespace-nowrap">
             {t("products-count", { count: filteredProducts.length })}
           </p>
