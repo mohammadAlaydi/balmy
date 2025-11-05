@@ -1,132 +1,133 @@
 "use client";
 
-import { Badge } from "./ui/badge";
+import React from "react";
 import { FaSearch } from "react-icons/fa";
-import { Input } from "./ui/input";
-import ProductCard from "./product-card";
-import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
-import { getSearchProducts } from "@/store/slices/search-products-slice";
-import { useSelector } from "react-redux";
-import { useTranslations } from "next-intl";
-import Loading from "./loading";
 import { IoClose } from "react-icons/io5";
 
-const SearchComponent = ({ maxHeight }: { maxHeight?: string }) => {
-  const t = useTranslations("search");
-  const dispatch = useDispatch();
-  const { products, isLoading } = useSelector(
-    (state: any) => state.searchProducts
-  );
-  const categories = useSelector((state: any) => state.categories);
-  const loading = useSelector((state: any) => state.categories.loading);
-  
-  const [search, setSearch] = useState("");
-  const [searchCategory, setSearchCategory] = useState("");
-  console.log(searchCategory, "🤷‍♂️😒");
-  const [filteredProducts, setFilteredProducts] = useState(
-    products?.data || []
-  );
-  const [categoryIndex, setCategoryIndex] = useState<number | null>(null);
+import { Badge } from "./ui/badge";
+import { Input } from "./ui/input";
+import ProductCard from "./product-card";
+import Loading from "./loading";
 
-  useEffect(() => {
-    dispatch(getSearchProducts() as any);
-  }, [dispatch]);
+import useSearch from "@/hooks/use-search";
 
-  useEffect(() => {
-    if (!products?.data) return;
+interface SearchComponentProps {
+  maxHeight?: string;
+}
 
-    const normalizedSearch = search.trim().toLowerCase();
-    const hasSearch = normalizedSearch.length > 0;
+/**
+ * Product search and filter component.
+ */
+const SearchComponent: React.FC<SearchComponentProps> = ({ maxHeight }) => {
+  const {
+    isLoading,
+    loading,
+    t,
+    search,
+    setSearch,
+    categories,
+    categoryIndex,
+    setSearchCategory,
+    setCategoryIndex,
+    searchCategory,
+    filteredProducts,
+  } = useSearch();
 
-    const filtered = products.data.filter((product: any) => {
-      const matchesCategory = searchCategory
-        ? Array.isArray(product?.category_id)
-          ? product.category_id.includes(searchCategory)
-          : product?.category_id === searchCategory
-        : true;
-
-      if (!hasSearch) return matchesCategory;
-
-      const productName = (product?.name || "").toLowerCase();
-      const productSku =
-        typeof product?.sku === "string"
-          ? product.sku.toLowerCase()
-          : String(product?.sku || "").toLowerCase();
-      const matchesText =
-        productName.includes(normalizedSearch) ||
-        productSku === normalizedSearch;
-
-      return matchesText && matchesCategory;
-    });
-
-    setFilteredProducts(filtered);
-  }, [search, products, searchCategory]);
-
+  // =============================
+  // ⏳ Loading State
+  // =============================
   if (isLoading || loading) {
     return (
-      <div className="min-h-[40vh]">
-        <Loading fullScreen={true} variant="spinner" size="xl" />
+      <div className="min-h-[40vh] flex items-center justify-center">
+        <Loading fullScreen variant="spinner" size="xl" />
       </div>
     );
   }
+
+  // =============================
+  // 🧭 Clear Filters Handler
+  // =============================
+  const handleClearFilters = () => {
+    setSearch("");
+    setSearchCategory("");
+    setCategoryIndex(null);
+  };
+
+  // =============================
+  // 🎨 Render
+  // =============================
   return (
     <div
       className={`w-full h-full flex flex-col gap-5 py-3 ${
-        maxHeight || "h-full rounded-md"
+        maxHeight ?? "h-full rounded-md"
       }`}
     >
+      {/* 🔍 Search Input */}
       <div className="w-full relative mt-4">
         <Input
           type="text"
           placeholder={t("search-placeholder")}
-          className="w-full"
+          className="w-full pr-8"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
-        <FaSearch className="cursor-pointer absolute ltr:right-2 rtl:left-2 top-1/2 transform -translate-y-1/2 text-sm" />
+        <FaSearch className="absolute ltr:right-2 rtl:left-2 top-1/2 -translate-y-1/2 text-gray-500 text-sm pointer-events-none" />
       </div>
-      <p>{t("suggested-words")}</p>
-      <div className="flex flex-wrap gap-2">
-        {categories?.categories?.categories?.map(
-          (suggestion: any, index: number) => (
-            <Badge
-              key={index}
-              className={`py-0.5 px-2 text-sm cursor-pointer bg-white border border-gray-200 rounded-md text-black py-1 px-3 ${
-                index == categoryIndex ? "bg-black text-white" : ""
-              }`}
-              onClick={() => {
-                setSearchCategory(suggestion?.id ?? "");
-                setCategoryIndex(index);
-              }}
-            >
-              {String(suggestion?.name ?? "")}
-            </Badge>
-          )
-        )}
-      </div>
-      {(searchCategory !== "" || search !== "") && (
-        <div
-          onClick={() => {
-            setSearchCategory("");
-            setCategoryIndex(null);
-            setSearch("");
-          }}
-          className="gap-2 cursor-pointer text-base bg-red-500 flex items-center px-2 py-1 rounded-md w-fit text-white"
-        >
-          {t("clear-filters")}{" "}
-          <IoClose className="text-base text-white font-bold" />
+
+      {/* 🏷️ Suggested Categories */}
+      <div>
+        <p className="text-base font-medium mb-2">{t("suggested-words")}</p>
+        <div className="flex flex-wrap gap-2">
+          {categories?.categories?.map(
+            (category: any, index: number) => {
+              const isActive = index === categoryIndex;
+              return (
+                <Badge
+                  key={category.id ?? index}
+                  className={`cursor-pointer border border-gray-200 rounded-md text-sm py-1 px-3 transition-colors duration-200 ${
+                    isActive
+                      ? "bg-black text-white"
+                      : "bg-white text-black hover:bg-gray-100"
+                  }`}
+                  onClick={() => {
+                    setSearchCategory(category?.id ?? "");
+                    setCategoryIndex(index);
+                  }}
+                >
+                  {String(category?.name ?? "")}
+                </Badge>
+              );
+            }
+          )}
         </div>
+      </div>
+
+      {/* ❌ Clear Filters */}
+      {(searchCategory || search) && (
+        <button
+          onClick={handleClearFilters}
+          className="flex items-center gap-2 w-fit bg-red-500 text-white px-3 py-1 rounded-md text-sm hover:bg-red-600 transition-colors"
+        >
+          {t("clear-filters")}
+          <IoClose className="text-lg font-bold" />
+        </button>
       )}
 
-      <div className="w-full h-full grid grid-cols-12 gap-2 overflow-y-auto justify-center ">
-        {filteredProducts?.map((product: any, index: number) => (
-          <ProductCard
-            key={index}
-            product={product}
-            cardColSpan="col-span-6 sm:col-span-4 md:col-span-3 xl:col-span-3 relative"
-          />
-        ))}
+      {/* 🛍️ Products Grid */}
+      <div className="w-full grid grid-cols-12 gap-2 overflow-y-auto">
+        {filteredProducts?.length > 0 ? (
+          filteredProducts.map((product: any, index: number) => (
+            <ProductCard
+              key={product?.id ?? index}
+              product={product}
+              cardColSpan="col-span-6 sm:col-span-4 md:col-span-3 xl:col-span-3 relative"
+            />
+          ))
+        ) : (
+          <p className="col-span-12 text-center text-gray-500 mt-8">
+            {t("no-results-found")}
+          </p>
+        )}
       </div>
     </div>
   );
