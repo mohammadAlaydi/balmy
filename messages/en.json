@@ -131,7 +131,7 @@
     "placeholder-phone": "+1-555-987-6543",
     "login-required": "Login Required",
     "please-login-to-checkout": "Please login to proceed with checkout",
-    "online-payment-methods":"Choose Online Payment Method"
+    "online-payment-methods": "Choose Online Payment Method"
   },
   "about": {
     "who-we-are": "Who We Are",
@@ -257,7 +257,7 @@
     "no": "No",
     "ok": "OK",
     "login": "Login",
-    "set-default" : "Set Default"
+    "set-default": "Set Default"
   },
   "contact-us": {
     "title": "Contact Us",
@@ -577,26 +577,26 @@
     "confirm-deletion": "تأكيد حذف هذا المنتج من السلة"
   },
   "profile": {
-    "title": "Profile",
-    "subtitle": "Edit your personal information",
+    "personal-info": "Personal Information",
+    "subtitle": "Update your personal information below",
     "first-name": "First Name",
     "last-name": "Last Name",
     "email": "Email",
-    "phone": "Phone Number",
-    "fullName": "Full Name",
-    "gender": "Gender",
-    "dateOfBirth": "Date of Birth",
-    "country": "Country",
-    "city": "City",
-    "address": "Address",
-    "save-changes": "Save Changes",
-    "saving": "Saving...",
+    "phone": "Phone",
     "changes-saved": "Changes saved successfully",
     "error-saving": "Error saving changes",
-    "select-gender": "Select gender",
-    "add-address" : "Add Address",
-    "addresses" : "Addresses",
-    "number" : "Number"
+    "addresses": "Addresses",
+    "address-subtitle": "Manage your saved addresses here",
+    "add-address": "Add Address",
+    "address": "Address",
+    "city": "City",
+    "country": "Country",
+    "addressUpdated": "Address updated successfully",
+    "addressAdded": "Address added successfully",
+    "updateFailed": "Failed to update address",
+    "deleteFailed": "Failed to delete address",
+    "addressDeleted": "Address deleted successfully",
+    "errorUpdating": "Error updating address"
   },
   "favourites": {
     "title": "My Favourites",
