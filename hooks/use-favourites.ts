@@ -1,6 +1,13 @@
-import { useCallback } from "react";
+"use client";
+
+import { useCallback, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch } from "@/store/store";
+import { useTranslations } from "next-intl";
+import toast from "react-hot-toast";
+
+import type { AppDispatch, RootState } from "@/store/store";
+import type { Product } from "@/types/types";
+
 import {
   addToFavourites,
   removeFromFavourites,
@@ -11,19 +18,24 @@ import {
   moveToCart,
   syncWithBackend,
 } from "@/store/slices/favourite-slice";
-import { Product } from "@/types/types";
 
 export const useFavourites = () => {
   const dispatch = useDispatch<AppDispatch>();
+  const t = useTranslations("favourites");
+
   const { items, loading, error } = useSelector(
-    (state: any) => state.favourites
+    (state: RootState) => state.favourites
   );
+  const { user } = useSelector((state: RootState) => state.auth);
+  const isAuthenticated = !!user;
+
+  // ------------------------- Actions -------------------------
 
   const addToFavouritesHandler = useCallback(
     async (product: Product) => {
       const result = await dispatch(addToFavourites(product));
       if (addToFavourites.rejected.match(result)) {
-        throw (result.payload as string) || "Failed to add to favourites";
+        throw (result.payload as string) || t("errorAddingProduct");
       }
       return result;
     },
@@ -34,7 +46,7 @@ export const useFavourites = () => {
     async (productId: number) => {
       const result = await dispatch(removeFromFavourites(productId));
       if (removeFromFavourites.rejected.match(result)) {
-        throw (result.payload as string) || "Failed to remove from favourites";
+        throw (result.payload as string) || t("errorRemovingProduct");
       }
       return result;
     },
@@ -44,7 +56,7 @@ export const useFavourites = () => {
   const fetchFavouritesHandler = useCallback(async () => {
     const result = await dispatch(fetchFavourites());
     if (fetchFavourites.rejected.match(result)) {
-      throw (result.payload as string) || "Failed to fetch favourites";
+      throw (result.payload as string) || t("errorFetchingProducts");
     }
     return result;
   }, [dispatch]);
@@ -52,7 +64,7 @@ export const useFavourites = () => {
   const clearFavouritesHandler = useCallback(async () => {
     const result = await dispatch(clearFavourites());
     if (clearFavourites.rejected.match(result)) {
-      throw (result.payload as string) || "Failed to clear favourites";
+      throw (result.payload as string) || t("errorClearingAll");
     }
     return result;
   }, [dispatch]);
@@ -61,45 +73,84 @@ export const useFavourites = () => {
     async (wishlistId: number) => {
       const result = await dispatch(moveToCart(wishlistId));
       if (moveToCart.rejected.match(result)) {
-        throw new Error(result.payload as string);
+        throw new Error((result.payload as string) || t("errorMovingToCart"));
       }
       return result;
     },
     [dispatch]
   );
 
-  const syncWithBackendHandler = useCallback(() => {
-    dispatch(syncWithBackend());
-  }, [dispatch]);
-
   const toggleFavouriteHandler = useCallback(
-    (product: Product) => {
-      dispatch(toggleFavourite(product));
-    },
+    (product: Product) => dispatch(toggleFavourite(product)),
     [dispatch]
   );
 
-  const clearErrorHandler = useCallback(() => {
-    dispatch(clearError());
-  }, [dispatch]);
+  const clearErrorHandler = useCallback(() => dispatch(clearError()), [dispatch]);
+
+  const syncWithBackendHandler = useCallback(() => dispatch(syncWithBackend()), [
+    dispatch,
+  ]);
+
+  // ----------------------- Computed -------------------------
 
   const isFavourite = useCallback(
-    (productId: number) => {
-      return items.some((item: any) => item.id === productId);
-    },
+    (productId: number) => items.some((item) => item.id === productId),
     [items]
   );
 
-  const getFavouritesCount = useCallback(() => {
-    return items.length;
-  }, [items]);
+  const getFavouritesCount = useCallback(() => items.length, [items]);
+
+  // ------------------------ Effects -------------------------
+
+  // Only run once on mount
+  useEffect(() => {
+    if (!isAuthenticated) return;
+
+    const init = async () => {
+      try {
+        await dispatch(fetchFavourites());
+        dispatch(syncWithBackend());
+      } catch (err) {
+        // ignore errors on initial fetch
+      }
+    };
+
+    init();
+    // Empty deps so it runs only on mount
+  }, [dispatch, isAuthenticated]);
+
+  // ------------------------ Helpers -------------------------
+
+  const handleRemoveFromFavourites = useCallback(
+    async (productId: number) => {
+      try {
+        await removeFromFavouritesHandler(productId);
+        toast.success(t("productRemoved"));
+        setTimeout(fetchFavouritesHandler, 500);
+      } catch {
+        toast.error(t("errorRemovingProduct"));
+      }
+    },
+    [removeFromFavouritesHandler, fetchFavouritesHandler]
+  );
+
+  const handleClearAll = useCallback(async () => {
+    try {
+      await clearFavouritesHandler();
+      toast.success(t("allCleared"));
+      setTimeout(fetchFavouritesHandler, 500);
+    } catch {
+      toast.error(t("errorClearingAll"));
+    }
+  }, [clearFavouritesHandler, fetchFavouritesHandler]);
 
   return {
-    // State
+    t,
     favourites: items,
     isLoading: loading,
     error,
-
+    isAuthenticated,
+    locale: "ar", // or read from next-intl params if needed
     // Actions
     addToFavourites: addToFavouritesHandler,
     removeFromFavourites: removeFromFavouritesHandler,
@@ -109,9 +160,10 @@ export const useFavourites = () => {
     toggleFavourite: toggleFavouriteHandler,
     clearError: clearErrorHandler,
     syncWithBackend: syncWithBackendHandler,
-
     // Computed
     isFavourite,
     getFavouritesCount,
+    handleRemoveFromFavourites,
+    handleClearAll,
   };
 };

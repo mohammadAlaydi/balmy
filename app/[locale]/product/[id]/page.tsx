@@ -1,8 +1,8 @@
-import React from "react";
 import { notFound } from "next/navigation";
-import ProductDetailsClient from "./product-details-client";
-import type { Metadata } from "next";
-import { getProductDetails } from "@/store/slices/product-details-slice";
+import { Metadata } from "next";
+
+import ProductPageStatus from "@/features/product/product-page-status";
+import PageWrapper from "@/components/page-wrapper";
 
 interface ProductDetailsPageProps {
   params: {
@@ -17,15 +17,10 @@ export async function generateMetadata({
   try {
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/v1/product-details/${params.id}`,
-      {
-        method: "GET",
-        credentials: "include",
-      }
+      { method: "GET", credentials: "include" }
     );
 
-    if (!res.ok) {
-      throw new Error("Product not found", params?.id);
-    }
+    if (!res.ok) throw new Error("Product not found");
 
     const product = await res.json();
 
@@ -62,7 +57,7 @@ export async function generateMetadata({
         ],
       },
     };
-  } catch (error) {
+  } catch {
     return {
       title: "Product not found",
       description: "The requested product could not be found.",
@@ -80,18 +75,16 @@ export async function generateMetadata({
   }
 }
 
-export default async function ProductDetailsPage({
+export default function ProductDetailsPage({
   params,
 }: ProductDetailsPageProps) {
   const productId = parseInt(params.id);
-
   if (isNaN(productId)) notFound();
 
-  // Optional: check if product exists server-side for 404
-  const product = await getProductDetails(params.id);
-
-  if (!product) notFound();
-
-  // ✅ Pass only productId to client component
-  return <ProductDetailsClient productId={productId} />;
+  // Client component handles loading, error, and actual product render
+  return (
+    <PageWrapper>
+      <ProductPageStatus productId={productId} />
+    </PageWrapper>
+  );
 }

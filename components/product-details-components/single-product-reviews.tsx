@@ -28,7 +28,6 @@ export default function SingleProductReviews({
   const t = useTranslations("product-details");
   const tButtons = useTranslations("buttons");
   const [userRating, setUserRating] = useState(0);
-  const [hoverRating, setHoverRating] = useState(0);
   const [reviewText, setReviewText] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);

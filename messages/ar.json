@@ -641,7 +641,8 @@
     "lastUpdated": "آخر تحديث",
     "login-to-manage-favourites": "يرجى تسجيل الدخول لإدارة المفضلات",
     "login-to-move-to-cart": "يرجى تسجيل الدخول لنقل العناصر إلى السلة",
-    "authentication-required": "مطلوب تسجيل الدخول: يرجى تسجيل الدخول للوصول إلى مفضلاتك."
+    "authentication-required": "مطلوب تسجيل الدخول: يرجى تسجيل الدخول للوصول إلى مفضلاتك.",
+     "remove-from-favourites": "إزالة من المفضلة"
   },
   "order": {
     "order-number": "رقم الطلب",

@@ -2,25 +2,22 @@
 
 import React from "react";
 import { useTranslations } from "next-intl";
-import SingleProductCard from "@/components/product-details-components/single-product-card";
-import { ErrorBoundary } from "next/dist/client/components/error-boundary";
 import { useGetProductDetailsQuery } from "@/store/slices/products-slice";
 import Loading from "@/components/loading";
-import PageWrapper from "@/components/page-wrapper";
+import SingleProductCard from "@/components/product-details-components/single-product-details";
 
-interface ProductDetailsClientProps {
+interface ProductPageStatusProps {
   productId: number;
 }
 
-export default function ProductDetailsClient({
-  productId,
-}: ProductDetailsClientProps) {
+export default function ProductPageStatus({ productId }: ProductPageStatusProps) {
+
   const t = useTranslations("product-details");
-  const { data, isLoading, error, refetch } =
-    useGetProductDetailsQuery(productId);
+  
+  const { data, isLoading, error, refetch } = useGetProductDetailsQuery(productId);
 
   if (isLoading) {
-    return <Loading fullScreen={true} variant="spinner" size="xl" />;
+    return <Loading fullScreen variant="spinner" size="xl" />;
   }
 
   if (error || !data?.data) {
@@ -44,11 +41,6 @@ export default function ProductDetailsClient({
     );
   }
 
-  return (
-    <PageWrapper>
-      <ErrorBoundary>
-        <SingleProductCard product={data.data} />
-      </ErrorBoundary>
-    </PageWrapper>
-  );
+  // ✅ Render actual product
+  return <SingleProductCard product={data.data} />;
 }

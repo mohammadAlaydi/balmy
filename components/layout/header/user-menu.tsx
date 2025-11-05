@@ -121,7 +121,7 @@ export default function UserMenu({ isMobile = false }: { isMobile?: boolean }) {
             }`}
           >
             <Link
-              href={`/${locale}/favourite`}
+              href={`/${locale}/favourites`}
               className={`flex items-center ${isRTL ? "flex-row-reverse" : ""}`}
               prefetch={true}
             >
@@ -212,7 +212,7 @@ export default function UserMenu({ isMobile = false }: { isMobile?: boolean }) {
           }`}
         >
           <Link
-            href={`/${locale}/favourite`}
+            href={`/${locale}/favourites`}
             className={`flex items-center ${isRTL ? "flex-row-reverse" : ""}`}
             prefetch={true}
           >

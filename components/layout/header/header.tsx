@@ -142,7 +142,7 @@ const ActionIcons = ({
         </Dialog>
         <UserMenu />
         <Link
-          href={`/${currentLocale}/favourite`}
+          href={`/${currentLocale}/favourites`}
           className="relative hidden lg:block"
           prefetch={true}
         >
@@ -407,7 +407,7 @@ const MobileMenu = ({
             </Link>
             <UserMenu isMobile={true} />
             <Link
-              href={`/${currentLocale}/favourite`}
+              href={`/${currentLocale}/favourites`}
               prefetch={true}
               className="relative"
             >
