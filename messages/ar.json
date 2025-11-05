@@ -131,10 +131,10 @@
     "placeholder-phone": "+966-50-123-4567",
     "login-required": "تسجيل الدخول مطلوب",
     "please-login-to-checkout": "يرجى تسجيل الدخول للمتابعة مع الدفع",
-    "online-payment-methods" : "إختر طرية الدفع الإلكترونية",
-    "no-products-yet" : "لا توجد منتجات بعد",
-    "choose-online-payment" : "اختر الدفع عبر الإنترنت",
-    "order-success" : "تم إرسال طلبك بنجاح"
+    "online-payment-methods": "إختر طرية الدفع الإلكترونية",
+    "no-products-yet": "لا توجد منتجات بعد",
+    "choose-online-payment": "اختر الدفع عبر الإنترنت",
+    "order-success": "تم إرسال طلبك بنجاح"
   },
   "about": {
     "who-we-are": "من نحن",
@@ -260,7 +260,7 @@
     "no": "لا",
     "ok": "موافق",
     "login": "تسجيل الدخول",
-    "set-default" : "تعيين كإفتراضي"
+    "set-default": "تعيين كإفتراضي"
   },
   "contact-us": {
     "title": "تواصل معنا",
@@ -642,7 +642,8 @@
     "login-to-manage-favourites": "يرجى تسجيل الدخول لإدارة المفضلات",
     "login-to-move-to-cart": "يرجى تسجيل الدخول لنقل العناصر إلى السلة",
     "authentication-required": "مطلوب تسجيل الدخول: يرجى تسجيل الدخول للوصول إلى مفضلاتك.",
-     "remove-from-favourites": "إزالة من المفضلة"
+    "remove-from-favourites": "إزالة من المفضلة",
+    "no-data-found": "لم يتم العثور على بيانات"
   },
   "order": {
     "order-number": "رقم الطلب",

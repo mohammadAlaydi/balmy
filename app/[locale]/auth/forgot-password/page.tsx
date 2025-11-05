@@ -10,7 +10,6 @@ import NewPasswordForm from "@/components/auth/new-password-form";
 type ForgotPasswordView = "forgot-password" | "reset-code" | "new-password";
 
 export default function page() {
-
   const [currentView, setCurrentView] =
     useState<ForgotPasswordView>("forgot-password");
   const [email, setEmail] = useState("");
@@ -80,9 +79,7 @@ export default function page() {
           <h1 className="text-3xl font-bold text-gray-900">
             {t("password-recovery")}
           </h1>
-          <p className="mt-2 text-sm text-gray-600">
-            {t("follow-steps")}
-          </p>
+          <p className="mt-2 text-sm text-gray-600">{t("follow-steps")}</p>
         </div>
         {renderCurrentView()}
       </div>

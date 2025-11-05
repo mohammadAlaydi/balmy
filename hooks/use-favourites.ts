@@ -39,7 +39,7 @@ export const useFavourites = () => {
       }
       return result;
     },
-    [dispatch]
+    [dispatch, t]
   );
 
   const removeFromFavouritesHandler = useCallback(
@@ -50,16 +50,13 @@ export const useFavourites = () => {
       }
       return result;
     },
-    [dispatch]
+    [dispatch, t]
   );
 
   const fetchFavouritesHandler = useCallback(async () => {
-    const result = await dispatch(fetchFavourites());
-    if (fetchFavourites.rejected.match(result)) {
-      throw (result.payload as string) || t("errorFetchingProducts");
-    }
-    return result;
-  }, [dispatch]);
+    if (!isAuthenticated) return;
+    await dispatch(fetchFavourites());
+  }, [dispatch, isAuthenticated]);
 
   const clearFavouritesHandler = useCallback(async () => {
     const result = await dispatch(clearFavourites());
@@ -67,7 +64,7 @@ export const useFavourites = () => {
       throw (result.payload as string) || t("errorClearingAll");
     }
     return result;
-  }, [dispatch]);
+  }, [dispatch, t]);
 
   const moveToCartHandler = useCallback(
     async (wishlistId: number) => {
@@ -77,7 +74,7 @@ export const useFavourites = () => {
       }
       return result;
     },
-    [dispatch]
+    [dispatch, t]
   );
 
   const toggleFavouriteHandler = useCallback(
@@ -86,10 +83,7 @@ export const useFavourites = () => {
   );
 
   const clearErrorHandler = useCallback(() => dispatch(clearError()), [dispatch]);
-
-  const syncWithBackendHandler = useCallback(() => dispatch(syncWithBackend()), [
-    dispatch,
-  ]);
+  const syncWithBackendHandler = useCallback(() => dispatch(syncWithBackend()), [dispatch]);
 
   // ----------------------- Computed -------------------------
 
@@ -102,22 +96,10 @@ export const useFavourites = () => {
 
   // ------------------------ Effects -------------------------
 
-  // Only run once on mount
   useEffect(() => {
-    if (!isAuthenticated) return;
-
-    const init = async () => {
-      try {
-        await dispatch(fetchFavourites());
-        dispatch(syncWithBackend());
-      } catch (err) {
-        // ignore errors on initial fetch
-      }
-    };
-
-    init();
-    // Empty deps so it runs only on mount
-  }, [dispatch, isAuthenticated]);
+    fetchFavouritesHandler();
+    syncWithBackendHandler();
+  }, [fetchFavouritesHandler, syncWithBackendHandler]);
 
   // ------------------------ Helpers -------------------------
 
@@ -126,23 +108,21 @@ export const useFavourites = () => {
       try {
         await removeFromFavouritesHandler(productId);
         toast.success(t("productRemoved"));
-        setTimeout(fetchFavouritesHandler, 500);
       } catch {
         toast.error(t("errorRemovingProduct"));
       }
     },
-    [removeFromFavouritesHandler, fetchFavouritesHandler]
+    [removeFromFavouritesHandler, t]
   );
 
   const handleClearAll = useCallback(async () => {
     try {
       await clearFavouritesHandler();
       toast.success(t("allCleared"));
-      setTimeout(fetchFavouritesHandler, 500);
     } catch {
       toast.error(t("errorClearingAll"));
     }
-  }, [clearFavouritesHandler, fetchFavouritesHandler]);
+  }, [clearFavouritesHandler, t]);
 
   return {
     t,
@@ -150,8 +130,7 @@ export const useFavourites = () => {
     isLoading: loading,
     error,
     isAuthenticated,
-    locale: "ar", // or read from next-intl params if needed
-    // Actions
+    locale: "ar",
     addToFavourites: addToFavouritesHandler,
     removeFromFavourites: removeFromFavouritesHandler,
     fetchFavourites: fetchFavouritesHandler,
@@ -160,7 +139,6 @@ export const useFavourites = () => {
     toggleFavourite: toggleFavouriteHandler,
     clearError: clearErrorHandler,
     syncWithBackend: syncWithBackendHandler,
-    // Computed
     isFavourite,
     getFavouritesCount,
     handleRemoveFromFavourites,
