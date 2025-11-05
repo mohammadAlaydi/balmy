@@ -266,8 +266,8 @@ const NavigationLinks = ({
                           <Link
                             href={
                               nested?.slug
-                                ? `/${currentLocale}/category/${link?.slug}/${nested?.slug}`
-                                : `/${currentLocale}/category/${link?.slug}/${nested?.id}`
+                                ? `/${currentLocale}/category/${nested?.slug}`
+                                : `/${currentLocale}/category/${nested?.id}`
                             }
                             prefetch={true}
                             className="cursor-pointer hover:bg-transparent  px-4 py-2 text-lg font-[600] hover:text-red-500 transition-all duration-300"
@@ -286,7 +286,7 @@ const NavigationLinks = ({
               >
                 <NavigationMenuLink asChild>
                   <Link
-                    href={`/${currentLocale}/category/${link?.slug}/${link?.id}`}
+                    href={`/${currentLocale}/category/${link?.id}`}
                     prefetch={true}
                     className="cursor-pointer hover:bg-transparent  px-4 py-2 text-lg font-[600] hover:text-red-500 transition-all duration-300"
                   >
@@ -370,7 +370,7 @@ const MobileMenu = ({
                         <li key={nested.id}>
                           <Link
                             prefetch={true}
-                            href={`/${currentLocale}/category/${category.slug}/${nested.slug}/${nested.id}`}
+                            href={`/${currentLocale}/category/${nested.id}`}
                             className="block rounded-md px-1.5 py-1 text-lg font-[550] hover:bg-accent hover:text-accent-foreground"
                           >
                             {nested.name}
@@ -383,7 +383,7 @@ const MobileMenu = ({
               ) : (
                 <Link
                   prefetch={true}
-                  href={`/${currentLocale}/category/${category.slug}/${category.id}`}
+                  href={`/${currentLocale}/category/${category.id}`}
                   className="flex items-center py-3 px-3 hover:bg-gray-50 rounded-md text-left w-full text-lg font-[550]"
                 >
                   {category.name}

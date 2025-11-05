@@ -46,7 +46,7 @@ export default function Categories({ categories }: { categories: any }) {
             category?.name != "Root" && (
               <SwiperSlide key={index}>
                 <Link
-                  href={`/category/${category.slug}/${category.id}`}
+                  href={`/category/${category.id}`}
                   className="overflow-hidden cursor-pointer"
                 >
                   <div>
