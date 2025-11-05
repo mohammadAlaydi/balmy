@@ -1,38 +1,14 @@
 "use client";
 
-import CarouselComponent from "@/components/carousel-component";
 import React from "react";
-import { MdOutlineLocalShipping } from "react-icons/md";
-import { BiSupport } from "react-icons/bi";
-import { PiSealCheck } from "react-icons/pi";
 import { SwiperSlide } from "swiper/react";
-import { useTranslations } from "next-intl";
-import { TfiBackLeft } from "react-icons/tfi";
+import CarouselComponent from "@/components/carousel-component";
+import useHome from "@/hooks/use-home";
+import { BenefitItem } from "@/hooks/use-home"; 
 
 export default function Services() {
-  const t = useTranslations("home");
-  let benfits = [
-    {
-      icon: <TfiBackLeft className="text-4xl text-primary" />,
-      h2: t("return-and-exchange"),
-      p: t("return-and-exchange-desc"),
-    },
-    {
-      icon: <MdOutlineLocalShipping className="text-4xl text-primary" />,
-      h2: t("free-shipping"),
-      p: t("free-shipping-desc"),
-    },
-    {
-      icon: <BiSupport className="text-4xl text-primary" />,
-      h2: t("always-with-you"),
-      p: t("always-with-you-desc"),
-    },
-    {
-      icon: <PiSealCheck className="text-4xl text-primary" />,
-      h2: t("gold-membership"),
-      p: t("gold-membership-desc"),
-    },
-  ];
+
+  const { benefits } = useHome();
 
   return (
     <CarouselComponent
@@ -46,21 +22,24 @@ export default function Services() {
         0: { slidesPerView: 1 },
       }}
     >
-      {benfits.map((benfit, index) => (
-        <SwiperSlide key={index} className="px-5 py-10 ">
-          <div className="flex justify-center">{benfit.icon}</div>
-          <div>
-            <h2 className="text-center text-sm md:text-md lg:text-[20px] mt-2">
-              {" "}
-              {benfit.h2}
-            </h2>
-            <p className="text-center text-gray-color mt-2 text-sm md:text-lg">
-              {" "}
-              {benfit.p}
-            </p>
-          </div>
-        </SwiperSlide>
-      ))}
+      {benefits.map((benefit: BenefitItem, index: number) => {
+        const Icon = benefit.icon;
+        return (
+          <SwiperSlide key={index} className="px-5 py-10">
+            <div className="flex justify-center">
+              <Icon className="text-4xl text-primary" />
+            </div>
+            <div>
+              <h2 className="text-center text-sm md:text-md lg:text-[20px] mt-2 font-semibold">
+                {benefit.title}
+              </h2>
+              <p className="text-center text-gray-500 mt-2 text-sm md:text-lg">
+                {benefit.description}
+              </p>
+            </div>
+          </SwiperSlide>
+        );
+      })}
     </CarouselComponent>
   );
 }

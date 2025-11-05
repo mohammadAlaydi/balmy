@@ -6,6 +6,7 @@ import { SwiperSlide } from "swiper/react";
 import Image from "next/image";
 
 export default function BannerCarousel({ sliders }: { sliders: any }) {
+  
   const items = Array.isArray(sliders) && sliders.length > 0 ? sliders : [];
 
   return (
