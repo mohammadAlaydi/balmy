@@ -6,13 +6,12 @@ import { getCartProducts, removeFromCart } from "@/store/slices/cart-slice";
 import { useAppDispatch } from "@/store/hooks";
 import ReactStars from "./react-stars";
 import toast from "react-hot-toast";
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { FavouriteButton } from "./favourite-button";
 import { useRouter } from "next/navigation";
 import ProductIncementOrDecrement from "./product-increment-or-decrement";
 import { Badge } from "./ui/badge";
-import { FaRegStar, FaStar } from "react-icons/fa";
 
 interface CartProductProps {
   product: any;
@@ -66,7 +65,7 @@ export default function CartProduct({
               {product?.price} <i className="icon-rial"></i>
             </p>
             <div className="scale-[0.85] sm:scale-100">
-              <div className="flex items-center gap-1 bg-gray-100 px-2 rounded-md w-fit mb-2 shadow-sm">
+              <div className="flex items-center gap-1 bg-gray-100 rounded-md w-fit mb-2 shadow-sm">
                 <div className="hidden sm:flex"><ReactStars edit={false} /> </div>
                 <div className="flex sm:hidden">
                   <ReactStars

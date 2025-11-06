@@ -106,26 +106,23 @@ export default function Checkout() {
   }, [dispatch]);
   // ✅ التحكم في التنقل بعد نجاح الطلب
   useEffect(() => {
-    if (!saveOrderData) return;
+    if (!saveOrderData?.success) return;
 
     const orderId = saveOrderData?.data?.data?.order?.id;
+    const redirectUrl = saveOrderData?.data?.data?.url;
     const paymentMethod = watch("payment.method");
 
-    if (saveOrderData?.success && orderId) {
-      if (paymentMethod === "cashondelivery" || paymentMethod === "tabby") {
-        // انتقل لصفحة الحالة
-        router.push(`/cart/checkout-status/${orderId}`);
-        // اعمل reset بعد التنقل فقط
-        dispatch(resetStatus());
-      } else {
-        // لو فيه URL خارجي (مثلاً للدفع الإلكتروني)
-        router.push(redirectUrl);
-
-        dispatch(resetStatus());
-
-      }
+    if (paymentMethod === "cashondelivery" || paymentMethod === "tabby") {
+      router.push(`/cart/checkout-status/${orderId}`);
+      dispatch(resetStatus());
+    } else if (redirectUrl) {
+      // External redirect (like Moyasar)
+      window.location.href = redirectUrl;
+      // Delay reset so it doesn't clear before navigation
+      setTimeout(() => dispatch(resetStatus()), 2000);
     }
-  }, [saveOrderData, watch, router, redirectUrl, dispatch]);
+  }, [saveOrderData, router, dispatch, watch]);
+
 
   return (
     <>
