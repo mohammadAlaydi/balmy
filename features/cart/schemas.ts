@@ -23,7 +23,6 @@ export const formSchema = z
       phone: z.string().optional().or(z.literal("")),
     }),
     payment: z.object({
-      way: z.enum(["cashondelivery", "online"]),
       method: z.enum(["cashondelivery", "moyasar", "tabby"]),
     }),
     shipping_method: z.enum([

@@ -78,6 +78,7 @@ export default function QuickCart() {
             isOpen={isOpen}
             action={() => dispatch(removeAllProductsFromCart() as any)}
             text="مسح جميع المنتجات"
+            deleteMessage="delete-all-products"
           />
         )}
         {data?.data?.items?.length > 0 && (

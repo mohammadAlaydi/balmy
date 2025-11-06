@@ -29,6 +29,7 @@ export default function page() {
                 isOpen={isOpen}
                 action={() => dispatch(removeAllProductsFromCart() as any)}
                 text="مسح جميع المنتجات"
+                deleteMessage="delete-all-products"
               />
             </div>
             {data?.data?.items &&

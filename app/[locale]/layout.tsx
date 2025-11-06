@@ -27,39 +27,80 @@ export async function generateMetadata({
 }: {
   params: { locale: string };
 }): Promise<Metadata> {
-  const locale = params.locale || "ar";
+  const locale = params?.locale || "ar";
 
   try {
     const response = await fetch(`${API_URL}/v1/home?locale=${locale}`, {
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: { "Content-Type": "application/json" },
       next: { revalidate: 3600 },
     });
 
+    if (!response.ok) {
+      throw new Error(`Failed to fetch SEO data: ${response.statusText}`);
+    }
+
     const data = await response.json();
     const seo = data?.seo_settings?.channel?.meta_data;
+    let logo = data?.seo_settings?.channel?.logo;
+
+    // ✅ Ensure favicon is a full URL
+    if (logo && !logo.startsWith("http")) {
+      logo = `${API_URL}${logo.startsWith("/") ? "" : "/"}${logo}`;
+    }
+
+    console.log("🖼️ favicon:", logo);
 
     return {
-      title: seo?.meta_title,
-      description: seo?.meta_description || "",
-      keywords: seo?.meta_keywords || [
-        "e-commerce",
-        "shopping",
-        "products",
-        "quality",
-      ],
+      title: seo?.meta_title || "My Store",
+      description: seo?.meta_description || "Welcome to our online store.",
+      keywords:
+        seo?.meta_keywords || [
+          "e-commerce",
+          "shopping",
+          "products",
+          "quality",
+        ],
+      icons: {
+        icon: logo || "/favicon.ico",
+        shortcut: logo || "/favicon.ico",
+        apple: logo || "/apple-touch-icon.png",
+      },
       twitter: {
         card: "summary_large_image",
+        title: seo?.meta_title || "My Store",
+        description: seo?.meta_description || "",
       },
       openGraph: {
-        title: seo?.meta_title || "",
+        title: seo?.meta_title || "My Store",
         description: seo?.meta_description || "",
         type: "website",
+        images: [
+          {
+            url: logo || "/og-image.jpg",
+            width: 1200,
+            height: 630,
+            alt: seo?.meta_title || "My Store",
+          },
+        ],
       },
     };
   } catch (error) {
     console.error("SEO metadata fetch failed:", error);
+
+    // ✅ fallback metadata
+    return {
+      title: "My Store",
+      description: "Welcome to our online store.",
+      icons: {
+        icon: "/favicon.ico",
+        apple: "/apple-touch-icon.png",
+      },
+      openGraph: {
+        title: "My Store",
+        description: "Welcome to our online store.",
+        type: "website",
+      },
+    };
   }
 }
 

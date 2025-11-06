@@ -220,29 +220,41 @@ export default function ShippingForm({
                   </div>
                 </AccordionTrigger>
                 <AccordionContent className="border border-gray-200 p-3 mt-3 rounded-md">
-                  <LabelAndRadio
-                    control={form.control}
-                    inputName="payment.way" // must match CheckoutFormValues
-                    labelText={t("choose-payment-method")}
-                    options={[
-                      {
-                        value: "cashondelivery",
-                        label: t("cash-on-delivery"),
-                        action: () => setPaymentMethod("cashondelivery"),
-                      },
-                      {
-                        value: "online",
-                        label: t("credit-card"),
-                        action: () => setPaymentMethod("onlinepayment"),
-                      },
-                    ]}
-                  />
+                  <div className="flex flex-col gap-3">
+                    {/* Cash on Delivery */}
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="radio"
+                        name="paymentMethod"
+                        value="cashondelivery"
+                        checked={paymentMethod === "cashondelivery"}
+                        onChange={() => setPaymentMethod("cashondelivery")}
+                        className="w-4 h-4 text-black focus:ring-black border-black accent-black"
+                      />
+                      <span className="text-sm md:text-base">{t("cash-on-delivery")}</span>
+                    </label>
+
+                    {/* Online Payment */}
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="radio"
+                        name="paymentMethod"
+                        value="online"
+                        checked={paymentMethod === "online"}
+                        onChange={() => setPaymentMethod("online")}
+                        className="w-4 h-4 text-black focus:ring-black border-black accent-black"
+                      />
+                      <span className="text-sm md:text-base">{t("credit-card")}</span>
+                    </label>
+                  </div>
+
                 </AccordionContent>
+
               </AccordionItem>
             </Accordion>
 
             {/* Online Payment Methods (if credit card selected) */}
-            {watch("payment.way") === "onlinepayment" && (
+            {paymentMethod === "online" && (
               <Accordion type="single" collapsible>
                 <AccordionItem value="online-payment-methods">
                   <AccordionTrigger className="border border-gray-200 px-3">

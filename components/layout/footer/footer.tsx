@@ -11,7 +11,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
 import Link from "next/link";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useDispatch, useSelector } from "react-redux";
 import { getHomeData } from "@/store/slices/home-slice";
 import { useEffect } from "react";
@@ -73,6 +73,7 @@ const FooterImage = ({ data }: { data: any }) => {
         src={data.ads[2]?.img_path}
         alt={t("image-alt")}
         className="w-full max-h-[400px] object-cover"
+        quality={95}
       />
     </div>
   );
@@ -123,11 +124,10 @@ const FooterAccordion = ({
           <div className="flex flex-col gap-2">
             {items?.map((item: any) => (
               <Link
-                href={`/${
-                  typeof window !== "undefined"
+                href={`/${typeof window !== "undefined"
                     ? window.location.pathname.split("/")[1]
                     : "ar"
-                }/cms/${item?.url_key}`}
+                  }/cms/${item?.url_key}`}
                 key={item?.url_key || item?.page_title}
                 prefetch={true}
                 className="text-sm text-white text-end rtl:text-right ltr:text-left rtl:hover:mr-3 ltr:hover:ml-3 transition-all duration-300"
@@ -154,14 +154,13 @@ const CopyrightSection = ({ data }: { data: any }) => {
   );
 };
 
-export default function Footer({ locale }: { locale?: string }) {
+export default function Footer() {
   const { data, loading } = useSelector((state: any) => state.home);
   const dispatch = useDispatch();
-  const pathname = usePathname();
-  const currentLocale = pathname.split("/")[1];
+  const locale = useLocale()
   useEffect(() => {
-    dispatch(getHomeData(currentLocale || "ar") as any);
-  }, [dispatch, currentLocale]);
+    dispatch(getHomeData(locale || "ar") as any);
+  }, [dispatch, locale]);
   const t = useTranslations("footer");
   if (loading) {
     return <Loading fullScreen={true} variant="spinner" size="xl" />;

@@ -19,11 +19,13 @@ export default function DeleteProductComponent({
   setIsOpen,
   isOpen,
   text,
+  deleteMessage
 }: {
   action: () => void;
   setIsOpen: any;
   isOpen: boolean;
   text?: string;
+  deleteMessage?: string
 }) {
   const t = useTranslations("buttons");
   const isLoading = useSelector((state: any) => state.cart.isLoading);
@@ -39,7 +41,7 @@ export default function DeleteProductComponent({
         showCloseButton={false}
         width="sm:max-w-sm"
       >
-        <p className="text-start">{t("delete-confirmation")}</p>
+        <p className="text-start">{t(deleteMessage ? deleteMessage : "delete-confirmation")}</p>
         <DialogFooter className="flex gap-3 justify-center ">
           <DialogClose asChild>
             <Button variant="outline">{t("cancel")}</Button>

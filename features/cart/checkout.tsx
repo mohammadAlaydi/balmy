@@ -36,7 +36,6 @@ const defaultFormValues: CheckoutFormValues = {
     phone: "",
   },
   payment: {
-    way : "cashondelivery",
     method: "cashondelivery",
   },
   shipping_method: "flatrate_flatrate" as const,
@@ -86,16 +85,16 @@ export default function Checkout() {
 
     const shippingData = use_for_shipping
       ? {
-          address1: values.billing.address1,
-          city: values.billing.city,
-          phone: values.billing.phone,
-        }
+        address1: values.billing.address1,
+        city: values.billing.city,
+        phone: values.billing.phone,
+      }
       : values.shipping;
 
     const checkoutPayload = {
       billing: billingWithoutFlag,
       shipping: shippingData,
-      payment: values.payment?.method,
+      payment: values.payment,
       shipping_method: values.shipping_method,
     };
 
@@ -105,22 +104,27 @@ export default function Checkout() {
 
   useEffect(() => {
     dispatch(getCartProducts() as any);
-  }, [success, redirectUrl, router, dispatch]);
-
+  }, [dispatch]);
   // Show Success page if order succeeded and no redirect URL
+  // ✅ التحكم في التنقل بعد نجاح الطلب
   useEffect(() => {
-    if (
-      saveOrderData?.success &&
-      saveOrderData?.data?.data?.order?.id &&
-      (watch("payment.method") == "cashondelivery" ||
-        watch("payment.method") == "tabby")
-    ) {
-      const orderId = saveOrderData?.data?.data?.order?.id;
-      router.push(`/cart/checkout-status/${orderId}`);
-    } else {
-      router.push(redirectUrl);
+    if (!saveOrderData) return;
+
+    const orderId = saveOrderData?.data?.data?.order?.id;
+    const paymentMethod = watch("payment.method");
+
+    if (saveOrderData?.success && orderId) {
+      if (paymentMethod === "cashondelivery" || paymentMethod === "tabby") {
+        // انتقل لصفحة الحالة
+        router.push(`/cart/checkout-status/${orderId}`);
+        // اعمل reset بعد التنقل فقط
+        dispatch(resetStatus());
+      } else if (redirectUrl) {
+        // لو فيه URL خارجي (مثلاً للدفع الإلكتروني)
+        window.location.href = redirectUrl;
+      }
     }
-  }, [saveOrderData, router, redirectUrl]); // re-run when saveOrderData updates
+  }, [saveOrderData, watch, router, redirectUrl, dispatch]);
 
   return (
     <>

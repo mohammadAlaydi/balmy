@@ -104,11 +104,10 @@ export default function SingleProductInfo({
 
       {/* Stock Status */}
       <Badge
-        className={`text-sm px-3 py-1 rounded ${
-          currentVariant?.in_stock ?? product.in_stock
+        className={`text-sm px-3 py-1 rounded ${currentVariant?.in_stock ?? product.in_stock
             ? "bg-green-100 text-green-800 border-green-200"
             : "bg-red-100 text-red-800 border-red-200"
-        }`}
+          }`}
       >
         {currentVariant?.in_stock ?? product.in_stock
           ? t("in-stock")
@@ -146,7 +145,7 @@ export default function SingleProductInfo({
               const targetId = currentVariant?.product_id ?? product.product_id;
               if (!targetId) return;
               const isLoading = loadingProductId === targetId || increaseOrDecreaseLoading;
-              if (isLoading) return toast.error(t("operation-in-progress"));
+
 
               if (cartQuantityForProduct && cartQuantityForProduct > 1) {
                 handleUpdateQuantity(targetId, -1);
@@ -154,13 +153,12 @@ export default function SingleProductInfo({
                 setQuantity((q) => Math.max(1, q - 1));
               }
             }}
-            className={`w-10 h-10 flex justify-center items-center border border-gray-300 rounded-full hover:bg-gray-50 transition-colors ${
-              loadingProductId === currentVariant?.product_id ||
-              increaseOrDecreaseLoading ||
-              displayedQuantity <= 1
+            className={`w-10 h-10 flex justify-center items-center border border-gray-300 rounded-full hover:bg-gray-50 transition-colors ${loadingProductId === currentVariant?.product_id ||
+                increaseOrDecreaseLoading ||
+                displayedQuantity <= 1
                 ? "text-gray-400"
                 : ""
-            }`}
+              }`}
             disabled={displayedQuantity <= 1}
           >
             <TiMinus className="text-sm" />
@@ -171,16 +169,15 @@ export default function SingleProductInfo({
               const targetId = currentVariant?.product_id ?? product.product_id;
               if (!targetId) return;
               const isLoading = loadingProductId === targetId || increaseOrDecreaseLoading;
-              if (isLoading) return toast.error(t("operation-in-progress"));
+
 
               if (cartQuantityForProduct) handleUpdateQuantity(targetId, 1);
               else setQuantity((q) => q + 1);
             }}
-            className={`w-10 h-10 flex justify-center items-center border border-gray-300 rounded-full hover:bg-gray-50 transition-colors ${
-              loadingProductId === currentVariant?.product_id || increaseOrDecreaseLoading
+            className={`w-10 h-10 flex justify-center items-center border border-gray-300 rounded-full hover:bg-gray-50 transition-colors ${loadingProductId === currentVariant?.product_id || increaseOrDecreaseLoading
                 ? "text-gray-400"
                 : ""
-            }`}
+              }`}
           >
             <FaPlus className="text-sm" />
           </button>
