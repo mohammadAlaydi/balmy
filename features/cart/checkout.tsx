@@ -51,7 +51,6 @@ export default function Checkout() {
   const success = saveOrderData?.data?.data?.success;
   const redirectUrl = saveOrderData?.data?.data?.url;
 
-  console.log(redirectUrl, "❤️");
 
   const dispatch = useDispatch();
   const [showAuthModal, setShowAuthModal] = useState(false);
@@ -105,7 +104,6 @@ export default function Checkout() {
   useEffect(() => {
     dispatch(getCartProducts() as any);
   }, [dispatch]);
-  // Show Success page if order succeeded and no redirect URL
   // ✅ التحكم في التنقل بعد نجاح الطلب
   useEffect(() => {
     if (!saveOrderData) return;
@@ -119,9 +117,12 @@ export default function Checkout() {
         router.push(`/cart/checkout-status/${orderId}`);
         // اعمل reset بعد التنقل فقط
         dispatch(resetStatus());
-      } else if (redirectUrl) {
+      } else {
         // لو فيه URL خارجي (مثلاً للدفع الإلكتروني)
-        window.location.href = redirectUrl;
+        router.push(redirectUrl);
+
+        dispatch(resetStatus());
+
       }
     }
   }, [saveOrderData, watch, router, redirectUrl, dispatch]);

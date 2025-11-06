@@ -61,7 +61,7 @@ export default function CartProduct({
             </h2>
           </div>
 
-          <div className="hidden sm:flex flex-col gap-2">
+          <div className="flex flex-col gap-2">
             <p className="text-xs sm:text-sm md:text-base text-gray-color">
               {product?.price} <i className="icon-rial"></i>
             </p>
@@ -94,27 +94,6 @@ export default function CartProduct({
               FaRegHeartColor="text-black"
               className="absolute right-2 top-2 rounded-none"
             />
-          </div>
-        </div>
-      </div>
-
-      <div className="flex items-center justify-between sm:hidden">
-        <p className="text-xs sm:text-sm md:text-base text-gray-color ltr:text-start rtl:text-end">
-          {product?.price} <i className="icon-rial"></i>
-        </p>
-        <div className="scale-[0.85] sm:scale-100">
-          <div className="flex items-center gap-1 bg-gray-100 px-2 rounded-md w-fit mb-2 md:mb-0 shadow-md">
-            <ReactStars
-              rating={
-                // product?.reviews?.total
-                4.5
-              }
-              count={1}
-            />
-            <Badge className="bg-transparent text-gray-500 p-0 text-sm font-[550]">
-              {/* {product?.reviews?.total} */}
-              4.5
-            </Badge>{" "}
           </div>
         </div>
       </div>
