@@ -67,12 +67,22 @@ export default function CartProduct({
             </p>
             <div className="scale-[0.85] sm:scale-100">
               <div className="flex items-center gap-1 bg-gray-100 px-2 rounded-md w-fit mb-2 shadow-sm">
-                <ReactStars edit={false} />
+                <div className="hidden sm:flex"><ReactStars edit={false} /> </div>
+                <div className="flex sm:hidden">
+                  <ReactStars
+                    rating={
+                      // product?.reviews?.total
+                      4.5
+                    }
+                    count={1}
+                  />
+                </div>
                 <Badge className="bg-transparent text-gray-500 p-0 text-sm font-[550]">
                   {/* {product?.reviews?.total} */}
                   4.5
                 </Badge>{" "}
               </div>
+
             </div>
           </div>
         </div>
