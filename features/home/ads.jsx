@@ -10,8 +10,8 @@ export default function Ads({ ads }) {
   return (
     <div className="cross-body flex flex-col md:flex-row justify-between m-auto gap-3 px-3 md:px-0 w-full xl:max-w-[75%] py-5">
       {/* Ad 1 */}
-      <Link
-        href={`/${ads[0]?.ads_path || "#"}`}
+      <a
+        href={`${ads[0]?.ads_path || "#"}`}
         className="relative w-full md:w-1/2 overflow-hidden rounded-lg group"
       >
         <div className="relative w-full aspect-[16/9]">
@@ -25,11 +25,11 @@ export default function Ads({ ads }) {
             priority
           />
         </div>
-      </Link>
+      </a>
 
       {/* Ad 2 */}
-      <Link
-        href={`/${ads[1]?.ads_path || "#"}`}
+      <a
+        href={`${ads[1]?.ads_path || "#"}`}
         className="relative w-full md:w-1/2 overflow-hidden rounded-lg group"
       >
         <div className="relative w-full aspect-[16/9]">
@@ -43,7 +43,7 @@ export default function Ads({ ads }) {
             priority
           />
         </div>
-      </Link>
+      </a>
     </div>
 
   );

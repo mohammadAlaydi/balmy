@@ -61,9 +61,9 @@ export async function generateMetadata({
           "quality",
         ],
       icons: {
-        icon: logo || "/favicon.ico",
-        shortcut: logo || "/favicon.ico",
-        apple: logo || "/apple-touch-icon.png",
+        icon: logo ,
+        shortcut: logo ,
+        apple: logo ,
       },
       twitter: {
         card: "summary_large_image",
