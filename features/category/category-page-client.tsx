@@ -1,0 +1,71 @@
+"use client";
+
+import Loading from "@/components/loading";
+import ProductCard from "@/components/product-card";
+import CategoryFilter from "@/components/category-filter";
+import PageWrapper from "@/components/page-wrapper";
+import useCategory from "@/hooks/use-category";
+
+type Props = { categoryId: string | number };
+
+export default function CategoryPageClient({ categoryId }: Props) {
+  const { loading, error, t, categoryProducts, filteredProducts, handleFilterChange } = useCategory(categoryId);
+
+  const products = categoryProducts?.data || [];
+  const hasProducts = products.length > 0;
+  const hasFiltered = filteredProducts.length > 0;
+
+  if (loading) {
+    return <Loading fullScreen variant="spinner" size="xl" />;
+  }
+
+  if (error) {
+    return (
+      <PageWrapper>
+        <div className="flex items-center justify-center min-h-[65vh]">
+          <p className="text-base md:text-lg xl:text-xl text-center text-red-600">
+            {t("error-loading-products") || "Error loading products. Please try again."}
+          </p>
+        </div>
+      </PageWrapper>
+    );
+  }
+
+  return (
+    <PageWrapper>
+      {hasProducts && (
+        <div className="flex flex-wrap items-center gap-5 justify-start mb-10">
+          <CategoryFilter products={products} onFilterChange={handleFilterChange} />
+          <p className="text-gray-600 whitespace-nowrap">
+            {t("products-count", { count: filteredProducts.length })}
+          </p>
+        </div>
+      )}
+
+      {hasFiltered ? (
+        <div className="grid grid-cols-12 gap-2 md:gap-3 xl:gap-5 min-h-[65vh]">
+          {filteredProducts.map((product: any) => (
+            <ProductCard
+              key={product.id}
+              product={product}
+              cardColSpan="col-span-6 md:col-span-4 xl:col-span-3"
+            />
+          ))}
+        </div>
+      ) : hasProducts ? (
+        <NoResults text={t("no-products-match-filters")} />
+      ) : (
+        <NoResults text={t("no-products-found")} />
+      )}
+    </PageWrapper>
+  );
+}
+
+/** 🧩 Small reusable sub-component for empty states */
+function NoResults({ text }: { text: string }) {
+  return (
+    <div className="flex items-center justify-center min-h-[65vh]">
+      <p className="text-base md:text-lg xl:text-xl text-center text-gray-600">{text}</p>
+    </div>
+  );
+}

@@ -426,7 +426,7 @@
     "login": "Login",
     "register": "Register",
     "logout": "Logout",
-    "forgot-password": "Forgot Password ?",
+    "forgot-password": "Forgot Password",
     "reset-password": "Reset Password",
     "email": "Email",
     "email-placeholder": "Enter your email address",

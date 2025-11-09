@@ -1,33 +1,42 @@
-"use client";
+import { Metadata } from "next";
+import ClientPage from "../../../../features/cms/client-page";
 
-import Loading from "@/components/loading";
-import PageWrapper from "@/components/page-wrapper";
-import React, { use } from "react";
-import UseCMS from "@/hooks/use-cms";
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
-export default function Page({
+export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ slug: string }>;
-}) {
+  params: { slug: string };
+}): Promise<Metadata> {
+  try {
+    const slug = params.slug;
+    const locale = slug.split("/")[1] || "en"; // fallback locale
 
-  const { slug } = use(params);
-  const { t, loading, data } = UseCMS();
+    const response = await fetch(`${API_URL}/v1/home?locale=${locale}`, {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+      next: { revalidate: 3600 }, // optional caching
+    });
 
-  if (loading) {
-    return <Loading fullScreen={true} variant="spinner" size="xl" />;
+    if (!response.ok) {
+      throw new Error("Failed to fetch CMS metadata");
+    }
+
+    const data = await response.json();
+
+    const page = data?.cms_pages?.find((p: any) => p.url_key === slug);
+
+    return {
+      title: page?.page_title || "Default Title",
+    };
+  } catch (error) {
+    console.error("Failed to generate metadata:", error);
+    return {
+      title: "Default Title",
+    };
   }
-  const page = data?.cms_pages?.find((page: any) => page.url_key === slug);
-  
-  if (!page) {
-    return <div>Page not found</div>;
-  }
-  return (
-    <PageWrapper>
-      <div
-        className="min-h-[65vh]"
-        dangerouslySetInnerHTML={{ __html: page?.html_content }}
-      />
-    </PageWrapper>
-  );
+}
+
+export default function Page({ params }: { params: { slug: string } }) {
+  return <ClientPage params={params} />;
 }

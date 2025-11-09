@@ -183,13 +183,13 @@ export default function ProductCard({
     exit: { scaleX: 0 },
   };
 
-  console.log(product, "😂😂")
   return (
     <Card
       onMouseEnter={() => isInStock && setIsHovered(true)}
       onMouseLeave={() => isInStock && setIsHovered(false)}
-      className={`relative product-card shadow-none hover:shadow-[0px_10px_30px_rgba(149,157,165,0.1)] py-0 h-fit rounded-lg gap-3 ${cardColSpan || "col-span-6 xl:col-span-2"
-        } border border-gray-200 hover:border-red-color`}
+      className={`relative product-card shadow-none hover:shadow-[0px_10px_30px_rgba(149,157,165,0.1)] py-0 h-fit rounded-lg gap-3 ${
+        cardColSpan || "col-span-6 xl:col-span-2"
+      } border border-gray-200 hover:border-red-color`}
     >
       {!isInStock && <ZeroQuantity />}
 
@@ -232,7 +232,9 @@ export default function ProductCard({
             quality={95}
             className="object-cover transition-transform duration-500 transform group-hover:scale-105 cursor-pointer"
             onClick={() =>
-              router.push(`/product/${wishlistProductId || product?.product_id}`)
+              router.push(
+                `/product/${wishlistProductId || product?.product_id}`
+              )
             }
             priority
           />
@@ -247,12 +249,13 @@ export default function ProductCard({
               quality={95}
               className="object-cover transition-transform duration-500 transform group-hover:scale-105 opacity-0 group-hover:opacity-100 cursor-pointer"
               onClick={() =>
-                router.push(`/product/${wishlistProductId || product?.product_id}`)
+                router.push(
+                  `/product/${wishlistProductId || product?.product_id}`
+                )
               }
             />
           )}
         </div>
-
 
         {/* Cart Buttons */}
         <div className="absolute right-2 bottom-2">
@@ -322,7 +325,6 @@ export default function ProductCard({
             {chosenVariantSku ?? product?.sku}
           </p>
           <p className="font-semibold text-sm truncate">{product?.name}</p>
-          
         </div>
 
         {/* Variant Selector */}
@@ -344,11 +346,12 @@ export default function ProductCard({
                         alt={`${product?.name || t("product")} ${t(
                           "variant-image"
                         )} ${index + 1}`}
-                        className={`cursor-pointer transition-all duration-200 rounded-full h-[28px] w-[28px] ${selectedVariantIndex === index ||
-                            (selectedVariantIndex === null && index === 0)
+                        className={`cursor-pointer transition-all duration-200 rounded-full h-[28px] w-[28px] ${
+                          selectedVariantIndex === index ||
+                          (selectedVariantIndex === null && index === 0)
                             ? "ring-2 ring-gray-300"
                             : "border-2 border-dotted border-gray-300"
-                          }`}
+                        }`}
                         onClick={() =>
                           handleVariantSelect(
                             index,
@@ -376,10 +379,11 @@ export default function ProductCard({
                       "/assets/images/no-image.webp"
                     }
                     alt={`${product?.name || t("product")}`}
-                    className={`${selectedVariantIndex === 0 || selectedVariantIndex == null
+                    className={`${
+                      selectedVariantIndex === 0 || selectedVariantIndex == null
                         ? "ring-2 ring-gray-300"
                         : "border-2 border-dotted border-gray-300"
-                      } cursor-pointer transition-all duration-200 rounded-full ring-2 ring-gray-300 h-[28px] w-[28px]`}
+                    } cursor-pointer transition-all duration-200 rounded-full ring-2 ring-gray-300 h-[28px] w-[28px]`}
                     onClick={() =>
                       handleVariantSelect(0, product?.product_id, product?.sku)
                     }
