@@ -2,6 +2,7 @@ import FavouritePageClient from "../../../features/favourites/favourite-page-cli
 import { getTranslations } from "next-intl/server";
 
 export async function generateMetadata() {
+  
   const t = await getTranslations("favourites");
 
   return {

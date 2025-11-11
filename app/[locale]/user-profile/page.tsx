@@ -5,6 +5,7 @@ import PageWrapper from "@/components/page-wrapper";
 import { getTranslations } from "next-intl/server";
 
 export async function generateMetadata() {
+  
   const t = await getTranslations("breadcrumb");
 
   return {

@@ -17,6 +17,7 @@ export type NavConfig = NavEntry[];
 export interface TSectionTitle {
   title: string;
   titleStyle?: string;
+  subtitle?:string;
 }
 
 // Toast types for sonner

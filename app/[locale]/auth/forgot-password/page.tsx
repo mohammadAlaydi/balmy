@@ -2,6 +2,7 @@ import ForgotPasswordPageClient from "../../../../features/auth/forgot-password/
 import { getTranslations } from "next-intl/server";
 
 export async function generateMetadata() {
+  
   const t = await getTranslations("auth");
 
   return {

@@ -2,7 +2,7 @@ import { getTranslations } from "next-intl/server";
 import CartPageClient from "../../../features/cart/cart-page-client";
 
 export async function generateMetadata() {
-  // Server-side translations
+  
   const t = await getTranslations("products");
 
   return {

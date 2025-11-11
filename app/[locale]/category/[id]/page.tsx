@@ -25,19 +25,12 @@ export async function generateMetadata({
       (cat: any) => cat?.id.toString() === params.id.toString()
     );
 
-    // Debug logs (server-side)
-    console.log("Locale:", locale);
-    console.log("Category object:", category);
-    console.log("Category name:", category?.name);
 
     return {
-      title: category?.name || "Category",
+      title: category?.name,
     };
   } catch (error) {
     console.error("Failed to fetch category metadata:", error);
-    return {
-      title: "Category",
-    };
   }
 }
 

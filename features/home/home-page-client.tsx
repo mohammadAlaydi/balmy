@@ -11,6 +11,7 @@ import SectionTitle from "@/components/section-title";
 import useHome from "@/hooks/use-home";
 
 export default function HomePageClient() {
+
   const { t, loading, data } = useHome();
 
   if (loading) {
@@ -21,8 +22,9 @@ export default function HomePageClient() {
     <>
       <BannerCarousel sliders={data?.sliders} />
 
+      <Services />
+
       <PageWrapper yPadding="py-5">
-        <Services />
 
         <Categories categories={data?.featured_categories} />
 

@@ -35,8 +35,7 @@ export default function Categories({ categories }: { categories: any }) {
           spaceBetween: 8,
         },
         1000: { slidesPerView: 3, spaceBetween: 15 },
-        1200: { slidesPerView: 4, spaceBetween: 15 },
-        1201: { slidesPerView: 5, spaceBetween: 15 },
+        1201: { slidesPerView: 4, spaceBetween: 15 },
       }}
     >
       {categories &&

@@ -3,6 +3,7 @@ import SearchComponent from "@/components/search-component";
 import { getTranslations } from "next-intl/server";
 
 export async function generateMetadata() {
+  
   const t = await getTranslations("breadcrumb");
 
   return {

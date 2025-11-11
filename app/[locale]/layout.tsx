@@ -21,7 +21,6 @@ const cairo = Cairo({
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
-// ✅ فقط generateMetadata (بدون metadata)
 export async function generateMetadata({
   params,
 }: {
@@ -43,7 +42,6 @@ export async function generateMetadata({
     const seo = data?.seo_settings?.channel?.meta_data;
     let logo = data?.seo_settings?.channel?.logo;
 
-    // ✅ Ensure favicon is a full URL
     if (logo && !logo.startsWith("http")) {
       logo = `${API_URL}${logo.startsWith("/") ? "" : "/"}${logo}`;
     }
@@ -62,7 +60,6 @@ export async function generateMetadata({
         ],
       icons: {
         icon: logo ,
-        shortcut: logo ,
         apple: logo ,
       },
       twitter: {
@@ -87,7 +84,6 @@ export async function generateMetadata({
   } catch (error) {
     console.error("SEO metadata fetch failed:", error);
 
-    // ✅ fallback metadata
     return {
       title: "My Store",
       description: "Welcome to our online store.",

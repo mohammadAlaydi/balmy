@@ -81,7 +81,6 @@ export default function ProductDetailsPage({
   const productId = parseInt(params.id);
   if (isNaN(productId)) notFound();
 
-  // Client component handles loading, error, and actual product render
   return (
     <PageWrapper>
       <ProductPageStatus productId={productId} />
