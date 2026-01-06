@@ -9,7 +9,7 @@ export async function generateMetadata() {
     title: t("home") || "Home",
   };
 }
-
+// home page
 export default function Page() {
   return <HomePageClient />;
 }
