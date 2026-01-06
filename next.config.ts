@@ -71,6 +71,24 @@ const nextConfig: NextConfig = {
         port: "",
         pathname: "/**",
       },
+      {
+        protocol: "http",
+        hostname: "localhost",
+        port: "",
+        pathname: "/**",
+      },
+      {
+        protocol: "http",
+        hostname: "0.0.0.0",
+        port: "",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "*.vercel.app",
+        port: "",
+        pathname: "/**",
+      },
     ],
     // qualities is NOT a valid config option for next/image
     // If you want to control quality, pass `quality` to <Image /> directly
