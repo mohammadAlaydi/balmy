@@ -53,6 +53,7 @@ import { LANGUAGES } from "@/static-data/static-data";
 // Components
 const TopBar = ({ data }: { data: any }) => {
   const t = useTranslations("contact");
+  // commit
 
   return (
     <div className="flex justify-center md:justify-between xl:justify-around items-center gap-5 py-0.5 px-3 lg:px-10 bg-black w-full">
