@@ -56,11 +56,11 @@ const TopBar = ({ data }: { data: any }) => {
 
   return (
     <div className="flex justify-center md:justify-between xl:justify-around items-center gap-5 py-0.5 px-3 lg:px-10 bg-black w-full">
-      <div className="flex items-center flex-1">
-        <Badge className="bg-transparent text-sm lg:text-base hidden md:inline-block">
+      <div className="hidden md:flex items-center flex-1 justify-center">
+        <Badge className="bg-transparent text-sm lg:text-base">
           {data?.inventory_source_data?.contact_number}
         </Badge>
-        <Badge className="bg-transparent text-sm lg:text-base hidden md:inline-block">
+        <Badge className="bg-transparent text-sm lg:text-base">
           {t("call-to-action")}
         </Badge>
       </div>
@@ -271,7 +271,7 @@ const NavigationLinks = ({
                             }
                             prefetch={true}
                             className="cursor-pointer hover:bg-transparent  px-4 py-2 text-lg font-[600] hover:text-red-500 transition-all duration-300"
-                            >
+                          >
                             {nested.name}
                           </Link>
                         </NavigationMenuLink>

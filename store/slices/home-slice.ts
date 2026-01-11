@@ -40,7 +40,7 @@ const homeSlice = createSlice({
       })
       .addCase(getHomeData.fulfilled, (state, action) => {
         state.loading = false;
-        state.data = action.payload; 
+        state.data = action.payload;
       })
       .addCase(getHomeData.rejected, (state, action) => {
         state.loading = false;
