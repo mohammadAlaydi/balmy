@@ -46,11 +46,11 @@ export default function useHome() {
       title: t("return-and-exchange"),
       description: t("return-and-exchange-desc"),
     },
-    {
-      icon: MdOutlineLocalShipping,
-      title: t("free-shipping"),
-      description: t("free-shipping-desc"),
-    },
+    // {
+    //   icon: MdOutlineLocalShipping,
+    //   title: t("free-shipping"),
+    //   description: t("free-shipping-desc"),
+    // },
     {
       icon: BiSupport,
       title: t("always-with-you"),

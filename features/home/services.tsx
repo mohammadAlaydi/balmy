@@ -39,7 +39,7 @@ export default function Services() {
            
           
             1000: { slidesPerView: 3, spaceBetween: 15 },
-            1200: { slidesPerView: 4, spaceBetween: 15 },
+            1200: { slidesPerView: 3, spaceBetween: 15 },
           }}
         >
           {benefits.map((benefit: BenefitItem, index: number) => {

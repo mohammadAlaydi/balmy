@@ -54,7 +54,7 @@
     "choose-color": "Choose product color",
     "no-product-details": "No product details available",
     "go-to-favourites": "Go to Favourites",
-    "go-to-cart": "Go to Cart",
+    "go-to-cart": "Proceed to Payment",
     "cart": "Cart"
   },
   "categories": {
@@ -120,7 +120,7 @@
     "paypal": "PayPal",
     "quick-look": "Quick Look",
     "products-added-to-cart": "The following products have been added to your cart",
-    "go-to-cart": "Go to Cart",
+    "go-to-cart": "Proceed to Payment",
     "no-products-in-cart": "No products in cart",
     "no-data-found": "No data found",
     "placeholder-first-name": "John",

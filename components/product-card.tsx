@@ -182,7 +182,7 @@ export default function ProductCard({
     animate: { scaleX: 1 },
     exit: { scaleX: 0 },
   };
-
+   console.log(product , "😍😍😍😍")
   return (
     <Card
       onMouseEnter={() => isInStock && setIsHovered(true)}
