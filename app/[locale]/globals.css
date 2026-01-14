@@ -307,13 +307,27 @@ body {
 .categories-carousel .swiper-autoheight .swiper-wrapper {
   padding-top: 55px !important;
 }
-.categories-carousel .swiper-button-next {
-  right: var(--swiper-navigation-sides-offset, 10px) !important;
+/* English (LTR) */
+.categories-carousel.ltr .swiper-button-next {
+  right: 10px !important;
   top: 22px !important;
 }
-.categories-carousel .swiper-button-prev {
-  right: var(--swiper-navigation-sides-offset, 50px) !important;
-  top: 22px !important;
-  left : auto !important
 
+.categories-carousel.ltr .swiper-button-prev {
+  right: 50px !important;
+  top: 22px !important;
+  left: auto !important;
+}
+
+/* Arabic (RTL) */
+.categories-carousel.rtl .swiper-button-next {
+  left: 10px !important; /* بدل right */
+  top: 22px !important;
+  right: auto !important;
+}
+
+.categories-carousel.rtl .swiper-button-prev {
+  left: 50px !important;
+  top: 22px !important;
+  right: auto !important;
 }

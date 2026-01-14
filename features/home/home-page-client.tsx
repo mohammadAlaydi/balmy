@@ -9,6 +9,7 @@ import Loading from "@/components/loading";
 import PageWrapper from "@/components/page-wrapper";
 import SectionTitle from "@/components/section-title";
 import useHome from "@/hooks/use-home";
+import { useLocale } from "next-intl";
 
 export default function HomePageClient() {
 
@@ -17,13 +18,13 @@ export default function HomePageClient() {
   if (loading) {
     return <Loading fullScreen variant="spinner" size="xl" />;
   }
-
+  const locale = useLocale()
   return (
     <>
       <BannerCarousel sliders={data?.sliders} />
       <PageWrapper yPadding="py-2.5">
         <Services />
-        <Categories categories={data?.featured_categories} />
+        <Categories categories={data?.featured_categories} locale={locale} />
 
         <SectionTitle
           title={t("featured-products")}

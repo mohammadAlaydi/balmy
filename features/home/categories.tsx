@@ -11,13 +11,15 @@ interface Category {
   link: string;
 }
 
-export default function Categories({ categories }: { categories: any }) {
+export default function Categories({ categories , locale }: { categories: any  , locale : string}) {
   return (
     <CarouselComponent
     navigation={true}
       spaceBetween={20}
       slidesPerView={1}
-      containerClassName="categories-carousel h-auto"
+      containerClassName={`categories-carousel h-auto ${
+        locale === "ar" ? "rtl" : "ltr"
+      }`}
       autoHeight
       breakpoints={{
         300: {
