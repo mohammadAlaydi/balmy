@@ -7,6 +7,9 @@ export const getHomeData = createAsyncThunk(
       const response = await fetch(`/api/home?locale=${locale}`, {
         method: "GET",
         credentials: "include", // Include httpOnly cookies
+        headers: {
+          "Accept": "application/json",
+        },
       });
 
       const data = await response.json();

@@ -571,7 +571,8 @@
     "clear-filters": "مسح المرشحات",
     "search-suggestions": ["نعال", "حذاء", "شماغ"],
     "search-products": "البحث عن المنتجات",
-    "search-description": "ابحث عن المنتجات في متجرنا"
+    "search-description": "ابحث عن المنتجات في متجرنا",
+    "no-results-found": "لم يتم العثور على نتائج"
   },
   "accessibility": {
     "close": "إغلاق",

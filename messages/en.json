@@ -568,7 +568,8 @@
     "clear-filters": "Clear Filters",
     "search-suggestions": ["Slippers", "Shoes", "Scarf"],
     "search-products": "Search Products",
-    "search-description": "Search for products in our store"
+    "search-description": "Search for products in our store",
+    "no-results-found": "No results found"
   },
   "accessibility": {
     "close": "إغلاق",
