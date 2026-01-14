@@ -293,8 +293,7 @@ body {
   .swiper-pagination-bullet {
   margin-inline: 10px !important;
 }
-.swiper-button-prev:after,
-.swiper-rtl .swiper-button-next:after {
+.swiper-button-prev:after, .swiper-button-next:after {
   font-size: 18px !important;
   color: black !important;
   width: 40px;
@@ -304,4 +303,17 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+.categories-carousel .swiper-autoheight .swiper-wrapper {
+  padding-top: 55px !important;
+}
+.categories-carousel .swiper-button-next {
+  right: var(--swiper-navigation-sides-offset, 10px) !important;
+  top: 22px !important;
+}
+.categories-carousel .swiper-button-prev {
+  right: var(--swiper-navigation-sides-offset, 50px) !important;
+  top: 22px !important;
+  left : auto !important
+
 }

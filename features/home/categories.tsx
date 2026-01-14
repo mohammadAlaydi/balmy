@@ -14,6 +14,7 @@ interface Category {
 export default function Categories({ categories }: { categories: any }) {
   return (
     <CarouselComponent
+    navigation={true}
       spaceBetween={20}
       slidesPerView={1}
       containerClassName="categories-carousel h-auto"

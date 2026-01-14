@@ -21,11 +21,8 @@ export default function HomePageClient() {
   return (
     <>
       <BannerCarousel sliders={data?.sliders} />
-
-      <Services />
-
-      <PageWrapper yPadding="py-5">
-
+      <PageWrapper yPadding="py-2.5">
+        <Services />
         <Categories categories={data?.featured_categories} />
 
         <SectionTitle

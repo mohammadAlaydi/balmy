@@ -17,7 +17,7 @@ export default function Services() {
       <div className="w-full px-4">
         <SectionTitle
           title={t("our-services")}
-          titleStyle="text-center mb-3 text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900"
+          titleStyle="text-center mb-1 text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900"
           subtitle={t("what-we-offer")}
         />
         <div className="flex justify-center mb-10">
