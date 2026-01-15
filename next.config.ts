@@ -45,7 +45,13 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "erpv2.envaglo.net",
         port: "",
-        pathname: "/storage/**", // <-- match all paths
+        pathname: "/storage/category/**", // <-- match all paths
+      },
+      {
+        protocol: "https",
+        hostname: "erpv2.envaglo.net",
+        port: "",
+        pathname: "/storage/ads/images/**", // <-- match all paths
       },
       {
         protocol: "http",
@@ -57,7 +63,13 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "envaglo-erp.envaglo.net",
         port: "",
-        pathname: "/storage/**", // <-- match all paths
+        pathname: "/storage/category/**", // <-- match all paths
+      },
+      {
+        protocol: "https",
+        hostname: "envaglo-erp.envaglo.net",
+        port: "",
+        pathname: "/storage/ads/images/**", // <-- match all paths
       },
       {
         protocol: "http",
