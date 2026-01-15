@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { resolveImageSrc } from "@/lib/image-src";
+import { isEnvagloCdnUrl, normalizeRemoteImageUrl } from "@/lib/utils";
 
 export default function Ads({ ads }) {
 
@@ -8,7 +8,11 @@ export default function Ads({ ads }) {
     return null;
   }
 
-  
+  const ad1Src =
+    normalizeRemoteImageUrl(ads[0]?.img_path) || "/assets/images/no-image.webp";
+  const ad2Src =
+    normalizeRemoteImageUrl(ads[1]?.img_path) || "/assets/images/no-image.webp";
+
   return (
     <div className="cross-body flex flex-col md:flex-row justify-between m-auto gap-3 px-3 md:px-0 w-full xl:max-w-[75%] py-5">
       {/* Ad 1 */}
@@ -18,13 +22,14 @@ export default function Ads({ ads }) {
       >
         <div className="relative w-full aspect-[16/9]">
           <Image
-            src={resolveImageSrc(ads[0]?.img_path)}
+            src={ad1Src}
             alt="Advertisement 1"
             fill
             quality={95}
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 45vw, 600px"
             className="object-cover transition-transform duration-700 group-hover:scale-105"
             priority
+            unoptimized={isEnvagloCdnUrl(ad1Src)}
           />
         </div>
       </a>
@@ -36,13 +41,14 @@ export default function Ads({ ads }) {
       >
         <div className="relative w-full aspect-[16/9]">
           <Image
-            src={resolveImageSrc(ads[1]?.img_path)}
+            src={ad2Src}
             alt="Advertisement 2"
             fill
             quality={95}
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 45vw, 600px"
             className="object-cover transition-transform duration-700 group-hover:scale-105"
             priority
+            unoptimized={isEnvagloCdnUrl(ad2Src)}
           />
         </div>
       </a>

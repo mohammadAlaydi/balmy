@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import { SwiperSlide } from "swiper/react";
+import { isEnvagloCdnUrl, normalizeRemoteImageUrl } from "@/lib/utils";
 
 interface Category {
   src: string;
@@ -61,9 +62,11 @@ export default function Categories({ categories , locale }: { categories: any  ,
                         rawBannerUrl.startsWith("http://") ||
                         rawBannerUrl.startsWith("https://") ||
                         rawBannerUrl.startsWith("/");
-                      const imageSrc = isLikelyValidUrl
-                        ? rawBannerUrl
-                        : "/assets/images/no-image.webp";
+                      const normalized = isLikelyValidUrl
+                        ? normalizeRemoteImageUrl(rawBannerUrl)
+                        : undefined;
+                      const imageSrc =
+                        normalized || "/assets/images/no-image.webp";
                       return (
                         <div className="relative w-full aspect-square rounded-full overflow-hidden m-auto">
                           <Image
@@ -71,6 +74,7 @@ export default function Categories({ categories , locale }: { categories: any  ,
                             alt={category.name || "category"}
                             fill
                             className="object-cover hover:scale-[1.02] transition-all duration-1000"
+                            unoptimized={isEnvagloCdnUrl(imageSrc)}
                           />
                         </div>
                       );
