@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { resolveImageSrc } from "@/lib/image-src";
 
 export default function Ads({ ads }) {
 
@@ -17,7 +18,7 @@ export default function Ads({ ads }) {
       >
         <div className="relative w-full aspect-[16/9]">
           <Image
-            src={ads[0]?.img_path || "/assets/images/no-image.webp"}
+            src={resolveImageSrc(ads[0]?.img_path)}
             alt="Advertisement 1"
             fill
             quality={95}
@@ -35,7 +36,7 @@ export default function Ads({ ads }) {
       >
         <div className="relative w-full aspect-[16/9]">
           <Image
-            src={ads[1]?.img_path || "/assets/images/no-image.webp"}
+            src={resolveImageSrc(ads[1]?.img_path)}
             alt="Advertisement 2"
             fill
             quality={95}

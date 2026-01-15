@@ -17,6 +17,7 @@ import { getHomeData } from "@/store/slices/home-slice";
 import { useEffect } from "react";
 import Loading from "@/components/loading";
 import { usePathname } from "next/navigation";
+import { resolveImageSrc } from "@/lib/image-src";
 
 // Components
 const WorkHoursSection = ({ data }: { data: any }) => {
@@ -70,7 +71,7 @@ const FooterImage = ({ data }: { data: any }) => {
       <Image
         width={400}
         height={400}
-        src={data.ads[2]?.img_path}
+        src={resolveImageSrc(data.ads[2]?.img_path)}
         alt={t("image-alt")}
         className="w-full max-h-[400px] object-cover"
         quality={95}
