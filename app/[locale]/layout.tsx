@@ -10,6 +10,7 @@ import Providers from "@/components/providers";
 import AuthInitializer from "@/components/auth/auth-initializer";
 import BreadcrumbWrapper from "@/components/layout/breadcrumb-wrapper";
 import ToTop from "@/components/layout/to-top/to-top";
+import WhatsAppIcon from "@/components/whats-app-icon";
 
 const cairo = Cairo({
   variable: "--font-cairo",
@@ -121,6 +122,7 @@ export default async function RootLayout({
             <Providers>{children}</Providers>
             <Footer />
             <ToTop />
+            <WhatsAppIcon />
           </NextIntlClientProvider>
         </ReduxProvider>
       </body>

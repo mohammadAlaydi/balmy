@@ -174,7 +174,7 @@ svg {
 
 body {
   font-family: var(--font-cairo), system-ui, sans-serif;
-  text-transform: capitalize !important;
+  text-transform: lowercase !important;
 }
 
 .font-cairo {
@@ -330,4 +330,14 @@ body {
   right: 10px !important;
   top: 22px !important;
   left: auto !important;
+}
+@keyframes heartbeat {
+  0%, 100% { transform: scale(1); }
+  25% { transform: scale(1.2); }
+  50% { transform: scale(1); }
+  75% { transform: scale(1.2); }
+}
+
+.animate-heartbeat {
+  animation: heartbeat 0.8s ease-in-out infinite;
 }
