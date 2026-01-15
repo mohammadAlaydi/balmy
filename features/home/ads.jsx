@@ -23,7 +23,7 @@ export default function Ads({ ads }) {
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 45vw, 600px"
             className="object-cover transition-transform duration-700 group-hover:scale-105"
             priority
-            unoptimized
+            
           />
         </div>
       </a>
@@ -42,7 +42,6 @@ export default function Ads({ ads }) {
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 45vw, 600px"
             className="object-cover transition-transform duration-700 group-hover:scale-105"
             priority
-            unoptimized
           />
         </div>
       </a>
