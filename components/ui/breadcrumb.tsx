@@ -188,6 +188,8 @@ const AutoBreadcrumb = ({ className, showHome = true }: AutoBreadcrumbProps) => 
         'cart': tBreadcrumb("cart"),
         'checkout-status': tBreadcrumb("checkout-status"),
         'favourite': tBreadcrumb("favourite"),
+        // Route uses plural `/favourites` but translations use singular key `breadcrumb.favourite`
+        'favourites': tBreadcrumb("favourite"),
         'user-profile': tBreadcrumb("user-profile"),
         'auth': tBreadcrumb("auth"),
         'login': tBreadcrumb("login"),
