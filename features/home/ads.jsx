@@ -7,6 +7,13 @@ export default function Ads({ ads }) {
     return null;
   }
 
+
+
+  function normalizeImageUrl(url) {
+    if (!url) return "/assets/images/no-image.webp";
+    return url.replace(/([^:]\/)\/+/g, "$1");
+  }
+
   return (
     <div className="cross-body flex flex-col md:flex-row justify-between m-auto gap-3 px-3 md:px-0 w-full xl:max-w-[75%] py-5">
       {/* Ad 1 */}
@@ -16,7 +23,7 @@ export default function Ads({ ads }) {
       >
         <div className="relative w-full aspect-[16/9]">
           <Image
-            src={ads[0]?.img_path || "/assets/images/no-image.webp"}
+            src={normalizeImageUrl(item.banner_url)}
             alt="Advertisement 1"
             fill
             quality={95}
@@ -34,7 +41,7 @@ export default function Ads({ ads }) {
       >
         <div className="relative w-full aspect-[16/9]">
           <Image
-            src={ads[1]?.img_path || "/assets/images/no-image.webp"}
+            src={normalizeImageUrl(item.banner_url)}
             alt="Advertisement 2"
             fill
             quality={95}
