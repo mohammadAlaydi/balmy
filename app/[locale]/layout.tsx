@@ -22,14 +22,31 @@ const cairo = Cairo({
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
+function toAbsoluteUrl(maybeUrl: string | undefined | null) {
+  if (!maybeUrl) return undefined;
+  if (maybeUrl.startsWith("http://") || maybeUrl.startsWith("https://")) {
+    return maybeUrl;
+  }
+  if (!API_URL) return maybeUrl; // fallback (keeps behavior predictable)
+  try {
+    return new URL(maybeUrl, API_URL).toString();
+  } catch {
+    return maybeUrl;
+  }
+}
+
 export async function generateMetadata({
   params,
 }: {
-  params: { locale: string };
+  params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
-  const locale = params?.locale || "ar";
+  const { locale = "ar" } = await params;
 
   try {
+    if (!API_URL) {
+      throw new Error("NEXT_PUBLIC_API_URL is not set");
+    }
+
     const response = await fetch(`${API_URL}/v1/home?locale=${locale}`, {
       headers: { "Content-Type": "application/json" },
       next: { revalidate: 3600 },
@@ -41,13 +58,7 @@ export async function generateMetadata({
 
     const data = await response.json();
     const seo = data?.seo_settings?.channel?.meta_data;
-    let logo = data?.seo_settings?.channel?.logo;
-
-    if (logo && !logo.startsWith("http")) {
-      logo = `${API_URL}${logo.startsWith("/") ? "" : "/"}${logo}`;
-    }
-
-    console.log("🖼️ favicon:", logo);
+    const logo = toAbsoluteUrl(data?.seo_settings?.channel?.logo);
 
     return {
       title: seo?.meta_title || "My Store",
@@ -60,8 +71,8 @@ export async function generateMetadata({
           "quality",
         ],
       icons: {
-        icon: logo ,
-        apple: logo ,
+        icon: [{ url: logo }],
+        apple:  [{ url: logo }] 
       },
       twitter: {
         card: "summary_large_image",
@@ -106,9 +117,9 @@ export default async function RootLayout({
   params,
 }: Readonly<{
   children: React.ReactNode;
-  params: { locale: string };
+  params: Promise<{ locale: string }>;
 }>) {
-  const locale = params.locale || "ar";
+  const { locale = "ar" } = await params;
   const messages = await getMessages({ locale });
 
   return (
