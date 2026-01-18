@@ -40,13 +40,13 @@ export async function generateMetadata({
 
     const data = await response.json();
     const seo = data?.seo_settings?.channel?.meta_data;
-    let logo = data?.seo_settings?.channel?.logo;
+    // let logo = data?.seo_settings?.channel?.logo;
 
-    if (logo && !logo.startsWith("http")) {
-      logo = `${API_URL}${logo.startsWith("/") ? "" : "/"}${logo}`;
-    }
+    // if (logo && !logo.startsWith("http")) {
+    //   logo = `${API_URL}${logo.startsWith("/") ? "" : "/"}${logo}`;
+    // }
 
-    console.log("🖼️ favicon:", logo);
+    // console.log("🖼️ favicon:", logo);
 
     return {
       title: seo?.meta_title || "My Store",
@@ -59,8 +59,8 @@ export async function generateMetadata({
           "quality",
         ],
       icons: {
-        icon: logo ,
-        apple: logo ,
+        icon: data?.seo_settings?.channel?.logo ,
+        apple: data?.seo_settings?.channel?.logo ,
       },
       twitter: {
         card: "summary_large_image",
@@ -73,7 +73,7 @@ export async function generateMetadata({
         type: "website",
         images: [
           {
-            url: logo || "/og-image.jpg",
+            url: data?.seo_settings?.channel?.logo || "/og-image.jpg",
             width: 1200,
             height: 630,
             alt: seo?.meta_title || "My Store",

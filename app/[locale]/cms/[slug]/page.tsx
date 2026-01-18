@@ -10,12 +10,12 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   try {
     const slug = params.slug;
-    const locale = slug.split("/")[1] || "en"; 
+    const locale = slug.split("/")[1] || "en";
 
     const response = await fetch(`${API_URL}/v1/home?locale=${locale}`, {
       method: "GET",
       headers: { "Content-Type": "application/json" },
-      next: { revalidate: 3600 }, 
+      next: { revalidate: 3600 },
     });
 
     if (!response.ok) {
