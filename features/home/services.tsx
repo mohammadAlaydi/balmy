@@ -13,7 +13,7 @@ export default function Services() {
   const { benefits } = useHome();
 
   return (
-    <div className="bg-gradient-to-b from-slate-50 to-white pt-10">
+    <div className="pt-5">
       <div className="w-full px-4">
         <SectionTitle
           title={t("our-services")}
@@ -29,15 +29,13 @@ export default function Services() {
           breakpoints={{
             300: {
               slidesPerView: 1,
-              spaceBetween : 2
+              spaceBetween: 2,
             },
             400: {
               slidesPerView: 2,
-              spaceBetween : 3
-
+              spaceBetween: 3,
             },
-           
-          
+
             1000: { slidesPerView: 3, spaceBetween: 15 },
             1200: { slidesPerView: 3, spaceBetween: 15 },
           }}

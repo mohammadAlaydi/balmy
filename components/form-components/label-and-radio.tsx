@@ -9,6 +9,7 @@ type RadioOption = {
   value: string;
   label: React.ReactNode;
   action?: () => void; // used for setting state like paymentMethod
+  disable?: boolean; // used to disable radio option
 };
 
 type LabelAndRadioProps<T extends Record<string, any>> = {

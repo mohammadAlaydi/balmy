@@ -15,7 +15,7 @@ export default function ZeroQuantity({
   const { locale } = useParams();
 
   return (
-    <Link  prefetch={true}    href={`/product/${wishlistProductId || product?.product_id}`} className="absolute inset-0 bg-black/50 flex items-center justify-center rounded-lg z-50">
+    <Link  prefetch={true}    href={`/product/${wishlistProductId || product?.product_id}`} className="absolute inset-0 bg-black/20 flex items-center justify-center rounded-lg z-50">
       <FavouriteButton
         product={product}
         className="cursor-pointer absolute rtl:left-2 ltr:right-2 top-2"

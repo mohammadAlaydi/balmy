@@ -9,6 +9,7 @@ import DeleteProductComponent from "@/components/delete-product-component";
 import UseCart from "@/hooks/use-cart";
 
 export default function CartPageClient() {
+  
   const { t, data, isOpen, setIsOpen, dispatch } = UseCart();
 
   // Uncomment if loading state is required
@@ -27,7 +28,7 @@ export default function CartPageClient() {
                 setIsOpen={setIsOpen}
                 isOpen={isOpen}
                 action={() => dispatch(removeAllProductsFromCart() as any)}
-                text="مسح جميع المنتجات"
+                text={t("clear-all-products")}
                 deleteMessage="delete-all-products"
               />
             </div>
