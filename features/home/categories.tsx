@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import { SwiperSlide } from "swiper/react";
+import { isEnvagloCdnUrl, normalizeRemoteImageUrl } from "@/lib/utils";
 
 interface Category {
   src: string;
@@ -11,12 +12,15 @@ interface Category {
   link: string;
 }
 
-export default function Categories({ categories }: { categories: any }) {
+export default function Categories({ categories , locale }: { categories: any  , locale : string}) {
   return (
     <CarouselComponent
+    navigation={true}
       spaceBetween={20}
       slidesPerView={1}
-      containerClassName="categories-carousel h-auto"
+      containerClassName={`categories-carousel h-auto ${
+        locale === "ar" ? "rtl" : "ltr"
+      }`}
       autoHeight
       breakpoints={{
         300: {
@@ -58,9 +62,11 @@ export default function Categories({ categories }: { categories: any }) {
                         rawBannerUrl.startsWith("http://") ||
                         rawBannerUrl.startsWith("https://") ||
                         rawBannerUrl.startsWith("/");
-                      const imageSrc = isLikelyValidUrl
-                        ? rawBannerUrl
-                        : "/assets/images/no-image.webp";
+                      const normalized = isLikelyValidUrl
+                        ? normalizeRemoteImageUrl(rawBannerUrl)
+                        : undefined;
+                      const imageSrc =
+                        normalized || "/assets/images/no-image.webp";
                       return (
                         <div className="relative w-full aspect-square rounded-full overflow-hidden m-auto">
                           <Image
@@ -68,6 +74,7 @@ export default function Categories({ categories }: { categories: any }) {
                             alt={category.name || "category"}
                             fill
                             className="object-cover hover:scale-[1.02] transition-all duration-1000"
+                            unoptimized={isEnvagloCdnUrl(imageSrc)}
                           />
                         </div>
                       );

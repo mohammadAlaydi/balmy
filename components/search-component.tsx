@@ -3,7 +3,6 @@
 import React from "react";
 import { FaSearch } from "react-icons/fa";
 import { IoClose } from "react-icons/io5";
-
 import { Badge } from "./ui/badge";
 import { Input } from "./ui/input";
 import ProductCard from "./product-card";
@@ -52,7 +51,7 @@ const SearchComponent: React.FC<SearchComponentProps> = ({ maxHeight }) => {
     setSearchCategory("");
     setCategoryIndex(null);
   };
-
+ console.log(searchCategory , "✨✨✨✨✨✨✨✨" ,filteredProducts);
   // =============================
   // 🎨 Render
   // =============================

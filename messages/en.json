@@ -407,7 +407,7 @@
     "categories": "Product Categories",
     "featured-products": "Featured Products",
     "advertising": "Advertising",
-    "new-arrivals": "New Arrivals",
+    "new-arrivals": "Just Arrived",
     "best-sellers": "Best Sellers",
     "return-and-exchange": "Return & Exchange",
     "return-and-exchange-desc": "You can return or exchange within 14 days without worry",
@@ -568,7 +568,8 @@
     "clear-filters": "Clear Filters",
     "search-suggestions": ["Slippers", "Shoes", "Scarf"],
     "search-products": "Search Products",
-    "search-description": "Search for products in our store"
+    "search-description": "Search for products in our store",
+    "no-results-found": "No results found"
   },
   "accessibility": {
     "close": "إغلاق",
@@ -981,5 +982,10 @@
     "log-out": "Log out",
     "logged-out-successfully": "Logged out successfully",
     "logout-failed": "Logout failed"
+  },
+  "not-found": {
+    "looks-like-you-re-lost": "Looks Like You're Lost!",
+    "we-cant-seem-to-find-the-page-you-re-looking-for": "We can't seem to find the page you're looking for.",
+    "return-home": "Back to Home"
   }
 }

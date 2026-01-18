@@ -310,7 +310,16 @@ const NavigationLinks = ({
 };
 
 const Logo = ({ data }: { data: any }) => {
-  const logo = data?.seo_settings?.channel?.logo;
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+  let logo = data?.seo_settings?.channel?.logo as string | undefined;
+
+  if (logo && !logo.startsWith("http://") && !logo.startsWith("https://") && apiUrl) {
+    try {
+      logo = new URL(logo, apiUrl).toString();
+    } catch {
+      // keep original value if URL construction fails
+    }
+  }
   if (!logo) return null; // Nothing to render if logo is missing
 
   return (

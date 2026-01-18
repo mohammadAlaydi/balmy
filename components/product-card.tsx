@@ -182,7 +182,6 @@ export default function ProductCard({
     animate: { scaleX: 1 },
     exit: { scaleX: 0 },
   };
-   console.log(product , "😍😍😍😍")
   return (
     <Card
       onMouseEnter={() => isInStock && setIsHovered(true)}
@@ -191,7 +190,7 @@ export default function ProductCard({
         cardColSpan || "col-span-6 xl:col-span-2"
       } border border-gray-200 hover:border-red-color`}
     >
-      {!isInStock && <ZeroQuantity />}
+      {!isInStock && <ZeroQuantity product={product} wishlistProductId={wishlistProductId} />}
 
       <CardHeader className="p-0 relative overflow-hidden rounded-t-lg group">
         {/* Hover Actions */}
@@ -211,7 +210,7 @@ export default function ProductCard({
               />
             }
           >
-            <QuickProductDetails product={productDetails?.data} />
+            <QuickProductDetails product={productDetails?.data}  />
           </DrawerComponent>
         </motion.div>
 
@@ -324,7 +323,7 @@ export default function ProductCard({
           <p className="text-xs text-gray-500 truncate max-w-[100px]">
             {chosenVariantSku ?? product?.sku}
           </p>
-          <p className="font-semibold text-sm truncate">{product?.name}</p>
+          <p className="font-semibold text-sm truncate w-[100] sm:w-auto">{product?.name}</p>
         </div>
 
         {/* Variant Selector */}

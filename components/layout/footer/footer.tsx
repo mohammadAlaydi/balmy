@@ -17,6 +17,7 @@ import { getHomeData } from "@/store/slices/home-slice";
 import { useEffect } from "react";
 import Loading from "@/components/loading";
 import { usePathname } from "next/navigation";
+import { isEnvagloCdnUrl, normalizeRemoteImageUrl } from "@/lib/utils";
 
 // Components
 const WorkHoursSection = ({ data }: { data: any }) => {
@@ -65,15 +66,20 @@ const FooterImage = ({ data }: { data: any }) => {
     return null;
   }
 
+  const footerAdSrc =
+    normalizeRemoteImageUrl(data.ads[2]?.img_path) ||
+    "/assets/images/no-image.webp";
+
   return (
     <div className="col-span-12 lg:col-span-6">
       <Image
         width={400}
         height={400}
-        src={data.ads[2]?.img_path}
+        src={footerAdSrc}
         alt={t("image-alt")}
         className="w-full max-h-[400px] object-cover"
         quality={95}
+        unoptimized={isEnvagloCdnUrl(footerAdSrc)}
       />
     </div>
   );
