@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { authenticatedFetch } from "@/lib/authenticated-fetch";
+import { login, register } from "./auth-slice";
 
 /* -------------------------------------------------------------------------- */
 /*                               Async Thunks                                 */
@@ -190,6 +191,15 @@ const cartSlice = createSlice({
         state.saveOrderData.success = null;
       }
     },
+
+    /** Clear cart data - used when user logs in/registers to prevent showing old cart */
+    clearCart: (state) => {
+      state.data = null;
+      state.increaseOrDecreaseResponse = {};
+      state.status = null;
+      state.cartStatus = null;
+      state.error = null;
+    },
   },
   extraReducers: (builder) => {
     /* ------------------------------ getCartProducts ------------------------------ */
@@ -297,6 +307,31 @@ const cartSlice = createSlice({
         state.isLoading = false;
         state.status = "failed";
       });
+
+    /* ---------------------------- Clear cart on auth ---------------------------- */
+    // Clear cart when user logs in or registers to prevent showing old cart data
+    // The cart will be fetched automatically by useCart hook after clearing
+    builder
+      .addCase(login.fulfilled, (state, action) => {
+        // Clear old cart data to prevent showing products from previous session
+        state.data = null;
+        state.increaseOrDecreaseResponse = {};
+        state.status = null;
+        state.cartStatus = null;
+        state.error = null;
+        // Reset loading state so useCart hook can fetch the new cart
+        state.isLoading = false;
+      })
+      .addCase(register.fulfilled, (state, action) => {
+        // Clear old cart data to prevent showing products from previous session
+        state.data = null;
+        state.increaseOrDecreaseResponse = {};
+        state.status = null;
+        state.cartStatus = null;
+        state.error = null;
+        // Reset loading state so useCart hook can fetch the new cart
+        state.isLoading = false;
+      });
   },
 });
 
@@ -304,5 +339,5 @@ const cartSlice = createSlice({
 /*                                   Exports                                  */
 /* -------------------------------------------------------------------------- */
 
-export const { applyLocalQuantityDelta, resetStatus } = cartSlice.actions;
+export const { applyLocalQuantityDelta, resetStatus, clearCart } = cartSlice.actions;
 export const cartReducer = cartSlice.reducer;

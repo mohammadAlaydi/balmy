@@ -20,7 +20,7 @@ export default function Services() {
           titleStyle="text-center mb-1 text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900"
           subtitle={t("what-we-offer")}
         />
-        <div className="flex justify-center mb-10">
+        <div className="flex justify-center mb-5">
           <div className="w-24 h-1 bg-gradient-to-r from-transparent via-primary to-transparent rounded-full"></div>
         </div>
         <CarouselComponent

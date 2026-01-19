@@ -313,7 +313,12 @@ const Logo = ({ data }: { data: any }) => {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
   let logo = data?.seo_settings?.channel?.logo as string | undefined;
 
-  if (logo && !logo.startsWith("http://") && !logo.startsWith("https://") && apiUrl) {
+  if (
+    logo &&
+    !logo.startsWith("http://") &&
+    !logo.startsWith("https://") &&
+    apiUrl
+  ) {
     try {
       logo = new URL(logo, apiUrl).toString();
     } catch {

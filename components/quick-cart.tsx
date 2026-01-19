@@ -16,7 +16,10 @@ export default function QuickCart() {
   const t = useTranslations("cart");
   const dispatch = useDispatch();
   const { data, status } = useSelector((state: any) => state.cart);
+  const { isAuthenticated } = useSelector((state: any) => state.auth);
   const hasFetchedRef = useRef(false);
+  const prevAuthRef = useRef(isAuthenticated);
+  
   useEffect(() => {
     if (
       !hasFetchedRef.current &&
@@ -33,6 +36,20 @@ export default function QuickCart() {
       dispatch(getCartProducts() as any);
     }
   }, [status, dispatch]);
+
+  // Reset fetch flag and fetch cart when user logs in or registers
+  // This ensures we get the correct cart for the new user session
+  useEffect(() => {
+    // Check if authentication status changed from false to true (login/register)
+    if (!prevAuthRef.current && isAuthenticated) {
+      // Reset the fetch flag so cart can be fetched again
+      hasFetchedRef.current = false;
+      // Fetch the cart for the new user
+      dispatch(getCartProducts() as any);
+    }
+    // Update the previous auth state
+    prevAuthRef.current = isAuthenticated;
+  }, [isAuthenticated, dispatch]);
 
   const [isOpen, setIsOpen] = useState(false);
 
