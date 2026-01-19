@@ -40,7 +40,8 @@ export default function Services() {
             },
 
             1000: { slidesPerView: 3, spaceBetween: 15 },
-            1200: { slidesPerView: 3, spaceBetween: 15 },
+            1200: { slidesPerView: 3, spaceBetween: 50 },
+            1500: { slidesPerView: 3, spaceBetween: 140 },
           }}
         >
           {benefits.map((benefit: BenefitItem, index: number) => {
@@ -62,7 +63,7 @@ export default function Services() {
                     <h2 className="text-sm sm:text-base md:text-lg lg:text-xl font-semibold text-gray-900 mb-1">
                       {benefit.title}
                     </h2>
-                    <p className="text-gray-600 text-xs sm:text-sm md:text-base leading-relaxed flex-1">
+                    <p className="text-gray-600 text-xs sm:text-sm md:text-base leading-relaxed flex-1 truncate">
                       {benefit.description}
                     </p>
                   </div>

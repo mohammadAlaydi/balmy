@@ -13,7 +13,7 @@ export default function ProductsCarousel({ products }: { products: any }) {
 
   return (
     <CarouselComponent
-      containerClassName="w-full h-auto py-5"
+      containerClassName="w-full h-auto"
       spaceBetween={30}
       slidesPerView={1}
       autoHeight
@@ -50,6 +50,8 @@ export default function ProductsCarousel({ products }: { products: any }) {
         },
       }}
       autoPlay={true}
+      autoplayDelay={5000}
+
     >
       {displayedProducts.map((product: any, index: number) => (
         <SwiperSlide key={product?.id || product?.product_id || index}>

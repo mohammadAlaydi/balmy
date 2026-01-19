@@ -21,6 +21,7 @@ export default function CarouselComponent({
   autoHeight,
   swiperClassName,
   effect,
+  autoplayDelay,
 }: {
   spaceBetween: number;
   slidesPerView: number;
@@ -33,6 +34,7 @@ export default function CarouselComponent({
   autoHeight?: boolean;
   swiperClassName?: string;
   effect?: string;
+  autoplayDelay?: number;
 }) {
   const modules = [];
   if (pagination) modules.push(Pagination);
@@ -50,7 +52,7 @@ export default function CarouselComponent({
         spaceBetween={spaceBetween || 30}
         slidesPerView={slidesPerView || 1}
         breakpoints={breakpoints}
-        autoplay={autoPlay ? { delay: 10000, disableOnInteraction: false } : false}
+        autoplay={autoPlay ? { delay: autoplayDelay || 10000, disableOnInteraction: false } : false}
         autoHeight={!!autoHeight}
         effect={effect}
         fadeEffect={effect === 'fade' ? { crossFade: true } : undefined}

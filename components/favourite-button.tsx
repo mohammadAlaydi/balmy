@@ -76,7 +76,7 @@ export function FavouriteButton({
       <div
         onClick={handleToggle}
         className={cn(
-          "transition-all duration-200 flex items-center justify-center",
+          "transition-all duration-200 flex items-center rtl:justify-end",
           isFav && "text-red-500 hover:text-red-600",
           !isFav && "text-black hover:text-red-500",
           size === "sm" && "p-1",

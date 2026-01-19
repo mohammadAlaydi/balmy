@@ -23,22 +23,20 @@ export default function HomePageClient() {
   return (
     <>
       <BannerCarousel sliders={data?.sliders} />
-
       <PageWrapper yPadding="py-2.5">
         <Services />
         <Categories categories={data?.featured_categories} locale={locale} />
-
         <div className="my-5">
-          <SectionTitle
-            title="Our Products"
-            titleStyle="text-xl md:text-3xl mb-5 capitalize text-center"
-          />
-          <Tabs defaultValue="featured" className="w-full">
-            <TabsList className="flex justify-center items-center w-full rounded-none md:p-1.5 h-fit">
+          <Tabs defaultValue="featured" className="mx-auto">
+            <SectionTitle
+              title={t("our-products")}
+              titleStyle="text-xl md:text-3xl capitalize text-center"
+            />
+            <TabsList className="flex items-center mx-auto rounded-none md:p-1.5 h-fit bg-transparent mb-3 -mt-3">
               <TabsTrigger value="featured" className="text-xs sm:text-sm md:text-base">
                 {t("featured-products")}
               </TabsTrigger>
-              <TabsTrigger value="new-arrivals" className="text-xs sm:text-sm md:text-base">
+              <TabsTrigger value="new-arrivals" className="text-xs sm:text-sm md:text-base ">
                 {t("new-arrivals")}
               </TabsTrigger>
             </TabsList>
@@ -50,9 +48,7 @@ export default function HomePageClient() {
             </TabsContent>
           </Tabs>
         </div>
-
         <Ads ads={data?.ads} />
-
       </PageWrapper>
     </>
   );
