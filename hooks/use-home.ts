@@ -4,18 +4,13 @@ import { useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
-
-import { TfiBackLeft } from "react-icons/tfi";
-import { MdOutlineLocalShipping } from "react-icons/md";
-import { BiSupport } from "react-icons/bi";
-import { PiSealCheck } from "react-icons/pi";
+import Image from "next/image";
 
 import { getHomeData } from "@/store/slices/home-slice";
 import { AppDispatch, RootState } from "@/store/store";
-import type { IconType } from "react-icons";
 
 export type BenefitItem = {
-  icon: IconType;
+  icon: string;
   title: string;
   description: string;
 };
@@ -42,22 +37,17 @@ export default function useHome() {
   // ✅ Static benefits — no dependency on `t`
   const benefits: BenefitItem[] = [
     {
-      icon: TfiBackLeft,
+      icon: "/assets/images/return-and-exchange.svg",
       title: t("return-and-exchange"),
       description: t("return-and-exchange-desc"),
     },
-    // {
-    //   icon: MdOutlineLocalShipping,
-    //   title: t("free-shipping"),
-    //   description: t("free-shipping-desc"),
-    // },
     {
-      icon: BiSupport,
+      icon: "/assets/images/always-with-you.svg",
       title: t("always-with-you"),
       description: t("always-with-you-desc"),
     },
     {
-      icon: PiSealCheck,
+      icon: "/assets/images/gold-membership.svg",
       title: t("gold-membership"),
       description: t("gold-membership-desc"),
     },

@@ -186,9 +186,8 @@ export default function ProductCard({
     <Card
       onMouseEnter={() => isInStock && setIsHovered(true)}
       onMouseLeave={() => isInStock && setIsHovered(false)}
-      className={`relative product-card shadow-none hover:shadow-[0px_10px_30px_rgba(149,157,165,0.1)] py-0 h-fit rounded-lg gap-3 ${
-        cardColSpan || "col-span-6 xl:col-span-2"
-      } border border-gray-200 hover:border-red-color`}
+      className={`relative product-card shadow-none hover:shadow-[0px_10px_30px_rgba(149,157,165,0.1)] py-0 h-fit rounded-lg gap-3 ${cardColSpan || "col-span-6 xl:col-span-2"
+        } border border-gray-200 hover:border-red-color`}
     >
       {!isInStock && <ZeroQuantity product={product} wishlistProductId={wishlistProductId} />}
 
@@ -210,7 +209,7 @@ export default function ProductCard({
               />
             }
           >
-            <QuickProductDetails product={productDetails?.data}  />
+            <QuickProductDetails product={productDetails?.data} />
           </DrawerComponent>
         </motion.div>
 
@@ -345,12 +344,11 @@ export default function ProductCard({
                         alt={`${product?.name || t("product")} ${t(
                           "variant-image"
                         )} ${index + 1}`}
-                        className={`cursor-pointer transition-all duration-200 rounded-full h-[28px] w-[28px] ${
-                          selectedVariantIndex === index ||
-                          (selectedVariantIndex === null && index === 0)
+                        className={`cursor-pointer transition-all duration-200 rounded-full h-[28px] w-[28px] ${selectedVariantIndex === index ||
+                            (selectedVariantIndex === null && index === 0)
                             ? "ring-2 ring-gray-300"
                             : "border-2 border-dotted border-gray-300"
-                        }`}
+                          }`}
                         onClick={() =>
                           handleVariantSelect(
                             index,
@@ -378,11 +376,10 @@ export default function ProductCard({
                       "/assets/images/no-image.webp"
                     }
                     alt={`${product?.name || t("product")}`}
-                    className={`${
-                      selectedVariantIndex === 0 || selectedVariantIndex == null
+                    className={`${selectedVariantIndex === 0 || selectedVariantIndex == null
                         ? "ring-2 ring-gray-300"
                         : "border-2 border-dotted border-gray-300"
-                    } cursor-pointer transition-all duration-200 rounded-full ring-2 ring-gray-300 h-[28px] w-[28px]`}
+                      } cursor-pointer transition-all duration-200 rounded-full ring-2 ring-gray-300 h-[28px] w-[28px]`}
                     onClick={() =>
                       handleVariantSelect(0, product?.product_id, product?.sku)
                     }

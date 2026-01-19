@@ -39,7 +39,8 @@ export default function Categories({ categories , locale }: { categories: any  ,
           spaceBetween: 8,
         },
         1000: { slidesPerView: 3, spaceBetween: 15 },
-        1201: { slidesPerView: 4, spaceBetween: 15 },
+        1201: { slidesPerView: 4, spaceBetween: 20 },
+        1501: { slidesPerView: 5, spaceBetween: 30 },
       }}
     >
       {categories &&

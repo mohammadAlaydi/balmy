@@ -10,8 +10,10 @@ import PageWrapper from "@/components/page-wrapper";
 import SectionTitle from "@/components/section-title";
 import useHome from "@/hooks/use-home";
 import { useLocale } from "next-intl";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 
 export default function HomePageClient() {
+
   const { t, loading, data } = useHome();
 
   if (loading) {
@@ -21,23 +23,33 @@ export default function HomePageClient() {
   return (
     <>
       <BannerCarousel sliders={data?.sliders} />
+
       <PageWrapper yPadding="py-2.5">
         <Services />
         <Categories categories={data?.featured_categories} locale={locale} />
 
-        <SectionTitle
-          title={t("featured-products")}
-          titleStyle="text-xl md:text-3xl my-5"
-        />
-        <ProductsCarousel products={data?.featured_products} />
+        <div className="my-5">
+
+          <Tabs defaultValue="featured" className="w-full">
+            <TabsList className="mb-6">
+              <TabsTrigger value="featured">
+                {t("featured-products")}
+              </TabsTrigger>
+              <TabsTrigger value="new-arrivals">
+                {t("new-arrivals")}
+              </TabsTrigger>
+            </TabsList>
+            <TabsContent value="featured">
+              <ProductsCarousel products={data?.featured_products} />
+            </TabsContent>
+            <TabsContent value="new-arrivals">
+              <ProductsCarousel products={data?.new_products} />
+            </TabsContent>
+          </Tabs>
+        </div>
 
         <Ads ads={data?.ads} />
 
-        <SectionTitle
-          title={t("new-arrivals")}
-          titleStyle="text-xl md:text-3xl my-5"
-        />
-        <ProductsCarousel products={data?.new_products} />
       </PageWrapper>
     </>
   );
