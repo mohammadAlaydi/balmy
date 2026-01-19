@@ -385,15 +385,155 @@ body {
 
 .data-\[state\=active\]\:bg-background[data-state="active"] {
   background-color: transparent !important;
-  color:  rgb(56 102 223)  !important;
+  color: rgb(56 102 223) !important;
   padding-block: 10px !important;
   border-radius: 0px !important;
   border-bottom: 2px solid rgb(56 102 223) !important;
   box-shadow: none !important;
+  font-weight: 700 !important;
 }
 
 @media screen and (max-width: 768px) {
   .data-\[state\=active\]\:bg-background[data-state="active"] {
     padding-block: 5px !important;
+  }
+}
+
+/* Input base styles */
+form input,
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+input[type="tel"],
+input[type="search"],
+textarea {
+  border: 1.5px solid rgba(156, 163, 175, 0.4) !important;
+  outline: none !important;
+  outline-offset: 0 !important;
+  border-radius: 6px !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  background-color: transparent !important;
+}
+
+/* Input hover effect */
+form input:hover:not(:disabled):not(:focus),
+input[type="text"]:hover:not(:disabled):not(:focus),
+input[type="email"]:hover:not(:disabled):not(:focus),
+input[type="password"]:hover:not(:disabled):not(:focus),
+input[type="number"]:hover:not(:disabled):not(:focus),
+input[type="tel"]:hover:not(:disabled):not(:focus),
+input[type="search"]:hover:not(:disabled):not(:focus),
+textarea:hover:not(:disabled):not(:focus) {
+  border-color: rgba(56, 102, 223, 0.6) !important;
+  border-width: 1.5px !important;
+  box-shadow: 0 0 0 2px rgba(56, 102, 223, 0.05) !important;
+  transform: translateY(-1px) !important;
+}
+
+/* Input focus effect */
+form input:focus,
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+input[type="number"]:focus,
+input[type="tel"]:focus,
+input[type="search"]:focus,
+textarea:focus {
+  outline: none !important;
+  border: 2px solid rgb(56, 102, 223) !important;
+  border-color: rgb(56, 102, 223) !important;
+  box-shadow: 0 0 0 4px rgba(56, 102, 223, 0.15) !important;
+  transform: translateY(-1px) !important;
+  background-color: rgba(255, 255, 255, 0.5) !important;
+}
+
+/* Input placeholder effect */
+form input::placeholder,
+input[type="text"]::placeholder,
+input[type="email"]::placeholder,
+input[type="password"]::placeholder,
+input[type="number"]::placeholder,
+input[type="tel"]::placeholder,
+input[type="search"]::placeholder,
+textarea::placeholder {
+  color: rgba(128, 128, 128, 0.6) !important;
+  transition: color 0.3s ease !important;
+}
+
+form input:focus::placeholder,
+input[type="text"]:focus::placeholder,
+input[type="email"]:focus::placeholder,
+input[type="password"]:focus::placeholder,
+input[type="number"]:focus::placeholder,
+input[type="tel"]:focus::placeholder,
+input[type="search"]:focus::placeholder,
+textarea:focus::placeholder {
+  color: rgba(128, 128, 128, 0.4) !important;
+}
+
+/* Input disabled state */
+form input:disabled,
+input[type="text"]:disabled,
+input[type="email"]:disabled,
+input[type="password"]:disabled,
+input[type="number"]:disabled,
+input[type="tel"]:disabled,
+input[type="search"]:disabled,
+textarea:disabled {
+  opacity: 0.5 !important;
+  cursor: not-allowed !important;
+  border-color: rgba(156, 163, 175, 0.3) !important;
+  background-color: rgba(243, 244, 246, 0.5) !important;
+}
+
+/* Input invalid/error state */
+form input:invalid:not(:placeholder-shown),
+input[type="text"]:invalid:not(:placeholder-shown),
+input[type="email"]:invalid:not(:placeholder-shown),
+input[type="password"]:invalid:not(:placeholder-shown),
+input[type="number"]:invalid:not(:placeholder-shown),
+input[type="tel"]:invalid:not(:placeholder-shown),
+input[type="search"]:invalid:not(:placeholder-shown),
+textarea:invalid:not(:placeholder-shown),
+form input[aria-invalid="true"],
+input[aria-invalid="true"] {
+  border-color: #ef4444 !important;
+  border-width: 2px !important;
+  box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.15) !important;
+}
+
+form input:invalid:not(:placeholder-shown):focus,
+input[type="text"]:invalid:not(:placeholder-shown):focus,
+input[type="email"]:invalid:not(:placeholder-shown):focus,
+input[type="password"]:invalid:not(:placeholder-shown):focus,
+input[type="number"]:invalid:not(:placeholder-shown):focus,
+input[type="tel"]:invalid:not(:placeholder-shown):focus,
+input[type="search"]:invalid:not(:placeholder-shown):focus,
+textarea:invalid:not(:placeholder-shown):focus,
+form input[aria-invalid="true"]:focus,
+input[aria-invalid="true"]:focus {
+  border-color: #dc2626 !important;
+  box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.2) !important;
+}
+
+/* Smooth animation for input value changes */
+form input,
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+input[type="tel"],
+input[type="search"],
+textarea {
+  animation: inputFadeIn 0.2s ease-in-out !important;
+}
+
+@keyframes inputFadeIn {
+  from {
+    opacity: 0.8;
+  }
+  to {
+    opacity: 1;
   }
 }

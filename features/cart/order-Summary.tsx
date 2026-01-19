@@ -46,10 +46,10 @@ export default function OrderSummary({ data }: { data: any }) {
     const subtotal = items.reduce((total: number, item: any) => {
       const price = Number(
         item?.product?.price?.value ||
-          item?.product?.price?.final_price ||
-          item?.product?.price?.base_price ||
-          item?.product?.price ||
-          0
+        item?.product?.price?.final_price ||
+        item?.product?.price?.base_price ||
+        item?.product?.price ||
+        0
       );
       const quantity = Number(item?.quantity || 0);
       return total + price * quantity;
@@ -95,7 +95,7 @@ export default function OrderSummary({ data }: { data: any }) {
   if (!data?.data?.items?.length) {
     return (
       <div className="col-span-12 lg:col-span-5 xl:col-span-4 p-6 rounded-lg border border-gray-200 h-fit flex flex-col gap-6 bg-white shadow-sm">
-        <h2 className="text-xl font-bold text-gray-900">
+        <h2 className="text-xl font-bold text-gray-900 capitalize">
           {t("order-summary")}
         </h2>
         <div className="text-center py-8">
@@ -119,7 +119,8 @@ export default function OrderSummary({ data }: { data: any }) {
           />
           <Button
             type="submit"
-            className="absolute rtl:left-0 ltr:right-0 top-0 h-full px-4 bg-black text-white hover:bg-gray-800 transition-colors"
+            className="absolute rtl:left-0 ltr:right-0 top-0 h-full px-4 bg-black text-white hover:bg-gray-800 transition-colors transition-opacity"
+            disabled={form.watch("coupon") === ""}
           >
             {t("apply")}
           </Button>
@@ -129,32 +130,31 @@ export default function OrderSummary({ data }: { data: any }) {
       <div className="space-y-4">
         {/* Subtotal */}
         <div className="flex justify-between items-center">
+
           <Badge
-            variant="outline"
-            className="text-sm bg-transparent text-gray-color border-gray-200"
+            className="text-sm bg-transparent text-gray-color border-gray-200 border-none capitalize"
           >
-            {subtotal.toFixed(2)} <i className="icon-rial"></i>
+            {items.length === 1 ? t("item") : t("items")}
           </Badge>
           <Badge
             variant="outline"
-            className="text-sm bg-transparent text-gray-color border-gray-200"
+            className="text-sm bg-transparent text-gray-color border-gray-200 bg-gray-50"
           >
-            {items.length === 1 ? t("item") : t("items")}
+            {subtotal.toFixed(2)} <i className="icon-rial"></i>
           </Badge>
         </div>
         {/* TAX */}
         <div className="flex justify-between items-center gap-5">
           <Badge
-            variant="outline"
-            className="text-sm bg-transparent text-gray-color border-gray-200"
+            className="text-sm bg-transparent text-gray-color border-gray-200 border-none capitalize"
           >
-            {tax.toFixed(2)} <i className="icon-rial"></i>
+            {t("taxes")}
           </Badge>
           <Badge
             variant="outline"
-            className="text-sm bg-transparent text-gray-color border-gray-200"
+            className="text-sm bg-transparent text-gray-color border-gray-200 bg-gray-50"
           >
-            {t("taxes")}
+            {tax.toFixed(2)} <i className="icon-rial"></i>
           </Badge>
         </div>
         <hr className="border-gray-200" />
@@ -162,15 +162,15 @@ export default function OrderSummary({ data }: { data: any }) {
         <div className="flex justify-between items-center gap-5">
           <Badge
             variant="outline"
-            className="text-sm font-semibold bg-transparent text-gray-color border-gray-200"
+            className="text-sm font-bold bg-transparent text-gray-color border-gray-200 border-none capitalize"
           >
-            {total.toFixed(2)} <i className="icon-rial"></i>
+            {t("total-inclusive-vat")}
           </Badge>
           <Badge
             variant="outline"
-            className="text-sm font-semibold bg-transparent text-gray-color border-gray-200"
+            className="text-sm font-bold bg-transparent text-gray-color border-gray-200 bg-gray-50"
           >
-            {t("total-inclusive-vat")}
+            {total.toFixed(2)} <i className="icon-rial"></i>
           </Badge>
         </div>
       </div>
@@ -191,7 +191,7 @@ export default function OrderSummary({ data }: { data: any }) {
           {t("proceed-to-checkout")}
         </DialogTrigger>
         <DialogContent>
-          <Checkout  />
+          <Checkout />
         </DialogContent>
       </Dialog>
     </div>

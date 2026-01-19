@@ -14,7 +14,6 @@ export default function Services() {
   const { benefits } = useHome();
 
   return (
-    <div className="pt-5">
       <div className="w-full">
         {/* <SectionTitle
           title={t("our-services")}
@@ -73,6 +72,5 @@ export default function Services() {
           })}
         </CarouselComponent>
       </div>
-    </div>
   );
 }

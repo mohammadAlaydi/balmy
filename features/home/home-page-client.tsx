@@ -23,10 +23,14 @@ export default function HomePageClient() {
   return (
     <>
       <BannerCarousel sliders={data?.sliders} />
+      <div className="bg-gray-50">
+        <PageWrapper yPadding="py-2.5 md:py-5">
+          <Services />
+        </PageWrapper>
+      </div>
       <PageWrapper yPadding="py-2.5">
-        <Services />
         <Categories categories={data?.featured_categories} locale={locale} />
-        <div className="my-5">
+        <div className="my-16">
           <Tabs defaultValue="featured" className="mx-auto">
             <SectionTitle
               title={t("our-products")}
