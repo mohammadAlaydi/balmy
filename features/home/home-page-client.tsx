@@ -29,13 +29,16 @@ export default function HomePageClient() {
         <Categories categories={data?.featured_categories} locale={locale} />
 
         <div className="my-5">
-
+          <SectionTitle
+            title="Our Products"
+            titleStyle="text-xl md:text-3xl mb-5 capitalize text-center"
+          />
           <Tabs defaultValue="featured" className="w-full">
-            <TabsList className="mb-6">
-              <TabsTrigger value="featured">
+            <TabsList className="flex justify-center items-center w-full rounded-none md:p-1.5 h-fit">
+              <TabsTrigger value="featured" className="text-xs sm:text-sm md:text-base">
                 {t("featured-products")}
               </TabsTrigger>
-              <TabsTrigger value="new-arrivals">
+              <TabsTrigger value="new-arrivals" className="text-xs sm:text-sm md:text-base">
                 {t("new-arrivals")}
               </TabsTrigger>
             </TabsList>

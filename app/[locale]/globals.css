@@ -53,6 +53,7 @@
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground;
     font-family: var(--font-cairo), system-ui, sans-serif !important;
@@ -114,9 +115,11 @@ svg {
 .text-white {
   color: white !important;
 }
+
 .rating-color {
   color: #fead20 !important;
 }
+
 /* Custom color utilities */
 
 /* RTL and LTR text direction utilities */
@@ -146,7 +149,7 @@ svg {
   direction: rtl;
 }
 
-.rtl .space-y-6 > * + * {
+.rtl .space-y-6>*+* {
   margin-top: 1.5rem;
 }
 
@@ -180,14 +183,17 @@ body {
 .font-cairo {
   font-family: var(--font-cairo), system-ui, sans-serif;
 }
+
 .hero {
   width: 100%;
   aspect-ratio: 0.75/0.8;
   max-height: 85vh;
 }
+
 .hero img {
   object-fit: cover;
 }
+
 .swiper-slide .fade-item {
   transform: translateY(100%);
   opacity: 0;
@@ -224,18 +230,19 @@ body {
 .swiper-initialized {
   width: 100% !important;
 }
+
 .swiper-pagination-bullet {
   background-color: white !important;
   opacity: 0.9 !important;
 }
+
 .swiper-pagination-bullet-active {
   outline: 1px solid white !important;
   outline-offset: 5px !important;
 }
 
-.swiper-horizontal > .swiper-pagination-bullets .swiper-pagination-bullet,
-.swiper-pagination-horizontal.swiper-pagination-bullets
-  .swiper-pagination-bullet {
+.swiper-horizontal>.swiper-pagination-bullets .swiper-pagination-bullet,
+.swiper-pagination-horizontal.swiper-pagination-bullets .swiper-pagination-bullet {
   background-color: white !important;
   padding: 3px !important;
   margin-inline: 15px !important;
@@ -252,9 +259,11 @@ body {
     bottom: 20px !important;
   }
 }
+
 .categories-carousel .swiper-wrapper {
   padding-block: 10px !important;
 }
+
 /* ryhal icon */
 @font-face {
   font-family: "icomoon";
@@ -288,12 +297,14 @@ body {
   content: "\e900";
   font-family: "IcoMoon";
 }
-.swiper-horizontal > .swiper-pagination-bullets .swiper-pagination-bullet,
-.swiper-pagination-horizontal.swiper-pagination-bullets
-  .swiper-pagination-bullet {
+
+.swiper-horizontal>.swiper-pagination-bullets .swiper-pagination-bullet,
+.swiper-pagination-horizontal.swiper-pagination-bullets .swiper-pagination-bullet {
   margin-inline: 10px !important;
 }
-.swiper-button-prev:after, .swiper-button-next:after {
+
+.swiper-button-prev:after,
+.swiper-button-next:after {
   font-size: 18px !important;
   color: black !important;
   width: 40px;
@@ -304,9 +315,11 @@ body {
   justify-content: center;
   align-items: center;
 }
+
 .categories-carousel .swiper-autoheight .swiper-wrapper {
   padding-top: 55px !important;
 }
+
 /* English (LTR) */
 .categories-carousel.ltr .swiper-button-next {
   left: 50px !important;
@@ -321,7 +334,8 @@ body {
 
 /* Arabic (RTL) */
 .categories-carousel.rtl .swiper-button-next {
-  right: 50px !important; /* بدل right */
+  right: 50px !important;
+  /* بدل right */
   top: 22px !important;
   left: auto !important;
 }
@@ -331,13 +345,41 @@ body {
   top: 22px !important;
   left: auto !important;
 }
+
 @keyframes heartbeat {
-  0%, 100% { transform: scale(1); }
-  25% { transform: scale(1.2); }
-  50% { transform: scale(1); }
-  75% { transform: scale(1.2); }
+
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  25% {
+    transform: scale(1.2);
+  }
+
+  50% {
+    transform: scale(1);
+  }
+
+  75% {
+    transform: scale(1.2);
+  }
 }
 
 .animate-heartbeat {
   animation: heartbeat 0.8s ease-in-out infinite;
+}
+
+.data-\[state\=active\]\:bg-background[data-state="active"] {
+  background-color: rgb(56 102 223) !important;
+  color: white !important;
+  padding-block: 10px !important;
+  border-radius: 0px !important;
+
+}
+
+@media screen and (max-width: 768px) {
+  .data-\[state\=active\]\:bg-background[data-state="active"] {
+    padding-block: 5px !important;
+  }
 }
