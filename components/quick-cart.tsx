@@ -13,6 +13,7 @@ import CartProduct from "./cart-product";
 import DeleteProductComponent from "./delete-product-component";
 
 export default function QuickCart() {
+  
   const t = useTranslations("cart");
   const dispatch = useDispatch();
   const { data, status } = useSelector((state: any) => state.cart);

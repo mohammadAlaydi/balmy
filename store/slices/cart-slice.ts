@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { authenticatedFetch } from "@/lib/authenticated-fetch";
-import { login, register } from "./auth-slice";
+import { login, register, logout } from "./auth-slice";
 
 /* -------------------------------------------------------------------------- */
 /*                               Async Thunks                                 */
@@ -309,8 +309,9 @@ const cartSlice = createSlice({
       });
 
     /* ---------------------------- Clear cart on auth ---------------------------- */
-    // Clear cart when user logs in or registers to prevent showing old cart data
-    // The cart will be fetched automatically by useCart hook after clearing
+    // Clear cart when user logs in/registers/logs out to prevent showing stale data
+    // عند الـ login / register: السلة هتتجلب من الـ API بنفس الحساب
+    // عند الـ logout: نمسح السلة من الـ Redux بس، لكن الداتا بتفضل محفوظة في السيرفر
     builder
       .addCase(login.fulfilled, (state, action) => {
         // Clear old cart data to prevent showing products from previous session
@@ -330,6 +331,15 @@ const cartSlice = createSlice({
         state.cartStatus = null;
         state.error = null;
         // Reset loading state so useCart hook can fetch the new cart
+        state.isLoading = false;
+      })
+      .addCase(logout.fulfilled, (state) => {
+        // Clear cart locally on logout
+        state.data = null;
+        state.increaseOrDecreaseResponse = {};
+        state.status = null;
+        state.cartStatus = null;
+        state.error = null;
         state.isLoading = false;
       });
   },
