@@ -1,7 +1,7 @@
 "use client";
 
 import CartProduct from "@/components/cart-product";
-import OrderSummary from "@/features/cart/order-Summary";
+import OrderSummary from "@/features/cart/order-summary";
 import { removeAllProductsFromCart } from "@/store/slices/cart-slice";
 import Loading from "@/components/loading";
 import PageWrapper from "@/components/page-wrapper";
@@ -36,14 +36,14 @@ export default function CartPageClient() {
               data.data.items.length > 0 &&
               data.data.items.map(
                 (item: any) =>
-                  item?.product?.in_stock && (
+                  // item?.product?.in_stock && (
                     <CartProduct
                       key={item?.product?.id}
                       product={item?.product}
                       quantity={item?.quantity}
                       deletedProductId={item?.id}
                     />
-                  )
+                  // )
               )}
           </div>
         </div>

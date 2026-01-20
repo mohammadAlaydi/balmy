@@ -92,6 +92,7 @@
     "taxes": "Taxes",
     "total-inclusive-vat": "Total (Inclusive of VAT)",
     "proceed-to-checkout": "Proceed to Checkout",
+    "checkout-disabled-out-of-stock": "You can't proceed to checkout because some items are out of stock. Please remove out of stock items or reduce quantity.",
     "free-shipping-over": "Free shipping on orders over SAR 1000",
     "back": "Back",
     "next": "Next",

@@ -28,6 +28,7 @@ export default function CartProduct({
   const dispatch = useAppDispatch();
 
   const tToast = useTranslations("toast");
+  const tProducts = useTranslations("products");
   const [isOpen, setIsOpen] = useState(false);
 
   const handleDelete = async (productId: number | string) => {
@@ -35,9 +36,7 @@ export default function CartProduct({
       await dispatch(removeFromCart({ productId: Number(productId) })).unwrap();
       await dispatch(getCartProducts());
       toast.success(tToast("product-deleted"));
-      if (status === "success") {
-        setIsOpen(false);
-      }
+      setIsOpen(false);
     } catch (error) {
       console.error("Failed to remove product from cart:", error);
     }
@@ -83,12 +82,24 @@ export default function CartProduct({
               </div>
 
             </div>
+            {/* Stock Status */}
+            <Badge
+              className={`text-sm px-3 py-1 rounded ${product.in_stock
+                ? "bg-green-100 text-green-800 border-green-200"
+                : "bg-red-100 text-red-800 border-red-200"
+                }`}
+            >
+              {product.in_stock
+                ? tProducts("in-stock")
+                : tProducts("out-of-stock")}
+            </Badge>
+
           </div>
         </div>
         <div className="relative group">
           <Image
             src={product?.base_image?.original_image_url ?? "/placeholder.png"}
-            alt={product?.name ?? "product image"}
+            alt={product?.name ?? tProducts("product")}
             width={100}
             height={100}
             className="rounded-md object-cover w-[110px] md:w-[140px] aspect-square border border-gray-200 cursor-pointer"

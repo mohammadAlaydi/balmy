@@ -10,6 +10,7 @@ import ProductCard from "@/components/product-card";
 import toast from "react-hot-toast";
 import { ProtectedRoute } from "@/components/auth/protected-route";
 import { useFavourites } from "@/hooks/use-favourites";
+import PageWrapper from "@/components/page-wrapper";
 
 function FavouritePageContent() {
   const {
@@ -66,46 +67,48 @@ function FavouritePageContent() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="mb-8">
-        <SectionTitle title={t("title")} titleStyle="text-3xl font-bold text-gray-900 mb-2" />
-        <p className="text-gray-600">{t("subtitle")}</p>
-      </div>
-
-      <div className="flex justify-between items-center mb-6">
-        <div className="flex items-center gap-3">
-          <FaHeart className="h-5 w-5 text-red-500" />
-          <span className="text-lg font-medium text-gray-700">
-            {t("favouritesCount", { count: getFavouritesCount() })}
-          </span>
+    <PageWrapper>
+      <div className="container mx-auto">
+        <div className="mb-8">
+          <SectionTitle title={t("title")} titleStyle="text-3xl font-bold text-gray-900 mb-2" />
+          <p className="text-gray-600">{t("subtitle")}</p>
         </div>
-        <Button onClick={handleClearAll} variant="outline" className="text-red-600 hover:text-red-700 hover:bg-red-50">
-          <FaTrashAlt className="h-4 w-4 mr-2" />
-          {t("clearAll")}
-        </Button>
-      </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {favourites.map((product: any) => (
-          <div key={product.id} className="relative group">
-            <ProductCard
-              product={product}
-              cardColSpan="col-span-1"
-              wishlistId={product.item_id}
-              wishlistProductId={product.id}
-            />
-            <Button
-              size="sm"
-              variant="destructive"
-              className="absolute top-2 ltr:left-2 rtl:right-2 z-10 opacity-0 group-hover:opacity-100 transition-opacity"
-              onClick={() => handleRemoveFromFavourites(product.id)}
-            >
-              <FaTrashAlt className="h-4 w-4" />
-            </Button>
+        <div className="flex justify-between items-center mb-6">
+          <div className="flex items-center gap-3">
+            <FaHeart className="h-5 w-5 text-red-500" />
+            <span className="text-lg font-medium text-gray-700">
+              {t("favouritesCount", { count: getFavouritesCount() })}
+            </span>
           </div>
-        ))}
+          <Button onClick={handleClearAll} variant="outline" className="text-red-600 hover:text-red-700 hover:bg-red-50">
+            <FaTrashAlt className="h-4 w-4 mr-2" />
+            {t("clearAll")}
+          </Button>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          {favourites.map((product: any) => (
+            <div key={product.id} className="relative group">
+              <ProductCard
+                product={product}
+                cardColSpan="col-span-1"
+                wishlistId={product.item_id}
+                wishlistProductId={product.id}
+              />
+              <Button
+                size="sm"
+                variant="destructive"
+                className="absolute top-2 ltr:left-2 rtl:right-2 z-10 opacity-0 group-hover:opacity-100 transition-opacity"
+                onClick={() => handleRemoveFromFavourites(product.id)}
+              >
+                <FaTrashAlt className="h-4 w-4" />
+              </Button>
+            </div>
+          ))}
+        </div>
       </div>
-    </div>
+    </PageWrapper>
   );
 }
 

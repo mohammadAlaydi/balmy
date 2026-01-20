@@ -67,6 +67,10 @@ export default function OrderSummary({ data }: { data: any }) {
   };
 
   const { subtotal, tax, total, items } = calculateTotals();
+  const hasOutOfStock = items?.some(
+    (item: any) => item?.product?.in_stock === false
+  );
+  const checkoutDisabled = hasOutOfStock;
 
   const onSubmit = (data: CouponFormData) => {
     if (!data.coupon.trim()) {
@@ -179,18 +183,37 @@ export default function OrderSummary({ data }: { data: any }) {
       <Dialog
         open={open}
         onOpenChange={(nextOpen) => {
+          if (nextOpen && hasOutOfStock) {
+            toast.error(t("checkout-disabled-out-of-stock"));
+            return;
+          }
           setOpen(nextOpen);
         }}
       >
         <DialogTitle className="hidden"></DialogTitle>
-        <DialogTrigger
-          onClick={() => {
-            dispatch(resetStatus());
-          }}
-          className="w-full bg-black text-white hover:bg-gray-800 transition-colors py-2 cursor-pointer text-base font-semibold rounded-md"
-        >
-          {t("proceed-to-checkout")}
+        <DialogTrigger asChild>
+          <button
+            type="button"
+            aria-disabled={checkoutDisabled}
+            onClick={(e) => {
+              if (checkoutDisabled) {
+                e.preventDefault();
+                e.stopPropagation();
+                toast.error(t("checkout-disabled-out-of-stock"));
+                return;
+              }
+              dispatch(resetStatus());
+            }}
+            className={`w-full bg-black text-white transition-colors py-2 text-base font-semibold rounded-md ${
+              checkoutDisabled
+                ? "opacity-60 cursor-not-allowed"
+                : "hover:bg-gray-800 cursor-pointer"
+            }`}
+          >
+            {t("proceed-to-checkout")}
+          </button>
         </DialogTrigger>
+        
         <DialogContent>
           <Checkout />
         </DialogContent>
