@@ -106,11 +106,11 @@ export default function OrderSummary({ data }: { data: any }) {
   }
 
   return (
-    <div className="col-span-12 lg:col-span-5 xl:col-span-4 p-6 rounded-lg border border-gray-200 h-fit flex flex-col gap-6 bg-white shadow-sm">
+    <div className="col-span-12 lg:col-span-5 xl:col-span-4 p-6 rounded-lg border border-gray-200 h-fit flex flex-col gap-6 bg-white shadow-md">
       <h2 className="text-xl font-bold text-gray-900">{t("order-summary")}</h2>
       {/* Coupon Form */}
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="relative">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="relative flex items-center gap-2">
           <Input
             placeholder={t("enter-coupon-code")}
             {...form.register("coupon", {
@@ -118,8 +118,9 @@ export default function OrderSummary({ data }: { data: any }) {
             })}
           />
           <Button
+            variant="default"
             type="submit"
-            className="absolute rtl:left-0 ltr:right-0 top-0 h-full px-4 bg-black text-white hover:bg-gray-800 transition-colors transition-opacity"
+            // className="absolute rtl:left-0 ltr:right-0 top-0 h-full px-4 bg-black text-white hover:bg-gray-800 transition-colors transition-opacity"
             disabled={form.watch("coupon") === ""}
           >
             {t("apply")}

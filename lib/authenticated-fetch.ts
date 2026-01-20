@@ -54,16 +54,27 @@ class AuthenticatedFetchService {
     const { retryCount = 0, ...fetchOptions } = options;
 
     try {
-      const response = await fetch(url, fetchOptions);
+      // Ensure cookies (httpOnly tokens) are always included
+      const response = await fetch(url, {
+        credentials: 'include',
+        ...fetchOptions,
+      });
 
       // Handle 401 errors with automatic token refresh
-      if (response.status === 401 && retryCount === 0) {
+      if (
+        response.status === 401 &&
+        retryCount === 0 &&
+        !url.startsWith('/api/auth/refresh')
+      ) {
         console.log('Received 401, attempting token refresh...');
         const refreshSuccess = await this.refreshToken();
         
         if (refreshSuccess) {
           console.log('Token refreshed, retrying request...');
-          return this.authenticatedFetch(url, { ...options, retryCount: retryCount + 1 });
+          return this.authenticatedFetch(url, {
+            ...options,
+            retryCount: retryCount + 1,
+          });
         } else {
           console.error('Token refresh failed');
           throw new Error('Authentication failed. Please login again.');
