@@ -234,20 +234,24 @@ const NavigationLinks = ({
   currentLocale: string;
 }) => {
   const t = useTranslations("navigation");
+  const navTextClass =
+    "text-sm lg:text-base font-semibold hover:bg-transparent hover:text-red-500 transition-all duration-300";
+  const navLinkClass = `cursor-pointer hover:bg-transparent px-4 py-2 ${navTextClass}`;
   // Limit to first 5 categories
-  const limitedCategories = navbarCategories?.slice(0, 5) || [];
+  // const limitedCategories = navbarCategories?.slice(0, 5) || [];
 
   return (
     <NavigationMenu viewport={false} className="hidden lg:block">
       <NavigationMenuList>
-        {limitedCategories && limitedCategories.length > 0 ? (
-          limitedCategories.map((link: any, linkIndex: number) => {
+        {navbarCategories && navbarCategories.length > 0 ? (
+          navbarCategories.map((link: any, linkIndex: number) => {
             const hasChildren = link?.children && link?.children?.length > 0;
             return hasChildren ? (
               <NavigationMenuItem
                 key={link?.id ?? link?.slug ?? `cat-${linkIndex}`}
+                className={navTextClass}
               >
-                <NavigationMenuTrigger className="cursor-pointer hover:bg-transparent hover:text-red-color">
+                <NavigationMenuTrigger className={`cursor-pointer ${navTextClass}`}>
                   {link?.name}
                 </NavigationMenuTrigger>
                 <NavigationMenuContent className="overflow-hidden min-w-[100px]">
@@ -271,7 +275,7 @@ const NavigationLinks = ({
                                 : `/${currentLocale}/category/${nested?.id}`
                             }
                             prefetch={true}
-                            className="cursor-pointer hover:bg-transparent  px-4 py-2 text-lg font-[600] hover:text-red-500 transition-all duration-300"
+                            className={navLinkClass}
                           >
                             {nested.name}
                           </Link>
@@ -284,12 +288,13 @@ const NavigationLinks = ({
             ) : (
               <NavigationMenuItem
                 key={link?.id ?? link?.slug ?? `cat-${linkIndex}`}
+                className={navTextClass}
               >
                 <NavigationMenuLink asChild>
                   <Link
                     href={`/${currentLocale}/category/${link?.id}`}
                     prefetch={true}
-                    className="cursor-pointer hover:bg-transparent  px-4 py-2 text-lg font-[600] hover:text-red-500 transition-all duration-300"
+                    className={navLinkClass}
                   >
                     {link?.name}
                   </Link>
@@ -299,7 +304,7 @@ const NavigationLinks = ({
           })
         ) : (
           <NavigationMenuItem>
-            <div className="px-4 py-2 text-sm text-gray-500">
+            <div className="px-4 py-2 text-sm lg:text-base text-gray-500">
               {t("no-categories-found")}
             </div>
           </NavigationMenuItem>
@@ -350,6 +355,8 @@ const MobileMenu = ({
   currentLocale: string;
 }) => {
   const t = useTranslations("navigation");
+  const mobileNavTextClass =
+    "text-sm font-semibold hover:text-red-500 transition-all duration-300";
   return (
     <DrawerComponent
       trigger={
@@ -366,7 +373,7 @@ const MobileMenu = ({
       containerClassName="lg:hidden"
     >
       <div className="flex flex-col h-full">
-        <h2 className="text-xl font-semibold mb-6 text-center flex-shrink-0">
+        <h2 className="text-sm font-semibold mb-6 text-center flex-shrink-0">
           {t("menu")}
         </h2>
 
@@ -376,7 +383,7 @@ const MobileMenu = ({
             <AccordionItem key={category.id} value={`item-${index}`}>
               {category.children && category.children.length > 0 ? (
                 <>
-                  <AccordionTrigger className="text-left py-3 hover:bg-gray-50 rounded-md px-3">
+                  <AccordionTrigger className={`text-left py-3 hover:bg-gray-50 rounded-md px-3 ${mobileNavTextClass}`}>
                     {category.name}
                   </AccordionTrigger>
                   <AccordionContent>
@@ -386,7 +393,7 @@ const MobileMenu = ({
                           <Link
                             prefetch={true}
                             href={`/${currentLocale}/category/${nested.id}`}
-                            className="block rounded-md px-1.5 py-1 text-lg font-[550] hover:bg-accent hover:text-accent-foreground"
+                            className={`block rounded-md px-1.5 py-1 ${mobileNavTextClass} hover:bg-accent hover:text-accent-foreground`}
                           >
                             {nested.name}
                           </Link>
@@ -399,7 +406,7 @@ const MobileMenu = ({
                 <Link
                   prefetch={true}
                   href={`/${currentLocale}/category/${category.id}`}
-                  className="flex items-center py-3 px-3 hover:bg-gray-50 rounded-md text-left w-full text-lg font-[550]"
+                  className={`flex items-center py-3 px-3 hover:bg-gray-50 rounded-md text-left w-full ${mobileNavTextClass}`}
                 >
                   {category.name}
                 </Link>
