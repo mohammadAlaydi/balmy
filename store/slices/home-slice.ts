@@ -7,6 +7,9 @@ export const getHomeData = createAsyncThunk(
       const response = await fetch(`/api/home?locale=${locale}`, {
         method: "GET",
         credentials: "include", // Include httpOnly cookies
+        headers: {
+          "Accept": "application/json",
+        },
       });
 
       const data = await response.json();
@@ -40,7 +43,7 @@ const homeSlice = createSlice({
       })
       .addCase(getHomeData.fulfilled, (state, action) => {
         state.loading = false;
-        state.data = action.payload; 
+        state.data = action.payload;
       })
       .addCase(getHomeData.rejected, (state, action) => {
         state.loading = false;

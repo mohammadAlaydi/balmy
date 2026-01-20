@@ -1,8 +1,7 @@
-import FavouritePageClient from "../../../features/favourites/favourite-page-client";
 import { getTranslations } from "next-intl/server";
+import FavouritePageWrapper from "../../../features/favourites/favourite-page-wrapper";
 
 export async function generateMetadata() {
-  
   const t = await getTranslations("favourites");
 
   return {
@@ -11,5 +10,5 @@ export async function generateMetadata() {
 }
 
 export default function Page() {
-  return <FavouritePageClient />;
+  return <FavouritePageWrapper />;
 }

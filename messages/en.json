@@ -54,7 +54,7 @@
     "choose-color": "Choose product color",
     "no-product-details": "No product details available",
     "go-to-favourites": "Go to Favourites",
-    "go-to-cart": "Go to Cart",
+    "go-to-cart": "Proceed to Payment",
     "cart": "Cart"
   },
   "categories": {
@@ -85,6 +85,7 @@
     "coupon-applied-success": "Coupon applied successfully! 20% discount added.",
     "invalid-coupon-code": "Invalid coupon code",
     "cart-empty": "Your cart is empty",
+    "clear-all-products": "Clear All Products",
     "subtotal": "Subtotal",
     "item": "item",
     "items": "items",
@@ -120,7 +121,7 @@
     "paypal": "PayPal",
     "quick-look": "Quick Look",
     "products-added-to-cart": "The following products have been added to your cart",
-    "go-to-cart": "Go to Cart",
+    "go-to-cart": "Proceed to Payment",
     "no-products-in-cart": "No products in cart",
     "no-data-found": "No data found",
     "placeholder-first-name": "John",
@@ -406,8 +407,9 @@
     "featured-categories": "Featured Categories",
     "categories": "Product Categories",
     "featured-products": "Featured Products",
+    "our-products": "Our Products",
     "advertising": "Advertising",
-    "new-arrivals": "New Arrivals",
+    "new-arrivals": "Just Arrived",
     "best-sellers": "Best Sellers",
     "return-and-exchange": "Return & Exchange",
     "return-and-exchange-desc": "You can return or exchange within 14 days without worry",
@@ -568,7 +570,8 @@
     "clear-filters": "Clear Filters",
     "search-suggestions": ["Slippers", "Shoes", "Scarf"],
     "search-products": "Search Products",
-    "search-description": "Search for products in our store"
+    "search-description": "Search for products in our store",
+    "no-results-found": "No results found"
   },
   "accessibility": {
     "close": "إغلاق",
@@ -981,5 +984,10 @@
     "log-out": "Log out",
     "logged-out-successfully": "Logged out successfully",
     "logout-failed": "Logout failed"
+  },
+  "not-found": {
+    "looks-like-you-re-lost": "Looks Like You're Lost!",
+    "we-cant-seem-to-find-the-page-you-re-looking-for": "We can't seem to find the page you're looking for.",
+    "return-home": "Back to Home"
   }
 }

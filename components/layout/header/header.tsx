@@ -53,14 +53,15 @@ import { LANGUAGES } from "@/static-data/static-data";
 // Components
 const TopBar = ({ data }: { data: any }) => {
   const t = useTranslations("contact");
+  // commit
 
   return (
     <div className="flex justify-center md:justify-between xl:justify-around items-center gap-5 py-0.5 px-3 lg:px-10 bg-black w-full">
-      <div className="flex items-center flex-1">
-        <Badge className="bg-transparent text-sm lg:text-base hidden md:inline-block">
+      <div className="hidden md:flex items-center flex-1 justify-center">
+        <Badge className="bg-transparent text-sm lg:text-base">
           {data?.inventory_source_data?.contact_number}
         </Badge>
-        <Badge className="bg-transparent text-sm lg:text-base hidden md:inline-block">
+        <Badge className="bg-transparent text-sm lg:text-base">
           {t("call-to-action")}
         </Badge>
       </div>
@@ -271,7 +272,7 @@ const NavigationLinks = ({
                             }
                             prefetch={true}
                             className="cursor-pointer hover:bg-transparent  px-4 py-2 text-lg font-[600] hover:text-red-500 transition-all duration-300"
-                            >
+                          >
                             {nested.name}
                           </Link>
                         </NavigationMenuLink>
@@ -309,7 +310,21 @@ const NavigationLinks = ({
 };
 
 const Logo = ({ data }: { data: any }) => {
-  const logo = data?.seo_settings?.channel?.logo;
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+  let logo = data?.seo_settings?.channel?.logo as string | undefined;
+
+  if (
+    logo &&
+    !logo.startsWith("http://") &&
+    !logo.startsWith("https://") &&
+    apiUrl
+  ) {
+    try {
+      logo = new URL(logo, apiUrl).toString();
+    } catch {
+      // keep original value if URL construction fails
+    }
+  }
   if (!logo) return null; // Nothing to render if logo is missing
 
   return (

@@ -1,7 +1,6 @@
-"use client";
+"use client"
 
 import { FaHeart, FaRegHeart } from "react-icons/fa";
-import { Button } from "@/components/ui/button";
 import { useFavourites } from "@/hooks/use-favourites";
 import { cn } from "@/lib/utils";
 import toast from "react-hot-toast";
@@ -14,7 +13,6 @@ import { useTranslations } from "next-intl";
 interface FavouriteButtonProps {
   product: any;
   size?: "sm" | "default" | "lg";
-  variant?: "default" | "outline" | "ghost";
   className?: string;
   showText?: boolean;
   FaRegHeartColor?: string;
@@ -36,15 +34,13 @@ export function FavouriteButton({
   const isFav = isFavourite(targetId);
   const { isAuthenticated } = useSelector((state: RootState) => state.auth);
   const [authModalOpen, setAuthModalOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const tFav = useTranslations("favourites");
   const tPD = useTranslations("product-details");
   const tProducts = useTranslations("products");
   const tButtons = useTranslations("buttons");
 
   const handleToggle = async (e: React.MouseEvent) => {
-    console.log("✅ normalizedProduct", normalizedProduct);
-    console.log("✅ targetId", targetId);
-
     e.preventDefault();
     e.stopPropagation();
 
@@ -54,6 +50,7 @@ export function FavouriteButton({
     }
 
     try {
+      setIsLoading(true);
       if (isFav) {
         await removeFromFavourites(targetId);
         toast.success(tFav("productRemoved"));
@@ -61,14 +58,10 @@ export function FavouriteButton({
         await addToFavourites(normalizedProduct as any);
         toast.success(tProducts("added-to-favorites"));
       }
-    } catch (error) {
-      // Handle authentication errors gracefully
-      if (error && typeof error === "string" && error.includes("login")) {
-        setAuthModalOpen(true);
-        // Don't redirect automatically, let user decide
-      } else {
-        toast.error(tButtons("error"));
-      }
+    } catch {
+      toast.error(tButtons("error"));
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -81,34 +74,26 @@ export function FavouriteButton({
   return (
     <>
       <div
-        size={size}
         onClick={handleToggle}
         className={cn(
-          "transition-all duration-200 bg-trasnparent",
+          "transition-all duration-200 flex items-center rtl:justify-end",
           isFav && "text-red-500 hover:text-red-600",
           !isFav && "text-black hover:text-red-500",
           size === "sm" && "p-1",
           !isAuthenticated && "opacity-80 hover:opacity-100",
           className
         )}
-        aria-label={
-          isFav ? tPD("remove-from-favorites") : tPD("add-to-favorites")
-        }
-        title={
-          !isAuthenticated
-            ? tFav("login-to-manage-favourites")
-            : isFav
-            ? tPD("remove-from-favorites")
-            : tPD("add-to-favorites")
-        }
       >
-        {isFav ? (
+        {isLoading ? (
           <FaHeart
             className={cn(
               iconSizes[size],
-              "transition-all duration-200 text-red-500"
+              "text-red-500 animate-heartbeat"
             )}
-            size={15}
+          />
+        ) : isFav ? (
+          <FaHeart
+            className={cn(iconSizes[size], "text-red-500 transition-all duration-200")}
           />
         ) : (
           <FaRegHeart
@@ -135,10 +120,11 @@ export function FavouriteButton({
         onOpenChange={setAuthModalOpen}
         onAuthenticated={async () => {
           try {
+            setIsLoading(true);
             await addToFavourites(normalizedProduct as any);
             toast.success(tProducts("added-to-favorites"));
-          } catch {
-            // no-op, errors are already handled with toasts above
+          } finally {
+            setIsLoading(false);
           }
         }}
       />

@@ -92,7 +92,7 @@ export default function QuickProductDetails({
     const imageUrl =
       selectedVariant?.base_image?.original_image_url || IMAGE_SIZES.fallback;
     setMainImage(imageUrl);
-    setChoosenVarianrID(selectedVariant?.id);
+    setChoosenVarianrID(selectedVariant?.id || null);
   };
 
   // 🔹 Main product image display
@@ -189,7 +189,7 @@ export default function QuickProductDetails({
         </Button>
         <Link
           prefetch={true}
-          href="/favourits"
+          href="/favourites"
           className="text-nowrap text-xs md:text-sm bg-black text-white px-4 py-2 rounded-md hover:bg-black/85 transition-all duration-300 text-center"
         >
           {t("go-to-favourites")}

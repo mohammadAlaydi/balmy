@@ -226,7 +226,6 @@ export default function ShippingForm({
                       <input
                         type="radio"
                         name="paymentMethod"
-                        defaultChecked={true}
                         value="cashondelivery"
                         checked={paymentMethod === "cashondelivery"}
                         onChange={() => setPaymentMethod("cashondelivery")}

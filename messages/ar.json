@@ -85,6 +85,7 @@
     "coupon-applied-success": "تم تطبيق القسيمة بنجاح! خصم 20% مضاف.",
     "invalid-coupon-code": "رمز القسيمة غير صحيح",
     "cart-empty": "سلة التسوق فارغة",
+    "clear-all-products": "مسح جميع المنتجات",
     "subtotal": "المجموع الفرعي",
     "item": "منتج",
     "items": "منتجات",
@@ -409,6 +410,7 @@
     "featured-categories": "الفئات المميزة",
     "categories": "فئات المنتجات",
     "featured-products": "المنتجات المميزة",
+    "our-products": "منتجاتنا",
     "advertising": "الإعلانات",
     "new-arrivals": "وصلت للتو",
     "best-sellers": "الأكثر مبيعاً",
@@ -571,7 +573,8 @@
     "clear-filters": "مسح المرشحات",
     "search-suggestions": ["نعال", "حذاء", "شماغ"],
     "search-products": "البحث عن المنتجات",
-    "search-description": "ابحث عن المنتجات في متجرنا"
+    "search-description": "ابحث عن المنتجات في متجرنا",
+    "no-results-found": "لم يتم العثور على نتائج"
   },
   "accessibility": {
     "close": "إغلاق",
@@ -984,5 +987,10 @@
     "log-out": "تسجيل الخروج",
     "logged-out-successfully": "تم تسجيل الخروج بنجاح",
     "logout-failed": "فشل تسجيل الخروج"
+  },
+  "not-found": {
+    "looks-like-you-re-lost": "يبدو أنك مخسوم!",
+    "we-cant-seem-to-find-the-page-you-re-looking-for": "لا يمكننا إيجاد الصفحة التي تبحث عنها.",
+    "return-home": "العودة للرئيسية"
   }
 }

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { FaFacebookF, FaWhatsapp } from "react-icons/fa";
 import { FaXTwitter, FaInstagram } from "react-icons/fa6";
+import { MdOutlineMail } from "react-icons/md";
 
 interface SocialMediaIconsProps {
   iconStyle?: string;
@@ -39,6 +40,14 @@ export default function SocialMediaIcons({
     <div
       className={`flex items-center gap-3 justify-end ${containerStyle || ""}`}
     >
+      <Link
+        href={`mailto:`}
+      >
+        <MdOutlineMail
+          className={`cursor-pointer ${iconStyle || ""}`}
+          title="email"
+        />
+      </Link>
       {socialLinks?.map(
         ({ platform, url }: { platform: string; url: string }) => {
           const IconComponent = getIcon(platform);

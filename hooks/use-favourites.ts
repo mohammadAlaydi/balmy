@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useTranslations } from "next-intl";
 import toast from "react-hot-toast";
@@ -22,6 +22,7 @@ import {
 export const useFavourites = () => {
   const dispatch = useDispatch<AppDispatch>();
   const t = useTranslations("favourites");
+  const hasFetchedRef = useRef(false);
 
   const { items, loading, error } = useSelector(
     (state: RootState) => state.favourites
@@ -97,9 +98,19 @@ export const useFavourites = () => {
   // ------------------------ Effects -------------------------
 
   useEffect(() => {
-    fetchFavouritesHandler();
-    syncWithBackendHandler();
-  }, [fetchFavouritesHandler, syncWithBackendHandler]);
+    // Only fetch if authenticated, not already loading, and haven't fetched yet
+    if (isAuthenticated && !loading && !hasFetchedRef.current) {
+      hasFetchedRef.current = true;
+      fetchFavouritesHandler();
+      syncWithBackendHandler();
+    }
+    
+    // Reset the ref if user logs out
+    if (!isAuthenticated) {
+      hasFetchedRef.current = false;
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isAuthenticated]); // Only depend on isAuthenticated to avoid infinite loops
 
   // ------------------------ Helpers -------------------------
 

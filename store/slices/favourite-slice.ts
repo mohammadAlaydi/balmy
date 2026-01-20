@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { FavouriteState, Product } from "@/types/types";
 import { buildApiUrl, API_CONFIG } from "@/lib/config";
+import { login, register, logout } from "./auth-slice";
 
 // Helper functions for local storage
 const saveFavourites = (favourites: Product[]) => {
@@ -389,6 +390,27 @@ const favouriteSlice = createSlice({
       .addCase(moveToCart.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
+      });
+
+    /* ----------------------- Auth-related favourites logic ---------------------- */
+    // عند الـ login / register: نمسح الـ items محليًا، و hook `useFavourites`
+    // هتستشعر إن المستخدم ات-authenticate وتندّه على `fetchFavourites`
+    // عند الـ logout: نمسح الـ items محليًا فقط (الداتا تفضل محفوظة في السيرفر)
+    builder
+      .addCase(login.fulfilled, (state) => {
+        state.items = [];
+        state.loading = false;
+        state.error = null;
+      })
+      .addCase(register.fulfilled, (state) => {
+        state.items = [];
+        state.loading = false;
+        state.error = null;
+      })
+      .addCase(logout.fulfilled, (state) => {
+        state.items = [];
+        state.loading = false;
+        state.error = null;
       });
   },
 });

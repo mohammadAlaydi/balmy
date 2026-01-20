@@ -91,11 +91,9 @@ export default function CategoryFilter({
 
     // Availability filter
     if (filters.availability.length > 0) {
-      filtered = filtered.filter((product) =>
-        filters.availability.includes(product.availability || "available")
-      );
+      filtered = filtered.filter((product) => product.total_quantity > 0);
     }
-
+    // console.log("Availability filter:", product.total_quantity, "😍💕");
     // Stock filter
     if (filters.inStock) {
       filtered = filtered.filter((product) => product.in_stock);
@@ -236,43 +234,6 @@ export default function CategoryFilter({
                       </span>
                     </div>
                   </div>
-                </div>
-              </div>
-
-              <Separator className="bg-gradient-to-r from-transparent via-gray-300 to-transparent" />
-
-              {/* Availability */}
-              <div className="space-y-4">
-                <Label className="text-base font-semibold text-gray-700 flex items-center gap-2">
-                  <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                  {t("availability")}
-                </Label>
-                <div className="grid grid-cols-1 gap-3">
-                  {availabilityOptions.map((availability) => (
-                    <div
-                      key={availability}
-                      className="flex items-center gap-2 space-x-3 p-2 sm:p-3 bg-white rounded-lg border border-gray-200 hover:border-green-300 hover:bg-green-50 transition-all duration-200"
-                    >
-                      <input
-                        type="checkbox"
-                        id={availability}
-                        checked={filters.availability.includes(availability)}
-                        onChange={(e) =>
-                          handleAvailabilityChange(
-                            availability,
-                            e.target.checked
-                          )
-                        }
-                        className="w-4 h-4 text-green-600 bg-gray-100 border-green-300 rounded focus:ring-green-500 focus:ring-2"
-                      />
-                      <Label
-                        htmlFor={availability}
-                        className="text-sm font-medium text-gray-700 capitalize cursor-pointer flex-1"
-                      >
-                        {t(availability as any) || availability}
-                      </Label>
-                    </div>
-                  ))}
                 </div>
               </div>
 

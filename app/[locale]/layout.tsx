@@ -10,6 +10,7 @@ import Providers from "@/components/providers";
 import AuthInitializer from "@/components/auth/auth-initializer";
 import BreadcrumbWrapper from "@/components/layout/breadcrumb-wrapper";
 import ToTop from "@/components/layout/to-top/to-top";
+import WhatsAppIcon from "@/components/layout/whats-app/whats-app-icon";
 
 const cairo = Cairo({
   variable: "--font-cairo",
@@ -21,14 +22,31 @@ const cairo = Cairo({
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
+function toAbsoluteUrl(maybeUrl: string | undefined | null) {
+  if (!maybeUrl) return undefined;
+  if (maybeUrl.startsWith("http://") || maybeUrl.startsWith("https://")) {
+    return maybeUrl;
+  }
+  if (!API_URL) return maybeUrl; // fallback (keeps behavior predictable)
+  try {
+    return new URL(maybeUrl, API_URL).toString();
+  } catch {
+    return maybeUrl;
+  }
+}
+
 export async function generateMetadata({
   params,
 }: {
-  params: { locale: string };
+  params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
-  const locale = params?.locale || "ar";
+  const { locale = "ar" } = await params;
 
   try {
+    if (!API_URL) {
+      throw new Error("NEXT_PUBLIC_API_URL is not set");
+    }
+
     const response = await fetch(`${API_URL}/v1/home?locale=${locale}`, {
       headers: { "Content-Type": "application/json" },
       next: { revalidate: 3600 },
@@ -40,27 +58,20 @@ export async function generateMetadata({
 
     const data = await response.json();
     const seo = data?.seo_settings?.channel?.meta_data;
-    let logo = data?.seo_settings?.channel?.logo;
-
-    if (logo && !logo.startsWith("http")) {
-      logo = `${API_URL}${logo.startsWith("/") ? "" : "/"}${logo}`;
-    }
-
-    console.log("🖼️ favicon:", logo);
+    const logo = toAbsoluteUrl(data?.seo_settings?.channel?.logo);
 
     return {
       title: seo?.meta_title || "My Store",
       description: seo?.meta_description || "Welcome to our online store.",
-      keywords:
-        seo?.meta_keywords || [
-          "e-commerce",
-          "shopping",
-          "products",
-          "quality",
-        ],
+      keywords: seo?.meta_keywords || [
+        "e-commerce",
+        "shopping",
+        "products",
+        "quality",
+      ],
       icons: {
-        icon: logo ,
-        apple: logo ,
+        icon: [{ url: logo }],
+        apple: [{ url: logo }],
       },
       twitter: {
         card: "summary_large_image",
@@ -73,7 +84,7 @@ export async function generateMetadata({
         type: "website",
         images: [
           {
-            url: logo || "/og-image.jpg",
+            url: data?.seo_settings?.channel?.logo || "/og-image.jpg",
             width: 1200,
             height: 630,
             alt: seo?.meta_title || "My Store",
@@ -105,9 +116,9 @@ export default async function RootLayout({
   params,
 }: Readonly<{
   children: React.ReactNode;
-  params: { locale: string };
+  params: Promise<{ locale: string }>;
 }>) {
-  const locale = params.locale || "ar";
+  const { locale = "ar" } = await params;
   const messages = await getMessages({ locale });
 
   return (
@@ -121,6 +132,7 @@ export default async function RootLayout({
             <Providers>{children}</Providers>
             <Footer />
             <ToTop />
+            <WhatsAppIcon />
           </NextIntlClientProvider>
         </ReduxProvider>
       </body>

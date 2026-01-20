@@ -13,7 +13,7 @@ import {
   resetStatus,
 } from "@/store/slices/cart-slice";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { useTranslations } from "next-intl";
 import AuthModal from "@/components/auth/auth-modal";
@@ -42,6 +42,8 @@ const defaultFormValues: CheckoutFormValues = {
 };
 
 export default function Checkout() {
+
+  const { locale } = useParams();
   const router = useRouter();
   const t = useTranslations("cart");
   const tButtons = useTranslations("buttons");
@@ -117,7 +119,18 @@ export default function Checkout() {
       dispatch(resetStatus());
     } else if (redirectUrl) {
       // External redirect (like Moyasar)
-      window.location.href = redirectUrl;
+      try {
+        const url = typeof redirectUrl === 'string' ? new URL(redirectUrl) : redirectUrl;
+        if (url && url.searchParams) {
+          url.searchParams.set("lang", locale);
+          window.location.href = url.toString();
+        } else {
+          window.location.href = typeof redirectUrl === 'string' ? redirectUrl : redirectUrl.toString();
+        }
+      } catch (error) {
+        console.error("Error processing redirect URL:", error);
+        window.location.href = typeof redirectUrl === 'string' ? redirectUrl : redirectUrl.toString();
+      }
       // Delay reset so it doesn't clear before navigation
       setTimeout(() => dispatch(resetStatus()), 2000);
     }
