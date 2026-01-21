@@ -24,11 +24,11 @@ export default function LoginPageClient() {
   }, [isAuthenticated, router]);
 
   const handleSwitchToRegister = () => {
-    router.push("/auth/register");
+    router.push("/register");
   };
 
   const handleForgotPassword = () => {
-    router.push("/auth/forgot-password");
+    router.push("/forgot-password");
   };
 
   if (isLoading || isAuthenticated) {

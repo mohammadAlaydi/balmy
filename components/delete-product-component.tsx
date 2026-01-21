@@ -51,7 +51,7 @@ export default function DeleteProductComponent({
           <DialogClose asChild>
             <Button variant="outline">{t("cancel")}</Button>
           </DialogClose>
-          <Button type="submit" onClick={action}>
+          <Button type="submit" onClick={action} className="text-white">
             {isLoading ? <BeatLoader size={3} /> : t("delete")}
           </Button>
         </DialogFooter>

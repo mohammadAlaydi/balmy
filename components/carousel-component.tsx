@@ -22,6 +22,11 @@ export default function CarouselComponent({
   swiperClassName,
   effect,
   autoplayDelay,
+  centeredSlides,
+  centerInsufficientSlides,
+  centeredSlidesBounds,
+  slidesOffsetBefore,
+  slidesOffsetAfter,
 }: {
   spaceBetween: number;
   slidesPerView: number;
@@ -35,6 +40,11 @@ export default function CarouselComponent({
   swiperClassName?: string;
   effect?: string;
   autoplayDelay?: number;
+  centeredSlides?: boolean;
+  centerInsufficientSlides?: boolean;
+  centeredSlidesBounds?: boolean;
+  slidesOffsetBefore?: number;
+  slidesOffsetAfter?: number;
 }) {
   const modules = [];
   if (pagination) modules.push(Pagination);
@@ -56,6 +66,11 @@ export default function CarouselComponent({
         autoHeight={!!autoHeight}
         effect={effect}
         fadeEffect={effect === 'fade' ? { crossFade: true } : undefined}
+        centeredSlides={!!centeredSlides}
+        centerInsufficientSlides={!!centerInsufficientSlides}
+        centeredSlidesBounds={!!centeredSlidesBounds}
+        slidesOffsetBefore={slidesOffsetBefore}
+        slidesOffsetAfter={slidesOffsetAfter}
         style={{ width: '100%', height: autoHeight ? 'auto' : '100%' }}
       > 
         {children}

@@ -1,4 +1,4 @@
-import ForgotPasswordPageClient from "../../../../features/auth/forgot-password/forgot-password-page-client";
+import ForgotPasswordPageClient from "@/features/auth/forgot-password/forgot-password-page-client";
 import { getTranslations } from "next-intl/server";
 
 export async function generateMetadata() {

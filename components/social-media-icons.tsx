@@ -40,14 +40,6 @@ export default function SocialMediaIcons({
     <div
       className={`flex items-center gap-3 justify-end ${containerStyle || ""}`}
     >
-      <Link
-        href={`mailto:`}
-      >
-        <MdOutlineMail
-          className={`cursor-pointer ${iconStyle || ""}`}
-          title="email"
-        />
-      </Link>
       {socialLinks?.map(
         ({ platform, url }: { platform: string; url: string }) => {
           const IconComponent = getIcon(platform);

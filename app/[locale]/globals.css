@@ -266,7 +266,7 @@ body {
 
 .categories-carousel .swiper-wrapper {
   padding-block: 10px !important;
-  padding-inline: 50px !important;
+  padding-inline: 0 !important;
 }
 
 /* ryhal icon */

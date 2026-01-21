@@ -87,7 +87,7 @@ export default function UserMenu({ isMobile = false }: { isMobile?: boolean }) {
             className={`cursor-pointer flex gap-2 items-center`}
           >
             <Link
-              href={`/${locale}/auth/login`}
+              href={`/login`}
               className={`flex items-center ${isRTL ? "flex-row-reverse" : ""}`}
               prefetch={true}
             >

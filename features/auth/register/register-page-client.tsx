@@ -25,7 +25,7 @@ export default function RegisterPageClient() {
       : "en";
 
   const handleSwitchToLogin = () => {
-    router.push(`/${locale}/auth/login`);
+    router.push(`/login`);
   };
 
   return (
