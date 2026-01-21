@@ -16,6 +16,7 @@ import {
   addressesSchema,
 } from "@/features/user-profile/schema";
 import { apiService } from "@/lib/api-service";
+import { DISABLE_BACKEND_FETCH, mockDelay } from "@/lib/dev-config";
 
 // 🧾 Types
 type PersonalInfoFormData = z.infer<typeof personalInfoSchema>;
@@ -99,6 +100,14 @@ export function useUserProfile() {
   // =============================
   const handlePersonalSubmit = async (data: PersonalInfoFormData) => {
     try {
+      // DEV MODE: Return mock success when backend is disabled
+      if (DISABLE_BACKEND_FETCH) {
+        await mockDelay();
+        console.log("🚧 [DEV] Profile update bypassed");
+        toast.success(t("changes-saved"));
+        return;
+      }
+
       const { addresses, ...payload } = data as any;
       const response = await apiService.updateCustomerProfile(payload);
 
@@ -128,6 +137,15 @@ export function useUserProfile() {
     setSavingAddressIndex(index);
 
     try {
+      // DEV MODE: Return mock success when backend is disabled
+      if (DISABLE_BACKEND_FETCH) {
+        await mockDelay();
+        console.log("🚧 [DEV] Address edit bypassed");
+        toast.success(address.address_id ? t("addressUpdated") : t("addressAdded"));
+        setSavingAddressIndex(null);
+        return;
+      }
+
       const method = address.address_id ? "PUT" : "POST";
       const endpoint = address.address_id
         ? `/api/customer/addresses/${address.address_id}`
@@ -166,6 +184,16 @@ export function useUserProfile() {
     setDeletingAddressIndex(index);
 
     try {
+      // DEV MODE: Return mock success when backend is disabled
+      if (DISABLE_BACKEND_FETCH) {
+        await mockDelay();
+        console.log(`🚧 [DEV] Address delete bypassed - address ${addressId}`);
+        toast.success(t("addressDeleted"));
+        remove(index);
+        setDeletingAddressIndex(null);
+        return;
+      }
+
       const res = await fetch(`/api/customer/addresses/${addressId}`, { method: "DELETE" });
       const data = await res.json();
 

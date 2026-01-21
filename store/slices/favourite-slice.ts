@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { FavouriteState, Product } from "@/types/types";
 import { buildApiUrl, API_CONFIG } from "@/lib/config";
 import { login, register, logout } from "./auth-slice";
+import { DISABLE_BACKEND_FETCH, MOCK_WISHLIST, mockDelay } from "@/lib/dev-config";
 
 // Helper functions for local storage
 const saveFavourites = (favourites: Product[]) => {
@@ -33,6 +34,13 @@ export const addToFavourites = createAsyncThunk(
   "favourites/add",
   async (product: Product, { rejectWithValue, dispatch }) => {
     try {
+      // DEV MODE: Return mock success when backend is disabled
+      if (DISABLE_BACKEND_FETCH) {
+        await mockDelay();
+        console.log(`🚧 [DEV] Add to favourites bypassed - product ${product.id}`);
+        return product;
+      }
+
 const productId = product.product_id ?? product.id;
 
 if (!productId) {
@@ -68,6 +76,13 @@ export const removeFromFavourites = createAsyncThunk(
   "favourites/remove",
   async (productId: number, { rejectWithValue, dispatch }) => {
     try {
+      // DEV MODE: Return mock success when backend is disabled
+      if (DISABLE_BACKEND_FETCH) {
+        await mockDelay();
+        console.log(`🚧 [DEV] Remove from favourites bypassed - product ${productId}`);
+        return productId;
+      }
+
       const response = await makeAuthenticatedRequest(
         `/api/wishlist/${productId}`,
         {
@@ -100,6 +115,13 @@ export const fetchFavourites = createAsyncThunk(
   "favourites/fetch",
   async (_, { rejectWithValue, dispatch }) => {
     try {
+      // DEV MODE: Return mock data when backend is disabled
+      if (DISABLE_BACKEND_FETCH) {
+        await mockDelay();
+        console.log("🚧 [DEV] Fetch favourites bypassed - using mock data");
+        return MOCK_WISHLIST.data;
+      }
+
       const response = await makeAuthenticatedRequest(`/api/wishlist`, {
         method: "GET",
         headers: {
@@ -160,6 +182,13 @@ export const clearFavourites = createAsyncThunk(
   "favourites/clear",
   async (_, { rejectWithValue, dispatch }) => {
     try {
+      // DEV MODE: Return mock success when backend is disabled
+      if (DISABLE_BACKEND_FETCH) {
+        await mockDelay();
+        console.log("🚧 [DEV] Clear favourites bypassed");
+        return true;
+      }
+
       const response = await makeAuthenticatedRequest(`/api/wishlist/all`, {
         method: "DELETE",
       });

@@ -89,6 +89,13 @@ const nextConfig: NextConfig = {
         port: "",
         pathname: "/**",
       },
+      // Placeholder image service for development mock data
+      {
+        protocol: "https",
+        hostname: "placehold.co",
+        port: "",
+        pathname: "/**",
+      },
     ],
     // qualities is NOT a valid config option for next/image
     // If you want to control quality, pass `quality` to <Image /> directly

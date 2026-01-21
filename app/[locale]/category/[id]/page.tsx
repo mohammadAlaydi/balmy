@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import CategoryPageClient from "../../../../features/category/category-page-client";
+import { DISABLE_BACKEND_FETCH, MOCK_CATEGORIES } from "@/lib/dev-config";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -8,6 +9,14 @@ export async function generateMetadata({
 }: {
   params: { id: string; locale?: string };
 }): Promise<Metadata> {
+  // DEV MODE: Return mock metadata when backend is disabled
+  if (DISABLE_BACKEND_FETCH) {
+    const mockCategory = MOCK_CATEGORIES.find(c => c.id.toString() === params.id) || MOCK_CATEGORIES[0];
+    return {
+      title: mockCategory?.name || "Category (Dev Mode)",
+    };
+  }
+
   try {
     const locale = params.locale || "en";
 
@@ -31,6 +40,9 @@ export async function generateMetadata({
     };
   } catch (error) {
     console.error("Failed to fetch category metadata:", error);
+    return {
+      title: "Category",
+    };
   }
 }
 
@@ -41,3 +53,4 @@ export default function Page({
 }) {
   return <CategoryPageClient categoryId={params.id} />;
 }
+

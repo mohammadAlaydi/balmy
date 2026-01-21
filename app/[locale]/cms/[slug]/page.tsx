@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import ClientPage from "../../../../features/cms/client-page";
+import { DISABLE_BACKEND_FETCH } from "@/lib/dev-config";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -8,6 +9,13 @@ export async function generateMetadata({
 }: {
   params: { slug: string };
 }): Promise<Metadata> {
+  // DEV MODE: Return default metadata when backend is disabled
+  if (DISABLE_BACKEND_FETCH) {
+    return {
+      title: "CMS Page (Dev Mode)",
+    };
+  }
+
   try {
     const slug = params.slug;
     const locale = slug.split("/")[1] || "en";
@@ -40,3 +48,4 @@ export async function generateMetadata({
 export default function Page({ params }: { params: { slug: string } }) {
   return <ClientPage params={params} />;
 }
+

@@ -252,6 +252,8 @@
 // This service is deprecated - use Next.js API routes instead
 // Keeping for backward compatibility but all methods should be migrated
 
+import { DISABLE_BACKEND_FETCH, MOCK_USER, MOCK_PRODUCTS, MOCK_PRODUCT_DETAILS, mockDelay } from "@/lib/dev-config";
+
 class ApiService {
   private baseURL: string;
   private isRefreshing: boolean = false;
@@ -503,6 +505,13 @@ class ApiService {
   }
 
   async updateCustomerProfile(data: any) {
+    // DEV MODE: Return mock success when backend is disabled
+    if (DISABLE_BACKEND_FETCH) {
+      await mockDelay();
+      console.log("🚧 [DEV] updateCustomerProfile bypassed");
+      return { success: true, message: "Profile updated (mock)" };
+    }
+
     return fetch("/api/user-profile", {
       method: "POST",
       headers: {
@@ -513,6 +522,13 @@ class ApiService {
   }
 
   async deleteCustomerAddress(id: string) {
+    // DEV MODE: Return mock success when backend is disabled
+    if (DISABLE_BACKEND_FETCH) {
+      await mockDelay();
+      console.log(`🚧 [DEV] deleteCustomerAddress ${id} bypassed`);
+      return { success: true, message: "Address deleted (mock)" };
+    }
+
     const res = await fetch(`/api/customer/addresses/${id}`, {
       method: "DELETE",
       headers: {
@@ -523,16 +539,37 @@ class ApiService {
     return res.json();
   }
   async getProducts() {
+    // DEV MODE: Return mock data when backend is disabled
+    if (DISABLE_BACKEND_FETCH) {
+      await mockDelay();
+      console.log("🚧 [DEV] getProducts bypassed - using mock data");
+      return MOCK_PRODUCTS.data;
+    }
+
     console.log("Fetching products...");
     return this.request("/v1/products");
   }
 
   async getProductById(id: number) {
+    // DEV MODE: Return mock data when backend is disabled
+    if (DISABLE_BACKEND_FETCH) {
+      await mockDelay();
+      console.log(`🚧 [DEV] getProductById ${id} bypassed - using mock data`);
+      return MOCK_PRODUCTS.data.find(p => p.id === id) || MOCK_PRODUCTS.data[0];
+    }
+
     console.log(`Fetching product with ID: ${id}`);
     return this.request(`/v1/products/${id}`);
   }
 
   async getProductDetails(id: number) {
+    // DEV MODE: Return mock data when backend is disabled
+    if (DISABLE_BACKEND_FETCH) {
+      await mockDelay();
+      console.log(`🚧 [DEV] getProductDetails ${id} bypassed - using mock data`);
+      return MOCK_PRODUCT_DETAILS(id);
+    }
+
     console.log(`Fetching product details with ID: ${id}`);
     return this.request(`/v1/product-details/${id}`);
   }

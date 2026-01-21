@@ -3,14 +3,14 @@ import { Cairo } from "next/font/google";
 import "./globals.css";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
-import Header from "@/components/layout/header/header";
+import { HeaderBalmy } from "@/components/balmy";
 import Footer from "@/components/layout/footer/footer";
 import ReduxProvider from "@/store/redux-provider";
 import Providers from "@/components/providers";
 import AuthInitializer from "@/components/auth/auth-initializer";
-import BreadcrumbWrapper from "@/components/layout/breadcrumb-wrapper";
 import ToTop from "@/components/layout/to-top/to-top";
 import WhatsAppIcon from "@/components/layout/whats-app/whats-app-icon";
+import { DISABLE_BACKEND_FETCH } from "@/lib/dev-config";
 
 const cairo = Cairo({
   variable: "--font-cairo",
@@ -35,12 +35,33 @@ function toAbsoluteUrl(maybeUrl: string | undefined | null) {
   }
 }
 
+// Default metadata for dev mode
+const DEFAULT_METADATA: Metadata = {
+  title: "Balmy Store (Dev Mode)",
+  description: "Welcome to our online store - Development Mode",
+  icons: {
+    icon: "/favicon.ico",
+    apple: "/apple-touch-icon.png",
+  },
+  openGraph: {
+    title: "Balmy Store (Dev Mode)",
+    description: "Welcome to our online store - Development Mode",
+    type: "website",
+  },
+};
+
 export async function generateMetadata({
   params,
 }: {
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale = "ar" } = await params;
+
+  // DEV MODE: Return default metadata when backend is disabled
+  if (DISABLE_BACKEND_FETCH) {
+    console.log("🚧 [DEV] generateMetadata bypassed - using default metadata");
+    return DEFAULT_METADATA;
+  }
 
   try {
     if (!API_URL) {
@@ -69,9 +90,12 @@ export async function generateMetadata({
         "products",
         "quality",
       ],
-      icons: {
+      icons: logo ? {
         icon: [{ url: logo }],
         apple: [{ url: logo }],
+      } : {
+        icon: "/favicon.ico",
+        apple: "/apple-touch-icon.png",
       },
       twitter: {
         card: "summary_large_image",
@@ -126,8 +150,7 @@ export default async function RootLayout({
       <body className={`${cairo.variable} font-cairo`}>
         <ReduxProvider>
           <NextIntlClientProvider messages={messages}>
-            <Header />
-            <BreadcrumbWrapper />
+            <HeaderBalmy />
             <AuthInitializer />
             <Providers>{children}</Providers>
             <Footer />

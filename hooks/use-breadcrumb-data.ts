@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { apiService } from '@/lib/api-service';
+import { DISABLE_BACKEND_FETCH } from "@/lib/dev-config";
 
 interface BreadcrumbData {
   [key: string]: string;
@@ -18,6 +19,20 @@ export const useBreadcrumbData = (segments: string[]) => {
       // Prevent unnecessary API calls if no segments or already loading
       if (memoizedSegments.length === 0) {
         setBreadcrumbData({});
+        return;
+      }
+
+      // DEV MODE: Skip API calls when backend is disabled
+      if (DISABLE_BACKEND_FETCH) {
+        console.log("🚧 [DEV] Breadcrumb data fetch bypassed");
+        const mockData: BreadcrumbData = {};
+        memoizedSegments.forEach((segment, i) => {
+          const decodedSegment = decodeURIComponent(segment);
+          if (/^\d+$/.test(decodedSegment)) {
+            mockData[segment] = `Item ${decodedSegment}`;
+          }
+        });
+        setBreadcrumbData(mockData);
         return;
       }
 

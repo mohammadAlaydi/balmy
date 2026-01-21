@@ -1,5 +1,7 @@
 "use client";
 
+import { HeroBalmy, ProductsSectionBalmy } from "@/components/balmy";
+import ProductsSection from "@/components/ProductsSection";
 import BannerCarousel from "@/features/home/banner-carousel";
 import ProductsCarousel from "@/features/home/products-carousel";
 import Ads from "@/features/home/ads";
@@ -13,45 +15,55 @@ import { useLocale } from "next-intl";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 
 export default function HomePageClient() {
-
   const { t, loading, data } = useHome();
+  const locale = useLocale();
 
   if (loading) {
     return <Loading fullScreen variant="spinner" size="xl" />;
   }
-  const locale = useLocale();
+
   return (
     <>
-      <BannerCarousel sliders={data?.sliders} />
+      {/* Hero Section with new Balmy styling */}
+      <HeroBalmy sliders={data?.sliders} />
+
+      {/* Services Section */}
       <div className="bg-gray-50">
         <PageWrapper yPadding="py-2.5 md:py-5">
           <Services />
         </PageWrapper>
       </div>
+
       <PageWrapper yPadding="py-2.5">
         <Categories categories={data?.featured_categories} locale={locale} />
-        <div className="my-16">
-          <Tabs defaultValue="featured" className="mx-auto">
-            <SectionTitle
-              title={t("our-products")}
-              titleStyle="text-xl md:text-3xl capitalize text-center"
+
+        <div className="my-16 relative pt-[100px]">
+          {/* Featured Products Section */}
+          {data?.featured_products && data.featured_products.length > 0 && (
+            <ProductsSection
+              title="عــــــــــــــــروضنا"
+              products={data.featured_products}
             />
-            <TabsList className="flex items-center mx-auto rounded-none md:p-1.5 h-fit bg-transparent mb-3 -mt-3">
-              <TabsTrigger value="featured" className="text-xs sm:text-sm md:text-base">
-                {t("featured-products")}
-              </TabsTrigger>
-              <TabsTrigger value="new-arrivals" className="text-xs sm:text-sm md:text-base ">
-                {t("new-arrivals")}
-              </TabsTrigger>
-            </TabsList>
-            <TabsContent value="featured">
-              <ProductsCarousel products={data?.featured_products} />
-            </TabsContent>
-            <TabsContent value="new-arrivals">
-              <ProductsCarousel products={data?.new_products} />
-            </TabsContent>
-          </Tabs>
+          )}
+
+          {/* Best Sellers Section */}
+          {data?.best_sellers && data.best_sellers.length > 0 && (
+            <ProductsSection
+              title="الأكثــــــــر مبيعــــــــا"
+              products={data.best_sellers}
+            />
+          )}
+
+          {/* New Arrivals Section */}
+          {data?.new_products && data.new_products.length > 0 && (
+            <ProductsSection
+              title="وصــــــــــل حديثــــــــــا"
+              products={data.new_products}
+            />
+          )}
         </div>
+
+
         <Ads ads={data?.ads} />
       </PageWrapper>
     </>

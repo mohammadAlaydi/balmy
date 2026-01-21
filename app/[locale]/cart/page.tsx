@@ -1,15 +1,13 @@
-import { getTranslations } from "next-intl/server";
-import CartPageClient from "../../../features/cart/cart-page-client";
+import CartSection from "@/components/CartSection";
+import BreadcrumbNav from "@/components/BreadcrumbNav";
 
-export async function generateMetadata() {
-  
-  const t = await getTranslations("products");
+export default function CartPage() {
+  return (
+    <main dir="rtl" className="w-full">
 
-  return {
-    title: t("cart") || "Cart",
-  };
-}
-
-export default function Page() {
-  return <CartPageClient />;
+      <CartSection
+        breadcrumb={<BreadcrumbNav items={[{ label: "الرئيسية", href: "/" }, { label: "السلة" }]} />}
+      />
+    </main>
+  );
 }

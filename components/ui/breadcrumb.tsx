@@ -26,7 +26,7 @@ const BreadcrumbList = React.forwardRef<
   <ol
     ref={ref}
     className={cn(
-      "flex flex-wrap items-center gap-1.5 break-words text-sm text-muted-foreground sm:gap-2.5",
+      "flex flex-wrap items-center gap-1.5 break-words text-base text-[var(--color-medium-gray)] sm:gap-2",
       className
     )}
     {...props}
@@ -73,7 +73,7 @@ const BreadcrumbPage = React.forwardRef<
     role="link"
     aria-disabled="true"
     aria-current="page"
-    className={cn("font-normal text-foreground", className)}
+    className={cn("font-semibold text-black", className)}
     {...props}
   />
 ));
@@ -87,10 +87,10 @@ const BreadcrumbSeparator = ({
   <li
     role="presentation"
     aria-hidden="true"
-    className={cn("[&>svg]:size-3.5", className)}
+    className={cn("text-[var(--color-light-gray-6)]", className)}
     {...props}
   >
-    {children ?? <ChevronRight />}
+    {children ?? "/"}
   </li>
 );
 BreadcrumbSeparator.displayName = "BreadcrumbSeparator";
@@ -107,27 +107,27 @@ const AutoBreadcrumb = ({ className, showHome = true }: AutoBreadcrumbProps) => 
   const tBreadcrumb = useTranslations("breadcrumb");
   const tCategories = useTranslations("categories");
   const tGeneral = useTranslations();
-  
+
   // Get current locale from pathname
   const pathSegments = pathname.split('/').filter(Boolean);
   const locale = pathSegments[0] || 'en';
   const isRTL = locale === 'ar';
-  
+
   // Remove locale from path segments
   const segments = pathSegments.slice(1);
-  
+
   // Fetch dynamic breadcrumb data for numeric IDs
   const { breadcrumbData, loading } = useBreadcrumbData(segments);
 
   // Access CMS pages from store (populated by home slice)
   const homeState = useSelector((state: any) => state.home);
   const cmsPages = homeState?.data?.cms_pages || [];
-  
+
   // Generate breadcrumb items
   const breadcrumbItems = React.useMemo(() => {
     const items = [] as Array<{ label: string; href?: string; isLast: boolean; isHome: boolean }>;
     let currentPath = `/${locale}`;
-    
+
     // Add home item
     if (showHome) {
       items.push({
@@ -137,7 +137,7 @@ const AutoBreadcrumb = ({ className, showHome = true }: AutoBreadcrumbProps) => 
         isLast: false,
       });
     }
-    
+
     // If path includes 'cms', show Home > CMS page title only
     const cmsIndex = segments.findIndex((seg) => decodeURIComponent(seg) === 'cms');
     if (cmsIndex !== -1) {
@@ -165,20 +165,20 @@ const AutoBreadcrumb = ({ className, showHome = true }: AutoBreadcrumbProps) => 
     filteredSegments.forEach((segment, index) => {
       currentPath += `/${segment}`;
       const isLast = index === filteredSegments.length - 1;
-      
+
       // Decode URL-encoded segments
       const decodedSegment = decodeURIComponent(segment);
       const previousSegment = index > 0 ? decodeURIComponent(filteredSegments[index - 1]) : undefined;
-      
+
       // Check if it's a numeric ID (like category/product IDs) and hide it entirely
       const isNumericId = /^\d+$/.test(decodedSegment);
       if (isNumericId) {
         return; // Hide numeric ID segments from breadcrumb
       }
-      
+
       // Get translated label for segment
       let label = decodedSegment;
-      
+
       // Common translations
       const translations: Record<string, string> = {
         'home': t("home"),
@@ -210,7 +210,7 @@ const AutoBreadcrumb = ({ className, showHome = true }: AutoBreadcrumbProps) => 
         'return-policy': tBreadcrumb("return-policy"),
         'shipping-info': tBreadcrumb("shipping-info"),
       };
-      
+
       if (translations[decodedSegment]) {
         label = translations[decodedSegment];
       } else if (isNumericId) {
@@ -239,14 +239,14 @@ const AutoBreadcrumb = ({ className, showHome = true }: AutoBreadcrumbProps) => 
           }
         }
       }
-      
+
       // Determine if this segment should have a clickable link
       let href = undefined;
       if (!isLast) {
         // Make non-last segments clickable, except for specific cases like 'category'
         href = decodedSegment === 'category' ? undefined : currentPath;
       }
-      
+
       items.push({
         label,
         href,
@@ -254,14 +254,14 @@ const AutoBreadcrumb = ({ className, showHome = true }: AutoBreadcrumbProps) => 
         isHome: false,
       });
     });
-    
+
     return items;
   }, [segments, locale, t, tBreadcrumb, showHome, breadcrumbData]);
-  
+
   if (breadcrumbItems.length <= 1) {
     return null; // Don't show breadcrumb if only home or no items
   }
-  
+
   return (
     <Breadcrumb className={className}>
       <BreadcrumbList>
@@ -272,8 +272,8 @@ const AutoBreadcrumb = ({ className, showHome = true }: AutoBreadcrumbProps) => 
                 <BreadcrumbPage>{item.label}</BreadcrumbPage>
               ) : (
                 <BreadcrumbLink asChild>
-                  <Link 
-                    href={item.href} 
+                  <Link
+                    href={item.href}
                     className="flex items-center gap-1 hover:text-primary transition-colors cursor-pointer"
                     prefetch={false}
                   >

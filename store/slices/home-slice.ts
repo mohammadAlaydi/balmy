@@ -1,9 +1,17 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { DISABLE_BACKEND_FETCH, MOCK_HOME_DATA, mockDelay } from "@/lib/dev-config";
 
 export const getHomeData = createAsyncThunk(
   "home/getHomeData",
   async (locale: string, { rejectWithValue }) => {
     try {
+      // DEV MODE: Return mock data when backend is disabled
+      if (DISABLE_BACKEND_FETCH) {
+        await mockDelay();
+        console.log("🚧 [DEV] Home data fetch bypassed - using mock data");
+        return { ...MOCK_HOME_DATA, locale };
+      }
+
       const response = await fetch(`/api/home?locale=${locale}`, {
         method: "GET",
         credentials: "include", // Include httpOnly cookies

@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { authenticatedFetch } from "@/lib/authenticated-fetch";
 import { login, register, logout } from "./auth-slice";
+import { DISABLE_BACKEND_FETCH, MOCK_CART, mockDelay } from "@/lib/dev-config";
 
 /* -------------------------------------------------------------------------- */
 /*                               Async Thunks                                 */
@@ -11,6 +12,13 @@ export const getCartProducts = createAsyncThunk(
   "cart/getProducts",
   async (_, { rejectWithValue }) => {
     try {
+      // DEV MODE: Return mock data when backend is disabled
+      if (DISABLE_BACKEND_FETCH) {
+        await mockDelay();
+        console.log("🚧 [DEV] Cart fetch bypassed - using mock data");
+        return MOCK_CART;
+      }
+
       const res = await authenticatedFetch("/api/cart");
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || "Failed to fetch cart");
@@ -27,6 +35,13 @@ export const getOrderById = createAsyncThunk(
   "cart/getOrderById",
   async (orderId: string | number, { rejectWithValue }) => {
     try {
+      // DEV MODE: Return mock data when backend is disabled
+      if (DISABLE_BACKEND_FETCH) {
+        await mockDelay();
+        console.log(`🚧 [DEV] Order ${orderId} fetch bypassed - using mock data`);
+        return { data: { id: orderId, items: [], total: 0 } };
+      }
+
       const res = await authenticatedFetch(`/api/cart/order/${orderId}`);
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || "Failed to fetch order");
@@ -45,6 +60,13 @@ export const addToCart = createAsyncThunk(
     { rejectWithValue, dispatch }
   ) => {
     try {
+      // DEV MODE: Return mock success when backend is disabled
+      if (DISABLE_BACKEND_FETCH) {
+        await mockDelay();
+        console.log(`🚧 [DEV] Add to cart bypassed - product ${payload.productId}`);
+        return { success: true, message: "Added to cart (mock)" };
+      }
+
       const res = await authenticatedFetch("/api/cart/add", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -71,6 +93,13 @@ export const removeFromCart = createAsyncThunk(
   "cart/remove",
   async (payload: { productId: number }, { rejectWithValue, dispatch }) => {
     try {
+      // DEV MODE: Return mock success when backend is disabled
+      if (DISABLE_BACKEND_FETCH) {
+        await mockDelay();
+        console.log(`🚧 [DEV] Remove from cart bypassed - product ${payload.productId}`);
+        return { success: true, message: "Removed from cart (mock)" };
+      }
+
       const res = await authenticatedFetch(`/api/cart/remove/${payload.productId}`, {
         method: "DELETE",
       });
@@ -92,6 +121,13 @@ export const removeAllProductsFromCart = createAsyncThunk(
   "cart/removeAll",
   async (_, { rejectWithValue, dispatch }) => {
     try {
+      // DEV MODE: Return mock success when backend is disabled
+      if (DISABLE_BACKEND_FETCH) {
+        await mockDelay();
+        console.log("🚧 [DEV] Clear cart bypassed");
+        return { success: true, message: "Cart cleared (mock)" };
+      }
+
       const res = await authenticatedFetch("/api/cart", { method: "DELETE" });
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || "Failed to clear cart");
@@ -113,6 +149,13 @@ export const updateCartQuantity = createAsyncThunk(
     { rejectWithValue, dispatch }
   ) => {
     try {
+      // DEV MODE: Return mock success when backend is disabled
+      if (DISABLE_BACKEND_FETCH) {
+        await mockDelay();
+        console.log(`🚧 [DEV] Update quantity bypassed - product ${payload.productId}`);
+        return { success: true, message: "Quantity updated (mock)" };
+      }
+
       const res = await authenticatedFetch(`/api/cart/update/${payload.productId}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
@@ -136,6 +179,13 @@ export const saveOrder = createAsyncThunk(
   "cart/saveOrder",
   async (payload: any, { rejectWithValue }) => {
     try {
+      // DEV MODE: Return mock success when backend is disabled
+      if (DISABLE_BACKEND_FETCH) {
+        await mockDelay();
+        console.log("🚧 [DEV] Save order bypassed");
+        return { success: true, order_id: "MOCK-ORDER-123", message: "Order saved (mock)" };
+      }
+
       const res = await fetch("/api/checkout/save-order", {
         method: "POST",
         headers: { "Content-Type": "application/json" },

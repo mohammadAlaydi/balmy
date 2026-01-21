@@ -3,6 +3,7 @@ import { Metadata } from "next";
 
 import ProductPageStatus from "@/features/product/product-page-status";
 import PageWrapper from "@/components/page-wrapper";
+import { DISABLE_BACKEND_FETCH, MOCK_PRODUCT_DETAILS } from "@/lib/dev-config";
 
 interface ProductDetailsPageProps {
   params: {
@@ -14,6 +15,20 @@ interface ProductDetailsPageProps {
 export async function generateMetadata({
   params,
 }: ProductDetailsPageProps): Promise<Metadata> {
+  // DEV MODE: Return mock metadata when backend is disabled
+  if (DISABLE_BACKEND_FETCH) {
+    const mockProduct = MOCK_PRODUCT_DETAILS(parseInt(params.id));
+    return {
+      title: `${mockProduct.data.name} | My Store (Dev)`,
+      description: mockProduct.data.description || "Check out this amazing product!",
+      openGraph: {
+        title: mockProduct.data.name,
+        description: mockProduct.data.description || "Check out this amazing product!",
+        type: "website",
+      },
+    };
+  }
+
   try {
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/v1/product-details/${params.id}`,
@@ -53,7 +68,7 @@ export async function generateMetadata({
           product?.data?.description || "Check out this amazing product!",
         images: [
           product?.data?.base_image?.original_image_url ||
-            "/assets/images/no-image.webp",
+          "/assets/images/no-image.webp",
         ],
       },
     };

@@ -1,7 +1,15 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { DISABLE_BACKEND_FETCH, MOCK_CATEGORIES, mockDelay } from "@/lib/dev-config";
 
 const getCategories = createAsyncThunk("categories", async (locale: string, { rejectWithValue }) => {
   try {
+    // DEV MODE: Return mock data when backend is disabled
+    if (DISABLE_BACKEND_FETCH) {
+      await mockDelay();
+      console.log("🚧 [DEV] Categories fetch bypassed - using mock data");
+      return MOCK_CATEGORIES;
+    }
+
     const response = await fetch(`/api/categories?locale=${locale}`, {
       method: "GET",
       credentials: 'include', // Include httpOnly cookies

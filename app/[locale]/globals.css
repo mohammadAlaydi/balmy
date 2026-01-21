@@ -4,6 +4,67 @@
 
 @layer base {
   :root {
+    /* New Balmy Design Tokens */
+    /* White & Light Grays */
+    --color-white: #FFFFFF;
+    --color-light-gray: #ECECEC;
+    --color-light-gray-2: #E1E1E1;
+    --color-light-gray-3: #C5C5C5;
+    --color-light-gray-4: #B5B5B5;
+    --color-light-gray-5: #AEAEAE;
+    --color-light-gray-6: #9C9C9C;
+    
+    /* Medium Grays */
+    --color-medium-gray: #707070;
+    --color-medium-gray-2: #6B6B6B;
+    
+    /* Dark Grays & Blacks */
+    --color-black: #000000;
+    --color-black-2: #040000;
+    --color-black-3: #020202;
+    --color-black-4: #010101;
+    --color-dark-gray: #242424;
+    --color-dark-gray-2: #3A3A3A;
+    --color-dark-gray-3: #292929;
+    --color-dark-gray-4: #2A2A2A;
+    --color-dark-gray-5: #090808;
+    --color-dark-blue-gray: #16181D;
+    --color-dark-blue-gray-2: #27292D;
+    
+    /* Reds */
+    --color-red: #FF0000;
+    --color-red-2: #F52626;
+    --color-red-3: #E12626;
+    --color-red-4: #F90000;
+    --color-red-5: #EB001B;
+    
+    /* Blues */
+    --color-blue: #1434CB;
+    --color-blue-2: #259BD6;
+    --color-blue-3: #146CB5;
+    --color-blue-4: #2B2E69;
+    --color-blue-5: #2A4B8F;
+    --color-blue-6: #1D9BF0;
+    
+    /* Greens */
+    --color-green: #84B740;
+    --color-green-2: #5AFEAE;
+    --color-green-3: #045C4D;
+    
+    /* Oranges & Yellows */
+    --color-orange: #FF5F00;
+    --color-orange-2: #F79E1B;
+    --color-yellow: #F9C316;
+    
+    /* Purples */
+    --color-purple: #75348A;
+    --color-purple-2: #532D7B;
+    --color-purple-3: #59529F;
+    
+    /* Browns/Golds */
+    --color-gold: #C5992C;
+
+    /* Original design tokens */
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
     --card: 0 0% 100%;

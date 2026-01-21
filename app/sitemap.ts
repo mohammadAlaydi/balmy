@@ -1,10 +1,17 @@
 import { MetadataRoute } from "next";
+import { DISABLE_BACKEND_FETCH, MOCK_PRODUCTS } from "@/lib/dev-config";
 
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
 const apiUrl = process.env.NEXT_PUBLIC_API_URL ;
 
 // ✅ Fetch products safely
 async function getProducts() {
+  // DEV MODE: Return mock data when backend is disabled
+  if (DISABLE_BACKEND_FETCH) {
+    console.log("🚧 [DEV] Sitemap getProducts bypassed - using mock data");
+    return MOCK_PRODUCTS.data;
+  }
+
   try {
     const res = await fetch(`${apiUrl}/v1/categorysearch`, {
       headers: { accept: "application/json" },
@@ -23,6 +30,12 @@ async function getProducts() {
 
 // ✅ Fetch CMS pages safely
 async function getCMSPages() {
+  // DEV MODE: Return empty array when backend is disabled
+  if (DISABLE_BACKEND_FETCH) {
+    console.log("🚧 [DEV] Sitemap getCMSPages bypassed");
+    return [];
+  }
+
   try {
     const res = await fetch(`${apiUrl}/v1/home`, {
       headers: { accept: "application/json" },
@@ -85,3 +98,4 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   return sitemapEntries;
 }
+

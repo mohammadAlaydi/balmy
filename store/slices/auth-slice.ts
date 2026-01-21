@@ -5,12 +5,23 @@ import {
   RegisterCredentials,
   User,
 } from "@/types/types";
+import { DISABLE_BACKEND_FETCH, MOCK_USER, mockDelay } from "@/lib/dev-config";
 
 // Login action - now uses internal API route that sets httpOnly cookies
 export const login = createAsyncThunk(
   "auth/login",
   async (credentials: LoginCredentials, { rejectWithValue }) => {
     try {
+      // DEV MODE: Return mock data when backend is disabled
+      if (DISABLE_BACKEND_FETCH) {
+        await mockDelay();
+        console.log("🚧 [DEV] Login bypassed - using mock user");
+        return {
+          user: MOCK_USER,
+          message: "Login successful (mock)",
+        };
+      }
+
       const response = await fetch("/api/auth/login", {
         method: "POST",
         headers: {
@@ -40,6 +51,16 @@ export const register = createAsyncThunk(
   "auth/register",
   async (userData: RegisterCredentials, { rejectWithValue }) => {
     try {
+      // DEV MODE: Return mock data when backend is disabled
+      if (DISABLE_BACKEND_FETCH) {
+        await mockDelay();
+        console.log("🚧 [DEV] Register bypassed - using mock user");
+        return {
+          user: { ...MOCK_USER, ...userData },
+          message: "Registration successful (mock)",
+        };
+      }
+
       const response = await fetch("/api/auth/register", {
         method: "POST",
         headers: {
@@ -69,6 +90,13 @@ export const logout = createAsyncThunk(
   "auth/logout",
   async (_, { rejectWithValue }) => {
     try {
+      // DEV MODE: Return mock success when backend is disabled
+      if (DISABLE_BACKEND_FETCH) {
+        await mockDelay(200);
+        console.log("🚧 [DEV] Logout bypassed");
+        return { success: true, message: "Logout successful (mock)" };
+      }
+
       const response = await fetch("/api/auth/logout", {
         method: "POST",
       });
@@ -86,6 +114,13 @@ export const getCurrentUser = createAsyncThunk(
   "auth/getCurrentUser",
   async (_, { rejectWithValue }) => {
     try {
+      // DEV MODE: Return mock user when backend is disabled
+      if (DISABLE_BACKEND_FETCH) {
+        await mockDelay(200);
+        console.log("🚧 [DEV] getCurrentUser bypassed - using mock user");
+        return MOCK_USER;
+      }
+
       const response = await fetch("/api/auth/me", {
         method: "GET",
       });
@@ -108,6 +143,12 @@ export const refreshToken = createAsyncThunk(
   "auth/refreshToken",
   async (_, { rejectWithValue }) => {
     try {
+      // DEV MODE: Return mock success when backend is disabled
+      if (DISABLE_BACKEND_FETCH) {
+        console.log("🚧 [DEV] Token refresh bypassed");
+        return { success: true };
+      }
+
       const response = await fetch("/api/auth/refresh", {
         method: "POST",
       });

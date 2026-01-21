@@ -154,6 +154,7 @@
 // export default productsSlice.reducer;
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { DISABLE_BACKEND_FETCH, MOCK_PRODUCTS, MOCK_PRODUCT_DETAILS, mockDelay } from "@/lib/dev-config";
 
 // Types
 export interface Product {
@@ -193,6 +194,13 @@ export const fetchProducts = createAsyncThunk<Product[], void, { rejectValue: st
   "products/fetchProducts",
   async (_, { rejectWithValue }) => {
     try {
+      // DEV MODE: Return mock data when backend is disabled
+      if (DISABLE_BACKEND_FETCH) {
+        await mockDelay();
+        console.log("🚧 [DEV] Products fetch bypassed - using mock data");
+        return MOCK_PRODUCTS.data as unknown as Product[];
+      }
+
       const res = await fetch("/api/products", { credentials: "include" });
       const data = await res.json();
       if (!res.ok) return rejectWithValue(data.message || "Failed to fetch products");
@@ -207,6 +215,14 @@ export const fetchProductById = createAsyncThunk<Product, number, { rejectValue:
   "products/fetchProductById",
   async (id, { rejectWithValue }) => {
     try {
+      // DEV MODE: Return mock data when backend is disabled
+      if (DISABLE_BACKEND_FETCH) {
+        await mockDelay();
+        console.log(`🚧 [DEV] Product ${id} fetch bypassed - using mock data`);
+        const mockProduct = MOCK_PRODUCTS.data.find(p => p.id === id) || MOCK_PRODUCTS.data[0];
+        return mockProduct as unknown as Product;
+      }
+
       const res = await fetch(`/api/products/${id}`, { credentials: "include" });
       const data = await res.json();
       if (!res.ok) return rejectWithValue(data.message || "Failed to fetch product");
