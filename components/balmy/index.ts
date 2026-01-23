@@ -8,3 +8,4 @@ export { default as ProductsSectionBalmy } from "./products-section-balmy";
 export { default as TrackOrderButtonBalmy } from "./track-order-button-balmy";
 export { default as BreadcrumbBalmy } from "./breadcrumb-balmy";
 export { default as RatingBalmy } from "./rating-balmy";
+export { default as FooterBalmy } from "./footer-balmy";

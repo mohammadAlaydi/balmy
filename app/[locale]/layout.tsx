@@ -3,8 +3,7 @@ import { Cairo } from "next/font/google";
 import "./globals.css";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
-import { HeaderBalmy } from "@/components/balmy";
-import Footer from "@/components/layout/footer/footer";
+import { HeaderBalmy, FooterBalmy } from "@/components/balmy";
 import ReduxProvider from "@/store/redux-provider";
 import Providers from "@/components/providers";
 import AuthInitializer from "@/components/auth/auth-initializer";
@@ -153,7 +152,7 @@ export default async function RootLayout({
             <HeaderBalmy />
             <AuthInitializer />
             <Providers>{children}</Providers>
-            <Footer />
+            <FooterBalmy />
             <ToTop />
             <WhatsAppIcon />
           </NextIntlClientProvider>
