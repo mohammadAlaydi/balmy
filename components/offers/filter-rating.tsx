@@ -60,7 +60,7 @@ export default function FilterRating({
                 {ratingOptions.map((option) => (
                     <div
                         key={option.value}
-                        className="flex items-center space-x-2 space-x-reverse"
+                        className="flex items-start space-x-2 space-x-reverse"
                     >
                         <Checkbox
                             id={`rating-${option.value}`}

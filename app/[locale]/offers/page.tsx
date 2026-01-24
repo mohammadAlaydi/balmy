@@ -132,7 +132,7 @@ export default function OffersPage() {
 
     return (
         <div className="min-h-screen bg-white" dir="rtl">
-            <div className="container mx-auto px-4 py-8">
+            <div className="container mx-auto px-4 py-40">
                 {/* 2-Column Layout */}
                 <div className="flex flex-col lg:flex-row gap-8">
                     {/* Right Column - Sidebar (25%) */}

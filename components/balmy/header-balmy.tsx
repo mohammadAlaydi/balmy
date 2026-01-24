@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { Search, User, ShoppingCart } from "lucide-react";
+import { User } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
@@ -118,7 +118,12 @@ const ActionIcons = ({
                         className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-100 transition-colors hover:bg-gray-200"
                         aria-label="Search"
                     >
-                        <Search className="h-5 w-5 text-black" />
+                        <Image
+                            src="/assets/images/search.svg"
+                            alt="search"
+                            width={20}
+                            height={20}
+                        />
                     </button>
                 </DialogTrigger>
                 <DialogContent className="mt-5">
@@ -162,7 +167,12 @@ const ActionIcons = ({
                             SR {cartTotal.toFixed(2)}
                         </span>
                         <div className="relative">
-                            <ShoppingCart className="h-5 w-5 text-black" />
+                            <Image
+                                src="/assets/images/cart.svg"
+                                alt="cart"
+                                width={20}
+                                height={20}
+                            />
                             {cartCount > 0 && (
                                 <span className="absolute -right-1.5 -top-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-[var(--color-red)] text-[10px] font-bold text-white">
                                     {cartCount}
@@ -400,7 +410,13 @@ const MobileMenu = ({
                 <div className="pt-6 border-t border-gray-200 flex-shrink-0">
                     <div className="flex items-center justify-center gap-6">
                         <Link href={`/${currentLocale}/search`} prefetch={true}>
-                            <Search className="h-6 w-6 text-gray-600 hover:text-gray-900" />
+                            <Image
+                                src="/assets/images/search.svg"
+                                alt="search"
+                                width={24}
+                                height={24}
+                                className="cursor-pointer"
+                            />
                         </Link>
                         <UserMenu isMobile={true} />
                         <Link
@@ -423,7 +439,13 @@ const MobileMenu = ({
                         <div className="relative">
                             <DrawerComponent
                                 trigger={
-                                    <ShoppingCart className="h-6 w-6 text-gray-600 hover:text-gray-900 cursor-pointer" />
+                                    <Image
+                                        src="/assets/images/cart.svg"
+                                        alt="cart"
+                                        width={24}
+                                        height={24}
+                                        className="cursor-pointer"
+                                    />
                                 }
                             >
                                 <QuickCart />

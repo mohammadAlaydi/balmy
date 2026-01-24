@@ -239,7 +239,7 @@ const NavigationLinks = ({
   const navLinkClass = `cursor-pointer hover:bg-transparent px-4 py-2 ${navTextClass}`;
   // Limit to first 5 categories
   // const limitedCategories = navbarCategories?.slice(0, 5) || [];
-// 
+  // 
   return (
     <NavigationMenu viewport={false} className="hidden lg:block">
       <NavigationMenuList>

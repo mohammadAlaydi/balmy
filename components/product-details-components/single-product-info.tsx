@@ -5,8 +5,9 @@ import { addToCart } from "@/store/slices/cart-slice";
 import { FavouriteButton } from "@/components/favourite-button";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Card } from "@/components/ui/card";
 import { MdOutlineShoppingCart, MdOutlineShare } from "react-icons/md";
-import StarRating from "../react-stars";
+import RatingBalmy from "../balmy/rating-balmy";
 import VariantSelector from "../variant-selector";
 import { useProductVariants } from "@/hooks/use-product-variants";
 import { FaPlus } from "react-icons/fa";
@@ -71,13 +72,13 @@ export default function SingleProductInfo({
   );
 
   return (
-    <div className={`flex flex-col gap-6 ${className}`}>
+    <Card className={`flex flex-col gap-6 p-6 shadow-sm hover:shadow-md transition-shadow duration-300 border-gray-200 ${className}`}>
       {/* Product Title */}
       <div>
-        <h1 className="text-2xl lg:text-2xl md:text-xl font-bold text-black mb-2 font-cairo">
+        <h1 className="text-2xl lg:text-3xl font-bold text-black mb-2 font-cairo">
           {product.name}
         </h1>
-        <p className="text-lg lg:text-lg md:text-base text-gray-600 font-cairo">
+        <p className="text-base text-gray-500 font-cairo">
           {product.sku}
         </p>
       </div>
@@ -105,8 +106,8 @@ export default function SingleProductInfo({
       {/* Stock Status */}
       <Badge
         className={`text-sm px-3 py-1 rounded ${currentVariant?.in_stock ?? product.in_stock
-            ? "bg-green-100 text-green-800 border-green-200"
-            : "bg-red-100 text-red-800 border-red-200"
+          ? "bg-green-100 text-green-800 border-green-200"
+          : "bg-red-100 text-red-800 border-red-200"
           }`}
       >
         {currentVariant?.in_stock ?? product.in_stock
@@ -117,7 +118,7 @@ export default function SingleProductInfo({
       {/* Rating */}
       {product.reviews.average_rating && (
         <div className="flex items-center gap-2">
-          <StarRating rating={product.reviews.average_rating} edit={false} inline />
+          <RatingBalmy value={product.reviews.average_rating} />
           <span className="text-sm text-gray-600">
             ({product.reviews.total} {t("reviews")})
           </span>
@@ -154,10 +155,10 @@ export default function SingleProductInfo({
               }
             }}
             className={`w-10 h-10 flex justify-center items-center border border-gray-300 rounded-full hover:bg-gray-50 transition-colors ${loadingProductId === currentVariant?.product_id ||
-                increaseOrDecreaseLoading ||
-                displayedQuantity <= 1
-                ? "text-gray-400"
-                : ""
+              increaseOrDecreaseLoading ||
+              displayedQuantity <= 1
+              ? "text-gray-400"
+              : ""
               }`}
             disabled={displayedQuantity <= 1}
           >
@@ -175,8 +176,8 @@ export default function SingleProductInfo({
               else setQuantity((q) => q + 1);
             }}
             className={`w-10 h-10 flex justify-center items-center border border-gray-300 rounded-full hover:bg-gray-50 transition-colors ${loadingProductId === currentVariant?.product_id || increaseOrDecreaseLoading
-                ? "text-gray-400"
-                : ""
+              ? "text-gray-400"
+              : ""
               }`}
           >
             <FaPlus className="text-sm" />
@@ -248,6 +249,6 @@ export default function SingleProductInfo({
           }
         }}
       />
-    </div>
+    </Card>
   );
 }

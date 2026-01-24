@@ -8,7 +8,7 @@ import { useTranslations } from "next-intl";
 import { motion, AnimatePresence } from "framer-motion";
 import toast from "react-hot-toast";
 import { BeatLoader } from "react-spinners";
-import { Heart, ShoppingCart } from "lucide-react";
+import { Heart } from "lucide-react";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import DrawerComponent from "../layout/drawer/drawer-component";
@@ -341,7 +341,12 @@ export default function ProductCardBalmy({
                 <BeatLoader color="#000" size={5} />
               ) : (
                 <>
-                  <ShoppingCart className="w-4 h-4 text-[var(--color-black)]" />
+                  <Image
+                    src="/assets/images/cart.svg"
+                    alt="cart"
+                    width={16}
+                    height={16}
+                  />
                   <span className="text-[var(--color-black)] text-sm font-normal whitespace-nowrap">
                     أضــــــف للسلــــــــــــة
                   </span>

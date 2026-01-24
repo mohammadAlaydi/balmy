@@ -6,18 +6,20 @@ import PageWrapper from "@/components/page-wrapper";
 import { DISABLE_BACKEND_FETCH, MOCK_PRODUCT_DETAILS } from "@/lib/dev-config";
 
 interface ProductDetailsPageProps {
-  params: {
+  params: Promise<{
     id: string;
     locale: string;
-  };
+  }>;
 }
 
 export async function generateMetadata({
   params,
 }: ProductDetailsPageProps): Promise<Metadata> {
+  const { id, locale } = await params;
+
   // DEV MODE: Return mock metadata when backend is disabled
   if (DISABLE_BACKEND_FETCH) {
-    const mockProduct = MOCK_PRODUCT_DETAILS(parseInt(params.id));
+    const mockProduct = MOCK_PRODUCT_DETAILS(parseInt(id));
     return {
       title: `${mockProduct.data.name} | My Store (Dev)`,
       description: mockProduct.data.description || "Check out this amazing product!",
@@ -31,7 +33,7 @@ export async function generateMetadata({
 
   try {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/v1/product-details/${params.id}`,
+      `${process.env.NEXT_PUBLIC_API_URL}/v1/product-details/${id}`,
       { method: "GET", credentials: "include" }
     );
 
@@ -47,7 +49,7 @@ export async function generateMetadata({
         title: product?.data?.name,
         description:
           product?.data?.description || "Check out this amazing product!",
-        url: `${process.env.NEXT_PUBLIC_SITE_URL}/${params.locale}/product/${params.id}`,
+        url: `${process.env.NEXT_PUBLIC_SITE_URL}/${locale}/product/${id}`,
         images: [
           {
             url:
@@ -79,7 +81,7 @@ export async function generateMetadata({
       openGraph: {
         title: "Product not found",
         description: "The requested product could not be found.",
-        url: `${process.env.NEXT_PUBLIC_SITE_URL}/${params.locale}/product/${params.id}`,
+        url: `${process.env.NEXT_PUBLIC_SITE_URL}/${locale}/product/${id}`,
       },
       twitter: {
         card: "summary_large_image",
@@ -90,10 +92,11 @@ export async function generateMetadata({
   }
 }
 
-export default function ProductDetailsPage({
+export default async function ProductDetailsPage({
   params,
 }: ProductDetailsPageProps) {
-  const productId = parseInt(params.id);
+  const { id } = await params;
+  const productId = parseInt(id);
   if (isNaN(productId)) notFound();
 
   return (

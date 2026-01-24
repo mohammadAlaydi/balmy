@@ -48,24 +48,21 @@ export default function FilterBrands({
                 {brands.map((brand) => (
                     <div
                         key={brand.id}
-                        className="flex items-center justify-between space-x-2 space-x-reverse"
+                        className="flex items-start space-x-2 space-x-reverse"
                     >
-                        <div className="flex items-center space-x-2 space-x-reverse">
-                            <Checkbox
-                                id={brand.id}
-                                checked={selectedBrands.includes(brand.id)}
-                                onCheckedChange={(checked) =>
-                                    handleBrandChange(brand.id, checked as boolean)
-                                }
-                            />
-                            <Label
-                                htmlFor={brand.id}
-                                className="text-sm font-normal cursor-pointer text-medium-gray hover:text-black transition-colors"
-                            >
-                                {brand.name}
-                            </Label>
-                        </div>
-                        <span className="text-xs text-light-gray-3">({brand.count})</span>
+                        <Checkbox
+                            id={brand.id}
+                            checked={selectedBrands.includes(brand.id)}
+                            onCheckedChange={(checked) =>
+                                handleBrandChange(brand.id, checked as boolean)
+                            }
+                        />
+                        <Label
+                            htmlFor={brand.id}
+                            className="text-sm font-normal cursor-pointer text-medium-gray hover:text-black transition-colors"
+                        >
+                            {brand.name}
+                        </Label>
                     </div>
                 ))}
             </div>

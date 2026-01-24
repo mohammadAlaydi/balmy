@@ -59,21 +59,18 @@ export default function FilterCategories({
                     {categories.map((category) => (
                         <div
                             key={category.id}
-                            className="flex items-center justify-between space-x-2 space-x-reverse"
+                            className="flex items-start space-x-2 space-x-reverse"
                         >
-                            <div className="flex items-center space-x-2 space-x-reverse">
-                                <RadioGroupItem
-                                    id={category.id}
-                                    value={category.id}
-                                />
-                                <Label
-                                    htmlFor={category.id}
-                                    className="text-sm font-normal cursor-pointer text-medium-gray hover:text-black transition-colors"
-                                >
-                                    {category.name}
-                                </Label>
-                            </div>
-                            <span className="text-xs text-light-gray-3">({category.count})</span>
+                            <RadioGroupItem
+                                id={category.id}
+                                value={category.id}
+                            />
+                            <Label
+                                htmlFor={category.id}
+                                className="text-sm font-normal cursor-pointer text-medium-gray hover:text-black transition-colors"
+                            >
+                                {category.name}
+                            </Label>
                         </div>
                     ))}
                 </RadioGroup>
@@ -88,24 +85,21 @@ export default function FilterCategories({
                 {categories.map((category) => (
                     <div
                         key={category.id}
-                        className="flex items-center justify-between space-x-2 space-x-reverse"
+                        className="flex items-start space-x-2 space-x-reverse"
                     >
-                        <div className="flex items-center space-x-2 space-x-reverse">
-                            <Checkbox
-                                id={category.id}
-                                checked={selectedCategories.includes(category.id)}
-                                onCheckedChange={(checked) =>
-                                    handleCategoryChange(category.id, checked as boolean)
-                                }
-                            />
-                            <Label
-                                htmlFor={category.id}
-                                className="text-sm font-normal cursor-pointer text-medium-gray hover:text-black transition-colors"
-                            >
-                                {category.name}
-                            </Label>
-                        </div>
-                        <span className="text-xs text-light-gray-3">({category.count})</span>
+                        <Checkbox
+                            id={category.id}
+                            checked={selectedCategories.includes(category.id)}
+                            onCheckedChange={(checked) =>
+                                handleCategoryChange(category.id, checked as boolean)
+                            }
+                        />
+                        <Label
+                            htmlFor={category.id}
+                            className="text-sm font-normal cursor-pointer text-medium-gray hover:text-black transition-colors"
+                        >
+                            {category.name}
+                        </Label>
                     </div>
                 ))}
             </div>

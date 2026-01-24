@@ -29,38 +29,46 @@ export default function SideFilter({
     onBrandChange,
 }: SideFilterProps) {
     return (
-        <div className="bg-white border border-light-gray-2 rounded-lg p-6 sticky top-6">
-            <div className="space-y-6">
+        <div className="bg-transparent p-6 sticky top-6">
+            <div className="space-y-6 w-full max-w-xs mx-auto text-start">
                 {/* Filter Categories */}
-                <FilterCategories
-                    selectedCategories={selectedCategories}
-                    onCategoryChange={onCategoryChange}
-                    useRadio={false}
-                />
+                <div className="w-full">
+                    <FilterCategories
+                        selectedCategories={selectedCategories}
+                        onCategoryChange={onCategoryChange}
+                        useRadio={false}
+                    />
+                </div>
 
-                <Separator className="bg-light-gray-2" />
+                <Separator className="bg-light-gray-2 w-full" />
 
                 {/* Filter by Rating */}
-                <FilterRating
-                    selectedRatings={selectedRatings}
-                    onRatingChange={onRatingChange}
-                />
+                <div className="w-full">
+                    <FilterRating
+                        selectedRatings={selectedRatings}
+                        onRatingChange={onRatingChange}
+                    />
+                </div>
 
-                <Separator className="bg-light-gray-2" />
+                <Separator className="bg-light-gray-2 w-full" />
 
                 {/* Filter by Price */}
-                <FilterPrice
-                    selectedPriceRanges={selectedPriceRanges}
-                    onPriceChange={onPriceChange}
-                />
+                <div className="w-full">
+                    <FilterPrice
+                        selectedRanges={selectedPriceRanges}
+                        onPriceChange={onPriceChange}
+                    />
+                </div>
 
-                <Separator className="bg-light-gray-2" />
+                <Separator className="bg-light-gray-2 w-full" />
 
                 {/* Filter by Brands */}
-                <FilterBrands
-                    selectedBrands={selectedBrands}
-                    onBrandChange={onBrandChange}
-                />
+                <div className="w-full">
+                    <FilterBrands
+                        selectedBrands={selectedBrands}
+                        onBrandChange={onBrandChange}
+                    />
+                </div>
             </div>
         </div>
     );

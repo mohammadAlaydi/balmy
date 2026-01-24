@@ -7,7 +7,7 @@ const getCategories = createAsyncThunk("categories", async (locale: string, { re
     if (DISABLE_BACKEND_FETCH) {
       await mockDelay();
       console.log("🚧 [DEV] Categories fetch bypassed - using mock data");
-      return MOCK_CATEGORIES;
+      return { categories: MOCK_CATEGORIES };
     }
 
     const response = await fetch(`/api/categories?locale=${locale}`, {

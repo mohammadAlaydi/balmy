@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { ProductImage } from "@/types/types";
+import { Card } from "@/components/ui/card";
 
 interface SingleProductImageHolderProps {
   baseImage: ProductImage;
@@ -34,24 +35,24 @@ export default function SingleProductImageHolder({
   const fallbackImage = "/assets/images/product-card.jpg";
 
   return (
-    <div className={cn("flex gap-5 w-full col-span-12", className)}>
-      <div className="relative w-full lg:w-[calc(100%-100px)] aspect-square overflow-hidden rounded-lg bg-gray-50 grid grid-cols-12">
+    <Card className={cn("flex gap-4 p-4 w-full col-span-12 shadow-sm hover:shadow-md transition-shadow duration-300 border-gray-200", className)}>
+      <div className="relative w-full lg:w-[calc(100%-110px)] aspect-square overflow-hidden rounded-lg bg-gray-50">
         <Image
           src={currentImage.large_image_url ?? currentImage.original_image_url ?? fallbackImage}
           alt={`${productName} - Main view`}
           fill
-          className="object-cover object-center transition-all duration-300 hover:scale-105 col-span-12"
+          className="object-cover object-center transition-all duration-300 hover:scale-105"
           priority
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           suppressHydrationWarning
         />
-        <div className="absolute top-4 right-4 bg-black/70 text-white px-2 py-1 rounded text-sm">
+        <div className="absolute top-4 ltr:right-4 rtl:left-4 bg-black/70 text-white px-3 py-1 rounded-md text-sm font-medium">
           {displayIndex + 1} / {allImages.length}
         </div>
       </div>
 
       {allImages.length > 1 && (
-        <div className="w-[100px] flex flex-col items-center gap-2 lg:max-h-[500px]">
+        <div className="w-[90px] flex flex-col items-center gap-3 overflow-y-auto max-h-[500px] scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
           {allImages.map((image, idx) => (
             <button
               key={idx}
@@ -59,10 +60,10 @@ export default function SingleProductImageHolder({
               onMouseEnter={() => setHoveredImageIndex(idx)}
               onMouseLeave={() => setHoveredImageIndex(null)}
               className={cn(
-                "relative w-[80px] h-[80px] flex-shrink-0 overflow-hidden rounded-md border-2 transition-all duration-200 hover:scale-105",
+                "relative w-[80px] h-[80px] flex-shrink-0 overflow-hidden rounded-lg border-2 transition-all duration-200 hover:scale-105 hover:shadow-md",
                 selectedImageIndex === idx
-                  ? "border-red-500 ring-2 ring-red-500/20"
-                  : "border-gray-200 hover:border-gray-300"
+                  ? "border-black ring-2 ring-black/20 shadow-md"
+                  : "border-gray-200 hover:border-gray-400"
               )}
             >
               <Image
@@ -73,11 +74,11 @@ export default function SingleProductImageHolder({
                 sizes="80px"
                 suppressHydrationWarning
               />
-              {selectedImageIndex === idx && <div className="absolute inset-0 bg-red-500/10" />}
+              {selectedImageIndex === idx && <div className="absolute inset-0 bg-black/10" />}
             </button>
           ))}
         </div>
       )}
-    </div>
+    </Card>
   );
 }

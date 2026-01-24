@@ -46,7 +46,7 @@ export default function FilterPrice({
                 {priceRanges.map((range) => (
                     <div
                         key={range.id}
-                        className="flex items-center space-x-2 space-x-reverse"
+                        className="flex items-start space-x-2 space-x-reverse"
                     >
                         <Checkbox
                             id={range.id}

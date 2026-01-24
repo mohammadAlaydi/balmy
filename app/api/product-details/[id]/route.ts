@@ -2,11 +2,27 @@ import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
+const DISABLE_BACKEND_FETCH = process.env.DISABLE_BACKEND_FETCH === "true"; // Assuming this is defined elsewhere
+const MOCK_PRODUCT_DETAILS = (id: number) => ({ // Assuming this is defined elsewhere
+  id: id,
+  name: `Mock Product ${id}`,
+  description: `This is a mock description for product ${id}.`,
+  price: 100 + id,
+  currency: "USD",
+});
 
 export async function GET(
-  request: NextRequest,
-  { params }: { params: { id: string } }
+  request: Request,
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params;
+
+  if (DISABLE_BACKEND_FETCH) {
+    console.log("🚧 Backend fetches are DISABLED - using mock data");
+    const mockData = MOCK_PRODUCT_DETAILS(parseInt(id));
+    return NextResponse.json(mockData);
+  }
+
   try {
 
     const cookieStore = await cookies();
@@ -22,7 +38,7 @@ export async function GET(
       headers["Authorization"] = `Bearer ${accessToken}`;
     }
 
-    const response = await fetch(`${API_URL}/v1/product-details/${params.id}`, {
+    const response = await fetch(`${API_URL}/v1/product-details/${id}`, {
       method: "GET",
       headers,
     });
@@ -33,21 +49,21 @@ export async function GET(
       // If unauthorized and refresh token exists, attempt one refresh then retry once
       if (response.status === 401 && refreshToken && accessToken) {
         try {
+          const url = new URL(request.url);
           const refreshResp = await fetch(
-            `${request.nextUrl.origin}/api/auth/refresh`,
+            `${url.origin}/api/auth/refresh`,
             {
               method: "POST",
             }
           );
           if (refreshResp.ok) {
             const retry = await fetch(
-              `${API_URL}/v1/product-details/${params.id}`,
+              `${API_URL}/v1/product-details/${id}`,
               {
                 method: "GET",
                 headers: {
-                  Authorization: `Bearer ${
-                    cookieStore.get("accessToken")?.value ?? ""
-                  }`,
+                  Authorization: `Bearer ${cookieStore.get("accessToken")?.value ?? ""
+                    }`,
                   Accept: "application/json",
                 },
               }
@@ -63,7 +79,7 @@ export async function GET(
               { status: retry.status }
             );
           }
-        } catch {}
+        } catch { }
       }
 
       return NextResponse.json(
@@ -73,7 +89,7 @@ export async function GET(
     }
 
     return NextResponse.json(data);
-    
+
   } catch (error) {
 
     return NextResponse.json(

@@ -15,13 +15,13 @@ export default function RatingBalmy({ value, max = 5 }: RatingBalmyProps) {
     return (
         <div className="flex items-center gap-1">
             {Array.from({ length: filled }).map((_, i) => (
-                <Star key={`filled-${i}`} className="h-3 w-3 md:h-4 md:w-4 fill-[var(--color-yellow)] text-[var(--color-yellow)]" />
+                <Star key={`filled-${i}`} className="h-3 w-3 md:h-4 md:w-4 fill-[var(--color-gold)] text-[var(--color-gold)]" />
             ))}
             {hasHalf && (
                 <div className="relative h-3 w-3 md:h-4 md:w-4">
                     <Star className="h-3 w-3 md:h-4 md:w-4 text-[var(--color-light-gray-3)]" />
                     <div className="absolute inset-0 overflow-hidden" style={{ width: "50%" }}>
-                        <Star className="h-3 w-3 md:h-4 md:w-4 fill-[var(--color-yellow)] text-[var(--color-yellow)]" />
+                        <Star className="h-3 w-3 md:h-4 md:w-4 fill-[var(--color-gold)] text-[var(--color-gold)]" />
                     </div>
                 </div>
             )}
