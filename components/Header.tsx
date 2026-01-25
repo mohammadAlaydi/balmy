@@ -42,7 +42,7 @@ export default function Header({ variant = "hero", sticky = true }: HeaderProps)
           <div className="flex items-center gap-3">
             <Link href="/" className="block">
               <Image 
-                src="/logo.png" 
+                src="/images/balmy-logo.png" 
                 alt="Balmy Logo" 
                 width={64}
                 height={64}

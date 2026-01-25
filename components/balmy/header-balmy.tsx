@@ -321,7 +321,7 @@ const Logo = ({ data, isHero = false }: { data: any; isHero?: boolean }) => {
                 />
             ) : (
                 <Image
-                    src="/logo.png"
+                    src="/images/balmy-logo.png"
                     alt="Balmy Logo"
                     width={64}
                     height={64}

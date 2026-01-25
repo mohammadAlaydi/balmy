@@ -9,14 +9,15 @@ export type BreadcrumbItem = {
 
 export type BreadcrumbBalmyProps = {
     items: BreadcrumbItem[];
+    className?: string;
 };
 
-export default function BreadcrumbBalmy({ items }: BreadcrumbBalmyProps) {
+export default function BreadcrumbBalmy({ items, className }: BreadcrumbBalmyProps) {
     const lastIndex = Math.max(0, items.length - 1);
 
     return (
         <nav aria-label="Breadcrumb" dir="rtl" className="w-full">
-            <ol className="flex flex-wrap items-center justify-start gap-2 text-base">
+            <ol className={`flex flex-wrap items-center justify-start gap-2 text-base ${className ?? ""}`}>
                 {items.map((item, index) => {
                     const isLast = index === lastIndex;
 
