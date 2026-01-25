@@ -1,6 +1,12 @@
 "use client";
 
-import { ShoppingCart, Heart, Star, BadgeCheck } from "lucide-react";
+import Image from "next/image";
+import { useState } from "react";
+import StarRating from "./react-stars";
+import { CiHeart } from "react-icons/ci";
+import { FaHeart } from "react-icons/fa";
+import AddToCartBtn from "./AddToCartBtn";
+import RiyalSymbol from "./RiyalSymbol";
 
 interface ProductCardProps {
   brandName?: string;
@@ -12,122 +18,133 @@ interface ProductCardProps {
   category?: string;
   rating?: number;
   isVerified?: boolean;
+  onAddToCart?: () => void;
+  onToggleFavorite?: () => void;
 }
 
 export default function ProductCard({
-  brandName = "جورجيو أرماني",
-  productName = "جورجيو أرماني إمبريو أرماني سترونجر ويذ يو إنتنسلي",
-  price = 480,
-  oldPrice = 780,
+  brandName = "توم فورد",
+  productName = "أومبري ليذر أو دو برفيوم",
+  price = 749,
+  oldPrice = 480,
   discount = 20,
   imageUrl = "/images/card-image.png",
-  category = "رجـــالي",
+  category = "نسائي",
   rating = 5,
   isVerified = true,
+  onAddToCart,
+  onToggleFavorite,
 }: ProductCardProps) {
-  return (
-    <div className="relative w-full max-w-sm bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow" dir="rtl">
-      {/* Card Header - Heart and Category Badge */}
-      <div className="absolute top-3 left-3 right-3 z-10 flex items-center justify-between">
-        {/* Heart Icon - Top Left */}
-        <button
-          className="w-9 h-9 bg-white rounded-full flex items-center justify-center hover:bg-gray-50 transition-colors shadow-sm"
-          aria-label="Add to favorites"
-        >
-          <Heart className="w-5 h-5 text-gray-600" />
-        </button>
+  const [favorited, setFavorited] = useState(false);
 
-        {/* Category Badge - Top Right */}
-        {category && (
-          <div className="px-3 py-1 bg-gray-100 rounded-md">
-            <span className="text-xs font-medium text-gray-700">
-              {category}
-            </span>
-          </div>
-        )}
+  return (
+    <div className="relative w-full max-w-sm bg-white rounded-2xl overflow-hidden hover:shadow-lg transition-shadow font-[family-name:var(--font-cairo)]" dir="rtl">
+      {/* Wishlist Icon - Top Left (Absolute) */}
+      <div className="absolute top-3 left-3 z-10">
+        <button
+          onClick={() => {
+            setFavorited((s) => !s);
+            onToggleFavorite?.();
+          }}
+          aria-pressed={favorited}
+          className="w-12 h-12 bg-transparent rounded-full flex items-center justify-center hover:bg-white/5 transition-colors"
+          aria-label={favorited ? "Remove favorite" : "Add to favorites"}
+        >
+          {favorited ? (
+            <FaHeart className="w-8 h-8 text-red" />
+          ) : (
+            <CiHeart className="w-8 h-8 text-gray-600" />
+          )}
+        </button>
       </div>
 
       {/* Product Image */}
-      <div className="relative w-full aspect-[4/5] overflow-hidden rounded-t-lg">
+      <div className="relative w-full aspect-square bg-gray-50 overflow-hidden">
         {imageUrl ? (
-          <img 
-            src={imageUrl} 
-            alt={productName} 
-            className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+          <Image
+            src={imageUrl}
+            alt={productName}
+            fill
+            sizes="(max-width: 768px) 100vw"
+            className="object-cover hover:scale-105 transition-transform duration-300"
           />
         ) : (
           <div className="w-full h-full bg-gray-100 flex items-center justify-center">
-            <span className="text-gray-400">صورة المنتج</span>
+            <span className="text-gray-400 text-sm">صورة المنتج</span>
           </div>
         )}
       </div>
 
-      {/* Card Content */}
-      <div className="p-4 space-y-3">
-        {/* Rating */}
-        <div className="flex items-center gap-1">
-          {[...Array(5)].map((_, index) => (
-            <Star
-              key={index}
-              className={`w-4 h-4 ${
-                index < rating
-                  ? "fill-yellow-400 text-yellow-400"
-                  : "fill-gray-200 text-gray-200"
-              }`}
-            />
-          ))}
-        </div>
+      {/* Card Content - Split Layout */}
+      <div className="p-4">
+        {/* Main Details Section - Two Column Layout */}
+        <div className="flex items-start justify-between gap-3 mb-4">
+          {/* Right Side - Primary Info */}
+          <div className="flex-1 space-y-2">
+            {/* Brand Name with Checkmark */}
+            <div className="flex items-center gap-1.5">
+              <h3 className="text-base font-bold text-gray-900">
+                {brandName}
+              </h3>
+              {isVerified && (
+                <Image src="/assets/verified-badge.svg" alt="verified" width={16} height={16} className="w-4 h-4" />
+              )}
+            </div>
 
-        {/* Brand Name with Checkmark */}
-        <div className="flex items-center gap-2">
-          <h3 className="text-lg font-semibold text-gray-900">
-            {brandName}
-          </h3>
-          {isVerified && (
-            <BadgeCheck className="w-5 h-5 fill-blue-500 text-white flex-shrink-0" />
-          )}
-        </div>
+            {/* Product Name */}
+            <div className="flex items-center gap-2">
+              <p className="text-sm text-gray-500 line-clamp-2 leading-snug">
+                {productName}
+              </p>
+            </div>
 
-        {/* Product Description */}
-        <p className="text-sm text-gray-500 line-clamp-2 leading-relaxed">
-          {productName}
-        </p>
-
-        {/* Price Section */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            {/* Current Price */}
-            <span className="text-xl font-bold text-gray-900">
-              {price} ريال
-            </span>
-
-            {/* Old Price */}
-            {oldPrice && (
-              <span className="text-sm text-gray-400 line-through">
-                {oldPrice}
+            {/* Price Section */}
+            <div className="flex items-baseline gap-2 pt-1">
+              {/* Current Price */}
+              <span className="text-xl font-bold text-gray-900 flex items-center gap-1">
+                {price}
+                <RiyalSymbol className="w-3 h-3" />
               </span>
-            )}
+
+              {/* Old Price */}
+              {oldPrice && (
+                <span className="text-sm text-gray-400 line-through flex items-center gap-1">
+                  {oldPrice}
+                  <RiyalSymbol className="w-2.5 h-2.5" />
+                </span>
+              )}
+            </div>
           </div>
 
-          {/* Discount Badge */}
-          {discount && (
-            <div className="px-2.5 py-1 bg-red-500 rounded-full">
-              <span className="text-xs font-bold text-white">
-                {discount}%-
-              </span>
+          {/* Left Side - Badges & Rating */}
+          <div className="flex flex-col items-end gap-2">
+            {/* Category Badge */}
+            {category && (
+              <div className="px-2.5 py-1 flex rounded-[7px]" style={{ background: "#B5B5B5 0% 0% no-repeat padding-box" }}>
+                <span className="text-xs font-medium text-white">
+                  {category}
+                </span>
+              </div>
+            )}
+
+            {/* Rating Stars */}
+            <div className="flex items-center gap-1">
+              <StarRating rating={rating} inline className="inline-flex" />
             </div>
-          )}
+
+            {/* Discount Badge - Under Rating */}
+            {discount && (
+              <div className="px-2.5 py-0.5 flex items-center bg-red rounded-full">
+                <span className="text-xs font-bold text-white">
+                  {discount}%
+                </span>
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Add to Cart Button */}
-        <button
-          className="w-full h-12 border-2 border-gray-800 rounded-lg flex items-center justify-center gap-2 hover:bg-gray-800 hover:text-white transition-colors group"
-        >
-          <ShoppingCart className="w-5 h-5 text-gray-800 group-hover:text-white transition-colors" />
-          <span className="text-sm font-medium text-gray-800 group-hover:text-white transition-colors">
-            أضف للسلة
-          </span>
-        </button>
+        <AddToCartBtn onClick={onAddToCart} />
       </div>
     </div>
   );
