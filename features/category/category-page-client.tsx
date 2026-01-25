@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { BreadcrumbBalmy } from "@/components/balmy";
-import { ProductCardBalmy } from "@/components/balmy";
+import ProductCard from "@/components/ProductCard";
 import SideFilter from "@/components/offers/side-filter";
 import Loading from "@/components/loading";
 import {
@@ -24,6 +24,7 @@ export default function CategoryPageClient({ categoryId }: Props) {
   const [selectedPriceRanges, setSelectedPriceRanges] = useState<string[]>([]);
   const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
   const [sortBy, setSortBy] = useState("suggestions");
+  const [visibleCount, setVisibleCount] = useState(9); // Initial visible count
 
   const products = categoryProducts?.data || [];
 
@@ -47,6 +48,11 @@ export default function CategoryPageClient({ categoryId }: Props) {
       return true;
     });
   }, [products, selectedRatings, selectedBrands]);
+
+  // Reset visible count when filters change
+  useEffect(() => {
+    setVisibleCount(9);
+  }, [selectedCategories, selectedRatings, selectedPriceRanges, selectedBrands, sortBy]);
 
   // Sort products
   const sortedProducts = useMemo(() => {
@@ -89,13 +95,22 @@ export default function CategoryPageClient({ categoryId }: Props) {
     { label: categoryProducts?.category?.name || "التصنيف", href: `/category/${categoryId}` },
   ];
 
+  const visibleProducts = sortedProducts.slice(0, visibleCount);
+
+  const handleLoadMore = () => {
+    setVisibleCount((prev) => prev + 9);
+  };
+
   return (
     <div className="min-h-screen bg-white" dir="rtl">
       <div className="container mx-auto px-4 py-40 ">
         {/* 2-Column Layout */}
         <div className="flex flex-col lg:flex-row gap-8 relative">
           {/* Right Column - Sidebar (25%) */}
-          <aside className="lg:w-1/4 order-2 lg:order-1">
+          <aside className="lg:w-1/4 order-2 lg:order-1 flex flex-col items-center gap-4">
+            <div className="w-full">
+              <BreadcrumbBalmy items={breadcrumbItems} className="justify-center" />
+            </div>
             <SideFilter
               selectedCategories={selectedCategories}
               selectedRatings={selectedRatings}
@@ -113,11 +128,8 @@ export default function CategoryPageClient({ categoryId }: Props) {
           {/* Left Column - Main Content (75%) */}
           <main className="lg:w-3/4 order-1 lg:order-2">
             {/* Top Bar */}
-            <div className="mb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-              {/* Right: Breadcrumb */}
-              <div className="order-1">
-                <BreadcrumbBalmy items={breadcrumbItems} />
-              </div>
+            <div className="mb-6 flex flex-col md:flex-row justify-end items-start md:items-center gap-4">
+              {/* Removed Breadcrumb from here */}
 
               {/* Left: Sort Select */}
               <div className="order-2 flex items-center gap-3">
@@ -149,27 +161,27 @@ export default function CategoryPageClient({ categoryId }: Props) {
             </div>
 
             {/* Product Grid - 3 products per row on desktop */}
-            {sortedProducts.length > 0 ? (
+            {visibleProducts.length > 0 ? (
               <>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
-                  {sortedProducts.map((product: any) => (
+                  {visibleProducts.map((product: any) => (
                     <div key={product.id} className="w-full max-w-sm mx-auto">
-                      <ProductCardBalmy product={product} />
+                      <ProductCard product={product} />
                     </div>
                   ))}
                 </div>
 
                 {/* Load More Button */}
-                <div className="flex justify-center mt-8">
-                  <button
-                    className="bg-black text-white px-12 py-3 rounded-lg font-medium hover:bg-dark-gray-3 transition-colors duration-300"
-                    onClick={() => {
-                      console.log("Load more products");
-                    }}
-                  >
-                    تحميل المزيد
-                  </button>
-                </div>
+                {visibleCount < sortedProducts.length && (
+                  <div className="flex justify-center mt-8">
+                    <button
+                      className="bg-black text-white px-12 py-3 rounded-lg font-medium hover:bg-dark-gray-3 transition-colors duration-300"
+                      onClick={handleLoadMore}
+                    >
+                      تحميل المزيد
+                    </button>
+                  </div>
+                )}
               </>
             ) : (
               /* Empty State */

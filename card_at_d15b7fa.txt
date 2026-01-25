@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Image from "next/image";
 import React, { useState } from "react";
@@ -27,7 +27,6 @@ import { GrView } from "react-icons/gr";
 import ProductIncementOrDecrement from "./product-increment-or-decrement";
 import { MdOutlineShoppingCart } from "react-icons/md";
 import StarRating from "./react-stars";
-import { Rating, RatingButton } from "./ui/rating";
 
 /* ---------------- Helper Functions ---------------- */
 const calculateProductPrice = (product: any): number => {
@@ -346,9 +345,9 @@ export default function ProductCard({
                           "variant-image"
                         )} ${index + 1}`}
                         className={`cursor-pointer transition-all duration-200 rounded-full h-[28px] w-[28px] ${selectedVariantIndex === index ||
-                          (selectedVariantIndex === null && index === 0)
-                          ? "ring-2 ring-gray-300"
-                          : "border-2 border-dotted border-gray-300"
+                            (selectedVariantIndex === null && index === 0)
+                            ? "ring-2 ring-gray-300"
+                            : "border-2 border-dotted border-gray-300"
                           }`}
                         onClick={() =>
                           handleVariantSelect(
@@ -361,7 +360,7 @@ export default function ProductCard({
                     </div>
                   ))}
                 {product.variants.length > 2 && (
-                  <Badge className="mx-1 bg-transparent text-primary ring-2 ring-gray-300 w-[28px] h-[28px] p-0 flex items-center rounded-full justify-center shadow-[inset_0_2px_4_rgba(0,0,0,0.1)] text-xs">
+                  <Badge className="mx-1 bg-transparent text-primary ring-2 ring-gray-300 w-[28px] h-[28px] p-0 flex items-center rounded-full justify-center shadow-[inset_0_2px_4px_rgba(0,0,0,0.1)] text-xs">
                     +{product.variants.length - 2}
                   </Badge>
                 )}
@@ -378,8 +377,8 @@ export default function ProductCard({
                     }
                     alt={`${product?.name || t("product")}`}
                     className={`${selectedVariantIndex === 0 || selectedVariantIndex == null
-                      ? "ring-2 ring-gray-300"
-                      : "border-2 border-dotted border-gray-300"
+                        ? "ring-2 ring-gray-300"
+                        : "border-2 border-dotted border-gray-300"
                       } cursor-pointer transition-all duration-200 rounded-full ring-2 ring-gray-300 h-[28px] w-[28px]`}
                     onClick={() =>
                       handleVariantSelect(0, product?.product_id, product?.sku)
@@ -397,13 +396,10 @@ export default function ProductCard({
             {productPrice.toFixed(2)} <i className="icon-rial"></i>
           </p>
           <div className="hidden sm:flex items-center gap-1 bg-gray-100 px-2 rounded-full w-fit shadow-sm">
-            <Rating readOnly value={Math.floor(Number(product?.reviews?.average_rating || 4.5))} max={5}>
-              {Array.from({ length: 5 }).map((_, i) => (
-                <RatingButton key={i} size={14} />
-              ))}
-            </Rating>
+            <StarRating edit={false} rating={4.5} />
             <Badge className="bg-transparent text-gray-500 p-0 text-sm font-[550]">
-              {product?.reviews?.average_rating || 4.5}
+              {/* {product?.reviews?.total} */}
+              4.5
             </Badge>{" "}
           </div>
         </div>

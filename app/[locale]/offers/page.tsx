@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { BreadcrumbBalmy } from "@/components/balmy";
-import { ProductCardBalmy } from "@/components/balmy";
+import ProductCard from "@/components/product-card";
 import SideFilter from "@/components/offers/side-filter";
 import {
     Select,
@@ -191,7 +191,15 @@ export default function OffersPage() {
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
                             {sortedProducts.map((product) => (
                                 <div key={product.id} className="w-full max-w-sm mx-auto">
-                                    <ProductCardBalmy product={product} />
+                                    <ProductCard
+                                        product={product}
+                                        brandName={product.brand}
+                                        productName={product.name}
+                                        price={product.discountPrice || product.price}
+                                        oldPrice={product.discountPrice ? product.price : undefined}
+                                        imageUrl={product.image}
+                                        rating={product.rating}
+                                    />
                                 </div>
                             ))}
                         </div>
