@@ -33,7 +33,12 @@ export default function FilterBrands({
 
     const handleBrandChange = (value: string) => {
         if (!onBrandChange) return;
-        onBrandChange([value]);
+        // Toggle: clear if already selected
+        if (selectedBrands[0] === value) {
+            onBrandChange([]);
+        } else {
+            onBrandChange([value]);
+        }
     };
 
     return (
@@ -48,6 +53,11 @@ export default function FilterBrands({
                     <div
                         key={brand.id}
                         className="flex items-center justify-end gap-3"
+                        onClick={() => {
+                            if (selectedBrands[0] === brand.id) {
+                                onBrandChange?.([]);
+                            }
+                        }}
                     >
                         <Label
                             htmlFor={brand.id}

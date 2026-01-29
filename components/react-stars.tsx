@@ -13,6 +13,7 @@ interface StarRatingProps {
   color2?: string; // filled stars
   className?: string;
   inline?: boolean;
+  dir?: "ltr" | "rtl";
 }
 
 export default function StarRating({
@@ -25,6 +26,7 @@ export default function StarRating({
   color2 = "#ffd700", // yellow
   className,
   inline = false,
+  dir = "ltr",
 }: StarRatingProps) {
   const [isMobile, setIsMobile] = useState(false);
   const [isTablet, setIsTablet] = useState(false);
@@ -46,7 +48,7 @@ export default function StarRating({
   else if (isTablet) starSize = 18;
 
   const stars = (
-    <span className="inline-flex align-middle" dir="ltr">
+    <span className="inline-flex align-middle" dir={dir} style={{ direction: dir }}>
       <ReactStars
         count={count}
         value={rating}

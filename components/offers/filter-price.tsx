@@ -31,7 +31,12 @@ export default function FilterPrice({
 
     const handlePriceChange = (value: string) => {
         if (!onPriceChange) return;
-        onPriceChange([value]);
+        // Toggle: if same as current selection, clear; otherwise set
+        if (selectedRanges[0] === value) {
+            onPriceChange([]);
+        } else {
+            onPriceChange([value]);
+        }
     };
 
     return (
@@ -46,6 +51,11 @@ export default function FilterPrice({
                     <div
                         key={range.id}
                         className="flex items-center justify-end gap-3"
+                        onClick={() => {
+                            if (selectedRanges[0] === range.id) {
+                                onPriceChange?.([]);
+                            }
+                        }}
                     >
                         <Label
                             htmlFor={range.id}

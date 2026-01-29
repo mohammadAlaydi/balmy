@@ -34,6 +34,13 @@ export default function SideFilter({
     return (
         <div className="bg-transparent p-6 sticky top-6">
             <div className="space-y-6 w-full max-w-xs mx-auto">
+                {/* Breadcrumb (above filters) */}
+                {breadcrumbItems && (
+                    <div className="w-full">
+                        <BreadcrumbBalmy items={breadcrumbItems} className="justify-start" />
+                    </div>
+                )}
+
                 {/* Filter Categories */}
                 <div className="w-full">
                     <FilterCategories
