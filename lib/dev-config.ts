@@ -726,7 +726,11 @@ export const MOCK_HOME_DATA = {
     },
   ],
   featured_categories: MOCK_CATEGORIES,
-  featured_products: MOCK_PRODUCTS.data.slice(0, 8),
+  featured_products: MOCK_PRODUCTS.data.filter(p => p.category_id.includes(2)),
+  best_sellers: MOCK_PRODUCTS.data.filter(p => p.category_id.includes(3)),
+  exclusive_products: MOCK_PRODUCTS.data.filter(p => p.category_id.includes(8)),
+  sets_products: MOCK_PRODUCTS.data.filter(p => p.category_id.includes(9)),
+  niche_products: MOCK_PRODUCTS.data.filter(p => p.category_id.includes(7)),
   new_products: MOCK_PRODUCTS.data.filter(p => p.new),
   ads: [
     {

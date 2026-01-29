@@ -9,3 +9,9 @@ export { default as TrackOrderButtonBalmy } from "./track-order-button-balmy";
 export { default as BreadcrumbBalmy } from "./breadcrumb-balmy";
 export { default as RatingBalmy } from "./rating-balmy";
 export { default as FooterBalmy } from "./footer-balmy";
+export { default as PaymentInstallmentBanner } from "./payment-installment-banner";
+export { default as BrandsShowcaseSection } from "./brands-showcase-section";
+export { default as PromotionalBannerSection } from "./promotional-banner-section";
+
+
+
