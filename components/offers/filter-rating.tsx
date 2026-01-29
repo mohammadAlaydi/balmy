@@ -3,7 +3,7 @@
 import React from "react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import { Star } from "lucide-react";
+import StarRating from "@/components/react-stars";
 
 interface RatingOption {
     value: number;
@@ -37,18 +37,9 @@ export default function FilterRating({
     };
 
     const renderStars = (count: number) => {
-        // Define star styles as complete static strings for Tailwind JIT detection
-        const filledStarClass = "h-4 w-4 fill-yellow-400 text-yellow-400";
-        const emptyStarClass = "h-4 w-4 fill-gray-200 text-gray-200";
-
         return (
             <div className="flex items-center gap-0.5">
-                {[...Array(5)].map((_, index) => (
-                    <Star
-                        key={index}
-                        className={index < count ? filledStarClass : emptyStarClass}
-                    />
-                ))}
+                <StarRating rating={count} count={5} half={false} inline className="inline-flex" />
             </div>
         );
     };
