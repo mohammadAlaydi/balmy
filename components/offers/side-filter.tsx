@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { BreadcrumbBalmy } from "@/components/balmy";
 import { Separator } from "@/components/ui/separator";
 import FilterCategories from "./filter-categories";
 import FilterRating from "./filter-rating";
@@ -8,6 +9,7 @@ import FilterPrice from "./filter-price";
 import FilterBrands from "./filter-brands";
 
 interface SideFilterProps {
+    breadcrumbItems?: { label: string; href?: string }[];
     selectedCategories?: string[];
     selectedRatings?: number[];
     selectedPriceRanges?: string[];
@@ -19,6 +21,7 @@ interface SideFilterProps {
 }
 
 export default function SideFilter({
+    breadcrumbItems,
     selectedCategories = [],
     selectedRatings = [],
     selectedPriceRanges = [],
