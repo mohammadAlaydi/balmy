@@ -6,7 +6,7 @@ import { AlertCircle, Wifi } from "lucide-react";
 import { FaHeart, FaRegHeart, FaTrashAlt } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
 import SectionTitle from "@/components/section-title";
-import ProductCard from "@/components/product-card";
+import ProductCard from "@/components/ProductCard";
 import toast from "react-hot-toast";
 import { ProtectedRoute } from "@/components/auth/protected-route";
 import { useFavourites } from "@/hooks/use-favourites";

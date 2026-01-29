@@ -1,9 +1,13 @@
 "use client";
 
 import React from "react";
-import { Checkbox } from "@/components/ui/checkbox";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
+<<<<<<< HEAD
 import StarRating from "@/components/react-stars";
+=======
+import { Rating, RatingButton } from "@/components/ui/rating";
+>>>>>>> 60a01ce7b4dfd7741b9f48e62f12a2ce3d5cac44
 
 interface RatingOption {
     value: number;
@@ -26,16 +30,13 @@ export default function FilterRating({
         { value: 1 },
     ];
 
-    const handleRatingChange = (rating: number, checked: boolean) => {
+    const handleRatingChange = (value: string) => {
         if (!onRatingChange) return;
-
-        if (checked) {
-            onRatingChange([...selectedRatings, rating]);
-        } else {
-            onRatingChange(selectedRatings.filter((r) => r !== rating));
-        }
+        const rating = parseInt(value);
+        onRatingChange([rating]);
     };
 
+<<<<<<< HEAD
     const renderStars = (count: number) => {
         return (
             <div className="flex items-center gap-0.5">
@@ -43,32 +44,40 @@ export default function FilterRating({
             </div>
         );
     };
+=======
+
+>>>>>>> 60a01ce7b4dfd7741b9f48e62f12a2ce3d5cac44
 
     return (
         <div className="space-y-4">
             <h3 className="text-lg font-bold text-black">حسب التقييم</h3>
-            <div className="space-y-3">
+            <RadioGroup
+                value={selectedRatings[0]?.toString() || ""}
+                onValueChange={handleRatingChange}
+                className="space-y-3"
+            >
                 {ratingOptions.map((option) => (
                     <div
                         key={option.value}
-                        className="flex items-start space-x-2 space-x-reverse"
+                        className="flex items-center justify-end gap-3"
                     >
-                        <Checkbox
-                            id={`rating-${option.value}`}
-                            checked={selectedRatings.includes(option.value)}
-                            onCheckedChange={(checked) =>
-                                handleRatingChange(option.value, checked as boolean)
-                            }
-                        />
                         <Label
                             htmlFor={`rating-${option.value}`}
                             className="flex items-center gap-2 text-sm font-normal cursor-pointer text-medium-gray hover:text-black transition-colors"
                         >
-                            {renderStars(option.value)}
+                            <Rating readOnly value={option.value}>
+                                {Array.from({ length: 5 }).map((_, i) => (
+                                    <RatingButton key={i} />
+                                ))}
+                            </Rating>
                         </Label>
+                        <RadioGroupItem
+                            id={`rating-${option.value}`}
+                            value={option.value.toString()}
+                        />
                     </div>
                 ))}
-            </div>
+            </RadioGroup>
         </div>
     );
 }

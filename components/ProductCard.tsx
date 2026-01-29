@@ -9,6 +9,10 @@ import AddToCartBtn from "./AddToCartBtn";
 import RiyalSymbol from "./RiyalSymbol";
 
 interface ProductCardProps {
+  product?: any;
+  cardColSpan?: string;
+  wishlistId?: string | number;
+  wishlistProductId?: string | number;
   brandName?: string;
   productName?: string;
   price?: number;
@@ -23,19 +27,34 @@ interface ProductCardProps {
 }
 
 export default function ProductCard({
-  brandName = "توم فورد",
-  productName = "أومبري ليذر أو دو برفيوم",
-  price = 749,
-  oldPrice = 480,
-  discount = 20,
-  imageUrl = "/images/card-image.png",
-  category = "نسائي",
-  rating = 5,
-  isVerified = true,
+  product,
+  cardColSpan,
+  wishlistId,
+  wishlistProductId,
+  brandName: initialBrandName,
+  productName: initialProductName,
+  price: initialPrice,
+  oldPrice: initialOldPrice,
+  discount: initialDiscount,
+  imageUrl: initialImageUrl,
+  category: initialCategory,
+  rating: initialRating,
+  isVerified: initialIsVerified = true,
   onAddToCart,
   onToggleFavorite,
 }: ProductCardProps) {
   const [favorited, setFavorited] = useState(false);
+
+  // Extract from product object if provided
+  const brandName = initialBrandName ?? product?.brand?.name ?? product?.brand_name ?? "توم فورد";
+  const productName = initialProductName ?? product?.name ?? product?.description ?? "أومبري ليذر أو دو برفيوم";
+  const price = initialPrice ?? Number(product?.price) ?? 749;
+  const oldPrice = initialOldPrice ?? (product?.original_price || product?.price_regular?.value) ?? (price > 0 ? price * 1.3 : 480);
+  const discount = initialDiscount ?? product?.discount_percent ?? (oldPrice > price ? Math.round(((oldPrice - price) / oldPrice) * 100) : 0);
+  const imageUrl = initialImageUrl ?? (product?.images?.[0]?.url || product?.image || "/images/card-image.png");
+  const category = initialCategory ?? (typeof product?.category === "string" ? product?.category : product?.category?.name) ?? "نسائي";
+  const rating = initialRating ?? Number(product?.rating || product?.reviews?.average_rating || 5);
+  const isVerified = initialIsVerified !== false && product?.is_verified !== false;
 
   return (
     <div className="relative w-full max-w-sm bg-white rounded-2xl overflow-hidden hover:shadow-lg transition-shadow font-[family-name:var(--font-cairo)]" dir="rtl">

@@ -32,15 +32,8 @@ export default function SideFilter({
     onBrandChange,
 }: SideFilterProps) {
     return (
-        <div className="bg-transparent p-6 sticky top-6 ">
-            <div className="space-y-6 w-full max-w-xs mx-auto text-start border-l border-black">
-                {/* Breadcrumb above filters */}
-                {breadcrumbItems && (
-                    <div className="mb-4">
-                        <BreadcrumbBalmy items={breadcrumbItems} className="text-lg font-semibold font-cairo" />
-                    </div>
-                )}
-
+        <div className="bg-transparent p-6 sticky top-6">
+            <div className="space-y-6 w-full max-w-xs mx-auto">
                 {/* Filter Categories */}
                 <div className="w-full">
                     <FilterCategories

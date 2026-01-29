@@ -1,7 +1,12 @@
 "use client";
 
 import React, { useState } from "react";
+<<<<<<< HEAD
 import ProductCard from "@/components/ProductCard";
+=======
+import { BreadcrumbBalmy } from "@/components/balmy";
+import ProductCard from "@/components/product-card";
+>>>>>>> 60a01ce7b4dfd7741b9f48e62f12a2ce3d5cac44
 import SideFilter from "@/components/offers/side-filter";
 import {
     Select,
@@ -187,6 +192,7 @@ export default function OffersPage() {
 
                         {/* Product Grid - 3 products per row on desktop */}
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
+<<<<<<< HEAD
                             {sortedProducts.map((product) => {
                                 const currentPrice = product.discountPrice ?? product.price;
                                 const discountPercent = product.discountPrice
@@ -210,6 +216,21 @@ export default function OffersPage() {
                                     </div>
                                 );
                             })}
+=======
+                            {sortedProducts.map((product) => (
+                                <div key={product.id} className="w-full max-w-sm mx-auto">
+                                    <ProductCard
+                                        product={product}
+                                        brandName={product.brand}
+                                        productName={product.name}
+                                        price={product.discountPrice || product.price}
+                                        oldPrice={product.discountPrice ? product.price : undefined}
+                                        imageUrl={product.image}
+                                        rating={product.rating}
+                                    />
+                                </div>
+                            ))}
+>>>>>>> 60a01ce7b4dfd7741b9f48e62f12a2ce3d5cac44
                         </div>
 
                         {/* Load More Button */}

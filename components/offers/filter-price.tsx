@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Checkbox } from "@/components/ui/checkbox";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 
 interface PriceRange {
@@ -29,41 +29,37 @@ export default function FilterPrice({
         { id: "over-1000", label: "أكثر من 1000 ريال", min: 1000, max: null },
     ];
 
-    const handlePriceChange = (rangeId: string, checked: boolean) => {
+    const handlePriceChange = (value: string) => {
         if (!onPriceChange) return;
-
-        if (checked) {
-            onPriceChange([...selectedRanges, rangeId]);
-        } else {
-            onPriceChange(selectedRanges.filter((r) => r !== rangeId));
-        }
+        onPriceChange([value]);
     };
 
     return (
         <div className="space-y-4">
             <h3 className="text-lg font-bold text-black">حسب السعر</h3>
-            <div className="space-y-3">
+            <RadioGroup
+                value={selectedRanges[0] || ""}
+                onValueChange={handlePriceChange}
+                className="space-y-3"
+            >
                 {priceRanges.map((range) => (
                     <div
                         key={range.id}
-                        className="flex items-start space-x-2 space-x-reverse"
+                        className="flex items-center justify-end gap-3"
                     >
-                        <Checkbox
-                            id={range.id}
-                            checked={selectedRanges.includes(range.id)}
-                            onCheckedChange={(checked) =>
-                                handlePriceChange(range.id, checked as boolean)
-                            }
-                        />
                         <Label
                             htmlFor={range.id}
                             className="text-sm font-normal cursor-pointer text-medium-gray hover:text-black transition-colors"
                         >
                             {range.label}
                         </Label>
+                        <RadioGroupItem
+                            id={range.id}
+                            value={range.id}
+                        />
                     </div>
                 ))}
-            </div>
+            </RadioGroup>
         </div>
     );
 }

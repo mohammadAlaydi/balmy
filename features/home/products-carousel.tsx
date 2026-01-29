@@ -1,5 +1,5 @@
 import CarouselComponent from "@/components/carousel-component";
-import ProductCard from "@/components/product-card";
+import ProductCard from "@/components/ProductCard";
 import React from "react";
 import { SwiperSlide } from "swiper/react";
 

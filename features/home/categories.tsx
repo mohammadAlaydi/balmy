@@ -6,10 +6,10 @@ import { SwiperSlide } from "swiper/react";
 import { isEnvagloCdnUrl, normalizeRemoteImageUrl } from "@/lib/utils";
 
 interface Category {
-  id?: string | number;
-  name?: string;
-  meta_title?: string;
-  banner_url?: string;
+  src: string;
+  h2: string;
+  p: string;
+  link: string;
 }
 
 export default function Categories({ categories , locale }: { categories: any  , locale : string}) {
@@ -18,9 +18,6 @@ export default function Categories({ categories , locale }: { categories: any  ,
     navigation={true}
       spaceBetween={20}
       slidesPerView={1}
-      centeredSlides
-      centerInsufficientSlides
-      centeredSlidesBounds
       containerClassName={`categories-carousel h-auto ${
         locale === "ar" ? "rtl" : "ltr"
       }`}

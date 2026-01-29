@@ -5,7 +5,7 @@ import { FaSearch } from "react-icons/fa";
 import { IoClose } from "react-icons/io5";
 import { Badge } from "./ui/badge";
 import { Input } from "./ui/input";
-import ProductCard from "./product-card";
+import ProductCard from "./ProductCard";
 import Loading from "./loading";
 
 import useSearch from "@/hooks/use-search";
@@ -51,15 +51,14 @@ const SearchComponent: React.FC<SearchComponentProps> = ({ maxHeight }) => {
     setSearchCategory("");
     setCategoryIndex(null);
   };
- console.log(searchCategory , "✨✨✨✨✨✨✨✨" ,filteredProducts);
+  console.log(searchCategory, "✨✨✨✨✨✨✨✨", filteredProducts);
   // =============================
   // 🎨 Render
   // =============================
   return (
     <div
-      className={`w-full h-full flex flex-col gap-5 py-3 ${
-        maxHeight ?? "h-full rounded-md"
-      }`}
+      className={`w-full h-full flex flex-col gap-5 py-3 ${maxHeight ?? "h-full rounded-md"
+        }`}
     >
       {/* 🔍 Search Input */}
       <div className="w-full relative mt-4">
@@ -83,11 +82,10 @@ const SearchComponent: React.FC<SearchComponentProps> = ({ maxHeight }) => {
               return (
                 <Badge
                   key={category.id ?? index}
-                  className={`cursor-pointer border border-gray-200 rounded-md text-sm py-1 px-3 transition-colors duration-200 ${
-                    isActive
-                      ? "bg-black text-white"
-                      : "bg-white text-black hover:bg-gray-100"
-                  }`}
+                  className={`cursor-pointer border border-gray-200 rounded-md text-sm py-1 px-3 transition-colors duration-200 ${isActive
+                    ? "bg-black text-white"
+                    : "bg-white text-black hover:bg-gray-100"
+                    }`}
                   onClick={() => {
                     setSearchCategory(category?.id ?? "");
                     setCategoryIndex(index);

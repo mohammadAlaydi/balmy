@@ -13,6 +13,7 @@
     "changelog": "سجل التغييرات",
     "menu": "القائمة",
     "language": "اللغة",
+    "track-order": "تتبع الطلب",
     "no-categories-found": "لم يتم العثور على فئات."
   },
   "contact": {
@@ -572,7 +573,11 @@
     "search-results": "نتائج البحث",
     "suggested-words": "كلمات مقترحة",
     "clear-filters": "مسح المرشحات",
-    "search-suggestions": ["نعال", "حذاء", "شماغ"],
+    "search-suggestions": [
+      "نعال",
+      "حذاء",
+      "شماغ"
+    ],
     "search-products": "البحث عن المنتجات",
     "search-description": "ابحث عن المنتجات في متجرنا",
     "no-results-found": "لم يتم العثور على نتائج"
@@ -726,7 +731,6 @@
     "price-low-to-high": "السعر: من الأقل للأعلى",
     "price-high-to-low": "السعر: من الأعلى للأقل",
     "rating": "التقييم",
-    "no-products-match-filters": "لا توجد منتجات تطابق المرشحات",
     "available": "متوفر",
     "unavailable": "غير متوفر",
     "limited-stock": "مخزون محدود",

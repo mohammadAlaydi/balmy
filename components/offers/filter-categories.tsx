@@ -47,62 +47,32 @@ export default function FilterCategories({
         onCategoryChange([value]);
     };
 
-    if (useRadio) {
-        return (
-            <div className="space-y-4">
-                <h3 className="text-lg font-bold text-black">الفئات</h3>
-                <RadioGroup
-                    value={selectedCategories[0] || ""}
-                    onValueChange={handleRadioChange}
-                    className="space-y-3"
-                >
-                    {categories.map((category) => (
-                        <div
-                            key={category.id}
-                            className="flex items-start space-x-2 space-x-reverse"
-                        >
-                            <RadioGroupItem
-                                id={category.id}
-                                value={category.id}
-                            />
-                            <Label
-                                htmlFor={category.id}
-                                className="text-sm font-normal cursor-pointer text-medium-gray hover:text-black transition-colors"
-                            >
-                                {category.name}
-                            </Label>
-                        </div>
-                    ))}
-                </RadioGroup>
-            </div>
-        );
-    }
-
     return (
         <div className="space-y-4">
             <h3 className="text-lg font-bold text-black">الفئات</h3>
-            <div className="space-y-3">
+            <RadioGroup
+                value={selectedCategories[0] || ""}
+                onValueChange={handleRadioChange}
+                className="space-y-3"
+            >
                 {categories.map((category) => (
                     <div
                         key={category.id}
-                        className="flex items-start space-x-2 space-x-reverse"
+                        className="flex items-center justify-end gap-3"
                     >
-                        <Checkbox
-                            id={category.id}
-                            checked={selectedCategories.includes(category.id)}
-                            onCheckedChange={(checked) =>
-                                handleCategoryChange(category.id, checked as boolean)
-                            }
-                        />
                         <Label
                             htmlFor={category.id}
                             className="text-sm font-normal cursor-pointer text-medium-gray hover:text-black transition-colors"
                         >
                             {category.name}
                         </Label>
+                        <RadioGroupItem
+                            id={category.id}
+                            value={category.id}
+                        />
                     </div>
                 ))}
-            </div>
+            </RadioGroup>
         </div>
     );
 }
