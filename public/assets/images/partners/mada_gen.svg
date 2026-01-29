@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 60">
+  <defs>
+    <style>
+      .text { font-family: Arial, sans-serif; font-weight: bold; }
+    </style>
+  </defs>
+  <!-- Mada Blue #00589b -->
+  <rect x="10" y="10" width="80" height="15" fill="#00589b"/>
+  <!-- Mada Green #8dc63f -->
+  <rect x="10" y="30" width="80" height="15" fill="#8dc63f"/>
+  <text x="100" y="40" class="text" fill="#000000" font-size="30">mada</text>
+  <text x="100" y="20" class="text" fill="#000000" font-size="20">مدى</text>
+</svg>

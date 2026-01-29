@@ -4,29 +4,37 @@ import React from "react";
 
 export default function PromotionalBannerSection() {
     return (
-        <div className="w-full flex justify-center px-4 my-8 md:my-16">
+        // The outer div handles vertical spacing
+        <div className="relative w-full my-8 md:my-24">
+            {/* 
+                Break out of the parent container to achieve full viewport width (100vw).
+                Using left: 50% and -translate-x-1/2 centers it relative to the viewport.
+            */}
             <div
-                className="relative w-full max-w-[1707px] h-[400px] md:h-[600px] lg:h-[726px] border border-white rounded-[30px] md:rounded-[60px] overflow-hidden bg-cover bg-center bg-no-repeat shadow-lg"
-                style={{ backgroundImage: "url('/assets/images/ai-generated-luxury-perfume-cosmetic-premium-glass-bottle-banner-poster-for-beauty-promotion-of-elegant-product-for-ads-on-draped-silk-fabric-clothing-elegants-landscape.jpg')" }}
+                className="absolute left-1/2 -translate-x-1/2 w-screen h-[400px] md:h-[600px] lg:h-[829px] overflow-hidden"
+                style={{
+                    maxWidth: '100vw' // Prevent horizontal scrollbar
+                }}
             >
-                <div className="absolute inset-0 bg-black/10" /> {/* Optional overlay for text contrast if needed */}
+                <div
+                    className="w-full h-full bg-cover bg-center bg-no-repeat transition-all duration-300 shadow-xl"
+                    style={{
+                        backgroundImage: "url('/assets/images/vecteezy_gold-silk-fabric-background_49939843.jpg')",
+                    }}
+                >
+                    <div className="absolute inset-0 bg-black/5" />
 
-                <div className="h-full w-full flex items-center justify-end md:justify-end pr-8 md:pr-[100px]" dir="ltr">
-                    {/* 
-                Note: The user asked for "Left side" alignment. 
-                In LTR, justify-start is left. 
-                In RTL context (which the site usually is), we need to be careful.
-                The user said "Align the text to the left side... Add significant left padding".
-                So regardless of direction, visually it should be on the left.
-             */}
-
-                    <div className="flex h-full items-center justify-start absolute inset-0 pl-8 md:pl-[100px]">
-                        <span className="text-white font-[100] text-[120px] md:text-[200px] lg:text-[300px] leading-none font-sans select-none drop-shadow-sm">
-                            50%
-                        </span>
+                    <div className="h-full w-full max-w-[1707px] mx-auto flex items-center pr-4 md:pr-[100px]" dir="ltr">
+                        <div className="flex h-full items-center justify-start pl-8 md:pl-[100px]">
+                            <span className="text-white font-[100] text-[80px] sm:text-[120px] md:text-[250px] lg:text-[300px] leading-none font-sans select-none drop-shadow-2xl">
+                                50%
+                            </span>
+                        </div>
                     </div>
                 </div>
             </div>
+            {/* Spacer to preserve height in the flow since the banner is absolute */}
+            <div className="h-[400px] md:h-[600px] lg:h-[829px] w-full invisible"></div>
         </div>
     );
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { HeroBalmy, ProductsSectionBalmy, PaymentInstallmentBanner, BrandsShowcaseSection, PromotionalBannerSection } from "@/components/balmy";
+import { HeroBalmy, ProductsSectionBalmy, PaymentInstallmentBanner, BrandsShowcaseSection, PromotionalBannerSection, TrustFeaturesSection } from "@/components/balmy";
 import ProductsSection from "@/components/ProductsSection";
 import BannerCarousel from "@/features/home/banner-carousel";
 import ProductsCarousel from "@/features/home/products-carousel";
@@ -72,6 +72,9 @@ export default function HomePageClient() {
               products={data.niche_products.slice(0, 4)}
             />
           )}
+
+          {/* Trust Features & Partners Section */}
+          <TrustFeaturesSection />
         </div>
       </PageWrapper>
     </>

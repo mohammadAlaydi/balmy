@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 60">
+  <defs>
+    <style>
+      .text { font-family: Arial, sans-serif; font-weight: bold; }
+    </style>
+  </defs>
+  <!-- Aramex Red Color #EF3829 -->
+  <text x="10" y="45" class="text" fill="#EF3829" font-size="50">aramex</text>
+</svg>

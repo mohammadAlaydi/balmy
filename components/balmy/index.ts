@@ -12,6 +12,8 @@ export { default as FooterBalmy } from "./footer-balmy";
 export { default as PaymentInstallmentBanner } from "./payment-installment-banner";
 export { default as BrandsShowcaseSection } from "./brands-showcase-section";
 export { default as PromotionalBannerSection } from "./promotional-banner-section";
+export { default as TrustFeaturesSection } from "./trust-features-section";
+
 
 
 
