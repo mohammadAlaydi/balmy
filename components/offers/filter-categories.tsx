@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import { Checkbox } from "@/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 
@@ -44,7 +43,12 @@ export default function FilterCategories({
 
     const handleRadioChange = (value: string) => {
         if (!onCategoryChange) return;
-        onCategoryChange([value]);
+        // Toggle: if same as current selection, clear; otherwise set
+        if (selectedCategories[0] === value) {
+            onCategoryChange([]);
+        } else {
+            onCategoryChange([value]);
+        }
     };
 
     return (
@@ -59,6 +63,11 @@ export default function FilterCategories({
                     <div
                         key={category.id}
                         className="flex items-center justify-end gap-3"
+                        onClick={() => {
+                            if (selectedCategories[0] === category.id) {
+                                onCategoryChange?.([]);
+                            }
+                        }}
                     >
                         <Label
                             htmlFor={category.id}

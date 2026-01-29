@@ -3,11 +3,7 @@
 import React from "react";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
-<<<<<<< HEAD
 import StarRating from "@/components/react-stars";
-=======
-import { Rating, RatingButton } from "@/components/ui/rating";
->>>>>>> 60a01ce7b4dfd7741b9f48e62f12a2ce3d5cac44
 
 interface RatingOption {
     value: number;
@@ -33,20 +29,19 @@ export default function FilterRating({
     const handleRatingChange = (value: string) => {
         if (!onRatingChange) return;
         const rating = parseInt(value);
-        onRatingChange([rating]);
+        // Toggle: if same as current selection, clear; otherwise set
+        if (selectedRatings[0] === rating) {
+            onRatingChange([]);
+        } else {
+            onRatingChange([rating]);
+        }
     };
 
-<<<<<<< HEAD
-    const renderStars = (count: number) => {
-        return (
-            <div className="flex items-center gap-0.5">
-                <StarRating rating={count} count={5} half={false} inline className="inline-flex" />
-            </div>
-        );
-    };
-=======
-
->>>>>>> 60a01ce7b4dfd7741b9f48e62f12a2ce3d5cac44
+    const renderStars = (count: number) => (
+        <div className="flex items-center gap-0.5">
+            <StarRating rating={count} count={5} half={false} inline className="inline-flex" dir="rtl" />
+        </div>
+    );
 
     return (
         <div className="space-y-4">
@@ -60,16 +55,17 @@ export default function FilterRating({
                     <div
                         key={option.value}
                         className="flex items-center justify-end gap-3"
+                        onClick={() => {
+                            if (selectedRatings[0] === option.value) {
+                                onRatingChange?.([]);
+                            }
+                        }}
                     >
                         <Label
                             htmlFor={`rating-${option.value}`}
                             className="flex items-center gap-2 text-sm font-normal cursor-pointer text-medium-gray hover:text-black transition-colors"
                         >
-                            <Rating readOnly value={option.value}>
-                                {Array.from({ length: 5 }).map((_, i) => (
-                                    <RatingButton key={i} />
-                                ))}
-                            </Rating>
+                            {renderStars(option.value)}
                         </Label>
                         <RadioGroupItem
                             id={`rating-${option.value}`}

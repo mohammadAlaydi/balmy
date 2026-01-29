@@ -75,7 +75,7 @@ const dummyProducts = [
     },
 ];
 
-export default function OffersPage() {
+export default function MenPage() {
     const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
     const [selectedRatings, setSelectedRatings] = useState<number[]>([]);
     const [selectedPriceRanges, setSelectedPriceRanges] = useState<string[]>([]);
@@ -126,7 +126,7 @@ export default function OffersPage() {
 
     const breadcrumbItems = [
         { label: "الرئيسية", href: "/" },
-        { label: "العروض", href: "/offers" },
+        { label: "الرجال", href: "/men" },
     ];
 
     return (
@@ -177,7 +177,14 @@ export default function OffersPage() {
                                 </Select>
                             </div>
                         </div>
-                        
+
+                        {/* Products Count */}
+                        <div className="mb-6">
+                            <p className="text-sm text-medium-gray">
+                                عرض {sortedProducts.length} من المنتجات
+                            </p>
+                        </div>
+
                         {/* Product Grid - 3 products per row on desktop */}
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
                             {sortedProducts.map((product) => {
