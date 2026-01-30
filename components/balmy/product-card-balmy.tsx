@@ -4,7 +4,7 @@ import Image from "next/image";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { motion, AnimatePresence } from "framer-motion";
 import toast from "react-hot-toast";
 import { BeatLoader } from "react-spinners";
@@ -101,6 +101,7 @@ export default function ProductCardBalmy({
   const { moveToCart } = useFavourites();
   const t = useTranslations("products");
   const td = useTranslations("product-details");
+  const locale = useLocale();
 
   const { productDetails } = useSelector((state: any) => state.productDetails);
   const { isAuthenticated } = useSelector((state: any) => state.auth);
@@ -197,7 +198,7 @@ export default function ProductCardBalmy({
           sizes="(max-width: 768px) 100vw, 33vw"
           quality={95}
           className="object-cover object-center transition-transform duration-500 transform group-hover:scale-105 cursor-pointer"
-          onClick={() => router.push(`/product/${wishlistProductId || product?.product_id}`)}
+          onClick={() => router.push(`/${locale}/product/${wishlistProductId || product?.product_id}`)}
           priority
         />
 

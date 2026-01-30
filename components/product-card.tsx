@@ -4,7 +4,7 @@ import Image from "next/image";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { motion, AnimatePresence } from "framer-motion";
 import toast from "react-hot-toast";
 import { BeatLoader } from "react-spinners";
@@ -98,6 +98,7 @@ export default function ProductCard({
 
   const dispatch = useAppDispatch();
   const router = useRouter();
+  const locale = useLocale();
   const { moveToCart } = useFavourites();
   const t = useTranslations("products");
   const td = useTranslations("product-details");
@@ -232,7 +233,7 @@ export default function ProductCard({
             className="object-cover transition-transform duration-500 transform group-hover:scale-105 cursor-pointer"
             onClick={() =>
               router.push(
-                `/product/${wishlistProductId || product?.product_id}`
+                `/${locale}/product/${wishlistProductId || product?.product_id}`
               )
             }
             priority
@@ -249,7 +250,7 @@ export default function ProductCard({
               className="object-cover transition-transform duration-500 transform group-hover:scale-105 opacity-0 group-hover:opacity-100 cursor-pointer"
               onClick={() =>
                 router.push(
-                  `/product/${wishlistProductId || product?.product_id}`
+                  `/${locale}/product/${wishlistProductId || product?.product_id}`
                 )
               }
             />
@@ -397,13 +398,13 @@ export default function ProductCard({
             {productPrice.toFixed(2)} <i className="icon-rial"></i>
           </p>
           <div className="hidden sm:flex items-center gap-1 bg-gray-100 px-2 rounded-full w-fit shadow-sm">
-            <Rating readOnly value={Math.floor(Number(product?.reviews?.average_rating || 4.5))} max={5}>
+            <Rating readOnly value={Math.floor(Number((product?.reviews as any)?.average_rating || 4.5))} max={5}>
               {Array.from({ length: 5 }).map((_, i) => (
                 <RatingButton key={i} size={14} />
               ))}
             </Rating>
             <Badge className="bg-transparent text-gray-500 p-0 text-sm font-[550]">
-              {product?.reviews?.average_rating || 4.5}
+              {(product?.reviews as any)?.average_rating || 4.5}
             </Badge>{" "}
           </div>
         </div>

@@ -1,7 +1,7 @@
 "use client";
 
 import { HeroBalmy, ProductsSectionBalmy, PaymentInstallmentBanner, BrandsShowcaseSection, PromotionalBannerSection, TrustFeaturesSection } from "@/components/balmy";
-import ProductsSection from "@/components/ProductsSection";
+
 import BannerCarousel from "@/features/home/banner-carousel";
 import ProductsCarousel from "@/features/home/products-carousel";
 import Loading from "@/components/loading";
@@ -26,7 +26,7 @@ export default function HomePageClient() {
         <div className="my-8 flex flex-col gap-16 relative">
           {/* Featured Products Section */}
           {data?.featured_products && data.featured_products.length > 0 && (
-            <ProductsSection
+            <ProductsSectionBalmy
               title="العـــــــروض"
               products={data.featured_products.slice(0, 4)}
             />
@@ -34,7 +34,7 @@ export default function HomePageClient() {
 
           {/* Best Sellers Section */}
           {data?.best_sellers && data.best_sellers.length > 0 && (
-            <ProductsSection
+            <ProductsSectionBalmy
               title="الأكثـــر مبيعــــــــــــاً"
               products={data.best_sellers.slice(0, 4)}
             />
@@ -45,7 +45,7 @@ export default function HomePageClient() {
 
           {/* Exclusive Section */}
           {data?.exclusive_products && data.exclusive_products.length > 0 && (
-            <ProductsSection
+            <ProductsSectionBalmy
               title="حصـــــــــــري"
               products={data.exclusive_products.slice(0, 4)}
             />
@@ -56,7 +56,7 @@ export default function HomePageClient() {
 
           {/* Sets and Collections Section */}
           {data?.sets_products && data.sets_products.length > 0 && (
-            <ProductsSection
+            <ProductsSectionBalmy
               title="اطقم ومجموعات"
               products={data.sets_products.slice(0, 4)}
             />
@@ -67,7 +67,7 @@ export default function HomePageClient() {
 
           {/* Niche Section */}
           {data?.niche_products && data.niche_products.length > 0 && (
-            <ProductsSection
+            <ProductsSectionBalmy
               title="نيــــــــــــش"
               products={data.niche_products.slice(0, 4)}
             />
@@ -75,7 +75,7 @@ export default function HomePageClient() {
 
           {/* Men Section */}
           {data?.men_products && data.men_products.length > 0 && (
-            <ProductsSection
+            <ProductsSectionBalmy
               title="رجــــــــــــالي"
               products={data.men_products.slice(0, 4)}
             />
@@ -83,7 +83,7 @@ export default function HomePageClient() {
 
           {/* Women Section */}
           {data?.women_products && data.women_products.length > 0 && (
-            <ProductsSection
+            <ProductsSectionBalmy
               title="نســــــــــــائي"
               products={data.women_products.slice(0, 4)}
             />
@@ -91,7 +91,7 @@ export default function HomePageClient() {
 
           {/* Unisex Section */}
           {data?.unisex_products && data.unisex_products.length > 0 && (
-            <ProductsSection
+            <ProductsSectionBalmy
               title="للجنســــــــــــين"
               products={data.unisex_products.slice(0, 4)}
             />
@@ -99,7 +99,7 @@ export default function HomePageClient() {
 
           {/* Brands Section */}
           {data?.brands_products && data.brands_products.length > 0 && (
-            <ProductsSection
+            <ProductsSectionBalmy
               title="الماركــــــــــــات"
               products={data.brands_products.slice(0, 4)}
             />

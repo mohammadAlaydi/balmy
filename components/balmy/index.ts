@@ -14,6 +14,10 @@ export { default as BrandsShowcaseSection } from "./brands-showcase-section";
 export { default as PromotionalBannerSection } from "./promotional-banner-section";
 export { default as TrustFeaturesSection } from "./trust-features-section";
 
-
-
-
+// Product Details Components
+export { default as ProductImageGalleryBalmy } from "./product-image-gallery-balmy";
+export { default as ProductInfoBalmy } from "./product-info-balmy";
+export { default as SizeSelectorBalmy } from "./size-selector-balmy";
+export { default as DeliveryInfoBalmy } from "./delivery-info-balmy";
+export { default as ReviewsSectionBalmy } from "./reviews-section-balmy";
+export { default as ProductDetailsBalmy } from "./product-details-balmy";

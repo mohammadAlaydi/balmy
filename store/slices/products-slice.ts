@@ -40,13 +40,13 @@
 //         method: 'GET',
 //         credentials: 'include', // Include httpOnly cookies
 //       });
-      
+
 //       const data = await response.json();
-      
+
 //       if (!response.ok) {
 //         return rejectWithValue(data.message || 'Failed to fetch products');
 //       }
-      
+
 //       return data as Product[];
 //     } catch (error: any) {
 //       console.error('Products fetch error:', error);
@@ -64,13 +64,13 @@
 //         method: 'GET',
 //         credentials: 'include', // Include httpOnly cookies
 //       });
-      
+
 //       const data = await response.json();
-      
+
 //       if (!response.ok) {
 //         return rejectWithValue(data.message || 'Failed to fetch product');
 //       }
-      
+
 //       return data as Product;
 //     } catch (error: any) {
 //       console.error('Product fetch error:', error);
@@ -240,7 +240,15 @@ export const productApi = createApi({
   tagTypes: ["Product"],
   endpoints: (builder) => ({
     getProductDetails: builder.query<ProductDetailsApiResponse, number>({
-      query: (id) => `/api/product-details/${id}`,
+      queryFn: async (id, _queryApi, _extraOptions, baseQuery) => {
+        if (DISABLE_BACKEND_FETCH) {
+          await mockDelay();
+          console.log(`🚧 [DEV] Product Details ${id} fetch bypassed - using mock data`);
+          // Ensure we return the data structure expected by the frontend
+          return { data: MOCK_PRODUCT_DETAILS(id) };
+        }
+        return baseQuery(`/api/product-details/${id}`) as any;
+      },
       providesTags: (result, error, id) => [{ type: "Product", id }],
     }),
   }),

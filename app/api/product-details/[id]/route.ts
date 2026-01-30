@@ -1,15 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 
+import { DISABLE_BACKEND_FETCH, MOCK_PRODUCT_DETAILS } from "@/lib/dev-config";
+
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
-const DISABLE_BACKEND_FETCH = process.env.DISABLE_BACKEND_FETCH === "true"; // Assuming this is defined elsewhere
-const MOCK_PRODUCT_DETAILS = (id: number) => ({ // Assuming this is defined elsewhere
-  id: id,
-  name: `Mock Product ${id}`,
-  description: `This is a mock description for product ${id}.`,
-  price: 100 + id,
-  currency: "USD",
-});
 
 export async function GET(
   request: Request,

@@ -4,7 +4,7 @@ import React from "react";
 import { useTranslations } from "next-intl";
 import { useGetProductDetailsQuery } from "@/store/slices/products-slice";
 import Loading from "@/components/loading";
-import SingleProductCard from "@/components/product-details-components/single-product-details";
+import ProductDetailsBalmy from "@/components/balmy/product-details-balmy";
 
 interface ProductPageStatusProps {
   productId: number;
@@ -13,7 +13,7 @@ interface ProductPageStatusProps {
 export default function ProductPageStatus({ productId }: ProductPageStatusProps) {
 
   const t = useTranslations("product-details");
-  
+
   const { data, isLoading, error, refetch } = useGetProductDetailsQuery(productId);
 
   if (isLoading) {
@@ -41,6 +41,6 @@ export default function ProductPageStatus({ productId }: ProductPageStatusProps)
     );
   }
 
-  // ✅ Render actual product
-  return <SingleProductCard product={data.data} />;
+  // ✅ Render ProductDetailsBalmy with Balmy styling
+  return <ProductDetailsBalmy product={data.data} />;
 }
