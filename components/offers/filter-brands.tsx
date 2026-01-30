@@ -47,7 +47,7 @@ export default function FilterBrands({
             <RadioGroup
                 value={selectedBrands[0] || ""}
                 onValueChange={handleBrandChange}
-                className="space-y-3 max-h-80 overflow-y-auto"
+                className="space-y-3"
             >
                 {brands.map((brand) => (
                     <div

@@ -73,6 +73,38 @@ export default function HomePageClient() {
             />
           )}
 
+          {/* Men Section */}
+          {data?.men_products && data.men_products.length > 0 && (
+            <ProductsSection
+              title="رجــــــــــــالي"
+              products={data.men_products.slice(0, 4)}
+            />
+          )}
+
+          {/* Women Section */}
+          {data?.women_products && data.women_products.length > 0 && (
+            <ProductsSection
+              title="نســــــــــــائي"
+              products={data.women_products.slice(0, 4)}
+            />
+          )}
+
+          {/* Unisex Section */}
+          {data?.unisex_products && data.unisex_products.length > 0 && (
+            <ProductsSection
+              title="للجنســــــــــــين"
+              products={data.unisex_products.slice(0, 4)}
+            />
+          )}
+
+          {/* Brands Section */}
+          {data?.brands_products && data.brands_products.length > 0 && (
+            <ProductsSection
+              title="الماركــــــــــــات"
+              products={data.brands_products.slice(0, 4)}
+            />
+          )}
+
           {/* Trust Features & Partners Section */}
           <TrustFeaturesSection />
         </div>
