@@ -25,7 +25,7 @@ export const DISABLE_BACKEND_FETCH = true;
 // Placeholder image URLs - using local image
 const PLACEHOLDER_BANNER = "/abood.jpg";
 const PLACEHOLDER_CATEGORY = "/abood.jpg";
-const PLACEHOLDER_PRODUCT = "/abood.jpg";
+const PLACEHOLDER_PRODUCT = "/images/Gemini_Generated_Image_ne86f2ne86f2ne86.png";
 const PLACEHOLDER_AD = "/abood.jpg";
 
 export const MOCK_USER = {
@@ -58,11 +58,11 @@ export const MOCK_PRODUCTS = {
       inStock: true,
       new: true,
       base_image: {
-        url: PLACEHOLDER_PRODUCT,
-        original_image_url: PLACEHOLDER_PRODUCT
+        url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86.png",
+        original_image_url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86.png"
       },
       images: [
-        { url: PLACEHOLDER_PRODUCT, original_image_url: PLACEHOLDER_PRODUCT }
+        { url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86.png", original_image_url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86.png" }
       ],
       category_id: [1, 4],
       reviews: { total: 125, average_rating: 4.9 },
@@ -81,11 +81,11 @@ export const MOCK_PRODUCTS = {
       inStock: true,
       new: false,
       base_image: {
-        url: PLACEHOLDER_PRODUCT,
-        original_image_url: PLACEHOLDER_PRODUCT
+        url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86 (1).png",
+        original_image_url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86 (1).png"
       },
       images: [
-        { url: PLACEHOLDER_PRODUCT, original_image_url: PLACEHOLDER_PRODUCT }
+        { url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86 (1).png", original_image_url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86 (1).png" }
       ],
       category_id: [1, 5],
       reviews: { total: 342, average_rating: 5.0 },
@@ -104,11 +104,11 @@ export const MOCK_PRODUCTS = {
       inStock: true,
       new: true,
       base_image: {
-        url: PLACEHOLDER_PRODUCT,
-        original_image_url: PLACEHOLDER_PRODUCT
+        url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86.png",
+        original_image_url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86.png"
       },
       images: [
-        { url: PLACEHOLDER_PRODUCT, original_image_url: PLACEHOLDER_PRODUCT }
+        { url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86.png", original_image_url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86.png" }
       ],
       category_id: [1, 6, 7],
       reviews: { total: 98, average_rating: 4.8 },
@@ -130,11 +130,11 @@ export const MOCK_PRODUCTS = {
       inStock: true,
       new: false,
       base_image: {
-        url: PLACEHOLDER_PRODUCT,
-        original_image_url: PLACEHOLDER_PRODUCT
+        url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86 (1).png",
+        original_image_url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86 (1).png"
       },
       images: [
-        { url: PLACEHOLDER_PRODUCT, original_image_url: PLACEHOLDER_PRODUCT }
+        { url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86 (1).png", original_image_url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86 (1).png" }
       ],
       category_id: [2, 5],
       reviews: { total: 267, average_rating: 3.7 },
@@ -154,11 +154,11 @@ export const MOCK_PRODUCTS = {
       inStock: true,
       new: true,
       base_image: {
-        url: PLACEHOLDER_PRODUCT,
-        original_image_url: PLACEHOLDER_PRODUCT
+        url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86.png",
+        original_image_url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86.png"
       },
       images: [
-        { url: PLACEHOLDER_PRODUCT, original_image_url: PLACEHOLDER_PRODUCT }
+        { url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86.png", original_image_url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86.png" }
       ],
       category_id: [2, 9],
       reviews: { total: 89, average_rating: 4.7 },
@@ -179,11 +179,11 @@ export const MOCK_PRODUCTS = {
       inStock: true,
       new: false,
       base_image: {
-        url: PLACEHOLDER_PRODUCT,
-        original_image_url: PLACEHOLDER_PRODUCT
+        url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86 (1).png",
+        original_image_url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86 (1).png"
       },
       images: [
-        { url: PLACEHOLDER_PRODUCT, original_image_url: PLACEHOLDER_PRODUCT }
+        { url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86 (1).png", original_image_url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86 (1).png" }
       ],
       category_id: [3, 4],
       reviews: { total: 542, average_rating: 4.9 },
@@ -202,11 +202,11 @@ export const MOCK_PRODUCTS = {
       inStock: true,
       new: false,
       base_image: {
-        url: PLACEHOLDER_PRODUCT,
-        original_image_url: PLACEHOLDER_PRODUCT
+        url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86.png",
+        original_image_url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86.png"
       },
       images: [
-        { url: PLACEHOLDER_PRODUCT, original_image_url: PLACEHOLDER_PRODUCT }
+        { url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86.png", original_image_url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86.png" }
       ],
       category_id: [3, 6],
       reviews: { total: 412, average_rating: 5.0 },
@@ -225,11 +225,11 @@ export const MOCK_PRODUCTS = {
       inStock: true,
       new: false,
       base_image: {
-        url: PLACEHOLDER_PRODUCT,
-        original_image_url: PLACEHOLDER_PRODUCT
+        url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86 (1).png",
+        original_image_url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86 (1).png"
       },
       images: [
-        { url: PLACEHOLDER_PRODUCT, original_image_url: PLACEHOLDER_PRODUCT }
+        { url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86 (1).png", original_image_url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86 (1).png" }
       ],
       category_id: [3, 6],
       reviews: { total: 689, average_rating: 4.8 },
@@ -250,11 +250,11 @@ export const MOCK_PRODUCTS = {
       inStock: true,
       new: true,
       base_image: {
-        url: PLACEHOLDER_PRODUCT,
-        original_image_url: PLACEHOLDER_PRODUCT
+        url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86.png",
+        original_image_url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86.png"
       },
       images: [
-        { url: PLACEHOLDER_PRODUCT, original_image_url: PLACEHOLDER_PRODUCT }
+        { url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86.png", original_image_url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86.png" }
       ],
       category_id: [4, 1],
       reviews: { total: 234, average_rating: 4.9 },
@@ -273,11 +273,11 @@ export const MOCK_PRODUCTS = {
       inStock: true,
       new: false,
       base_image: {
-        url: PLACEHOLDER_PRODUCT,
-        original_image_url: PLACEHOLDER_PRODUCT
+        url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86 (1).png",
+        original_image_url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86 (1).png"
       },
       images: [
-        { url: PLACEHOLDER_PRODUCT, original_image_url: PLACEHOLDER_PRODUCT }
+        { url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86 (1).png", original_image_url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86 (1).png" }
       ],
       category_id: [4],
       reviews: { total: 156, average_rating: 4.7 },
@@ -298,11 +298,11 @@ export const MOCK_PRODUCTS = {
       inStock: true,
       new: true,
       base_image: {
-        url: PLACEHOLDER_PRODUCT,
-        original_image_url: PLACEHOLDER_PRODUCT
+        url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86.png",
+        original_image_url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86.png"
       },
       images: [
-        { url: PLACEHOLDER_PRODUCT, original_image_url: PLACEHOLDER_PRODUCT }
+        { url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86.png", original_image_url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86.png" }
       ],
       category_id: [5, 1],
       reviews: { total: 298, average_rating: 4.9 },
@@ -321,11 +321,11 @@ export const MOCK_PRODUCTS = {
       inStock: true,
       new: false,
       base_image: {
-        url: PLACEHOLDER_PRODUCT,
-        original_image_url: PLACEHOLDER_PRODUCT
+        url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86 (1).png",
+        original_image_url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86 (1).png"
       },
       images: [
-        { url: PLACEHOLDER_PRODUCT, original_image_url: PLACEHOLDER_PRODUCT }
+        { url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86 (1).png", original_image_url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86 (1).png" }
       ],
       category_id: [5, 1],
       reviews: { total: 412, average_rating: 5.0 },
@@ -344,11 +344,11 @@ export const MOCK_PRODUCTS = {
       inStock: true,
       new: false,
       base_image: {
-        url: PLACEHOLDER_PRODUCT,
-        original_image_url: PLACEHOLDER_PRODUCT
+        url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86.png",
+        original_image_url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86.png"
       },
       images: [
-        { url: PLACEHOLDER_PRODUCT, original_image_url: PLACEHOLDER_PRODUCT }
+        { url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86.png", original_image_url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86.png" }
       ],
       category_id: [5],
       reviews: { total: 187, average_rating: 4.8 },
@@ -369,11 +369,11 @@ export const MOCK_PRODUCTS = {
       inStock: true,
       new: true,
       base_image: {
-        url: PLACEHOLDER_PRODUCT,
-        original_image_url: PLACEHOLDER_PRODUCT
+        url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86 (1).png",
+        original_image_url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86 (1).png"
       },
       images: [
-        { url: PLACEHOLDER_PRODUCT, original_image_url: PLACEHOLDER_PRODUCT }
+        { url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86 (1).png", original_image_url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86 (1).png" }
       ],
       category_id: [6, 1],
       reviews: { total: 167, average_rating: 4.8 },
@@ -392,11 +392,11 @@ export const MOCK_PRODUCTS = {
       inStock: true,
       new: false,
       base_image: {
-        url: PLACEHOLDER_PRODUCT,
-        original_image_url: PLACEHOLDER_PRODUCT
+        url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86.png",
+        original_image_url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86.png"
       },
       images: [
-        { url: PLACEHOLDER_PRODUCT, original_image_url: PLACEHOLDER_PRODUCT }
+        { url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86.png", original_image_url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86.png" }
       ],
       category_id: [6],
       reviews: { total: 223, average_rating: 4.7 },
@@ -417,11 +417,11 @@ export const MOCK_PRODUCTS = {
       inStock: true,
       new: true,
       base_image: {
-        url: PLACEHOLDER_PRODUCT,
-        original_image_url: PLACEHOLDER_PRODUCT
+        url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86 (1).png",
+        original_image_url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86 (1).png"
       },
       images: [
-        { url: PLACEHOLDER_PRODUCT, original_image_url: PLACEHOLDER_PRODUCT }
+        { url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86 (1).png", original_image_url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86 (1).png" }
       ],
       category_id: [7, 4],
       reviews: { total: 312, average_rating: 5.0 },
@@ -440,11 +440,11 @@ export const MOCK_PRODUCTS = {
       inStock: true,
       new: false,
       base_image: {
-        url: PLACEHOLDER_PRODUCT,
-        original_image_url: PLACEHOLDER_PRODUCT
+        url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86.png",
+        original_image_url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86.png"
       },
       images: [
-        { url: PLACEHOLDER_PRODUCT, original_image_url: PLACEHOLDER_PRODUCT }
+        { url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86.png", original_image_url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86.png" }
       ],
       category_id: [7, 5],
       reviews: { total: 145, average_rating: 4.9 },
@@ -465,11 +465,11 @@ export const MOCK_PRODUCTS = {
       inStock: true,
       new: true,
       base_image: {
-        url: PLACEHOLDER_PRODUCT,
-        original_image_url: PLACEHOLDER_PRODUCT
+        url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86 (1).png",
+        original_image_url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86 (1).png"
       },
       images: [
-        { url: PLACEHOLDER_PRODUCT, original_image_url: PLACEHOLDER_PRODUCT }
+        { url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86 (1).png", original_image_url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86 (1).png" }
       ],
       category_id: [8],
       reviews: { total: 45, average_rating: 5.0 },
@@ -488,11 +488,11 @@ export const MOCK_PRODUCTS = {
       inStock: true,
       new: true,
       base_image: {
-        url: PLACEHOLDER_PRODUCT,
-        original_image_url: PLACEHOLDER_PRODUCT
+        url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86.png",
+        original_image_url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86.png"
       },
       images: [
-        { url: PLACEHOLDER_PRODUCT, original_image_url: PLACEHOLDER_PRODUCT }
+        { url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86.png", original_image_url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86.png" }
       ],
       category_id: [8, 6],
       reviews: { total: 67, average_rating: 4.9 },
@@ -513,11 +513,11 @@ export const MOCK_PRODUCTS = {
       inStock: true,
       new: true,
       base_image: {
-        url: PLACEHOLDER_PRODUCT,
-        original_image_url: PLACEHOLDER_PRODUCT
+        url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86 (1).png",
+        original_image_url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86 (1).png"
       },
       images: [
-        { url: PLACEHOLDER_PRODUCT, original_image_url: PLACEHOLDER_PRODUCT }
+        { url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86 (1).png", original_image_url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86 (1).png" }
       ],
       category_id: [9],
       reviews: { total: 189, average_rating: 4.9 },
@@ -536,11 +536,11 @@ export const MOCK_PRODUCTS = {
       inStock: true,
       new: false,
       base_image: {
-        url: PLACEHOLDER_PRODUCT,
-        original_image_url: PLACEHOLDER_PRODUCT
+        url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86.png",
+        original_image_url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86.png"
       },
       images: [
-        { url: PLACEHOLDER_PRODUCT, original_image_url: PLACEHOLDER_PRODUCT }
+        { url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86.png", original_image_url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86.png" }
       ],
       category_id: [9, 4],
       reviews: { total: 234, average_rating: 4.8 },
@@ -559,11 +559,11 @@ export const MOCK_PRODUCTS = {
       inStock: true,
       new: true,
       base_image: {
-        url: PLACEHOLDER_PRODUCT,
-        original_image_url: PLACEHOLDER_PRODUCT
+        url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86 (1).png",
+        original_image_url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86 (1).png"
       },
       images: [
-        { url: PLACEHOLDER_PRODUCT, original_image_url: PLACEHOLDER_PRODUCT }
+        { url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86 (1).png", original_image_url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86 (1).png" }
       ],
       category_id: [9],
       reviews: { total: 123, average_rating: 5.0 },
@@ -584,11 +584,11 @@ export const MOCK_PRODUCTS = {
       inStock: true,
       new: false,
       base_image: {
-        url: PLACEHOLDER_PRODUCT,
-        original_image_url: PLACEHOLDER_PRODUCT
+        url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86.png",
+        original_image_url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86.png"
       },
       images: [
-        { url: PLACEHOLDER_PRODUCT, original_image_url: PLACEHOLDER_PRODUCT }
+        { url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86.png", original_image_url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86.png" }
       ],
       category_id: [1, 4],
       reviews: { total: 287, average_rating: 4.7 },
@@ -607,11 +607,11 @@ export const MOCK_PRODUCTS = {
       inStock: true,
       new: true,
       base_image: {
-        url: PLACEHOLDER_PRODUCT,
-        original_image_url: PLACEHOLDER_PRODUCT
+        url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86 (1).png",
+        original_image_url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86 (1).png"
       },
       images: [
-        { url: PLACEHOLDER_PRODUCT, original_image_url: PLACEHOLDER_PRODUCT }
+        { url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86 (1).png", original_image_url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86 (1).png" }
       ],
       category_id: [1, 4, 3],
       reviews: { total: 456, average_rating: 4.9 },
@@ -630,8 +630,8 @@ export const MOCK_PRODUCTS = {
       in_stock: true,
       inStock: true,
       new: true,
-      base_image: { url: PLACEHOLDER_PRODUCT, original_image_url: PLACEHOLDER_PRODUCT },
-      images: [{ url: PLACEHOLDER_PRODUCT, original_image_url: PLACEHOLDER_PRODUCT }],
+      base_image: { url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86.png", original_image_url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86.png" },
+      images: [{ url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86.png", original_image_url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86.png" }],
       category_id: [2, 4],
       reviews: { total: 156, average_rating: 4.8 },
       short_description: "عرض خاص - عطر الانتعاش",
@@ -648,8 +648,8 @@ export const MOCK_PRODUCTS = {
       in_stock: true,
       inStock: true,
       new: false,
-      base_image: { url: PLACEHOLDER_PRODUCT, original_image_url: PLACEHOLDER_PRODUCT },
-      images: [{ url: PLACEHOLDER_PRODUCT, original_image_url: PLACEHOLDER_PRODUCT }],
+      base_image: { url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86 (1).png", original_image_url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86 (1).png" },
+      images: [{ url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86 (1).png", original_image_url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86 (1).png" }],
       category_id: [2, 4],
       reviews: { total: 890, average_rating: 4.7 },
       short_description: "عرض مغري - عطر الفخامة",
@@ -666,8 +666,8 @@ export const MOCK_PRODUCTS = {
       in_stock: true,
       inStock: true,
       new: true,
-      base_image: { url: PLACEHOLDER_PRODUCT, original_image_url: PLACEHOLDER_PRODUCT },
-      images: [{ url: PLACEHOLDER_PRODUCT, original_image_url: PLACEHOLDER_PRODUCT }],
+      base_image: { url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86.png", original_image_url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86.png" },
+      images: [{ url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86.png", original_image_url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86.png" }],
       category_id: [7, 6],
       reviews: { total: 45, average_rating: 4.9 },
       short_description: "نيش فاخر - عطر الصحراء",
@@ -684,8 +684,8 @@ export const MOCK_PRODUCTS = {
       in_stock: true,
       inStock: true,
       new: true,
-      base_image: { url: PLACEHOLDER_PRODUCT, original_image_url: PLACEHOLDER_PRODUCT },
-      images: [{ url: PLACEHOLDER_PRODUCT, original_image_url: PLACEHOLDER_PRODUCT }],
+      base_image: { url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86 (1).png", original_image_url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86 (1).png" },
+      images: [{ url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86 (1).png", original_image_url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86 (1).png" }],
       category_id: [7, 4],
       reviews: { total: 78, average_rating: 5.0 },
       short_description: "نيش شرقي - قوة العطر",
@@ -702,8 +702,8 @@ export const MOCK_PRODUCTS = {
       in_stock: true,
       inStock: true,
       new: true,
-      base_image: { url: PLACEHOLDER_PRODUCT, original_image_url: PLACEHOLDER_PRODUCT },
-      images: [{ url: PLACEHOLDER_PRODUCT, original_image_url: PLACEHOLDER_PRODUCT }],
+      base_image: { url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86.png", original_image_url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86.png" },
+      images: [{ url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86.png", original_image_url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86.png" }],
       category_id: [8, 4],
       reviews: { total: 34, average_rating: 5.0 },
       short_description: "حصري - قمة الرقي",
@@ -720,8 +720,8 @@ export const MOCK_PRODUCTS = {
       in_stock: true,
       inStock: true,
       new: true,
-      base_image: { url: PLACEHOLDER_PRODUCT, original_image_url: PLACEHOLDER_PRODUCT },
-      images: [{ url: PLACEHOLDER_PRODUCT, original_image_url: PLACEHOLDER_PRODUCT }],
+      base_image: { url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86 (1).png", original_image_url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86 (1).png" },
+      images: [{ url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86 (1).png", original_image_url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86 (1).png" }],
       category_id: [8, 4],
       reviews: { total: 22, average_rating: 4.9 },
       short_description: "حصري - أغلى عطور العالم",
@@ -738,8 +738,8 @@ export const MOCK_PRODUCTS = {
       in_stock: true,
       inStock: true,
       new: false,
-      base_image: { url: PLACEHOLDER_PRODUCT, original_image_url: PLACEHOLDER_PRODUCT },
-      images: [{ url: PLACEHOLDER_PRODUCT, original_image_url: PLACEHOLDER_PRODUCT }],
+      base_image: { url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86.png", original_image_url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86.png" },
+      images: [{ url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86.png", original_image_url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86.png" }],
       category_id: [9, 6],
       reviews: { total: 112, average_rating: 4.6 },
       short_description: "مجموعة السفر - عطور مصغرة",
@@ -914,10 +914,10 @@ export const MOCK_PRODUCT_DETAILS = (id: number) => {
       inStock: true,
       new: false,
       base_image: {
-        url: PLACEHOLDER_PRODUCT,
-        original_image_url: PLACEHOLDER_PRODUCT
+        url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86 (1).png",
+        original_image_url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86 (1).png"
       },
-      images: [{ url: PLACEHOLDER_PRODUCT, original_image_url: PLACEHOLDER_PRODUCT }],
+      images: [{ url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86 (1).png", original_image_url: "/images/Gemini_Generated_Image_ne86f2ne86f2ne86 (1).png" }],
       category_id: [1],
       reviews: { total: 10, average_rating: 4.5 },
       short_description: `وصف مختصر للمنتج ${id}`,

@@ -17,7 +17,7 @@ export type NavConfig = NavEntry[];
 export interface TSectionTitle {
   title: string;
   titleStyle?: string;
-  subtitle?:string;
+  subtitle?: string;
 }
 
 // Toast types for sonner
@@ -38,48 +38,48 @@ export interface ToastOptions {
   success?: {
     duration?: number;
     position?:
-      | "top-left"
-      | "top-center"
-      | "top-right"
-      | "bottom-left"
-      | "bottom-center"
-      | "bottom-right";
+    | "top-left"
+    | "top-center"
+    | "top-right"
+    | "bottom-left"
+    | "bottom-center"
+    | "bottom-right";
     style?: ToastStyle;
     className?: string;
   };
   error?: {
     duration?: number;
     position?:
-      | "top-left"
-      | "top-center"
-      | "top-right"
-      | "bottom-left"
-      | "bottom-center"
-      | "bottom-right";
+    | "top-left"
+    | "top-center"
+    | "top-right"
+    | "bottom-left"
+    | "bottom-center"
+    | "bottom-right";
     style?: ToastStyle;
     className?: string;
   };
   warning?: {
     duration?: number;
     position?:
-      | "top-left"
-      | "top-center"
-      | "top-right"
-      | "bottom-left"
-      | "bottom-center"
-      | "bottom-right";
+    | "top-left"
+    | "top-center"
+    | "top-right"
+    | "bottom-left"
+    | "bottom-center"
+    | "bottom-right";
     style?: ToastStyle;
     className?: string;
   };
   info?: {
     duration?: number;
     position?:
-      | "top-left"
-      | "top-center"
-      | "top-right"
-      | "bottom-left"
-      | "bottom-center"
-      | "bottom-right";
+    | "top-left"
+    | "top-center"
+    | "top-right"
+    | "bottom-left"
+    | "bottom-center"
+    | "bottom-right";
     style?: ToastStyle;
     className?: string;
   };
@@ -218,6 +218,7 @@ export interface ApiResponse<T = any> {
 // Product types
 export interface Product {
   id: number;
+  product_id?: number; // Optional product_id for compatibility
   name: string;
   nameEn: string;
   price: number;
@@ -457,7 +458,7 @@ export interface SuccessData {
 
 export interface SuccessProps {
   data: SuccessData;
-  isLoading : boolean
+  isLoading: boolean
 }
 export interface ShadowLayerProps {
   children: ReactNode;

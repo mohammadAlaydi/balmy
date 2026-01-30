@@ -1,5 +1,5 @@
 // Balmy styled components
-export { default as ProductCardBalmy } from "./product-card-balmy";
+
 export { default as CartSectionBalmy } from "./cart-section-balmy";
 export { default as TopBarBalmy } from "./top-bar-balmy";
 export { default as HeaderBalmy } from "./header-balmy";

@@ -34,7 +34,7 @@ import UserMenu from "@/components/layout/header/user-menu";
 import { useFavourites } from "@/hooks/use-favourites";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/store/store";
-import { getCartProducts } from "@/store/slices/cart-slice";
+import { getCartProducts, setCartOpen } from "@/store/slices/cart-slice";
 import {
     DropdownMenu,
     DropdownMenuSeparator,
@@ -86,6 +86,8 @@ const ActionIcons = ({
     const cartData = useSelector((state: RootState) => state.cart.data);
     const cartCount = cartData?.data?.items?.length || 0;
     const cartTotal = cartData?.data?.grand_total || 0;
+    // @ts-ignore
+    const isCartOpen = useSelector((state: RootState) => state.cart.isCartOpen);
 
     const { isAuthenticated, user } = useSelector(
         (state: RootState) => state.auth
@@ -161,6 +163,8 @@ const ActionIcons = ({
 
             {/* Cart Button with Balance and Badge */}
             <DrawerComponent
+                open={isCartOpen}
+                onOpenChange={(open) => dispatch(setCartOpen(open))}
                 trigger={
                     <button className="flex items-center gap-2 rounded-full border border-gray-300 bg-white px-4 py-2 transition-colors hover:bg-gray-50">
                         <span className="text-sm font-medium text-black">

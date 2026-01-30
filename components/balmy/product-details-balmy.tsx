@@ -79,10 +79,34 @@ export default function ProductDetailsBalmy({
 
     const locale = useLocale();
 
+    // Get category name from product's category_id
+    const getCategoryBreadcrumb = () => {
+        // Import categories from dev-config
+        const categories = [
+            { id: 1, name: "الماركــــــات", slug: "brands" },
+            { id: 2, name: "العــــــروض", slug: "offers" },
+            { id: 3, name: "الأكثــر مبيعـــاً", slug: "best-sellers" },
+            { id: 4, name: "رجـــالي", slug: "men" },
+            { id: 5, name: "نســائي", slug: "women" },
+            { id: 6, name: "للجنســين", slug: "unisex" },
+            { id: 7, name: "نيــــش", slug: "niche" },
+            { id: 8, name: "حصــــري", slug: "exclusive" },
+            { id: 9, name: "اطقم ومجموعات", slug: "sets-collections" },
+        ];
+
+        // Get the first category ID from the product
+        const categoryId = Array.isArray(product.category_id) ? product.category_id[0] : product.category_id;
+        const category = categories.find(cat => cat.id === categoryId);
+
+        return category
+            ? { label: category.name, href: `/${locale}/${category.slug}` }
+            : { label: t("products") || "المنتجات", href: `/${locale}/category` };
+    };
+
     // Breadcrumb items
     const breadcrumbItems = [
         { label: t("home") || "الرئيسية", href: `/${locale}` },
-        { label: t("products") || "المنتجات", href: `/${locale}/category` },
+        getCategoryBreadcrumb(),
         { label: product.name },
     ];
 

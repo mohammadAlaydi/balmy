@@ -56,7 +56,9 @@
     "no-product-details": "لا توجد تفاصيل للمنتج",
     "go-to-favourites": "الذهاب للمفضلة",
     "go-to-cart": "الذهاب إلى السلة",
-    "cart": "عربة التسوق"
+    "cart": "عربة التسوق",
+    "clear-all-products": "مسح جميع المنتجات",
+    "no-data-found": "لم يتم العثور على بيانات"
   },
   "categories": {
     "footwear": "أحذية",
@@ -254,6 +256,7 @@
     "open": "فتح",
     "save": "حفظ",
     "delete": "حذف",
+    "delete-product": "هل أنت متأكد من حذف هذا المنتج ؟",
     "delete-confirmation": "هل أنت متأكد من حذف هذا المنتج ؟",
     "delete-all-products": "هل أنت متأكد من مسح جميع المنتجات ؟",
     "edit": "تعديل",

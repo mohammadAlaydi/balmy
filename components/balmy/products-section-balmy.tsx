@@ -1,6 +1,6 @@
 "use client";
 
-import ProductCardBalmy from "./product-card-balmy";
+import ProductCard from "@/components/ProductCard";
 
 interface ProductsSectionBalmyProps {
     title: string;
@@ -25,7 +25,7 @@ export default function ProductsSectionBalmy({
             {/* Products Grid */}
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
                 {products.map((product, index) => (
-                    <ProductCardBalmy
+                    <ProductCard
                         key={product.product_id || index}
                         product={product}
                         cardColSpan="col-span-1"

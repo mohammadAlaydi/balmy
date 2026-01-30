@@ -12,7 +12,7 @@ import {
 import { useSelector } from "react-redux";
 import { useTranslations } from "next-intl";
 import { BeatLoader } from "react-spinners";
-import { MdDeleteSweep } from "react-icons/md";
+import Image from "next/image";
 
 export default function DeleteProductComponent({
   action,
@@ -33,7 +33,13 @@ export default function DeleteProductComponent({
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger className="flex items-center gap-2">
-        <MdDeleteSweep className="text-2xl cursor-pointer text-red-500" />
+        <Image
+          src="/assets/trash.svg"
+          alt="Delete"
+          width={20}
+          height={20}
+          className="cursor-pointer"
+        />
         {text && <p className="font-[550]">{text}</p>}
       </DialogTrigger>
       <DialogContent
@@ -42,7 +48,12 @@ export default function DeleteProductComponent({
         width="sm:max-w-sm"
       >
         <div className="flex justify-center">
-          <MdDeleteSweep className="text-center mx-auto text-3xl text-red-500" />
+          <Image
+            src="/assets/trash.svg"
+            alt="Delete"
+            width={48}
+            height={48}
+          />
         </div>
         <p className="text-start">
           {t(deleteMessage ? deleteMessage : "delete-confirmation")}

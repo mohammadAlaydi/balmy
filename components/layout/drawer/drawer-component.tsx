@@ -10,18 +10,27 @@ interface DrawerComponentProps {
   children?: React.ReactNode;
   trigger?: React.ReactNode;
   containerClassName?: string;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }
 
 export default function DrawerComponent({
   children,
   trigger,
   containerClassName,
+  open: controlledOpen,
+  onOpenChange: controlledOnOpenChange,
 }: DrawerComponentProps) {
-  
-  const [open, setOpen] = useState(false);
+
+  const [internalOpen, setInternalOpen] = useState(false);
   const [direction, setDirection] = useState("right");
   const pathname = usePathname();
   const currentLocale = pathname.split("/")[1];
+
+  const isControlled = controlledOpen !== undefined;
+  const open = isControlled ? controlledOpen : internalOpen;
+  const setOpen = isControlled && controlledOnOpenChange ? controlledOnOpenChange : setInternalOpen;
+
   useEffect(() => {
     if (currentLocale === "ar") {
       setDirection("right");

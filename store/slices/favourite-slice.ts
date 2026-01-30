@@ -38,18 +38,26 @@ export const addToFavourites = createAsyncThunk(
       if (DISABLE_BACKEND_FETCH) {
         await mockDelay();
         console.log(`🚧 [DEV] Add to favourites bypassed - product ${product.id}`);
+
+        // Save to local storage for persistence in dev mode
+        const currentParams = getStoredFavourites();
+        const exists = currentParams.some(p => p.id === product.id);
+        if (!exists) {
+          const newFavorites = [...currentParams, product];
+          saveFavourites(newFavorites);
+        }
+
         return product;
       }
 
-const productId = product.product_id ?? product.id;
+      const productId = product.product_id ?? product.id;
 
-if (!productId) {
-  throw new Error("Missing product_id or id in product");
-}
+      if (!productId) {
+        throw new Error("Missing product_id or id in product");
+      }
 
-const response = await makeAuthenticatedRequest(
-  `/api/wishlist/${productId}`,
-
+      const response = await makeAuthenticatedRequest(
+        `/api/wishlist/${productId}`,
         {
           method: "POST",
           headers: {
@@ -80,6 +88,12 @@ export const removeFromFavourites = createAsyncThunk(
       if (DISABLE_BACKEND_FETCH) {
         await mockDelay();
         console.log(`🚧 [DEV] Remove from favourites bypassed - product ${productId}`);
+
+        // Remove from local storage for persistence in dev mode
+        const currentParams = getStoredFavourites();
+        const newFavorites = currentParams.filter(p => p.id !== productId);
+        saveFavourites(newFavorites);
+
         return productId;
       }
 
@@ -118,8 +132,22 @@ export const fetchFavourites = createAsyncThunk(
       // DEV MODE: Return mock data when backend is disabled
       if (DISABLE_BACKEND_FETCH) {
         await mockDelay();
-        console.log("🚧 [DEV] Fetch favourites bypassed - using mock data");
-        return MOCK_WISHLIST.data;
+        console.log("🚧 [DEV] Fetch favourites bypassed - using local storage + mock data");
+
+        // Get from local storage
+        const storedFavorites = getStoredFavourites();
+
+        // If local storage is empty, use mock data and save it
+        if (storedFavorites.length === 0 && MOCK_WISHLIST.data.length > 0) {
+          // MOCK_WISHLIST might be in a different format, ensure compatibility if needed
+          // For now assuming MOCK_WISHLIST.data is compatible with Product[] or simple enough
+          // But since we want to persist USER actions, we prioritize what's in local storage
+          // If completely empty, we can return empty or mock.
+          // Let's stick to what's in storage to allow "empty state" testing.
+          return storedFavorites;
+        }
+
+        return storedFavorites;
       }
 
       const response = await makeAuthenticatedRequest(`/api/wishlist`, {
@@ -186,6 +214,7 @@ export const clearFavourites = createAsyncThunk(
       if (DISABLE_BACKEND_FETCH) {
         await mockDelay();
         console.log("🚧 [DEV] Clear favourites bypassed");
+        saveFavourites([]);
         return true;
       }
 
@@ -266,7 +295,7 @@ export const moveToCart = createAsyncThunk(
       // After successfully moving to cart, refresh both cart and favourites data
       const { getCartProducts } = await import("./cart-slice");
       dispatch(getCartProducts());
-      
+
       // Refresh favourites to remove the moved item
       dispatch(fetchFavourites());
 

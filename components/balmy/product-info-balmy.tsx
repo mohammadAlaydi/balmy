@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { cn } from "@/lib/utils";
 import { useTranslations } from "next-intl";
-import { Heart, ShoppingCart, CheckCircle, Share2 } from "lucide-react";
+import { Heart, ShoppingCart, CheckCircle, Share2, Truck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -20,7 +20,8 @@ import AuthModal from "@/components/auth/auth-modal";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
 import { useAppDispatch } from "@/store/hooks";
-import { addToCart } from "@/store/slices/cart-slice";
+import { addToCart, setCartOpen } from "@/store/slices/cart-slice";
+import { useRouter } from "next/navigation";
 import { BeatLoader } from "react-spinners";
 
 interface ProductInfoBalmyProps {
@@ -61,6 +62,7 @@ export default function ProductInfoBalmy({
     const t = useTranslations("product-details");
     const tProducts = useTranslations("products");
     const dispatch = useAppDispatch();
+    const router = useRouter();
 
     const [selectedSize, setSelectedSize] = useState<string | null>("100ml");
     const [isAddingToCart, setIsAddingToCart] = useState(false);
@@ -107,6 +109,7 @@ export default function ProductInfoBalmy({
             const promise = dispatch(addToCart({ productId, productQTY: 1 }));
             await (typeof promise.unwrap === "function" ? promise.unwrap() : promise);
             toast.success(tProducts("added-to-cart"));
+            dispatch(setCartOpen(true));
         } catch (error: any) {
             toast.error(error?.message || tProducts("failed-to-add-to-cart"));
         } finally {
@@ -129,7 +132,8 @@ export default function ProductInfoBalmy({
             const promise = dispatch(addToCart({ productId, productQTY: 1 }));
             await (typeof promise.unwrap === "function" ? promise.unwrap() : promise);
             // Navigate to checkout
-            window.location.href = "/cart";
+            // Navigate to checkout
+            router.push("/cart");
         } catch (error: any) {
             toast.error(error?.message || tProducts("failed-to-add-to-cart"));
         } finally {
@@ -158,7 +162,7 @@ export default function ProductInfoBalmy({
         <div className={cn("flex flex-col gap-5", className)} dir="rtl">
             {/* Header with Heart Icon and Brand */}
             <div className="flex items-start justify-between">
-                <div className="flex flex-col gap-1">
+                <div className="flex flex-col gap-1 flex-1">
                     {/* Brand Name with Verified Badge */}
                     <div className="flex items-center gap-2">
                         <span className="text-lg font-semibold text-[var(--color-black)] font-cairo">
@@ -168,13 +172,13 @@ export default function ProductInfoBalmy({
                     </div>
 
                     {/* Product Name */}
-                    <h1 className="text-[24px] leading-[45px] text-[#AEAEAE] font-cairo text-left">
+                    <h1 className="text-[24px] leading-[45px] text-[#AEAEAE] font-cairo text-right">
                         {product.name}
                     </h1>
 
                     {/* SKU */}
                     {product.sku && (
-                        <span className="text-sm text-[var(--color-light-gray-5)] font-cairo">
+                        <span className="text-sm text-[var(--color-light-gray-5)] font-cairo text-right">
                             {product.sku}
                         </span>
                     )}
@@ -183,7 +187,8 @@ export default function ProductInfoBalmy({
                 {/* Wishlist Heart Icon */}
                 <FavouriteButton
                     product={product}
-                    className="w-10 h-10 flex items-center justify-center border border-[var(--color-light-gray-3)] rounded-lg hover:bg-gray-50 transition-colors"
+                    size="lg"
+                    className="cursor-pointer"
                 />
             </div>
 
@@ -215,7 +220,7 @@ export default function ProductInfoBalmy({
             </div>
 
             {/* Rating & Free Shipping */}
-            <div className="flex items-center gap-4 flex-wrap">
+            <div className="flex flex-col gap-4">
                 <div className="flex items-center gap-2">
                     <RatingBalmy value={normalizedReviews.average_rating || 3.7} />
                     <span className="text-sm text-[var(--color-medium-gray)] font-cairo">
@@ -223,10 +228,28 @@ export default function ProductInfoBalmy({
                     </span>
                 </div>
 
-                <div className="flex items-center gap-1 text-[var(--color-green)]">
-                    <span className="text-sm font-semibold font-cairo">
-                        {t("free-shipping") || "شحن مجاني"}
-                    </span>
+                {/* Free Shipping & Original Product Section */}
+                <div className="flex items-center justify-between w-full border-b border-[#F0F0F0] pb-4">
+                    {/* Free Shipping Info (Right Side) */}
+                    <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 bg-black rounded-full flex items-center justify-center">
+                            <Truck className="w-6 h-6 text-white" />
+                        </div>
+                        <div className="flex flex-col items-start">
+                            <span className="text-[14px] font-bold text-black font-cairo leading-none mb-1">
+                                {t("free-shipping") || "شحن مجاني"}
+                            </span>
+                            <span className="text-[12px] text-[#AEAEAE] font-cairo leading-none">
+                                مبروك شحنك علينا
+                            </span>
+                        </div>
+                    </div>
+                    {/* Original Product Badge (Left Side) */}
+                    <div className="bg-black text-white text-[12px] px-3 py-1 rounded-[4px] font-cairo">
+                        منتج اصلي
+                    </div>
+
+
                 </div>
             </div>
 
@@ -239,6 +262,13 @@ export default function ProductInfoBalmy({
 
             {/* Action Buttons */}
             <div className="flex flex-row gap-3 w-full items-center">
+                {/* Share Button */}
+                <Button
+                    onClick={handleShare}
+                    className="w-auto px-4 h-[45px] bg-[#000000] text-[#FFFFFF] hover:bg-[#333333] font-cairo text-[24px] font-normal rounded-lg flex items-center justify-center transition-colors"
+                >
+                    <Share2 className="w-6 h-6" />
+                </Button>
                 {/* Add to Cart Button */}
                 <Button
                     onClick={handleAddToCart}
@@ -265,13 +295,7 @@ export default function ProductInfoBalmy({
                     )}
                 </Button>
 
-                {/* Share Button */}
-                <Button
-                    onClick={handleShare}
-                    className="w-auto px-4 h-[45px] bg-[#000000] text-[#FFFFFF] hover:bg-[#333333] font-cairo text-[24px] font-normal rounded-lg flex items-center justify-center transition-colors"
-                >
-                    <Share2 className="w-6 h-6" />
-                </Button>
+
             </div>
 
             {/* Delivery Info */}

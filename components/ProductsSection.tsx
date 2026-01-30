@@ -27,6 +27,7 @@ export default function ProductsSection({
         {products.map((product, index) => (
           <ProductCard
             key={product.product_id || index}
+            product={product}
             brandName={product.name || product.brand_name}
             productName={product.description || product.name}
             price={product.price}

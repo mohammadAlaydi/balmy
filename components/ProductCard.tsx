@@ -1,13 +1,18 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { useState } from "react";
+import { useSelector } from "react-redux";
+import { useTranslations } from "next-intl";
+import toast from "react-hot-toast";
 import StarRating from "./react-stars";
-import { CiHeart } from "react-icons/ci";
-import { FaHeart } from "react-icons/fa";
 import AddToCartBtn from "./AddToCartBtn";
 import RiyalSymbol from "./RiyalSymbol";
+import { FavouriteButton } from "./favourite-button";
+import AuthModal from "./auth/auth-modal";
+import { useAppDispatch } from "@/store/hooks";
+import { addToCart, setCartOpen } from "@/store/slices/cart-slice";
 
 interface ProductCardProps {
   product?: any;
@@ -27,6 +32,19 @@ interface ProductCardProps {
   onToggleFavorite?: () => void;
 }
 
+/* Helper Functions */
+const resolveProductId = (
+  product: any,
+  chosenVariantId: number | string | null
+): number | undefined => {
+  if (product?.variants?.length) {
+    return chosenVariantId
+      ? Number(chosenVariantId)
+      : product.variants[0]?.product_id;
+  }
+  return product?.product_id || product?.id;
+};
+
 export default function ProductCard({
   product,
   cardColSpan,
@@ -44,7 +62,15 @@ export default function ProductCard({
   onAddToCart,
   onToggleFavorite,
 }: ProductCardProps) {
-  const [favorited, setFavorited] = useState(false);
+  const [isAdding, setIsAdding] = useState(false);
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const [pendingAddProductId, setPendingAddProductId] = useState<number | null>(null);
+  const [chosenVariantId, setChosenVariantId] = useState<number | string | null>(null);
+
+  const dispatch = useAppDispatch();
+  const t = useTranslations("products");
+
+  const { isAuthenticated } = useSelector((state: any) => state.auth);
 
   // Extract from product object if provided
   const brandName = initialBrandName ?? product?.brand?.name ?? product?.brand_name ?? "توم فورد";
@@ -57,28 +83,57 @@ export default function ProductCard({
   const rating = initialRating ?? Number(product?.rating || product?.reviews?.average_rating || 5);
   const isVerified = initialIsVerified !== false && product?.is_verified !== false;
 
-  const productId = product?.product_id || product?.id || "#";
+  const productId = resolveProductId(product, chosenVariantId);
+  const isInStock = product?.in_stock ?? product?.inStock ?? true;
+
+  /* Add to Cart Handler */
+  const handleAddToCart = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
+
+    if (!isInStock || isAdding) return;
+
+    const targetId = resolveProductId(product, chosenVariantId);
+    if (!targetId) {
+      toast.error("معرف المنتج غير صالح");
+      return;
+    }
+
+    // Check authentication
+    if (!isAuthenticated) {
+      setPendingAddProductId(targetId);
+      setShowAuthModal(true);
+      return;
+    }
+
+    try {
+      setIsAdding(true);
+      const promise = dispatch(
+        addToCart({ productId: targetId, productQTY: 1 })
+      );
+      await (typeof promise.unwrap === "function" ? promise.unwrap() : promise);
+
+      toast.success(t("added-to-cart") || "تمت الإضافة إلى السلة");
+      dispatch(setCartOpen(true));
+
+      // Call the optional callback
+      onAddToCart?.();
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : String(error));
+    } finally {
+      setIsAdding(false);
+    }
+  };
 
   return (
     <div className="relative w-full max-w-sm bg-white rounded-2xl overflow-hidden hover:shadow-lg transition-shadow font-[family-name:var(--font-cairo)]" dir="rtl">
       {/* Wishlist Icon - Top Left (Absolute) */}
       <div className="absolute top-3 left-3 z-10">
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            setFavorited((s) => !s);
-            onToggleFavorite?.();
-          }}
-          aria-pressed={favorited}
-          className="w-12 h-12 bg-transparent rounded-full flex items-center justify-center hover:bg-white/5 transition-colors"
-          aria-label={favorited ? "Remove favorite" : "Add to favorites"}
-        >
-          {favorited ? (
-            <FaHeart className="w-8 h-8 text-red" />
-          ) : (
-            <CiHeart className="w-8 h-8 text-gray-600" />
-          )}
-        </button>
+        <FavouriteButton
+          product={product || { id: productId, name: productName, price, images: [{ url: imageUrl }] }}
+          size="lg"
+          className="cursor-pointer"
+        />
       </div>
 
       {/* Product Image Link */}
@@ -162,7 +217,7 @@ export default function ProductCard({
               {discount && (
                 <div className="px-2.5 py-0.5 flex items-center bg-red rounded-full">
                   <span className="text-xs font-bold text-white">
-                    {discount}%
+                    {discount}%-
                   </span>
                 </div>
               )}
@@ -171,11 +226,40 @@ export default function ProductCard({
         </Link>
 
         {/* Add to Cart Button */}
-        <AddToCartBtn onClick={(e: React.MouseEvent) => {
-          e.stopPropagation();
-          onAddToCart?.();
-        }} />
+        <AddToCartBtn
+          onClick={handleAddToCart}
+          disabled={isAdding || !isInStock}
+          label={isAdding ? "جاري الإضافة..." : "أضف للسلة"}
+        />
       </div>
+
+      {/* Auth Modal */}
+      <AuthModal
+        isOpen={showAuthModal}
+        onOpenChange={(open) => {
+          setShowAuthModal(open);
+          if (!open) setPendingAddProductId(null);
+        }}
+        onAuthenticated={async () => {
+          const targetId = pendingAddProductId ?? resolveProductId(product, chosenVariantId);
+          if (!targetId) return;
+          try {
+            setIsAdding(true);
+            const promise = dispatch(
+              addToCart({ productId: targetId, productQTY: 1 })
+            );
+            await (typeof promise.unwrap === "function" ? promise.unwrap() : promise);
+            toast.success(t("added-to-cart") || "تمت الإضافة إلى السلة");
+            dispatch(setCartOpen(true));
+            onAddToCart?.();
+          } catch (error) {
+            toast.error(error instanceof Error ? error.message : String(error));
+          } finally {
+            setIsAdding(false);
+            setPendingAddProductId(null);
+          }
+        }}
+      />
     </div>
   );
 }

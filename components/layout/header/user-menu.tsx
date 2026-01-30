@@ -60,15 +60,18 @@ export default function UserMenu({ isMobile = false }: { isMobile?: boolean }) {
     return (
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Image
-            src="/assets/images/user.svg"
-            alt="user"
-            width={24}
-            height={24}
-            className={`cursor-pointer text-black ${
-              isMobile ? "lg:hidden" : "hidden lg:flex"
-            }`}
-          />
+          <button
+            className={`flex h-10 w-10 items-center justify-center rounded-full bg-gray-100 transition-colors hover:bg-gray-200 ${isMobile ? "lg:hidden" : "hidden lg:flex"
+              }`}
+            aria-label="User menu"
+          >
+            <Image
+              src="/assets/images/user.svg"
+              alt="user"
+              width={20}
+              height={20}
+            />
+          </button>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
           <div className="flex items-center gap-2 p-2">
@@ -97,9 +100,8 @@ export default function UserMenu({ isMobile = false }: { isMobile?: boolean }) {
           </DropdownMenuItem>
           <DropdownMenuItem
             asChild
-            className={`cursor-pointer flex gap-2 items-center ${
-              isRTL ? "flex-row-reverse" : ""
-            }`}
+            className={`cursor-pointer flex gap-2 items-center ${isRTL ? "flex-row-reverse" : ""
+              }`}
           >
             <Link
               href={`/${locale}/user-profile`}
@@ -116,9 +118,8 @@ export default function UserMenu({ isMobile = false }: { isMobile?: boolean }) {
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem
-            className={`cursor-pointer flex gap-2 items-center ${
-              isRTL ? "flex-row-reverse" : ""
-            }`}
+            className={`cursor-pointer flex gap-2 items-center ${isRTL ? "flex-row-reverse" : ""
+              }`}
           >
             <Link
               href={`/${locale}/favourites`}
@@ -136,9 +137,8 @@ export default function UserMenu({ isMobile = false }: { isMobile?: boolean }) {
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem
-            className={`cursor-pointer flex gap-2 items-center ${
-              isRTL ? "flex-row-reverse" : ""
-            }`}
+            className={`cursor-pointer flex gap-2 items-center ${isRTL ? "flex-row-reverse" : ""
+              }`}
           >
             <Link
               href={`/${locale}/cart`}
@@ -166,13 +166,18 @@ export default function UserMenu({ isMobile = false }: { isMobile?: boolean }) {
         asChild
         className="cursor-pointer flex gap-2 items-center"
       >
-        <Image
-          src="/assets/images/user.svg"
-          alt="user"
-          width={22}
-          height={22}
-          className={`${isMobile ? "lg:hidden" : "hidden lg:flex"}`}
-        />
+        <button
+          className={`flex h-10 w-10 items-center justify-center rounded-full bg-gray-100 transition-colors hover:bg-gray-200 ${isMobile ? "lg:hidden" : "hidden lg:flex"
+            }`}
+          aria-label="User menu"
+        >
+          <Image
+            src="/assets/images/user.svg"
+            alt="user"
+            width={20}
+            height={20}
+          />
+        </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56">
         <div className="flex items-center gap-2 p-2">
@@ -188,9 +193,8 @@ export default function UserMenu({ isMobile = false }: { isMobile?: boolean }) {
         <DropdownMenuSeparator />
         <DropdownMenuItem
           asChild
-          className={`cursor-pointer flex gap-2 items-center ${
-            isRTL ? "flex-row-reverse" : ""
-          }`}
+          className={`cursor-pointer flex gap-2 items-center ${isRTL ? "flex-row-reverse" : ""
+            }`}
         >
           <Link
             href={`/${locale}/user-profile`}
@@ -207,9 +211,8 @@ export default function UserMenu({ isMobile = false }: { isMobile?: boolean }) {
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem
-          className={`cursor-pointer flex gap-2 items-center ${
-            isRTL ? "flex-row-reverse" : ""
-          }`}
+          className={`cursor-pointer flex gap-2 items-center ${isRTL ? "flex-row-reverse" : ""
+            }`}
         >
           <Link
             href={`/${locale}/favourites`}
@@ -227,9 +230,8 @@ export default function UserMenu({ isMobile = false }: { isMobile?: boolean }) {
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem
-          className={`cursor-pointer flex gap-2 items-center ${
-            isRTL ? "flex-row-reverse" : ""
-          }`}
+          className={`cursor-pointer flex gap-2 items-center ${isRTL ? "flex-row-reverse" : ""
+            }`}
         >
           <Link
             href={`/${locale}/cart`}
@@ -249,9 +251,8 @@ export default function UserMenu({ isMobile = false }: { isMobile?: boolean }) {
         <DropdownMenuSeparator />
         <DropdownMenuItem
           onClick={handleLogout}
-          className={`cursor-pointer flex gap-2 items-center ${
-            isRTL ? "flex-row-reverse" : ""
-          }`}
+          className={`cursor-pointer flex gap-2 items-center ${isRTL ? "flex-row-reverse" : ""
+            }`}
         >
           <CiLogout className={`${isRTL ? "ml-2" : "mr-2"} h-5 w-5"`} />
           <span>{t("log-out")}</span>

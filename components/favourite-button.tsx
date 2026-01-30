@@ -76,7 +76,7 @@ export function FavouriteButton({
       <div
         onClick={handleToggle}
         className={cn(
-          "transition-all duration-200 flex items-center rtl:justify-end",
+          "transition-all duration-200 flex items-center justify-center",
           isFav && "text-red-500 hover:text-red-600",
           !isFav && "text-black hover:text-red-500",
           size === "sm" && "p-1",
@@ -99,10 +99,9 @@ export function FavouriteButton({
           <FaRegHeart
             className={cn(
               iconSizes[size],
-              `transition-all duration-200 ${
-                FaRegHeartColor
-                  ? FaRegHeartColor
-                  : "text-black hover:text-red-500"
+              `transition-all duration-200 ${FaRegHeartColor
+                ? FaRegHeartColor
+                : "text-black hover:text-red-500"
               } group-hover:text-red-500`
             )}
           />

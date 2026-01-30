@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { BadgeCheck } from "lucide-react";
+import { BadgeCheck, Truck } from "lucide-react";
 import { useTranslations } from "next-intl";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
@@ -17,7 +17,8 @@ import DeleteProductComponent from "@/components/delete-product-component";
 import ProductIncementOrDecrement from "@/components/product-increment-or-decrement";
 import { Dialog, DialogContent, DialogTrigger, DialogTitle } from "@/components/ui/dialog";
 import Checkout from "@/features/cart/checkout";
-import RatingBalmy from "./rating-balmy";
+import { Rating, RatingButton } from "@/components/ui/rating";
+import { Badge } from "@/components/ui/badge";
 
 type CartItem = {
     id: string;
@@ -132,7 +133,16 @@ function CartItemCardBalmy({ item, onDelete }: { item: CartItem; onDelete: (id: 
                         <div className="w-full lg:w-auto">
                             {/* Rating and Discount Badge - Left Side */}
                             <div className="flex shrink-0 flex-col items-center lg:items-start gap-1">
-                                <RatingBalmy value={Number(product?.rating || 4.5)} />
+                                <div className="flex items-center gap-1 bg-gray-100 px-2 rounded-full w-fit shadow-sm">
+                                    <Rating readOnly value={Math.floor(Number((product as any)?.reviews?.average_rating || product?.rating || 4.5))} max={5}>
+                                        {Array.from({ length: 5 }).map((_, i) => (
+                                            <RatingButton key={i} size={14} />
+                                        ))}
+                                    </Rating>
+                                    <Badge className="bg-transparent text-gray-500 p-0 text-sm font-[550]">
+                                        {(product as any)?.reviews?.average_rating || product?.rating || 4.5}
+                                    </Badge>
+                                </div>
                                 {discountPercent > 0 && (
                                     <span className="inline-flex w-fit items-center rounded-full bg-red px-2 py-1 text-xs font-semibold text-white">
                                         {discountPercent}%-
@@ -230,29 +240,26 @@ function OrderSummaryBalmy({
                 {/* Free Shipping Header */}
                 <div className="flex items-center gap-2 md:gap-3">
                     <div className="flex h-10 w-10 md:h-12 md:w-12 shrink-0 items-center justify-center rounded-full bg-black">
-                        <Image
-                            src="/truck-icon.png"
-                            alt="شحن مجاني"
-                            width={24}
-                            height={24}
-                            className="object-contain"
+                        <Truck
+                            className="h-5 w-5 md:h-6 md:w-6 text-white"
+                            aria-label={t("shipping")}
                         />
                     </div>
                     <p className="text-lg md:text-xl font-semibold text-black">
-                        شحن مجاني
+                        {t("free-shipping")}
                         <br />
-                        <span className="text-gray-400 text-[10px] md:text-xs">الشحن مجاني علينا</span>
+                        <span className="text-gray-400 text-[10px] md:text-xs">{t("free-shipping-over")}</span>
                     </p>
                 </div>
 
-                <h3 className="mt-4 md:mt-6 text-right text-lg md:text-xl font-bold text-black">
-                    ملخص الطلب
+                <h3 className="mt-4 md:mt-6 text-right text-lg md:text-xl font-bold text-black text-start">
+                    {t("order-summary")}
                 </h3>
 
                 {/* Price Breakdown */}
                 <div className="mt-3 md:mt-4 space-y-2 md:space-y-3 text-sm md:text-base">
                     <div className="flex items-center justify-between">
-                        <span className="text-medium-gray">مجموع المنتجات بدون ضريبة</span>
+                        <span className="text-medium-gray">{t("subtotal")}</span>
                         <div className="flex items-center gap-1">
                             <span className="font-bold text-black">{subtotal.toFixed(0)}</span>
                             <Image
@@ -265,7 +272,7 @@ function OrderSummaryBalmy({
                         </div>
                     </div>
                     <div className="flex items-center justify-between">
-                        <span className="text-medium-gray">ضريبة القيمة المضافة</span>
+                        <span className="text-medium-gray">{t("taxes")}</span>
                         <div className="flex items-center gap-1">
                             <span className="font-bold text-black">{tax.toFixed(0)}</span>
                             <Image
@@ -281,7 +288,7 @@ function OrderSummaryBalmy({
                     <div className="my-4 h-px w-full bg-light-gray-2" />
 
                     <div className="flex items-center justify-between text-black">
-                        <span className="text-medium-gray">الإجمالي</span>
+                        <span className="text-medium-gray">{t("total-inclusive-vat")}</span>
                         <div className="flex items-center gap-1">
                             <span className="text-lg font-bold">{total.toFixed(0)}</span>
                             <Image
@@ -297,17 +304,17 @@ function OrderSummaryBalmy({
 
                 {/* Coupon Section */}
                 <div className="mt-4 md:mt-6">
-                    <p className="text-right text-sm md:text-base font-semibold text-black mb-2 md:mb-3" style={{ fontFamily: 'var(--font-sans)' }}>
-                        هل لديك كود خصم؟
+                    <p className="text-right text-sm md:text-base font-semibold text-black mb-2 md:mb-3 text-start" style={{ fontFamily: 'var(--font-sans)' }}>
+                        {t("enter-coupon-code")}
                     </p>
                     <div className="relative">
                         <input
                             type="text"
                             inputMode="text"
-                            placeholder="أدخل الكود"
+                            placeholder={t("enter-coupon-code")}
                             value={couponCode}
                             onChange={(e) => setCouponCode(e.target.value)}
-                            className="h-10 md:h-12 w-full rounded-3xl border border-light-gray-2 bg-white pl-16 md:pl-20 pr-3 md:pr-4 text-right text-sm md:text-base outline-none transition focus:ring-2 focus:ring-black/10"
+                            className="h-10 md:h-12 w-full rounded-3xl border border-light-gray-2 bg-white pl-16 md:pl-20 pr-3 md:pr-4 text-right text-sm md:text-base outline-none transition focus:ring-2 focus:ring-black/10 text-start"
                             style={{ fontFamily: 'var(--font-sans)' }}
                         />
                         <button
@@ -316,7 +323,7 @@ function OrderSummaryBalmy({
                             className="absolute left-1 top-1 h-8 md:h-10 rounded-3xl bg-black px-3 md:px-4 text-xs md:text-sm font-semibold text-white transition hover:opacity-90"
                             style={{ fontFamily: 'var(--font-sans)' }}
                         >
-                            إضافة
+                            {t("apply")}
                         </button>
                     </div>
                 </div>
@@ -350,7 +357,7 @@ function OrderSummaryBalmy({
                                 }`}
                             style={{ font: 'normal normal normal 22px/40px Cairo' }}
                         >
-                            اتمــــــام الدفــــــــع
+                            {t("proceed-to-checkout")}
                         </button>
                     </DialogTrigger>
 

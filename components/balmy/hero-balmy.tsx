@@ -10,7 +10,7 @@ export type HeroBalmyProps = {
 
 export default function HeroBalmy({ sliders }: HeroBalmyProps) {
     // Use the first slider image or fallback to default
-    const heroImage = sliders?.[0]?.slider_path || sliders?.[0]?.image || "/images/bg.jpg";
+    const heroImage = sliders?.[0]?.slider_path || sliders?.[0]?.image || "/images/mew-home-sec.png";
 
     return (
         <section
@@ -34,7 +34,7 @@ export default function HeroBalmy({ sliders }: HeroBalmyProps) {
 
             {/* Hero content container - centered with max-width */}
             <div className="relative z-10 h-full w-full max-w-[1920px] mx-auto pt-[54px]">
-                <div className="h-full flex flex-col items-center justify-center px-4">
+                <div className="h-full flex flex-col items-center justify-start pt-32 md:pt-48 lg:pt-60 px-4">
                     {/* Hero Title - Optional */}
                     <h1 className="text-white text-4xl md:text-6xl lg:text-7xl font-bold text-center mb-4 drop-shadow-lg">
                         {sliders?.[0]?.title || ""}

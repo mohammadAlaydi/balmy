@@ -1,11 +1,57 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { authenticatedFetch } from "@/lib/authenticated-fetch";
 import { login, register, logout } from "./auth-slice";
-import { DISABLE_BACKEND_FETCH, MOCK_CART, mockDelay } from "@/lib/dev-config";
+import { DISABLE_BACKEND_FETCH, MOCK_CART, mockDelay, MOCK_PRODUCTS } from "@/lib/dev-config";
 
 /* -------------------------------------------------------------------------- */
 /*                               Async Thunks                                 */
 /* -------------------------------------------------------------------------- */
+
+// Helper functions for local storage persistence (Mock DB)
+const saveStoredCart = (cartData: any) => {
+  if (typeof window !== "undefined") {
+    localStorage.setItem("mock_cart", JSON.stringify(cartData));
+  }
+};
+
+const getStoredCart = (): any => {
+  if (typeof window === "undefined") {
+    return null;
+  }
+  try {
+    const stored = localStorage.getItem("mock_cart");
+    return stored ? JSON.parse(stored) : null;
+  } catch (error) {
+    return null;
+  }
+};
+
+// Create a local mutable copy of the mock cart to avoid "object is not extensible" errors
+// and persist across reloads
+let localMockCart = getStoredCart() || JSON.parse(JSON.stringify(MOCK_CART));
+
+// Helper to update totals and save
+const updateCartTotalsAndSave = () => {
+  let count = 0;
+  let qty = 0;
+  let total = 0;
+
+  if (localMockCart?.data?.items) {
+    localMockCart.data.items.forEach((item: any) => {
+      count += 1;
+      qty += item.quantity;
+      total += item.total || (item.quantity * (item.product.price || 0));
+    });
+
+    localMockCart.data.items_count = count;
+    localMockCart.data.items_qty = qty;
+    localMockCart.data.grand_total = total;
+    localMockCart.data.sub_total = total;
+    localMockCart.data.base_tax_total = total * 0.15; // Mock tax
+  }
+
+  saveStoredCart(localMockCart);
+};
 
 // 🛒 Get cart products
 export const getCartProducts = createAsyncThunk(
@@ -15,8 +61,16 @@ export const getCartProducts = createAsyncThunk(
       // DEV MODE: Return mock data when backend is disabled
       if (DISABLE_BACKEND_FETCH) {
         await mockDelay();
-        console.log("🚧 [DEV] Cart fetch bypassed - using mock data");
-        return MOCK_CART;
+        console.log("🚧 [DEV] Cart fetch bypassed - using local storage data");
+
+        // Refresh local variable from storage in case it changed in another tab
+        const stored = getStoredCart();
+        if (stored) {
+          localMockCart = stored;
+        }
+
+        // Return a DEEP COPY to prevent Redux from freezing our mutable localMockCart
+        return JSON.parse(JSON.stringify(localMockCart));
       }
 
       const res = await authenticatedFetch("/api/cart");
@@ -64,6 +118,32 @@ export const addToCart = createAsyncThunk(
       if (DISABLE_BACKEND_FETCH) {
         await mockDelay();
         console.log(`🚧 [DEV] Add to cart bypassed - product ${payload.productId}`);
+
+        // Mock Implementation
+        // @ts-ignore - MOCK_PRODUCTS is typed loosely
+        const product = MOCK_PRODUCTS.data.find((p: any) => p.id === payload.productId || p.product_id === payload.productId);
+
+        if (product) {
+          // @ts-ignore
+          const existingItem = localMockCart.data.items.find((i: any) => i.product.id === product.id);
+          if (existingItem) {
+            existingItem.quantity += (payload.productQTY || 1);
+            existingItem.total = existingItem.quantity * existingItem.product.price;
+          } else {
+            // @ts-ignore
+            localMockCart.data.items.push({
+              id: Math.random(),
+              quantity: payload.productQTY || 1,
+              product: product,
+              total: (payload.productQTY || 1) * product.price
+            });
+          }
+
+          // Recalculate totals and save
+          updateCartTotalsAndSave();
+        }
+
+        dispatch(getCartProducts());
         return { success: true, message: "Added to cart (mock)" };
       }
 
@@ -97,6 +177,14 @@ export const removeFromCart = createAsyncThunk(
       if (DISABLE_BACKEND_FETCH) {
         await mockDelay();
         console.log(`🚧 [DEV] Remove from cart bypassed - product ${payload.productId}`);
+
+        // @ts-ignore
+        localMockCart.data.items = localMockCart.data.items.filter((item: any) => item.id !== payload.productId && item.product.id !== payload.productId);
+
+        // Recalculate totals and save
+        updateCartTotalsAndSave();
+
+        dispatch(getCartProducts());
         return { success: true, message: "Removed from cart (mock)" };
       }
 
@@ -125,6 +213,14 @@ export const removeAllProductsFromCart = createAsyncThunk(
       if (DISABLE_BACKEND_FETCH) {
         await mockDelay();
         console.log("🚧 [DEV] Clear cart bypassed");
+
+        // @ts-ignore
+        localMockCart.data.items = [];
+
+        // Recalculate totals and save
+        updateCartTotalsAndSave();
+
+        dispatch(getCartProducts());
         return { success: true, message: "Cart cleared (mock)" };
       }
 
@@ -219,8 +315,12 @@ const cartSlice = createSlice({
     status: null as string | null,
     cartStatus: null as string | null,
     orderDetails: null as any,
+    isCartOpen: false,
   },
   reducers: {
+    setCartOpen: (state, action) => {
+      state.isCartOpen = action.payload;
+    },
     /** Apply immediate UI update for quantity changes before backend sync */
     applyLocalQuantityDelta: (state, action) => {
       const { productId, delta } = action.payload;
@@ -399,5 +499,5 @@ const cartSlice = createSlice({
 /*                                   Exports                                  */
 /* -------------------------------------------------------------------------- */
 
-export const { applyLocalQuantityDelta, resetStatus, clearCart } = cartSlice.actions;
+export const { applyLocalQuantityDelta, resetStatus, clearCart, setCartOpen } = cartSlice.actions;
 export const cartReducer = cartSlice.reducer;

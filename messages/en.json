@@ -56,7 +56,9 @@
     "no-product-details": "No product details available",
     "go-to-favourites": "Go to Favourites",
     "go-to-cart": "Proceed to Payment",
-    "cart": "Cart"
+    "cart": "Cart",
+    "clear-all-products": "Clear All Products",
+    "no-data-found": "No data found"
   },
   "categories": {
     "footwear": "Footwear",
@@ -250,6 +252,7 @@
     "open": "Open",
     "save": "Save",
     "delete": "Delete",
+    "delete-product": "Are you sure you want to delete this product ?",
     "delete-confirmation": "Are you sure you want to delete this product ?",
     "delete-all-products": "Are your sure you want to delete all products ?",
     "cancel": "Cancel",

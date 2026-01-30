@@ -3,7 +3,7 @@
 import { ShoppingCart } from "lucide-react";
 
 interface AddToCartBtnProps {
-  onClick?: () => void;
+  onClick?: (e: React.MouseEvent) => void;
   label?: string;
   icon?: React.ReactNode;
   disabled?: boolean;

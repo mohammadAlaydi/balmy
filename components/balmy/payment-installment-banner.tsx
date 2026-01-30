@@ -4,42 +4,26 @@ import Image from "next/image";
 
 export default function PaymentInstallmentBanner() {
     return (
-        <div className="w-full flex justify-center px-4 my-8 md:my-16">
+        <div className="w-full flex justify-center px-2 sm:px-4 my-6 md:my-12 lg:my-16" dir="rtl">
             {/* Main Container */}
             <div
-                className="relative w-full max-w-[1707px] min-h-[279px] bg-white border border-[#3A3A3A] rounded-[62px] flex items-center overflow-hidden"
-                style={{
-                    height: '279px',
-                }}
-                dir="rtl"
+                className="relative w-full max-w-[1707px] bg-white border border-[#3A3A3A] rounded-[32px] sm:rounded-[48px] lg:rounded-[62px] flex flex-col lg:flex-row items-center overflow-hidden"
             >
-                {/* 
-                   Layout Requirement:
-                   - Main container: 1707px wide, 279px high, White bg, Dark border.
-                   - Left Black Capsule: 662px wide, 279px high.
-                   - Logos on the right side.
-                   
-                   RTL: 
-                   - Right side = Start
-                   - Left side = End
-                   
-                   So the black capsule should be at the "Left" (End in RTL).
-                   Logos should be at the "Right" (Start in RTL).
-                */}
-
                 {/* Right Side: Logos Group (Start in RTL) */}
-                <div className="flex-1 flex justify-center items-center gap-[60px] md:gap-[100px] h-full">
+                <div className="flex-1 w-full flex flex-col sm:flex-row justify-center items-center gap-6 sm:gap-8 md:gap-12 lg:gap-16 xl:gap-20 p-6 sm:p-8 md:p-10 lg:p-12">
 
-                    {/* Tabby Logo - Bigger as requested (approx 360x148) */}
+                    {/* Tabby Logo */}
                     <div
-                        className="flex items-center justify-center rounded-[48px]"
+                        className="flex items-center justify-center rounded-[24px] sm:rounded-[32px] md:rounded-[40px] lg:rounded-[48px] w-full sm:w-auto"
                         style={{
-                            width: '360px',
-                            height: '148px',
+                            maxWidth: '360px',
+                            width: '100%',
+                            minWidth: '200px',
+                            aspectRatio: '360/148',
                             backgroundColor: '#5AFEAE',
                         }}
                     >
-                        <div className="relative w-[200px] h-[80px]">
+                        <div className="relative w-[140px] sm:w-[160px] md:w-[180px] lg:w-[200px] h-[56px] sm:h-[64px] md:h-[72px] lg:h-[80px]">
                             <Image
                                 src="/assets/images/tabby.png"
                                 alt="Tabby"
@@ -49,21 +33,23 @@ export default function PaymentInstallmentBanner() {
                         </div>
                     </div>
 
-                    {/* Tamara Logo - Bigger as requested (approx 360x105) */}
+                    {/* Tamara Logo */}
                     <div
-                        className="flex items-center justify-center rounded-[48px]"
+                        className="flex items-center justify-center rounded-[24px] sm:rounded-[32px] md:rounded-[40px] lg:rounded-[48px] w-full sm:w-auto"
                         style={{
-                            width: '360px',
-                            height: '105px',
+                            maxWidth: '360px',
+                            width: '100%',
+                            minWidth: '200px',
+                            aspectRatio: '360/105',
                             backgroundColor: '#16181D',
                         }}
                     >
-                        <div className="relative w-[200px] h-[60px]">
+                        <div className="relative w-[140px] sm:w-[160px] md:w-[180px] lg:w-[200px] h-[42px] sm:h-[48px] md:h-[54px] lg:h-[60px]">
                             <Image
                                 src="/assets/images/tamara.png"
                                 alt="Tamara"
                                 fill
-                                className="object-contain invert" // White logo on dark bg
+                                className="object-contain invert"
                             />
                         </div>
                     </div>
@@ -72,28 +58,20 @@ export default function PaymentInstallmentBanner() {
 
                 {/* Left Side: Black Capsule (End in RTL) */}
                 <div
-                    className="flex flex-col items-center justify-center text-center shrink-0 h-full"
+                    className="flex flex-col items-center justify-center text-center w-full lg:w-auto lg:shrink-0 py-8 sm:py-10 md:py-12 lg:py-0 px-4 sm:px-6 md:px-8 bg-black lg:rounded-r-[32px] xl:rounded-r-[48px] 2xl:rounded-r-[62px]"
                     style={{
-                        width: '662px',
-                        backgroundColor: '#000000',
-                        // In RTL, this is on the left side
-                        // Since it's full height (279px), it likely acts as a sidebar of the banner
-                        borderTopRightRadius: '64px', // Curved inward to the container
-                        borderBottomRightRadius: '64px',
-                        borderTopLeftRadius: '62px', // Matches container corner
-                        borderBottomLeftRadius: '62px',
+                        minHeight: '200px',
                     }}
                 >
                     <span
-                        className="font-bold text-white font-cairo"
+                        className="font-bold text-white font-cairo text-[28px] sm:text-[32px] md:text-[36px] lg:text-[40px] xl:text-[45px] leading-tight sm:leading-snug md:leading-normal px-2"
                         style={{
-                            fontSize: '45px',
-                            lineHeight: '72px',
+                            lineHeight: '1.4',
                         }}
                     >
                         قسط مشترياتك على 4 دفعات
                     </span>
-                    <span className="text-xl font-light text-gray-200 mt-2">
+                    <span className="text-base sm:text-lg md:text-xl font-light text-gray-200 mt-2 sm:mt-3">
                         من غير رسوم او غرامات
                     </span>
                 </div>

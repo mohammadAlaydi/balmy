@@ -3,7 +3,7 @@
 import React from "react";
 import { cn } from "@/lib/utils";
 import { useTranslations } from "next-intl";
-import ProductCardBalmy from "@/components/balmy/product-card-balmy";
+import ProductCard from "@/components/ProductCard";
 import { MOCK_PRODUCTS } from "@/lib/dev-config";
 
 interface RelatedProductsSectionProps {
@@ -49,7 +49,7 @@ export default function RelatedProductsSection({
             {/* Products Grid */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
                 {relatedProducts.map((product) => (
-                    <ProductCardBalmy
+                    <ProductCard
                         key={product.id}
                         product={product as any}
                         cardColSpan="col-span-1"

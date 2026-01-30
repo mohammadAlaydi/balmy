@@ -4,7 +4,7 @@ import Image from "next/image";
 import DeleteProductComponent from "@/components/delete-product-component";
 import { getCartProducts, removeFromCart } from "@/store/slices/cart-slice";
 import { useAppDispatch } from "@/store/hooks";
-import ReactStars from "./react-stars";
+import { Rating, RatingButton } from "./ui/rating";
 import toast from "react-hot-toast";
 import { useState } from "react";
 import { useTranslations } from "next-intl";
@@ -64,21 +64,15 @@ export default function CartProduct({
               {product?.price} <i className="icon-rial"></i>
             </p>
             <div className="scale-[0.85] sm:scale-100">
-              <div className="flex items-center gap-1 bg-gray-100 px-2 rounded-md w-fit mb-2 shadow-sm">
-                <div className="hidden sm:flex"><ReactStars edit={false} /> </div>
-                <div className="flex sm:hidden">
-                  <ReactStars
-                    rating={
-                      // product?.reviews?.total
-                      4.5
-                    }
-                    count={1}
-                  />
-                </div>
+              <div className="flex items-center gap-1 bg-gray-100 px-2 rounded-full w-fit shadow-sm">
+                <Rating readOnly value={Math.floor(Number((product as any)?.reviews?.average_rating || product?.rating || 4.5))} max={5}>
+                  {Array.from({ length: 5 }).map((_, i) => (
+                    <RatingButton key={i} size={14} />
+                  ))}
+                </Rating>
                 <Badge className="bg-transparent text-gray-500 p-0 text-sm font-[550]">
-                  {/* {product?.reviews?.total} */}
-                  4.5
-                </Badge>{" "}
+                  {(product as any)?.reviews?.average_rating || product?.rating || 4.5}
+                </Badge>
               </div>
 
             </div>
