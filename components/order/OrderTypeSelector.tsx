@@ -1,7 +1,6 @@
 "use client";
 
 import { Home, Gift, Lock, Store } from "lucide-react";
-import { useState } from "react";
 
 export type DeliveryType = "home" | "gift" | "locker" | "branch";
 
@@ -15,6 +14,7 @@ interface DeliveryOption {
     title: string;
     description: string;
     estimate: string;
+    estimateColorClass: string;
     Icon: typeof Home;
 }
 
@@ -22,29 +22,33 @@ const deliveryOptions: DeliveryOption[] = [
     {
         id: "home",
         title: "توصيل للمنزل",
-        description: "استلم طلبك في منزلك",
-        estimate: "1-4 أيام",
+        description: "يمكنك استلام الطلب في المنزل\nاو مكان العمل الخاص بك",
+        estimate: "ايام 1-4",
+        estimateColorClass: "text-green-500",
         Icon: Home,
     },
     {
         id: "gift",
         title: "أرسال هدية",
-        description: "أرسل هدية لشخص عزيز",
-        estimate: "2-5 أيام",
+        description: "يمكنك استلام الطلب في المنزل\nاو مكان العمل الخاص بك",
+        estimate: "ايام 1-4",
+        estimateColorClass: "text-green-500",
         Icon: Gift,
     },
     {
         id: "locker",
         title: "الخزائن الذكية",
-        description: "استلم من خزانة ذكية",
-        estimate: "1-3 أيام",
+        description: "نوصلها عنك لمن تحب",
+        estimate: "ايام 1-4",
+        estimateColorClass: "text-green-500",
         Icon: Lock,
     },
     {
         id: "branch",
         title: "استلام من اقرب فرع",
-        description: "استلم من الفرع الأقرب",
-        estimate: "اليوم نفسه",
+        description: "يمكنك استلام طلبك في الوقت المناسب لك\nمن خلال الفرع القريب منك",
+        estimate: "ايام 1-4",
+        estimateColorClass: "text-green-500",
         Icon: Store,
     },
 ];
@@ -54,69 +58,62 @@ export default function OrderTypeSelector({
     onTypeChange,
 }: OrderTypeSelectorProps) {
     return (
-        <div className="w-full" dir="rtl">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                {deliveryOptions.map((option) => {
-                    const isSelected = selectedType === option.id;
-                    const Icon = option.Icon;
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-10" dir="rtl">
+            {deliveryOptions.map((option) => {
+                const isSelected = selectedType === option.id;
+                const Icon = option.Icon;
 
-                    return (
-                        <button
-                            key={option.id}
-                            onClick={() => onTypeChange(option.id)}
-                            className={`
-                relative p-6 rounded-lg border-2 transition-all duration-300
-                hover:shadow-lg hover:scale-[1.02]
-                ${isSelected
-                                    ? "border-black bg-light-gray/30 shadow-md"
-                                    : "border-light-gray-2 bg-white hover:border-light-gray-4"
-                                }
-              `}
-                        >
-                            {/* Radio button - top left */}
-                            <div className="absolute top-4 left-4">
-                                <div
-                                    className={`
-                  w-5 h-5 rounded-full border-2 flex items-center justify-center
-                  ${isSelected
-                                            ? "border-black bg-black"
-                                            : "border-light-gray-4 bg-white"
-                                        }
-                `}
-                                >
-                                    {isSelected && (
-                                        <div className="w-2 h-2 rounded-full bg-white" />
-                                    )}
+                return (
+                    <label
+                        key={option.id}
+                        onClick={() => onTypeChange(option.id)}
+                        className={`
+                            cursor-pointer border rounded-lg p-6 transition flex flex-row items-center justify-between text-right group
+                            ${isSelected
+                                ? "border-black dark:border-white bg-white dark:bg-surface-dark ring-1 ring-black dark:ring-white"
+                                : "border-gray-300 dark:border-gray-600 hover:border-black dark:hover:border-white bg-white dark:bg-surface-dark"
+                            }
+                        `}
+                    >
+                        <div className="flex flex-col w-full pl-2 h-full">
+                            <div className="flex items-center justify-start gap-2 mb-2">
+                                <h3 className="font-bold text-lg text-black dark:text-white">{option.title}</h3>
+                                <div className={`
+                                    w-4 h-4 rounded-full border flex items-center justify-center
+                                    ${isSelected ? "border-black bg-black dark:bg-white dark:border-white" : "border-gray-400 dark:border-gray-500"}
+                                `}>
+                                    {isSelected && <div className="w-1.5 h-1.5 bg-white dark:bg-black rounded-full" />}
                                 </div>
                             </div>
-
-                            {/* Icon - top right */}
-                            <div className="flex justify-end mb-4">
-                                <div
-                                    className={`
-                  p-3 rounded-lg
-                  ${isSelected
-                                            ? "bg-black text-white"
-                                            : "bg-light-gray text-medium-gray"
-                                        }
-                `}
-                                >
-                                    <Icon className="w-6 h-6" />
-                                </div>
-                            </div>
-
-                            {/* Content */}
-                            <div className="text-right space-y-2">
-                                <h3 className="text-lg font-bold text-black">{option.title}</h3>
-                                <p className="text-sm text-medium-gray">{option.description}</p>
-                                <p className="text-sm font-semibold text-green">
-                                    {option.estimate}
-                                </p>
-                            </div>
-                        </button>
-                    );
-                })}
-            </div>
+                            <p className="text-xs text-gray-500 dark:text-gray-400 mb-2 whitespace-pre-line leading-relaxed">
+                                {option.description}
+                            </p>
+                            <span className={`text-xs font-bold mt-auto ${option.estimateColorClass}`}>
+                                {option.estimate}
+                            </span>
+                        </div>
+                        <div className="shrink-0 mr-2">
+                            <Icon
+                                className={`text-4xl w-12 h-12 transition-colors
+                                    ${isSelected
+                                        ? "text-black dark:text-white"
+                                        : "text-gray-900 dark:text-gray-100 group-hover:text-black dark:group-hover:text-white"
+                                    }
+                                `}
+                                strokeWidth={2}
+                            />
+                        </div>
+                        {/* Hidden input for accessibility */}
+                        <input
+                            type="radio"
+                            name="shipping_method"
+                            checked={isSelected}
+                            readOnly
+                            className="hidden"
+                        />
+                    </label>
+                );
+            })}
         </div>
     );
 }

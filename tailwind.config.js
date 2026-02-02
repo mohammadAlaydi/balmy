@@ -10,13 +10,24 @@ module.exports = {
     './store/**/*.{js,ts,jsx,tsx,mdx}',
     './types/**/*.{js,ts,jsx,tsx,mdx}',
   ],
+  darkMode: 'class',
   theme: {
     extend: {
       colors: {
         border: "hsl(var(--border))",
+        "border-light": "#e5e7eb",
+        "border-dark": "#374151",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
+        "background-light": "#ffffff",
+        "background-dark": "#111827",
+        "surface-light": "#f9fafb",
+        "surface-dark": "#1f2937",
+        "text-main-light": "#1f2937",
+        "text-main-dark": "#f3f4f6",
+        "text-muted-light": "#6b7280",
+        "text-muted-dark": "#9ca3af",
         foreground: "hsl(var(--foreground))",
         primary: {
           DEFAULT: "hsl(var(--primary))",
@@ -34,6 +45,7 @@ module.exports = {
           DEFAULT: "hsl(var(--muted))",
           foreground: "hsl(var(--muted-foreground))",
         },
+        "accent-red": "#ef4444",
         accent: {
           DEFAULT: "hsl(var(--accent))",
           foreground: "hsl(var(--accent-foreground))",
@@ -88,8 +100,12 @@ module.exports = {
         "purple-2": "var(--color-purple-2)",
         "purple-3": "var(--color-purple-3)",
         "gold": "var(--color-gold)",
+        "report-blue": "#3b82f6",
+        "report-border-light": "#d1d5db",
+        "stores-primary": "#7c73e6",
       },
       borderRadius: {
+        DEFAULT: "0.5rem",
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",

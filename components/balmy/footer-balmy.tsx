@@ -2,7 +2,12 @@ import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 
+// Add import at the top
+import { useLocale } from 'next-intl';
+
 export default function FooterBalmy() {
+    const locale = useLocale();
+
     return (
         <footer
             dir="rtl"
@@ -20,25 +25,25 @@ export default function FooterBalmy() {
                         </h3>
                         <nav className="space-y-3">
                             <Link
-                                href="/faq"
+                                href={`/${locale}/shipping`}
                                 className="block text-light-gray-3 hover:text-white transition-colors duration-300"
                             >
                                 الأسئلة الأكثر تكراراً
                             </Link>
                             <Link
-                                href="/about"
+                                href={`/${locale}/about-us`}
                                 className="block text-light-gray-3 hover:text-white transition-colors duration-300"
                             >
                                 من نحن
                             </Link>
                             <Link
-                                href="/payment-methods"
+                                href={`/${locale}/payment-methods`}
                                 className="block text-light-gray-3 hover:text-white transition-colors duration-300"
                             >
                                 طرق الدفع
                             </Link>
                             <Link
-                                href="/track-order"
+                                href={`/${locale}/home`}
                                 className="block text-light-gray-3 hover:text-white transition-colors duration-300"
                             >
                                 تتبع طلبك
@@ -64,37 +69,37 @@ export default function FooterBalmy() {
                         </h3>
                         <nav className="space-y-3">
                             <Link
-                                href="/stores"
+                                href={`/${locale}/stores`}
                                 className="block text-light-gray-3 hover:text-white transition-colors duration-300"
                             >
                                 متاجرنا
                             </Link>
                             <Link
-                                href="/careers"
+                                href={`/${locale}/about-us`}
                                 className="block text-light-gray-3 hover:text-white transition-colors duration-300"
                             >
                                 الانضمام لفريق بالمي شركات العطور
                             </Link>
                             <Link
-                                href="/privacy"
+                                href={`/${locale}/shipping`}
                                 className="block text-light-gray-3 hover:text-white transition-colors duration-300"
                             >
                                 الخصوصية و شروط الاستخدام
                             </Link>
                             <Link
-                                href="/policies"
+                                href={`/${locale}/shipping`}
                                 className="block text-light-gray-3 hover:text-white transition-colors duration-300"
                             >
                                 سياسة الشحن والاستبدال والاسترجاع والدفع والإلغاء
                             </Link>
                             <Link
-                                href="/support"
+                                href={`/${locale}/shipping`}
                                 className="block text-light-gray-3 hover:text-white transition-colors duration-300"
                             >
                                 مركز الدعم
                             </Link>
                             <Link
-                                href="/report"
+                                href={`/${locale}/report-violation`}
                                 className="block text-light-gray-3 hover:text-white transition-colors duration-300"
                             >
                                 الإبلاغ عن الممارسات غير القانونية
