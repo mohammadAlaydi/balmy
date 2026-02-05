@@ -43,7 +43,7 @@ export default function FooterBalmy() {
                                 طرق الدفع
                             </Link>
                             <Link
-                                href={`/${locale}/home`}
+                                href={`/${locale}/track-order`}
                                 className="block text-light-gray-3 hover:text-white transition-colors duration-300"
                             >
                                 تتبع طلبك

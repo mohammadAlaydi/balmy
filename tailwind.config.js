@@ -13,6 +13,10 @@ module.exports = {
   darkMode: 'class',
   theme: {
     extend: {
+      fontFamily: {
+        cairo: ["var(--font-cairo)"],
+        tajawal: ["var(--font-tajawal)"],
+      },
       colors: {
         border: "hsl(var(--border))",
         "border-light": "#e5e7eb",
@@ -103,6 +107,10 @@ module.exports = {
         "report-blue": "#3b82f6",
         "report-border-light": "#d1d5db",
         "stores-primary": "#7c73e6",
+        // Order Tracking Colors
+        "accent-green": "#25D366", // WhatsApp green
+        "status-green": "#00c853", // Progress bar green
+        "footer-bg": "#2d2d2d",
       },
       borderRadius: {
         DEFAULT: "0.5rem",

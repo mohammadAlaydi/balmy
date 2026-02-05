@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Cairo } from "next/font/google";
+import { Cairo, Tajawal } from "next/font/google";
 import "./globals.css";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
@@ -16,6 +16,14 @@ const cairo = Cairo({
   subsets: ["arabic", "latin"],
   display: "swap",
   weight: ["400", "500", "600", "700"],
+  preload: true,
+});
+
+const tajawal = Tajawal({
+  variable: "--font-tajawal",
+  subsets: ["arabic", "latin"],
+  display: "swap",
+  weight: ["300", "400", "500", "700", "800"],
   preload: true,
 });
 
@@ -146,7 +154,7 @@ export default async function RootLayout({
 
   return (
     <html lang={locale} dir={locale === "ar" ? "rtl" : "ltr"}>
-      <body className={`${cairo.variable} font-cairo`}>
+      <body className={`${cairo.variable} ${tajawal.variable} font-cairo`}>
         <ReduxProvider>
           <NextIntlClientProvider messages={messages}>
             <HeaderBalmy />

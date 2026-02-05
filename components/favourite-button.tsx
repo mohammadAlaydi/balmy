@@ -76,33 +76,24 @@ export function FavouriteButton({
       <div
         onClick={handleToggle}
         className={cn(
-          "transition-all duration-200 flex items-center justify-center",
-          isFav && "text-red-500 hover:text-red-600",
-          !isFav && "text-black hover:text-red-500",
-          size === "sm" && "p-1",
-          !isAuthenticated && "opacity-80 hover:opacity-100",
+          "transition-all duration-200 flex items-center justify-center cursor-pointer",
           className
         )}
       >
-        {isLoading ? (
+        {isLoading || isFav ? (
           <FaHeart
             className={cn(
               iconSizes[size],
-              "text-red-500 animate-heartbeat"
+              "text-red-500 transition-all duration-200",
+              isLoading && "animate-pulse"
             )}
-          />
-        ) : isFav ? (
-          <FaHeart
-            className={cn(iconSizes[size], "text-red-500 transition-all duration-200")}
           />
         ) : (
           <FaRegHeart
             className={cn(
               iconSizes[size],
-              `transition-all duration-200 ${FaRegHeartColor
-                ? FaRegHeartColor
-                : "text-black hover:text-red-500"
-              } group-hover:text-red-500`
+              FaRegHeartColor || "text-black",
+              "hover:text-red-500 transition-all duration-200"
             )}
           />
         )}

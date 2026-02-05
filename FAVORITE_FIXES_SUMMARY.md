@@ -17,7 +17,17 @@
 - Works correctly on the favorites page
 - Proper authentication handling
 
-### 2. ✅ Fixed Breadcrumb Navigation
+### 2. ✅ Fixed Favorite Icon Color
+**File**: `components/favourite-button.tsx`
+
+**Changes**:
+- Switched icon library from `react-icons` to `lucide-react` for consistency with `Rating.tsx`.
+- Implemented `fill` and `stroke` logic:
+  - **Active**: `fill-current` (red) with `strokeWidth={0}`.
+  - **Inactive**: `fill-transparent` with `strokeWidth={2}`.
+- Ensured the heart icon is solid red when a product is favorited, fixing the "black heart" and "empty heart" issues.
+
+### 3. ✅ Fixed Breadcrumb Navigation
 **File**: `components/balmy/product-details-balmy.tsx`
 
 **Changes**:
@@ -29,7 +39,7 @@
 - **Before**: الرئيسية / المنتجات / جورجيو أرماني | عطر أرماني | سترونجر ويذ يو إنتنسلي
 - **After**: الرئيسية / العــــــروض / جورجيو أرماني | عطر أرماني | سترونجر ويذ يو إنتنسلي
 
-### 3. ✅ Styled Profile Icon
+### 4. ✅ Styled Profile Icon
 **File**: `components/layout/header/user-menu.tsx`
 
 **Changes**:
@@ -46,7 +56,7 @@ All header action icons now have the same styling:
 - Favorites icon ✓
 - Language icon ✓
 
-### 4. ✅ Favorite Counter Already Implemented
+### 5. ✅ Favorite Counter Already Implemented
 **File**: `components/balmy/header-balmy.tsx`
 
 **Status**: Already working correctly
@@ -57,7 +67,8 @@ All header action icons now have the same styling:
 
 ## Testing Checklist
 
-- [ ] Click favorite icon on product cards - should toggle favorite state
+- [x] Click favorite icon on product cards - should toggle favorite state
+- [x] **Verify favorite icon turns solid red when active** (New)
 - [ ] Navigate to favorites page - should show all favorited products
 - [ ] Remove items from favorites page - should update correctly
 - [ ] Check breadcrumb on product detail page - should show category name
@@ -88,8 +99,9 @@ Categories are mapped by ID to their Arabic names and slugs:
 
 ## Files Modified
 1. `components/ProductCard.tsx` - Integrated FavouriteButton
-2. `components/balmy/product-details-balmy.tsx` - Fixed breadcrumb
-3. `components/layout/header/user-menu.tsx` - Styled profile icon
+2. `components/favourite-button.tsx` - Fixed icon color and filled state
+3. `components/balmy/product-details-balmy.tsx` - Fixed breadcrumb
+4. `components/layout/header/user-menu.tsx` - Styled profile icon
 
 ## No Breaking Changes
 All changes are backward compatible and enhance existing functionality without breaking any current features.

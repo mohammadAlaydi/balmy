@@ -3,9 +3,8 @@
 import React from "react";
 import { cn } from "@/lib/utils";
 import { useTranslations } from "next-intl";
-import { Button } from "@/components/ui/button";
-import RatingBalmy from "@/components/balmy/rating-balmy";
-import ReviewCardBalmy from "@/components/balmy/review-card-balmy";
+import { MdStar, MdStarBorder } from "react-icons/md";
+import { Rating, RatingButton } from "@/components/ui/rating";
 
 interface ReviewsSectionBalmyProps {
     reviews: {
@@ -24,130 +23,162 @@ export default function ReviewsSectionBalmy({
 }: ReviewsSectionBalmyProps) {
     const t = useTranslations("product-details");
 
-    // Mock rating distribution based on total reviews
+    // Calculate rating distribution
     const ratingDistribution = [
         { stars: 5, count: Math.floor(reviews.total * 0.45), percentage: 45 },
-        { stars: 4, count: Math.floor(reviews.total * 0.25), percentage: 25 },
-        { stars: 3, count: Math.floor(reviews.total * 0.15), percentage: 15 },
-        { stars: 2, count: Math.floor(reviews.total * 0.10), percentage: 10 },
-        { stars: 1, count: Math.floor(reviews.total * 0.05), percentage: 5 },
+        { stars: 4, count: Math.floor(reviews.total * 0.20), percentage: 20 },
+        { stars: 3, count: Math.floor(reviews.total * 0.10), percentage: 10 },
+        { stars: 2, count: Math.floor(reviews.total * 0.05), percentage: 5 },
+        { stars: 1, count: Math.floor(reviews.total * 0.02), percentage: 2 },
     ];
 
-    const handleWriteReview = () => {
-        // TODO: Implement write review functionality
-        // Could open a modal or navigate to review form
-    };
+    // Mock data for reviews since the previous implementation also used mock data for the list
+    // In a real app, this would come from an API based on productId
+    const reviewsList = [
+        {
+            id: 1,
+            name: "محمد احمد عبدالرزاق",
+            rating: 5,
+            date: "12/28/2025",
+            content:
+                "هذا العطر رائع بكل معنى الكلمة! يمتاز برائحة جذابة ومميزة تجمع بين الأنوثة والأناقة بشكل متناغم. يدوم طويلا على البشرة والملابس ويمنحك شعورا بالثقة طوال اليوم. حقا من أفضل الروائح التي جربتها مؤخرا وأنصح به بشدة لمن يبحث عن عطر يعكس الأناقة والرقي.",
+        },
+        {
+            id: 2,
+            name: "سارة خالد",
+            rating: 4,
+            date: "12/20/2025",
+            content:
+                "العطر جميل وثابت، لكن السعر مرتفع قليلاً مقارنة بالحجم. التغليف كان ممتازاً والشحن سريع جداً. شكراً لكم.",
+        },
+    ];
 
     return (
-        <div className={cn("py-8 border-t border-[var(--color-light-gray-2)]", className)} dir="rtl">
-            {/* Section Title */}
-            <h2 className="text-xl md:text-2xl font-bold text-[var(--color-black)] font-cairo mb-6">
-                {t("reviews") || "التقييمات"}
-            </h2>
+        <div className={cn("w-full mb-16", className)} dir="rtl">
+            {/* Aggregate Ratings Section - التقييمات */}
+            <section className="mb-16">
+                <h2 className="text-2xl font-bold mb-8 text-right text-gray-900 dark:text-white flex items-center gap-4 font-cairo">
+                    {t("reviews") || "التقييمات"}
+                    <span className="flex-grow h-px bg-gray-200 dark:bg-gray-700"></span>
+                </h2>
 
-            <div className="flex flex-col md:flex-row gap-8">
-                {/* Left Side - Overall Rating */}
-                <div className="flex flex-col items-center justify-center text-center md:w-1/3">
-                    {/* Large Rating Number */}
-                    <div className="text-5xl md:text-6xl font-bold text-[var(--color-black)] font-cairo mb-2">
-                        {reviews.average_rating?.toFixed(1) || "3.8"}
-                    </div>
+                <div className="bg-white dark:bg-gray-800 rounded-[2.5rem] border border-gray-200 dark:border-gray-700 p-8 shadow-sm">
+                    <div className="flex flex-col lg:flex-row items-center justify-between gap-10">
+                        {/* Overall Rating Score */}
+                        <div className="flex flex-col items-center justify-center min-w-[150px]">
+                            <span className="text-6xl font-medium text-gray-900 dark:text-white mb-2 font-cairo">
+                                {reviews.average_rating?.toFixed(1) || "3.8"}
+                            </span>
+                            <div className="mb-2">
+                                <Rating readOnly value={Math.floor(reviews.average_rating || 3.8)} max={5}>
+                                    {Array.from({ length: 5 }).map((_, i) => (
+                                        <RatingButton
+                                            key={i}
+                                            size={24}
+                                            className="text-yellow-400"
+                                            filledIcon={MdStar}
+                                            emptyIcon={MdStarBorder}
+                                        />
+                                    ))}
+                                </Rating>
+                            </div>
+                            <span className="text-sm text-gray-500 dark:text-gray-400 font-cairo">
+                                عدد التقييمات {reviews.total || 225}
+                            </span>
+                        </div>
 
-                    {/* Stars */}
-                    <div className="mb-2">
-                        <RatingBalmy value={reviews.average_rating || 3.8} />
-                    </div>
-
-                    {/* Review Count */}
-                    <span className="text-sm text-[var(--color-medium-gray)] font-cairo">
-                        {reviews.total || 225} {t("reviews-count") || "التقييمات"}
-                    </span>
-                </div>
-
-                {/* Right Side - Rating Breakdown */}
-                <div className="flex-1">
-                    <div className="flex flex-col gap-3">
-                        {ratingDistribution.map(({ stars, count, percentage }) => (
-                            <div key={stars} className="flex items-center gap-3">
-                                {/* Stars Label */}
-                                <div className="flex items-center gap-1 min-w-[40px]">
-                                    <span className="text-sm font-medium text-[var(--color-black)] font-cairo">
+                        {/* Rating Distribution Bars */}
+                        <div className="flex-grow w-full max-w-xl">
+                            {ratingDistribution.map(({ stars, count, percentage }) => (
+                                <div key={stars} className="flex items-center gap-3 mb-2">
+                                    <span className="text-sm text-gray-600 dark:text-gray-400 w-3 font-medium font-cairo">
                                         {stars}
                                     </span>
-                                    <svg
-                                        className="w-4 h-4 text-yellow-400 fill-yellow-400"
-                                        viewBox="0 0 20 20"
-                                    >
-                                        <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" />
-                                    </svg>
+                                    <MdStar className="text-yellow-400 text-sm" />
+                                    <div className="flex-grow h-2 bg-gray-100 dark:bg-gray-700 rounded-full overflow-hidden">
+                                        <div
+                                            className="h-full bg-gray-900 dark:bg-gray-400 rounded-full transition-all duration-500"
+                                            style={{ width: `${percentage}%` }}
+                                        />
+                                    </div>
+                                    <span className="text-sm text-gray-500 dark:text-gray-400 w-8 text-left font-cairo">
+                                        {count}
+                                    </span>
                                 </div>
+                            ))}
+                        </div>
 
-                                {/* Progress Bar */}
-                                <div className="flex-1 h-3 bg-[var(--color-light-gray)] rounded-full overflow-hidden">
-                                    <div
-                                        className="h-full bg-yellow-400 rounded-full transition-all duration-500"
-                                        style={{ width: `${percentage}%` }}
-                                    />
-                                </div>
-
-                                {/* Count */}
-                                <span className="text-sm text-[var(--color-medium-gray)] font-cairo min-w-[35px] text-left">
-                                    {count}
-                                </span>
-                            </div>
-                        ))}
+                        {/* Write Review Button */}
+                        <div className="flex flex-col items-center">
+                            <button className="bg-gray-900 hover:bg-gray-800 dark:bg-white dark:text-gray-900 dark:hover:bg-gray-200 text-white px-10 py-3 rounded-full font-bold mb-3 transition-colors shadow-lg font-cairo">
+                                سجل تقييمك
+                            </button>
+                            <span className="text-xs text-gray-400 font-cairo">
+                                الشروط والأحكام الخاصة بالنشر
+                            </span>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </section>
 
+            {/* Latest Reviews Section - آخر التقييمات */}
+            <section>
+                <h2 className="text-2xl font-bold mb-8 text-right text-gray-900 dark:text-white flex items-center gap-4 font-cairo">
+                    {t("latest-reviews") || "آخر التقييمات"}
+                    <span className="flex-grow h-px bg-gray-200 dark:bg-gray-700"></span>
+                </h2>
 
-            {/* Write Review CTA */}
-            <div className="mt-8 flex flex-col items-center text-center gap-3 border-b border-[var(--color-light-gray-2)] pb-8 mb-8">
-                <Button
-                    onClick={handleWriteReview}
-                    className="h-12 px-8 bg-[var(--color-black)] text-white hover:bg-[var(--color-dark-gray)] font-cairo text-base font-semibold rounded-lg"
-                >
-                    {t("write-review-cta") || "سجل تقييماً"}
-                </Button>
-                <p className="text-sm text-[var(--color-medium-gray)] font-cairo">
-                    {t("review-cta-subtitle") || "احصل على مشترياتك واحكم عليها بنفسك"}
-                </p>
-            </div>
+                <div className="flex flex-col gap-6">
+                    {reviewsList.map((review) => (
+                        <div
+                            key={review.id}
+                            className="bg-white dark:bg-gray-800 rounded-[2rem] border border-gray-200 dark:border-gray-700 p-8 shadow-sm"
+                        >
+                            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+                                {/* Reviewer Name */}
+                                <div className="md:w-1/4">
+                                    <h4 className="text-lg font-bold text-gray-900 dark:text-white mb-1 font-cairo">
+                                        {review.name}
+                                    </h4>
+                                </div>
 
-            {/* Latest Reviews Section */}
-            <div className="w-full">
-                {/* Header */}
-                <div className="flex items-center justify-between mb-6">
-                    <h3 className="text-xl font-bold text-[var(--color-black)] font-cairo">
-                        {t("latest-reviews") || "أحدث التقييمات"}
-                    </h3>
-                    <span className="text-sm text-[var(--color-medium-gray)] font-cairo">
-                        {t("reviews-count-label") || "عدد التقييمات"} {reviews.total || 225}
-                    </span>
-                </div>
+                                {/* Review Content */}
+                                <div className="md:w-2/4 flex flex-col items-start text-right">
+                                    <div className="flex items-center text-sm mb-2 gap-2">
+                                        <Rating readOnly value={review.rating} max={5}>
+                                            {Array.from({ length: 5 }).map((_, i) => (
+                                                <RatingButton
+                                                    key={i}
+                                                    size={16}
+                                                    className="text-yellow-400"
+                                                    filledIcon={MdStar}
+                                                    emptyIcon={MdStarBorder}
+                                                />
+                                            ))}
+                                        </Rating>
+                                        <span className="font-bold text-gray-900 dark:text-white font-cairo">
+                                            {review.rating}
+                                        </span>
+                                    </div>
+                                    <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed mb-2 font-cairo">
+                                        {review.content}
+                                    </p>
+                                    <a className="text-blue-600 dark:text-blue-400 text-sm font-semibold hover:underline font-cairo" href="#">
+                                        موصي به
+                                    </a>
+                                </div>
 
-                {/* Reviews List */}
-                <div className="flex flex-col gap-5">
-                    {[1, 2, 3].map((id) => (
-                        <ReviewCardBalmy
-                            key={id}
-                            reviewerName="محمد احمد عبدالرزاق"
-                            rating={5}
-                            date="12/28/2025"
-                            verified={true}
-                            platform="website"
-                            reviewText="هذا المنتج رائع جداً ومناسب جداً من حيث الجودة والسعر، أنصح الجميع بشراءه."
-                        />
+                                {/* Date */}
+                                <div className="md:w-1/4 text-left self-end md:self-center">
+                                    <span className="text-sm font-medium text-gray-400 font-mono">
+                                        {review.date}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
                     ))}
                 </div>
-
-                {/* Show All Reviews Button */}
-                <button
-                    className="block mx-auto mt-8 bg-black text-white px-10 py-3 rounded-full font-cairo text-base hover:bg-gray-800 transition-colors"
-                >
-                    {t("view-all-reviews") || "مشاهدة جميع التقييمات"}
-                </button>
-            </div>
+            </section>
         </div>
     );
 }
