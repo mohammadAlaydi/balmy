@@ -53,7 +53,7 @@ export default function FilterCategories({
 
     return (
         <div className="space-y-4">
-            <h3 className="text-lg font-bold text-black">الفئات</h3>
+            <h3 className="text-lg font-bold text-black text-right">الفئات</h3>
             <RadioGroup
                 value={selectedCategories[0] || ""}
                 onValueChange={handleRadioChange}

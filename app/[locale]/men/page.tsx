@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import ProductCard from "@/components/ProductCard";
 import SideFilter from "@/components/offers/side-filter";
+import { BreadcrumbBalmy } from "@/components/balmy";
 import {
     Select,
     SelectContent,
@@ -132,12 +133,13 @@ export default function MenPage() {
     return (
         <div className="min-h-screen bg-white" dir="rtl">
             <div className="container mx-auto px-4 py-40">
-                {/* 2-Column Layout */}
-                <div className="flex flex-col lg:flex-row gap-8">
-                    {/* Right Column - Sidebar (25%) */}
-                    <aside className="lg:w-1/4 order-2 lg:order-1">
+                {/* Breadcrumb and Filter Button */}
+                <div className="mb-6 flex items-center justify-between">
+                    <div className="flex-1">
+                        <BreadcrumbBalmy items={breadcrumbItems} className="justify-start" />
+                    </div>
+                    <div className="lg:hidden">
                         <SideFilter
-                            breadcrumbItems={breadcrumbItems}
                             selectedCategories={selectedCategories}
                             selectedRatings={selectedRatings}
                             selectedPriceRanges={selectedPriceRanges}
@@ -147,10 +149,29 @@ export default function MenPage() {
                             onPriceChange={setSelectedPriceRanges}
                             onBrandChange={setSelectedBrands}
                         />
+                    </div>
+                </div>
+
+                {/* 2-Column Layout */}
+                <div className="flex flex-col lg:flex-row gap-8">
+                    {/* Right Column - Sidebar (25%) */}
+                    <aside className="hidden lg:block lg:w-1/4">
+                        <div className="sticky top-6">
+                            <SideFilter
+                                selectedCategories={selectedCategories}
+                                selectedRatings={selectedRatings}
+                                selectedPriceRanges={selectedPriceRanges}
+                                selectedBrands={selectedBrands}
+                                onCategoryChange={setSelectedCategories}
+                                onRatingChange={setSelectedRatings}
+                                onPriceChange={setSelectedPriceRanges}
+                                onBrandChange={setSelectedBrands}
+                            />
+                        </div>
                     </aside>
 
                     {/* Left Column - Main Content (75%) */}
-                    <main className="lg:w-3/4 order-1 lg:order-2">
+                    <main className="lg:w-3/4 w-full">
                         {/* Top Bar */}
                         <div className="mb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                             {/* Right (reserved) */}

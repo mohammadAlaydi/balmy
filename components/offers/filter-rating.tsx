@@ -45,7 +45,7 @@ export default function FilterRating({
 
     return (
         <div className="space-y-4">
-            <h3 className="text-lg font-bold text-black">حسب التقييم</h3>
+            <h3 className="text-lg font-bold text-black text-right">حسب التقييم</h3>
             <RadioGroup
                 value={selectedRatings[0]?.toString() || ""}
                 onValueChange={handleRatingChange}
