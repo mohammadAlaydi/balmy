@@ -43,7 +43,7 @@ export default function FilterBrands({
 
     return (
         <div className="space-y-4">
-            <h3 className="text-lg font-bold text-black">حسب الماركة</h3>
+            <h3 className="text-lg font-bold text-black text-right">حسب الماركة</h3>
             <RadioGroup
                 value={selectedBrands[0] || ""}
                 onValueChange={handleBrandChange}

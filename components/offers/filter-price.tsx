@@ -41,7 +41,7 @@ export default function FilterPrice({
 
     return (
         <div className="space-y-4">
-            <h3 className="text-lg font-bold text-black">حسب السعر</h3>
+            <h3 className="text-lg font-bold text-black text-right">حسب السعر</h3>
             <RadioGroup
                 value={selectedRanges[0] || ""}
                 onValueChange={handlePriceChange}

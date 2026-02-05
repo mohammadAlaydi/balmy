@@ -104,13 +104,12 @@ export default function CategoryPageClient({ categoryId }: Props) {
   return (
     <div className="min-h-screen bg-white" dir="rtl">
       <div className="container mx-auto px-4 py-40 ">
-        {/* 2-Column Layout */}
-        <div className="flex flex-col lg:flex-row gap-8 relative">
-          {/* Right Column - Sidebar (25%) */}
-          <aside className="lg:w-1/4 order-2 lg:order-1 flex flex-col items-center gap-4">
-            <div className="w-full">
-              <BreadcrumbBalmy items={breadcrumbItems} className="justify-center" />
-            </div>
+        {/* Breadcrumb and Filter Button */}
+        <div className="mb-6 flex items-center justify-between">
+          <div className="flex-1">
+            <BreadcrumbBalmy items={breadcrumbItems} className="justify-start" />
+          </div>
+          <div className="lg:hidden">
             <SideFilter
               selectedCategories={selectedCategories}
               selectedRatings={selectedRatings}
@@ -121,12 +120,31 @@ export default function CategoryPageClient({ categoryId }: Props) {
               onPriceChange={setSelectedPriceRanges}
               onBrandChange={setSelectedBrands}
             />
+          </div>
+        </div>
+
+        {/* 2-Column Layout */}
+        <div className="flex flex-col lg:flex-row gap-8 relative">
+          {/* Right Column - Sidebar (25%) */}
+          <aside className="hidden lg:block lg:w-1/4">
+            <div className="sticky top-6">
+              <SideFilter
+                selectedCategories={selectedCategories}
+                selectedRatings={selectedRatings}
+                selectedPriceRanges={selectedPriceRanges}
+                selectedBrands={selectedBrands}
+                onCategoryChange={setSelectedCategories}
+                onRatingChange={setSelectedRatings}
+                onPriceChange={setSelectedPriceRanges}
+                onBrandChange={setSelectedBrands}
+              />
+            </div>
           </aside>
           {/* Vertical separator line - only visible on desktop */}
           <div className="hidden lg:block absolute top-0 bottom-0 w-px bg-gray-300" style={{ right: "calc(25% - 1rem)" }}></div>
 
           {/* Left Column - Main Content (75%) */}
-          <main className="lg:w-3/4 order-1 lg:order-2">
+          <main className="lg:w-3/4 w-full">
             {/* Top Bar */}
             <div className="mb-6 flex flex-col md:flex-row justify-end items-start md:items-center gap-4">
               {/* Removed Breadcrumb from here */}

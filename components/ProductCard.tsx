@@ -126,7 +126,7 @@ export default function ProductCard({
   };
 
   return (
-    <div className="relative w-full max-w-sm bg-white rounded-2xl overflow-hidden hover:shadow-lg transition-shadow font-[family-name:var(--font-cairo)]" dir="rtl">
+    <div className={`relative w-full ${cardColSpan?.includes('search') ? 'max-w-none' : 'max-w-sm'} bg-white rounded-2xl overflow-visible hover:shadow-lg transition-shadow font-[family-name:var(--font-cairo)]`} dir="rtl">
       {/* Wishlist Icon - Top Left (Absolute) */}
       <div className="absolute top-3 left-3 z-10">
         <FavouriteButton
@@ -144,7 +144,7 @@ export default function ProductCard({
               src={imageUrl}
               alt={productName}
               fill
-              sizes="(max-width: 768px) 100vw"
+              sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw"
               className="object-cover hover:scale-105 transition-transform duration-300"
             />
           ) : (

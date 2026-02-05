@@ -24,11 +24,11 @@ const WorkHoursSection = ({ data }: { data: any }) => {
   const t = useTranslations("footer");
 
   return (
-    <div className="col-span-12 lg:col-span-6 flex flex-col gap-2 ">
+    <div className="col-span-12 lg:col-span-6 flex flex-col gap-2 items-center lg:items-start">
       <SectionTitle title={t("working-hours")} titleStyle="text-white/65" />
-      <p className="text-sm text-white">{data?.work_hours?.days}</p>
+      <p className="text-sm text-white text-center lg:text-start">{data?.work_hours?.days}</p>
       {data?.work_hours?.hours?.map((item: any, index: number) => (
-        <p key={index} className="text-sm text-white">
+        <p key={index} className="text-sm text-white text-center lg:text-start">
           from {item.from?.hour} {item.from?.pm_or_am} to {item.to?.hour}{" "}
           {item.to?.pm_or_am}
         </p>
@@ -42,16 +42,16 @@ const LocationSection = ({ data }: { data: any }) => {
   const tFooter = useTranslations("footer");
 
   return (
-    <div className="col-span-12 lg:col-span-6 flex flex-col gap-2">
+    <div className="col-span-12 lg:col-span-6 flex flex-col gap-2 items-center lg:items-start">
       <SectionTitle
         title={tFooter("how-to-reach-us")}
         titleStyle="text-white/65"
       />
-      <p className="text-sm text-white">{`${data?.inventory_source_data?.country} - ${data?.inventory_source_data?.city} - ${data?.inventory_source_data?.state} - ${data?.inventory_source_data?.street}`}</p>
+      <p className="text-sm text-white text-center lg:text-start">{`${data?.inventory_source_data?.country} - ${data?.inventory_source_data?.city} - ${data?.inventory_source_data?.state} - ${data?.inventory_source_data?.street}`}</p>
       <Link
         href={`tel:${data?.inventory_source_data?.contact_number}`}
         prefetch={true}
-        className="text-sm text-white"
+        className="text-sm text-white text-center lg:text-start"
       >
         {data?.inventory_source_data?.contact_number}
       </Link>
@@ -89,10 +89,10 @@ const SocialMediaSection = ({ data }: { data: any }) => {
   const t = useTranslations("footer");
 
   return (
-    <div className="col-span-12 lg:col-span-3 flex flex-col gap-3 items-start">
+    <div className="col-span-12 lg:col-span-3 flex flex-col gap-3 items-center lg:items-start">
       <SectionTitle
         title={t("follow-us")}
-        titleStyle="text-white/65 text-end text-base ltr:text-start"
+        titleStyle="text-white/65 text-center lg:text-end text-base ltr:lg:text-start"
       />
       <SocialMediaIcons
         data={data}
@@ -118,16 +118,16 @@ const FooterAccordion = ({
     >
       <AccordionItem
         value={defaultValue}
-        className="col-span-12 lg:col-span-3 flex flex-col gap-2"
+        className="col-span-12 lg:col-span-3 flex flex-col gap-2 items-center lg:items-start"
       >
-        <AccordionTrigger className="flex items-center p-0">
+        <AccordionTrigger className="flex items-center p-0 w-full justify-center lg:justify-start">
           <SectionTitle
             title={title}
-            titleStyle="text-white/65 text-base text-end ltr:text-start"
+            titleStyle="text-white/65 text-base text-center lg:text-end ltr:lg:text-start"
           />
         </AccordionTrigger>
         <AccordionContent>
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-2 items-center lg:items-start">
             {items?.map((item: any) => (
               <Link
                 href={`/${typeof window !== "undefined"
@@ -136,7 +136,7 @@ const FooterAccordion = ({
                   }/cms/${item?.url_key}`}
                 key={item?.url_key || item?.page_title}
                 prefetch={true}
-                className="text-sm text-white text-end rtl:text-right ltr:text-left rtl:hover:mr-3 ltr:hover:ml-3 transition-all duration-300"
+                className="text-sm text-white text-center lg:text-end rtl:lg:text-right ltr:lg:text-left rtl:hover:mr-3 ltr:hover:ml-3 transition-all duration-300"
               >
                 {item?.page_title ?? item?.title ?? ""}
               </Link>
@@ -188,7 +188,7 @@ export default function Footer() {
         <FooterImage data={data} />
       </div>
       <hr />
-      <div className="grid grid-cols-12 items-start p-3 lg:p-5 gap-3">
+      <div className="grid grid-cols-12 items-start p-3 lg:p-5 gap-3 justify-items-center lg:justify-items-start">
         <SocialMediaSection data={data} />
         <FooterAccordion
           title={t("legal-terms")}

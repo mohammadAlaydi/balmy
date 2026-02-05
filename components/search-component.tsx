@@ -111,17 +111,17 @@ const SearchComponent: React.FC<SearchComponentProps> = ({ maxHeight }) => {
       )}
 
       {/* 🛍️ Products Grid */}
-      <div className="w-full grid grid-cols-12 gap-2 overflow-y-auto">
+      <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 overflow-y-auto">
         {filteredProducts?.length > 0 ? (
-          filteredProducts.map((product: any, index: number) => (
+          filteredProducts.slice(0, 4).map((product: any, index: number) => (
             <ProductCard
               key={product?.id ?? index}
               product={product}
-              cardColSpan="col-span-6 sm:col-span-4 md:col-span-3 xl:col-span-3 relative"
+              cardColSpan="col-span-1 relative search-card"
             />
           ))
         ) : (
-          <p className="col-span-12 text-center text-gray-500 mt-8">
+          <p className="col-span-1 sm:col-span-2 lg:col-span-4 text-center text-gray-500 mt-8">
             {t("no-results-found")}
           </p>
         )}
