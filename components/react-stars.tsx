@@ -14,6 +14,7 @@ interface StarRatingProps {
   className?: string;
   inline?: boolean;
   dir?: "ltr" | "rtl";
+  size?: number; // custom size override
 }
 
 export default function StarRating({
@@ -27,6 +28,7 @@ export default function StarRating({
   className,
   inline = false,
   dir = "ltr",
+  size,
 }: StarRatingProps) {
   const [isMobile, setIsMobile] = useState(false);
   const [isTablet, setIsTablet] = useState(false);
@@ -43,9 +45,11 @@ export default function StarRating({
     return () => window.removeEventListener("resize", checkScreenSize);
   }, []);
 
-  let starSize = 18; // default desktop
-  if (isMobile) starSize = 15;
-  else if (isTablet) starSize = 18;
+  let starSize = size || 18; // use custom size if provided, otherwise default
+  if (!size) {
+    if (isMobile) starSize = 15;
+    else if (isTablet) starSize = 18;
+  }
 
   const stars = (
     <span className="inline-flex align-middle" dir={dir} style={{ direction: dir }}>

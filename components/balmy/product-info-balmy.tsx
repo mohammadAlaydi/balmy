@@ -13,6 +13,7 @@ import {
     AccordionTrigger,
 } from "@/components/ui/accordion";
 import RatingBalmy from "@/components/balmy/rating-balmy";
+import StarRating from "@/components/react-stars";
 import SizeSelectorBalmy from "@/components/balmy/size-selector-balmy";
 import DeliveryInfoBalmy from "@/components/balmy/delivery-info-balmy";
 import { FavouriteButton } from "@/components/favourite-button";
@@ -222,7 +223,12 @@ export default function ProductInfoBalmy({
             {/* Rating & Free Shipping */}
             <div className="flex flex-col gap-4">
                 <div className="flex items-center gap-2">
-                    <RatingBalmy value={normalizedReviews.average_rating || 3.7} />
+                    <StarRating 
+                        rating={normalizedReviews.average_rating || 3.7} 
+                        edit={false}
+                        inline={true}
+                        dir="ltr"
+                    />
                     <span className="text-sm text-[var(--color-medium-gray)] font-cairo">
                         ({normalizedReviews.total || 225})
                     </span>

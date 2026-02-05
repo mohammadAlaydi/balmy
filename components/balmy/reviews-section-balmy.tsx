@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { useTranslations } from "next-intl";
 import { MdStar, MdStarBorder } from "react-icons/md";
 import { Rating, RatingButton } from "@/components/ui/rating";
+import StarRating from "@/components/react-stars";
 
 interface ReviewsSectionBalmyProps {
     reviews: {
@@ -70,17 +71,13 @@ export default function ReviewsSectionBalmy({
                                 {reviews.average_rating?.toFixed(1) || "3.8"}
                             </span>
                             <div className="mb-2">
-                                <Rating readOnly value={Math.floor(reviews.average_rating || 3.8)} max={5}>
-                                    {Array.from({ length: 5 }).map((_, i) => (
-                                        <RatingButton
-                                            key={i}
-                                            size={24}
-                                            className="text-yellow-400"
-                                            filledIcon={MdStar}
-                                            emptyIcon={MdStarBorder}
-                                        />
-                                    ))}
-                                </Rating>
+                                <StarRating 
+                                    rating={reviews.average_rating || 3.8}
+                                    edit={false}
+                                    inline={true}
+                                    dir="ltr"
+                                    size={28}
+                                />
                             </div>
                             <span className="text-sm text-gray-500 dark:text-gray-400 font-cairo">
                                 عدد التقييمات {reviews.total || 225}
@@ -134,29 +131,28 @@ export default function ReviewsSectionBalmy({
                             key={review.id}
                             className="bg-white dark:bg-gray-800 rounded-[2rem] border border-gray-200 dark:border-gray-700 p-8 shadow-sm"
                         >
-                            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+                            <div className="flex flex-col md:flex-row items-start gap-4 md:gap-6">
                                 {/* Reviewer Name */}
-                                <div className="md:w-1/4">
+                                <div className="md:w-[200px] shrink-0">
                                     <h4 className="text-lg font-bold text-gray-900 dark:text-white mb-1 font-cairo">
                                         {review.name}
                                     </h4>
                                 </div>
 
+                                {/* Vertical Divider */}
+                                <div className="hidden md:block w-px bg-black h-auto self-stretch"></div>
+
                                 {/* Review Content */}
-                                <div className="md:w-2/4 flex flex-col items-start text-right">
+                                <div className="flex-1 flex flex-col items-start text-right">
                                     <div className="flex items-center text-sm mb-2 gap-2">
-                                        <Rating readOnly value={review.rating} max={5}>
-                                            {Array.from({ length: 5 }).map((_, i) => (
-                                                <RatingButton
-                                                    key={i}
-                                                    size={16}
-                                                    className="text-yellow-400"
-                                                    filledIcon={MdStar}
-                                                    emptyIcon={MdStarBorder}
-                                                />
-                                            ))}
-                                        </Rating>
-                                        <span className="font-bold text-gray-900 dark:text-white font-cairo">
+                                        <StarRating 
+                                            rating={review.rating}
+                                            edit={false}
+                                            inline={true}
+                                            dir="ltr"
+                                            size={20}
+                                        />
+                                        <span className="font-bold text-gray-900 dark:text-white font-cairo text-[30px]">
                                             {review.rating}
                                         </span>
                                     </div>
@@ -169,7 +165,7 @@ export default function ReviewsSectionBalmy({
                                 </div>
 
                                 {/* Date */}
-                                <div className="md:w-1/4 text-left self-end md:self-center">
+                                <div className="md:w-[120px] shrink-0 text-left self-start md:self-center">
                                     <span className="text-sm font-medium text-gray-400 font-mono">
                                         {review.date}
                                     </span>
