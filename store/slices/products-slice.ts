@@ -247,7 +247,7 @@ export const productApi = createApi({
           // Ensure we return the data structure expected by the frontend
           return { data: MOCK_PRODUCT_DETAILS(id) };
         }
-        return baseQuery(`/api/product-details/${id}`) as any;
+        return baseQuery(`/api/catalog/productdetails?productId=${id}`) as any;
       },
       providesTags: (result, error, id) => [{ type: "Product", id }],
     }),

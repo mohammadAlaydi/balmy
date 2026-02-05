@@ -15,7 +15,7 @@ import {
   personalInfoSchema,
   addressesSchema,
 } from "@/features/user-profile/schema";
-import { apiService } from "@/lib/api-service";
+// import { apiService } from "@/lib/api-service";
 import { DISABLE_BACKEND_FETCH, mockDelay } from "@/lib/dev-config";
 
 // 🧾 Types
@@ -78,14 +78,15 @@ export function useUserProfile() {
     if (!user || Object.keys(user).length === 0) return;
 
     personalForm.reset({
-      first_name: user.first_name || "",
-      last_name: user.last_name || "",
+      first_name: user.firstName || "",
+      last_name: user.lastName || "",
       email: user.email || "",
       phone: user.phone || "",
     });
 
     addressForm.reset({
       addresses:
+        // @ts-ignore - addresses might not be on User type depending on definition, but API returns it
         user.addresses?.map((a: any) => ({
           address_id: a.id,
           address1: a.address1 || "",
@@ -109,13 +110,21 @@ export function useUserProfile() {
       }
 
       const { addresses, ...payload } = data as any;
-      const response = await apiService.updateCustomerProfile(payload);
+      const response = await fetch("/api/customer/profile", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
 
-      if (response.success) {
+      const resData = await response.json();
+
+      if (response.ok && resData.success) {
         toast.success(t("changes-saved"));
         dispatch(getCurrentUser());
       } else {
-        toast.error(response.message || t("error-saving"));
+        toast.error(resData.message || t("error-saving"));
       }
     } catch (err: any) {
       toast.error(err.message || t("error-saving"));

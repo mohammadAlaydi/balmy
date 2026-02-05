@@ -154,7 +154,7 @@ export default async function RootLayout({
 
   return (
     <html lang={locale} dir={locale === "ar" ? "rtl" : "ltr"}>
-      <body className={`${cairo.variable} ${tajawal.variable} font-cairo`}>
+      <body className={`${cairo.variable} ${tajawal.variable} font-cairo min-h-screen flex flex-col`}>
         <ReduxProvider>
           <NextIntlClientProvider messages={messages}>
             <HeaderBalmy />

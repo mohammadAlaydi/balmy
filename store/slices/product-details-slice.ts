@@ -12,17 +12,17 @@ const getProductDetails = createAsyncThunk(
         return MOCK_PRODUCT_DETAILS(Number(payload.id));
       }
 
-      const response = await fetch(`/api/product-details/${payload.id}`, {
+      const response = await fetch(`/api/catalog/productdetails?productId=${payload.id}`, {
         method: 'GET',
         credentials: 'include', // Include httpOnly cookies
       });
-      
+
       const data = await response.json();
-      
+
       if (!response.ok) {
         return rejectWithValue(data.message || 'Failed to fetch product details');
       }
-      
+
       return data;
     } catch (error: any) {
       return rejectWithValue(error.message || 'Network error occurred');

@@ -12,9 +12,8 @@ export const getHomeData = createAsyncThunk(
         return { ...MOCK_HOME_DATA, locale };
       }
 
-      const response = await fetch(`/api/home?locale=${locale}`, {
+      const response = await fetch(`/api/catalog/homepage?locale=${locale}`, {
         method: "GET",
-        credentials: "include", // Include httpOnly cookies
         headers: {
           "Accept": "application/json",
         },

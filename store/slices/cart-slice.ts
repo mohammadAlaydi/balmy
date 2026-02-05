@@ -73,7 +73,7 @@ export const getCartProducts = createAsyncThunk(
         return JSON.parse(JSON.stringify(localMockCart));
       }
 
-      const res = await authenticatedFetch("/api/cart");
+      const res = await authenticatedFetch("/api/checkout/cartdetails");
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || "Failed to fetch cart");
       return data;
@@ -147,12 +147,12 @@ export const addToCart = createAsyncThunk(
         return { success: true, message: "Added to cart (mock)" };
       }
 
-      const res = await authenticatedFetch("/api/cart/add", {
+      const res = await authenticatedFetch("/api/checkout/addtocart", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           productId: payload.productId,
-          quantity: payload.productQTY ?? 1,
+          qty: payload.productQTY ?? 1,
         }),
       });
 
@@ -188,8 +188,10 @@ export const removeFromCart = createAsyncThunk(
         return { success: true, message: "Removed from cart (mock)" };
       }
 
-      const res = await authenticatedFetch(`/api/cart/remove/${payload.productId}`, {
-        method: "DELETE",
+      const res = await authenticatedFetch("/api/checkout/removefromcart", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ itemId: payload.productId }),
       });
 
       const data = await res.json();
@@ -224,7 +226,7 @@ export const removeAllProductsFromCart = createAsyncThunk(
         return { success: true, message: "Cart cleared (mock)" };
       }
 
-      const res = await authenticatedFetch("/api/cart", { method: "DELETE" });
+      const res = await authenticatedFetch("/api/checkout/emptycart", { method: "POST" });
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || "Failed to clear cart");
 
@@ -252,10 +254,10 @@ export const updateCartQuantity = createAsyncThunk(
         return { success: true, message: "Quantity updated (mock)" };
       }
 
-      const res = await authenticatedFetch(`/api/cart/update/${payload.productId}`, {
-        method: "PUT",
+      const res = await authenticatedFetch("/api/checkout/updatecart", {
+        method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ quantity: payload.quantity }),
+        body: JSON.stringify({ itemId: payload.productId, qty: payload.quantity }),
       });
 
       const data = await res.json();
@@ -282,7 +284,7 @@ export const saveOrder = createAsyncThunk(
         return { success: true, order_id: "MOCK-ORDER-123", message: "Order saved (mock)" };
       }
 
-      const res = await fetch("/api/checkout/save-order", {
+      const res = await fetch("/api/checkout/placeorder", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
@@ -307,9 +309,9 @@ const cartSlice = createSlice({
   name: "cart",
   initialState: {
     data: null as any,
-    saveOrderData: {},
+    saveOrderData: {} as any,
     increaseOrDecreaseLoading: false,
-    increaseOrDecreaseResponse: {},
+    increaseOrDecreaseResponse: {} as any,
     isLoading: false,
     error: null as string | null,
     status: null as string | null,

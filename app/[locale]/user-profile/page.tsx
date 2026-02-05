@@ -1,29 +1,19 @@
 import { ProtectedRoute } from "@/components/auth/protected-route";
-import PersonalInfoForm from "@/features/user-profile/personal-info-form";
-import UserAddressesForm from "@/features/user-profile/user-addresses-form";
-import PageWrapper from "@/components/page-wrapper";
+import ProfileInfoForm from "@/components/user-profile/profile-info-form";
 import { getTranslations } from "next-intl/server";
 
 export async function generateMetadata() {
-  
   const t = await getTranslations("breadcrumb");
 
   return {
-    title: t("user-profile") || "user profile",
+    title: t("user-profile") || "User Profile",
   };
 }
-export default function page() {
 
+export default function UserProfilePage() {
   return (
     <ProtectedRoute>
-      <PageWrapper>
-        <div className="grid grid-cols-12 gap-5">
-          {/* 🧾 Personal Info */}
-          <PersonalInfoForm />
-          {/* 🏠 Addresses */}
-          <UserAddressesForm />
-        </div>
-      </PageWrapper>
+      <ProfileInfoForm />
     </ProtectedRoute>
   );
 }

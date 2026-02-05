@@ -22,7 +22,7 @@ export const login = createAsyncThunk(
         };
       }
 
-      const response = await fetch("/api/auth/login", {
+      const response = await fetch("/api/customer/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -61,7 +61,7 @@ export const register = createAsyncThunk(
         };
       }
 
-      const response = await fetch("/api/auth/register", {
+      const response = await fetch("/api/customer/createaccount", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -97,7 +97,7 @@ export const logout = createAsyncThunk(
         return { success: true, message: "Logout successful (mock)" };
       }
 
-      const response = await fetch("/api/auth/logout", {
+      const response = await fetch("/api/extra/logout", {
         method: "POST",
       });
 
@@ -121,7 +121,7 @@ export const getCurrentUser = createAsyncThunk(
         return MOCK_USER;
       }
 
-      const response = await fetch("/api/auth/me", {
+      const response = await fetch("/api/customer/get", {
         method: "GET",
       });
 

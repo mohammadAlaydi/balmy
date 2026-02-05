@@ -10,9 +10,11 @@ const getCategories = createAsyncThunk("categories", async (locale: string, { re
       return { categories: MOCK_CATEGORIES };
     }
 
-    const response = await fetch(`/api/categories?locale=${locale}`, {
+    const response = await fetch(`/api/catalog/getCategorylist?locale=${locale}`, {
       method: "GET",
-      credentials: 'include', // Include httpOnly cookies
+      headers: {
+        "Accept": "application/json",
+      },
     });
 
     const data = await response.json();
