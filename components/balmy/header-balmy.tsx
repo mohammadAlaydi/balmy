@@ -374,40 +374,46 @@ const MobileMenu = ({
 
                 {/* Mobile Navigation Links */}
                 <Accordion className="w-full flex-1 overflow-y-auto">
-                    {navbarCategories?.map((category: any, index: number) => (
-                        <AccordionItem key={category.id} value={`item-${index}`}>
-                            {category.children && category.children.length > 0 ? (
-                                <>
-                                    <AccordionTrigger className="text-left py-3 hover:bg-gray-50 rounded-md px-3 text-sm font-semibold">
+                    {navbarCategories && navbarCategories.length > 0 ? (
+                        navbarCategories.map((category: any, index: number) => (
+                            <AccordionItem key={category.id} value={`item-${index}`}>
+                                {category.children && category.children.length > 0 ? (
+                                    <>
+                                        <AccordionTrigger className="text-left py-3 hover:bg-gray-50 rounded-md px-3 text-sm font-semibold">
+                                            {category.name}
+                                        </AccordionTrigger>
+                                        <AccordionContent>
+                                            <ul className="grid gap-1 p-1">
+                                                {category.children.map((nested: any) => (
+                                                    <li key={nested.id}>
+                                                        <Link
+                                                            prefetch={true}
+                                                            href={`/${currentLocale}/category/${nested.id}`}
+                                                            className="block rounded-md px-1.5 py-1 text-sm hover:bg-accent hover:text-accent-foreground"
+                                                        >
+                                                            {nested.name}
+                                                        </Link>
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        </AccordionContent>
+                                    </>
+                                ) : (
+                                    <Link
+                                        prefetch={true}
+                                        href={`/${currentLocale}/category/${category.id}`}
+                                        className="flex items-center py-3 px-3 hover:bg-gray-50 rounded-md text-left w-full text-sm font-semibold"
+                                    >
                                         {category.name}
-                                    </AccordionTrigger>
-                                    <AccordionContent>
-                                        <ul className="grid gap-1 p-1">
-                                            {category.children.map((nested: any) => (
-                                                <li key={nested.id}>
-                                                    <Link
-                                                        prefetch={true}
-                                                        href={`/${currentLocale}/category/${nested.id}`}
-                                                        className="block rounded-md px-1.5 py-1 text-sm hover:bg-accent hover:text-accent-foreground"
-                                                    >
-                                                        {nested.name}
-                                                    </Link>
-                                                </li>
-                                            ))}
-                                        </ul>
-                                    </AccordionContent>
-                                </>
-                            ) : (
-                                <Link
-                                    prefetch={true}
-                                    href={`/${currentLocale}/category/${category.id}`}
-                                    className="flex items-center py-3 px-3 hover:bg-gray-50 rounded-md text-left w-full text-sm font-semibold"
-                                >
-                                    {category.name}
-                                </Link>
-                            )}
-                        </AccordionItem>
-                    ))}
+                                    </Link>
+                                )}
+                            </AccordionItem>
+                        ))
+                    ) : (
+                        <div className="text-center text-gray-500 py-4">
+                            No categories available
+                        </div>
+                    )}
                 </Accordion>
 
                 {/* Mobile Action Icons */}
@@ -524,7 +530,7 @@ export default function HeaderBalmy({ variant = "page", sticky = true }: HeaderB
 
                         {/* Center Section: Navigation Menu */}
                         <NavigationLinks
-                            navbarCategories={(categories as any)?.categories?.categories || []}
+                            navbarCategories={data?.categories || []}
                             currentLocale={currentLocale}
                             isHero={isHero}
                         />
@@ -537,7 +543,7 @@ export default function HeaderBalmy({ variant = "page", sticky = true }: HeaderB
 
                         {/* Mobile Menu */}
                         <MobileMenu
-                            navbarCategories={(categories as any)?.categories?.categories || []}
+                            navbarCategories={data?.categories || []}
                             languageItems={languageItems}
                             currentLocale={currentLocale}
                         />

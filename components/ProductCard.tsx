@@ -78,7 +78,7 @@ export default function ProductCard({
   const price = initialPrice ?? Number(product?.price) ?? 749;
   const oldPrice = initialOldPrice ?? (product?.original_price || product?.price_regular?.value) ?? (price > 0 ? price * 1.3 : 480);
   const discount = initialDiscount ?? product?.discount_percent ?? (oldPrice > price ? Math.round(((oldPrice - price) / oldPrice) * 100) : 0);
-  const imageUrl = initialImageUrl ?? (product?.images?.[0]?.url || product?.image || "/images/card-image.png");
+  const imageUrl = initialImageUrl ?? (product?.thumbNail || product?.images?.[0]?.url || product?.image || product?.base_image?.url || "/images/card-image.png");
   const category = initialCategory ?? (typeof product?.category === "string" ? product?.category : product?.category?.name) ?? "نسائي";
   const rating = initialRating ?? Number(product?.rating || product?.reviews?.average_rating || 5);
   const isVerified = initialIsVerified !== false && product?.is_verified !== false;

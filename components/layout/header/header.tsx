@@ -555,12 +555,12 @@ export default function Header() {
             currentLocale={currentLocale}
           />
           <NavigationLinks
-            navbarCategories={(categories as any)?.categories?.categories || []}
+            navbarCategories={data?.categories || []}
             currentLocale={currentLocale}
           />
           <Logo data={data} />
           <MobileMenu
-            navbarCategories={(categories as any)?.categories?.categories || []}
+            navbarCategories={data?.categories || []}
             languageItems={languageItems}
             currentLocale={currentLocale}
           />

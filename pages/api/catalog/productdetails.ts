@@ -5,13 +5,19 @@ export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse
 ) {
-    const { storeId = config.store.id, locale = 'en', productId } = req.query;
+    const {
+        storeId = config.store.id,
+        locale = 'ar',
+        productId,
+        branchId = '10359',
+        versionId = '1'
+    } = req.query;
 
     if (!productId) {
         return res.status(400).json({ success: false, message: 'Product ID is required' });
     }
 
-    const url = `${config.api.baseUrl}/catalog/productdetails?storeId=${storeId}&locale=${locale}&productId=${productId}`;
+    const url = `${config.api.baseUrl}/catalog/productpagedata?storeId=${storeId}&locale=${locale}&productId=${productId}&branchId=${branchId}&versionId=${versionId}`;
     const apiToken = config.api.token;
     const headers: HeadersInit = {
         'api-token': apiToken || '',
