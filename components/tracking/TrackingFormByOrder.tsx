@@ -41,9 +41,9 @@ export default function TrackingFormByOrder({ onSubmit, isLoading = false }: Tra
     };
 
     return (
-        <form onSubmit={handleSubmit} className="flex flex-col space-y-6">
+        <form onSubmit={handleSubmit} className="flex flex-col space-y-4 sm:space-y-6">
             <div>
-                <label className="block text-sm font-bold mb-2 text-gray-700 dark:text-gray-300">
+                <label className="block text-xs sm:text-sm font-bold mb-2 text-gray-700 dark:text-gray-300">
                     رقم الطلـــب
                 </label>
                 <input
@@ -53,7 +53,7 @@ export default function TrackingFormByOrder({ onSubmit, isLoading = false }: Tra
                         setOrderNumber(e.target.value);
                         setErrors(prev => ({ ...prev, orderNumber: "" }));
                     }}
-                    className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-transparent outline-none transition"
+                    className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-transparent outline-none transition text-sm sm:text-base"
                     placeholder=""
                     disabled={isLoading}
                 />
@@ -63,7 +63,7 @@ export default function TrackingFormByOrder({ onSubmit, isLoading = false }: Tra
             </div>
 
             <div>
-                <label className="block text-sm font-bold mb-2 text-gray-700 dark:text-gray-300">
+                <label className="block text-xs sm:text-sm font-bold mb-2 text-gray-700 dark:text-gray-300">
                     رقم التليفون أو البريد الالكتروني
                 </label>
                 <input
@@ -73,7 +73,7 @@ export default function TrackingFormByOrder({ onSubmit, isLoading = false }: Tra
                         setContact(e.target.value);
                         setErrors(prev => ({ ...prev, contact: "" }));
                     }}
-                    className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-transparent outline-none transition"
+                    className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-transparent outline-none transition text-sm sm:text-base"
                     placeholder=""
                     disabled={isLoading}
                 />
@@ -82,13 +82,13 @@ export default function TrackingFormByOrder({ onSubmit, isLoading = false }: Tra
                 )}
             </div>
 
-            <div>
+            <div className="flex justify-end">
                 <button
                     type="submit"
                     disabled={isLoading}
-                    className="bg-primary hover:bg-primary-hover text-white px-8 py-2.5 rounded-lg text-sm font-medium transition w-32 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="bg-black hover:bg-gray-800 text-white px-6 sm:px-8 py-2 sm:py-2.5 rounded-lg text-xs sm:text-sm font-medium transition w-28 sm:w-32 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                    {isLoading ? "جاري البحث..." : "متابعة"}
+                    {isLoading ? "جاري البحث..." : "متابعـــة"}
                 </button>
             </div>
         </form>
