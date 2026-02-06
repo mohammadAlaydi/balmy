@@ -8,9 +8,16 @@ import { useTranslations } from "next-intl";
 import { getCategoryProducts } from "@/store/slices/category-products-slice";
 import type { AppDispatch, RootState } from "@/store/store";
 
-export default function useCategory() {
+/**
+ * Hook for fetching category products
+ * @param categoryId - Optional category ID. If not provided, uses URL params.
+ */
+export default function useCategory(categoryId?: string | number) {
     
-  const { id } = useParams<{ id: string }>(); 
+  const params = useParams<{ id: string }>();
+  // Use provided categoryId or fall back to URL params
+  const id = categoryId?.toString() || params?.id;
+  
   const t = useTranslations("category");
   const dispatch = useDispatch<AppDispatch>();
 

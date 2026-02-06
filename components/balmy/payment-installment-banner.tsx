@@ -9,7 +9,22 @@ export default function PaymentInstallmentBanner() {
             <div
                 className="relative w-full max-w-[1200px] bg-white border border-[#3A3A3A] rounded-[32px] sm:rounded-[48px] lg:rounded-[62px] flex flex-col lg:flex-row items-center overflow-hidden"
             >
-                {/* Right Side: Logos Group (Start in RTL) */}
+                {/* Black Capsule - First on mobile (top), End on desktop (left in RTL) */}
+                <div
+                    className="w-full lg:w-auto flex flex-col items-center justify-center text-center shrink-0 py-4 sm:py-5 lg:py-6 px-4 sm:px-6 lg:px-8 bg-black rounded-t-[32px] sm:rounded-t-[48px] lg:rounded-t-none lg:rounded-r-[32px] xl:rounded-r-[48px] 2xl:rounded-r-[62px] lg:self-stretch order-first lg:order-last"
+                    style={{ maxWidth: '100%' }}
+                >
+                    <span
+                        className="font-bold text-white font-cairo text-[18px] sm:text-[20px] md:text-[22px] lg:text-[22px] xl:text-[26px] 2xl:text-[30px] leading-snug"
+                    >
+                        قسط مشترياتك على 4 دفعات
+                    </span>
+                    <span className="text-sm sm:text-base lg:text-base font-light text-gray-200 mt-1 sm:mt-2">
+                        من غير رسوم او غرامات
+                    </span>
+                </div>
+
+                {/* Logos Group */}
                 <div className="flex-1 w-full flex flex-col sm:flex-row justify-center items-center gap-4 sm:gap-6 md:gap-8 lg:gap-6 xl:gap-16 2xl:gap-20 p-4 sm:p-6 md:p-8 lg:p-6 xl:p-10 2xl:p-12">
 
                     {/* Tabby Logo */}
@@ -53,24 +68,6 @@ export default function PaymentInstallmentBanner() {
                             />
                         </div>
                     </div>
-                </div>
-
-
-                {/* Left Side: Black Capsule (End in RTL) */}
-                <div
-                    className="flex flex-col items-center justify-center text-center w-full lg:w-auto lg:shrink-0 py-6 sm:py-8 md:py-10 lg:py-12 px-6 sm:px-8 md:px-10 lg:px-12 xl:px-16 bg-black lg:rounded-r-[32px] xl:rounded-r-[48px] 2xl:rounded-r-[62px] lg:min-h-full lg:self-stretch"
-                    style={{
-                        minWidth: '320px',
-                    }}
-                >
-                    <span
-                        className="font-bold text-white font-cairo text-[22px] sm:text-[26px] md:text-[30px] lg:text-[34px] xl:text-[40px] 2xl:text-[45px] leading-snug"
-                    >
-                        قسط مشترياتك على 4 دفعات
-                    </span>
-                    <span className="text-sm sm:text-base md:text-lg lg:text-lg xl:text-xl font-light text-gray-200 mt-2 sm:mt-3">
-                        من غير رسوم او غرامات
-                    </span>
                 </div>
 
             </div>

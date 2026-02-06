@@ -1,9 +1,11 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import ProductCard from "@/components/ProductCard";
 import SideFilter from "@/components/offers/side-filter";
 import { BreadcrumbBalmy } from "@/components/balmy";
+import Loading from "@/components/loading";
+import useHome from "@/hooks/use-home";
 import {
     Select,
     SelectContent,
@@ -12,123 +14,91 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 
-// Dummy product data for demonstration
-const dummyProducts = [
-    {
-        id: 1,
-        name: "عطر ديور سوفاج",
-        price: 450,
-        discountPrice: 350,
-        rating: 4.5,
-        image: "/abood.jpg",
-        brand: "dior",
-        category: "men",
-    },
-    {
-        id: 2,
-        name: "عطر شانيل نمبر 5",
-        price: 600,
-        discountPrice: 480,
-        rating: 5,
-        image: "/abood.jpg",
-        brand: "chanel",
-        category: "women",
-    },
-    {
-        id: 3,
-        name: "عطر غوتشي غيلتي",
-        price: 520,
-        discountPrice: 420,
-        rating: 4,
-        image: "/abood.jpg",
-        brand: "gucci",
-        category: "women",
-    },
-    {
-        id: 4,
-        name: "عطر أرماني كود",
-        price: 380,
-        discountPrice: 290,
-        rating: 4.5,
-        image: "/abood.jpg",
-        brand: "armani",
-        category: "men",
-    },
-    {
-        id: 5,
-        name: "عطر يوسي إيلوشن",
-        price: 550,
-        discountPrice: 440,
-        rating: 4.8,
-        image: "/abood.jpg",
-        brand: "ysl",
-        category: "unisex",
-    },
-    {
-        id: 6,
-        name: "عطر برادا لونا روسا",
-        price: 470,
-        discountPrice: 380,
-        rating: 4.3,
-        image: "/abood.jpg",
-        brand: "prada",
-        category: "men",
-    },
-];
-
 export default function OffersPage() {
+    // Use the home hook to get homepage data (includes all category products)
+    const { loading, data } = useHome();
+
     const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
     const [selectedRatings, setSelectedRatings] = useState<number[]>([]);
     const [selectedPriceRanges, setSelectedPriceRanges] = useState<string[]>([]);
     const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
     const [sortBy, setSortBy] = useState("suggestions");
+    const [visibleCount, setVisibleCount] = useState(9);
 
-    // Filter and sort products (dummy logic - replace with your actual logic)
-    const filteredProducts = dummyProducts.filter((product) => {
-        // Category filter
-        if (
-            selectedCategories.length > 0 &&
-            !selectedCategories.includes(product.category)
-        ) {
-            return false;
-        }
+    // Get offers products from homeSections - filter by category name "Offers"
+    const products = useMemo(() => {
+        const homeSections = data?._raw?.homeSections || data?.homeSections || [];
+        const offersSection = homeSections.find(
+            (section: any) =>
+                section.type === 'category' &&
+                (section.data?.categoryName?.toLowerCase() === 'offers' ||
+                    section.data?.categoryName === 'Offers')
+        );
+        return offersSection?.data?.productList || [];
+    }, [data]);
 
-        // Brand filter
-        if (selectedBrands.length > 0 && !selectedBrands.includes(product.brand)) {
-            return false;
-        }
+    // Filter products
+    const filteredProducts = useMemo(() => {
+        return products.filter((product: any) => {
+            // Rating filter
+            if (selectedRatings.length > 0) {
+                const productRating = product.reviews?.average_rating || 0;
+                const matchesRating = selectedRatings.some(
+                    (rating) => Math.floor(productRating) === rating
+                );
+                if (!matchesRating) return false;
+            }
 
-        // Rating filter
-        if (selectedRatings.length > 0) {
-            const matchesRating = selectedRatings.some(
-                (rating) => Math.floor(product.rating) === rating
-            );
-            if (!matchesRating) return false;
-        }
+            // Brand filter
+            if (selectedBrands.length > 0 && product.brand && !selectedBrands.includes(product.brand)) {
+                return false;
+            }
 
-        return true;
-    });
+            return true;
+        });
+    }, [products, selectedRatings, selectedBrands]);
+
+    // Reset visible count when filters change
+    useEffect(() => {
+        setVisibleCount(9);
+    }, [selectedCategories, selectedRatings, selectedPriceRanges, selectedBrands, sortBy]);
 
     // Sort products
-    const sortedProducts = [...filteredProducts].sort((a, b) => {
+    const sortedProducts = useMemo(() => {
+        const sorted = [...filteredProducts];
+
         switch (sortBy) {
             case "price-low-high":
-                return (a.discountPrice || a.price) - (b.discountPrice || b.price);
+                return sorted.sort((a, b) => (a.special_price || a.price) - (b.special_price || b.price));
             case "price-high-low":
-                return (b.discountPrice || b.price) - (a.discountPrice || a.price);
+                return sorted.sort((a, b) => (b.special_price || b.price) - (a.special_price || a.price));
             case "rating":
-                return b.rating - a.rating;
+                return sorted.sort((a, b) => {
+                    const ratingA = a.reviews?.average_rating || 0;
+                    const ratingB = b.reviews?.average_rating || 0;
+                    return ratingB - ratingA;
+                });
             case "newest":
-                return b.id - a.id;
+                return sorted.sort((a, b) => (b.new ? 1 : 0) - (a.new ? 1 : 0));
             default:
-                return 0;
+                return sorted;
         }
-    });
+    }, [filteredProducts, sortBy]);
+
+    if (loading) {
+        return <Loading fullScreen variant="spinner" size="xl" />;
+    }
 
     const breadcrumbItems = [
         { label: "الرئيسية", href: "/" },
         { label: "العروض", href: "/offers" },
     ];
+
+    const visibleProducts = sortedProducts.slice(0, visibleCount);
+
+    const handleLoadMore = () => {
+        setVisibleCount((prev) => prev + 9);
+    };
 
     return (
         <div className="min-h-screen bg-white" dir="rtl">
@@ -153,7 +123,7 @@ export default function OffersPage() {
                 </div>
 
                 {/* 2-Column Layout */}
-                <div className="flex flex-col lg:flex-row gap-8">
+                <div className="flex flex-col lg:flex-row gap-8 relative">
                     {/* Right Column - Sidebar (25%) */}
                     <aside className="hidden lg:block lg:w-1/4">
                         <div className="sticky top-6">
@@ -169,22 +139,21 @@ export default function OffersPage() {
                             />
                         </div>
                     </aside>
+                    {/* Vertical separator line - only visible on desktop */}
+                    <div className="hidden lg:block absolute top-0 bottom-0 w-px bg-gray-300" style={{ right: "calc(25% - 1rem)" }}></div>
 
                     {/* Left Column - Main Content (75%) */}
                     <main className="lg:w-3/4 w-full">
                         {/* Top Bar */}
-                        <div className="mb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                            {/* Right (reserved) */}
-                            <div className="order-1" />
-
+                        <div className="mb-6 flex flex-col md:flex-row justify-end items-start md:items-center gap-4">
                             {/* Left: Sort Select */}
                             <div className="order-2 flex items-center gap-3">
                                 <span className="text-sm font-medium text-black">ترتيب:</span>
                                 <Select value={sortBy} onValueChange={setSortBy}>
-                                    <SelectTrigger className="w-[200px] bg-transparent border border-gray-300 text-right">
+                                    <SelectTrigger className="w-[200px]">
                                         <SelectValue placeholder="اختر الترتيب" />
                                     </SelectTrigger>
-                                    <SelectContent className="text-right">
+                                    <SelectContent>
                                         <SelectItem value="suggestions">الاقتراحات</SelectItem>
                                         <SelectItem value="price-low-high">
                                             السعر: من الأقل للأعلى
@@ -198,58 +167,48 @@ export default function OffersPage() {
                                 </Select>
                             </div>
                         </div>
-                        
-                        {/* Product Grid - 3 products per row on desktop */}
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
-                            {sortedProducts.map((product) => {
-                                const currentPrice = product.discountPrice ?? product.price;
-                                const discountPercent = product.discountPrice
-                                    ? Math.round(((product.price - product.discountPrice) / product.price) * 100)
-                                    : undefined;
 
-                                return (
-                                    <div key={product.id} className="w-full max-w-sm mx-auto">
-                                        <ProductCard
-                                            brandName={product.brand}
-                                            productName={product.name}
-                                            price={currentPrice}
-                                            oldPrice={product.discountPrice ? product.price : undefined}
-                                            discount={discountPercent}
-                                            imageUrl={product.image}
-                                            category={product.category}
-                                            rating={product.rating}
-                                            onAddToCart={() => console.log("Add to cart", product.id)}
-                                            onToggleFavorite={() => console.log("Toggle favorite", product.id)}
-                                        />
-                                    </div>
-                                );
-                            })}
+                        {/* Products Count */}
+                        <div className="mb-6">
+                            <p className="text-sm text-medium-gray">
+                                عرض {sortedProducts.length} من العروض
+                            </p>
                         </div>
 
-                        {/* Load More Button */}
-                        {sortedProducts.length > 0 && (
-                            <div className="flex justify-center mt-8">
-                                <button
-                                    className="bg-black text-white px-12 py-3 rounded-lg font-medium hover:bg-dark-gray-3 transition-colors duration-300"
-                                    onClick={() => {
-                                        // Add your load more logic here
-                                        console.log("Load more products");
-                                    }}
-                                >
-                                    تحميل المزيد
-                                </button>
-                            </div>
-                        )}
+                        {/* Product Grid - 3 products per row on desktop */}
+                        {visibleProducts.length > 0 ? (
+                            <>
+                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
+                                    {visibleProducts.map((product: any) => (
+                                        <div key={product.id} className="w-full max-w-sm mx-auto">
+                                            <ProductCard product={product} />
+                                        </div>
+                                    ))}
+                                </div>
 
-                        {/* Empty State */}
-                        {sortedProducts.length === 0 && (
-                            <div className="flex flex-col items-center justify-center py-16 text-center">
+                                {/* Load More Button */}
+                                {visibleCount < sortedProducts.length && (
+                                    <div className="flex justify-center mt-8">
+                                        <button
+                                            className="bg-black text-white px-12 py-3 rounded-lg font-medium hover:bg-dark-gray-3 transition-colors duration-300"
+                                            onClick={handleLoadMore}
+                                        >
+                                            تحميل المزيد
+                                        </button>
+                                    </div>
+                                )}
+                            </>
+                        ) : (
+                            /* Empty State */
+                            <div className="flex flex-col items-center justify-center py-16 text-center min-h-[65vh]">
                                 <div className="text-6xl mb-4">🔍</div>
                                 <h3 className="text-xl font-bold text-black mb-2">
-                                    لا توجد نتائج
+                                    لا توجد عروض
                                 </h3>
                                 <p className="text-medium-gray">
-                                    حاول تغيير الفلاتر أو البحث عن منتجات أخرى
+                                    {selectedRatings.length > 0 || selectedBrands.length > 0
+                                        ? "حاول تغيير الفلاتر أو البحث عن منتجات أخرى"
+                                        : "لا توجد عروض متاحة حالياً"}
                                 </p>
                             </div>
                         )}
