@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import Image from "next/image";
 import { useSelector } from "react-redux";
 import { useTranslations } from "next-intl";
@@ -42,7 +43,8 @@ const resolveProductId = (
       ? Number(chosenVariantId)
       : product.variants[0]?.product_id;
   }
-  return product?.product_id || product?.id;
+  // Check entityId first (raw Markatty API format), then transformed formats
+  return product?.entityId || product?.product_id || product?.id;
 };
 
 export default function ProductCard({
@@ -67,6 +69,9 @@ export default function ProductCard({
   const [pendingAddProductId, setPendingAddProductId] = useState<number | null>(null);
   const [chosenVariantId, setChosenVariantId] = useState<number | string | null>(null);
 
+  const pathname = usePathname();
+  const locale = pathname?.split("/")[1] || "ar";
+
   const dispatch = useAppDispatch();
   const t = useTranslations("products");
 
@@ -80,7 +85,7 @@ export default function ProductCard({
   const discount = initialDiscount ?? product?.discount_percent ?? (oldPrice > price ? Math.round(((oldPrice - price) / oldPrice) * 100) : 0);
   const imageUrl = initialImageUrl ?? (product?.thumbNail || product?.images?.[0]?.url || product?.image || product?.base_image?.url || "/images/card-image.png");
   const category = initialCategory ?? (typeof product?.category === "string" ? product?.category : product?.category?.name) ?? "نسائي";
-  const rating = initialRating ?? Number(product?.rating || product?.reviews?.average_rating || 5);
+  const rating = initialRating ?? (product?.rating !== undefined ? Number(product.rating) : (product?.reviews?.average_rating ?? 0));
   const isVerified = initialIsVerified !== false && product?.is_verified !== false;
 
   const productId = resolveProductId(product, chosenVariantId);
@@ -137,7 +142,7 @@ export default function ProductCard({
       </div>
 
       {/* Product Image Link */}
-      <Link href={`/product/${productId}`}>
+      <Link href={`/${locale}/product/${productId}`}>
         <div className="relative w-full aspect-square bg-gray-50 overflow-hidden cursor-pointer">
           {imageUrl ? (
             <Image
@@ -158,7 +163,7 @@ export default function ProductCard({
       {/* Card Content - Split Layout */}
       <div className="p-4">
         {/* Main Details Section - Linked */}
-        <Link href={`/product/${productId}`}>
+        <Link href={`/${locale}/product/${productId}`}>
           <div className="flex items-start justify-between gap-3 mb-4 cursor-pointer">
             {/* Right Side - Primary Info */}
             <div className="flex-1 space-y-2">

@@ -34,6 +34,7 @@ interface ProductInfoBalmyProps {
         price?: string | number;
         special_price?: string | number | null;
         in_stock?: boolean;
+        isAvailable?: boolean;
         new?: boolean;
         featured?: boolean;
         description?: string | null;
@@ -42,19 +43,29 @@ interface ProductInfoBalmyProps {
             total?: number;
             average_rating?: number | null;
         };
+        // Markatty API fields
+        rating?: string | number;
+        ratingData?: {
+            ratingCode?: string;
+            ratingValue?: string | number;
+        };
+        reviewList?: any[];
+        configurableData?: Array<{
+            id?: number;
+            code?: string;
+            label?: string;
+            options?: Array<{
+                id: number;
+                label: string;
+                products?: number[];
+                isAvailable?: boolean;
+            }>;
+        }>;
         brand?: string;
         variants?: any[];
     };
     className?: string;
 }
-
-// Mock sizes - can be derived from product variants
-const DEFAULT_SIZES = [
-    { value: "75ml", label: "75 ml", inStock: true },
-    { value: "100ml", label: "100 ml", inStock: true },
-    { value: "125ml", label: "125 ml", inStock: true },
-    { value: "150ml", label: "150 ml", inStock: false },
-];
 
 export default function ProductInfoBalmy({
     product,
@@ -88,12 +99,31 @@ export default function ProductInfoBalmy({
     const hasDiscount = specialPrice !== null || true; // Always show discount for demo
     const discountPercent = Math.round(((originalPrice - currentPrice) / originalPrice) * 100);
 
-    // Normalize reviews data - handle both number and object formats
-    const normalizedReviews = typeof product.reviews === 'number'
-        ? { total: product.reviews, average_rating: 4.0 }
-        : product.reviews || { total: 225, average_rating: 3.7 };
+    // Get rating from API - check rating, ratingData, or reviews
+    const rawProduct = product as any;
+    const apiRating = rawProduct.rating
+        ? parseFloat(String(rawProduct.rating))
+        : (rawProduct.ratingData?.ratingValue
+            ? parseFloat(String(rawProduct.ratingData.ratingValue))
+            : null);
 
-    const isInStock = product.in_stock !== false;
+    // Count reviews from reviewList or reviews property
+    const reviewCount = rawProduct.reviewList?.length ||
+        (typeof product.reviews === 'number' ? product.reviews : product.reviews?.total) || 0;
+
+    const normalizedReviews = {
+        total: reviewCount,
+        average_rating: apiRating ?? 0
+    };
+
+    // Get sizes from configurableData (Markatty API) or use empty array
+    const sizesFromApi = rawProduct.configurableData?.[0]?.options?.map((opt: any) => ({
+        value: String(opt.id),
+        label: opt.label,
+        inStock: opt.isAvailable !== false
+    })) || [];
+
+    const isInStock = product.in_stock !== false && rawProduct.isAvailable !== false;
     const productId = product.product_id || product.id;
 
     const handleAddToCart = async () => {
@@ -223,8 +253,8 @@ export default function ProductInfoBalmy({
             {/* Rating & Free Shipping */}
             <div className="flex flex-col gap-4">
                 <div className="flex items-center gap-2">
-                    <StarRating 
-                        rating={normalizedReviews.average_rating || 3.7} 
+                    <StarRating
+                        rating={normalizedReviews.average_rating || 3.7}
                         edit={false}
                         inline={true}
                         dir="ltr"
@@ -259,12 +289,14 @@ export default function ProductInfoBalmy({
                 </div>
             </div>
 
-            {/* Size Selection */}
-            <SizeSelectorBalmy
-                sizes={DEFAULT_SIZES}
-                selectedSize={selectedSize}
-                onSizeChange={setSelectedSize}
-            />
+            {/* Size Selection - only show if sizes available from API */}
+            {sizesFromApi.length > 0 && (
+                <SizeSelectorBalmy
+                    sizes={sizesFromApi}
+                    selectedSize={selectedSize}
+                    onSizeChange={setSelectedSize}
+                />
+            )}
 
             {/* Action Buttons */}
             <div className="flex flex-row gap-3 w-full items-center">

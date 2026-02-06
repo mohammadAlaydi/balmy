@@ -32,7 +32,8 @@ export default async function handler(
             return res.status(response.status).json(data);
         }
 
-        res.status(200).json(data);
+        // Wrap response in { data: ... } format for frontend compatibility
+        res.status(200).json({ data });
     } catch (error) {
         console.error('Product Details API Error:', error);
         res.status(500).json({ success: false, message: "Internal Server Error" });

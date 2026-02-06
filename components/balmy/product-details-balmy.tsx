@@ -54,23 +54,36 @@ export default function ProductDetailsBalmy({
     const t = useTranslations("product-details");
 
     // Helper function to get image URL from various formats
-    const getImageUrl = (img: string | { url?: string; original_image_url?: string }): string => {
+    const getImageUrl = (img: any): string => {
         if (typeof img === 'string') return img;
+        // Handle Markatty API format: largeImage, mediumImage, smallImage
+        if (img.largeImage) return img.largeImage;
+        if (img.mediumImage) return img.mediumImage;
+        if (img.smallImage) return img.smallImage;
+        // Handle standard format
         return img.url || img.original_image_url || "/abood.jpg";
     };
 
-    // Prepare images
-    const firstImage = product.images?.[0];
+    // Prepare images - support both Markatty API format (imageGallery, thumbNail) and standard format
+    const rawProduct = product as any; // Allow access to API-specific properties
+
+    // Get gallery images from imageGallery (Markatty) or gallary/images (standard)
+    const rawGalleryImages = rawProduct.imageGallery || product.gallary || product.images || [];
+
+    const galleryImages: ProductImage[] = rawGalleryImages.map((img: any) => ({
+        original_image_url: getImageUrl(img),
+        medium_image_url: img.mediumImage || undefined,
+        small_image_url: img.smallImage || undefined,
+        large_image_url: img.largeImage || undefined,
+    }));
+
+    // Get base image from thumbNail (Markatty), base_image (standard), or first gallery image
     const baseImage: ProductImage = product.base_image || {
-        original_image_url: firstImage ? getImageUrl(firstImage) : "/abood.jpg",
+        original_image_url: rawProduct.thumbNail || (galleryImages[0]?.original_image_url) || "/abood.jpg",
     };
 
     const hoverImage: ProductImage | undefined = product.hovered_image;
 
-    const galleryImages: ProductImage[] = product.gallary ||
-        product.images?.map(img => ({
-            original_image_url: getImageUrl(img),
-        })) || [];
 
     // Normalize reviews data - handle both number and object formats
     const reviews = typeof product.reviews === 'number'
