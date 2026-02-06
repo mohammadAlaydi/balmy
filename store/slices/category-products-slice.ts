@@ -12,7 +12,7 @@ export const getCategoryProducts = createAsyncThunk(
         return MOCK_CATEGORY_PRODUCTS(id);
       }
 
-      const response = await fetch(`/api/category-products/${id}`, {
+      const response = await fetch(`/api/catalog/categoryproducts?categoryId=${id}`, {
         method: "GET",
         credentials: "include", // Include httpOnly cookies
       });

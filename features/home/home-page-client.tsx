@@ -16,7 +16,64 @@ export default function HomePageClient() {
 
   // Get bannerImages directly from raw data or transformed sliders
   const bannerImages = data?._raw?.bannerImages || data?.sliders || [];
-  const featuredCategories = data?.featuredCategories || [];
+
+  // Get homeSections from API - this contains the ordered sections with data
+  const homeSections = data?._raw?.homeSections || data?.homeSections || [];
+
+  // Render section based on type
+  const renderSection = (section: any, index: number) => {
+    switch (section.type) {
+      case 'category':
+        // Render category products section
+        const category = section.data;
+        if (!category?.productList || category.productList.length === 0) return null;
+        return (
+          <ProductsSectionBalmy
+            key={`category-${category.categoryId || index}`}
+            title={category.categoryName}
+            products={category.productList}
+            categoryId={category.categoryId}
+            maxProducts={8}
+          />
+        );
+
+      case 'payment_installment':
+        // Render payment installment banner
+        return <PaymentInstallmentBanner key={`payment-${index}`} />;
+
+      case 'partners':
+        // Render partners/brands showcase section with data from API
+        return (
+          <BrandsShowcaseSection
+            key={`partners-${index}`}
+            title={section.data?.title}
+            subtitle={section.data?.subtitle}
+            partners={section.data?.partners}
+          />
+        );
+
+      case 'ad':
+        // Render promotional ad banner with data from API
+        return (
+          <PromotionalBannerSection
+            key={`ad-${index}`}
+            ad={section.data}
+          />
+        );
+
+      case 'promotions':
+        // Render trust features section with data from API
+        return (
+          <TrustFeaturesSection
+            key={`promotions-${index}`}
+            promotions={section.data}
+          />
+        );
+
+      default:
+        return null;
+    }
+  };
 
   return (
     <>
@@ -26,62 +83,32 @@ export default function HomePageClient() {
       <PageWrapper yPadding="py-2.5">
         <div className="my-8 flex flex-col gap-10 relative">
 
-          {/* Featured Categories with Products - Start immediately with products */}
-          {featuredCategories.map((category: any) => (
-            category.products && category.products.length > 0 && (
-              <ProductsSectionBalmy
-                key={category.id}
-                title={category.name}
-                products={category.products}
-                categoryId={category.id}
-                maxProducts={8}
-              />
-            )
-          ))}
-
-          {/* Fallback: Show featured_products if no featured categories */}
-          {featuredCategories.length === 0 && data?.featured_products && data.featured_products.length > 0 && (
-            <ProductsSectionBalmy
-              title="منتجات مميزة"
-              products={data.featured_products}
-              maxProducts={8}
-              showViewAll={false}
-            />
+          {/* Render homeSections from API in order */}
+          {homeSections.length > 0 ? (
+            homeSections.map((section: any, index: number) => renderSection(section, index))
+          ) : (
+            // Fallback if homeSections not available - use old behavior
+            <>
+              {data?.featuredCategories?.map((category: any) => (
+                category.products && category.products.length > 0 && (
+                  <ProductsSectionBalmy
+                    key={category.id}
+                    title={category.name}
+                    products={category.products}
+                    categoryId={category.id}
+                    maxProducts={8}
+                  />
+                )
+              ))}
+              <BrandsShowcaseSection />
+              <PromotionalBannerSection />
+              <TrustFeaturesSection />
+            </>
           )}
 
-          {/* Best Sellers Section */}
-          {data?.best_sellers && data.best_sellers.length > 0 && (
-            <ProductsSectionBalmy
-              title="الأكثر مبيعاً"
-              products={data.best_sellers}
-              maxProducts={8}
-              showViewAll={false}
-            />
-          )}
-
-          {/* Payment Installment Banner */}
-          <PaymentInstallmentBanner />
-
-          {/* New Products Section */}
-          {data?.new_products && data.new_products.length > 0 && (
-            <ProductsSectionBalmy
-              title="وصل حديثاً"
-              products={data.new_products}
-              maxProducts={8}
-              showViewAll={false}
-            />
-          )}
-
-          {/* Brands Showcase Section */}
-          <BrandsShowcaseSection />
-
-          {/* Promotional Banner Section */}
-          <PromotionalBannerSection />
-
-          {/* Trust Features & Partners Section */}
-          <TrustFeaturesSection />
         </div>
       </PageWrapper>
     </>
   );
 }
+

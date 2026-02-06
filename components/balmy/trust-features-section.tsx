@@ -4,7 +4,33 @@ import React from "react";
 import Image from "next/image";
 import { FaShieldHalved, FaCertificate, FaMedal, FaTruckFast } from "react-icons/fa6";
 
-const FEATURES = [
+interface PromotionItem {
+    id?: string;
+    icon?: string;
+    title: string;
+    description?: string;
+    subtitle?: string;
+}
+
+interface PromotionsData {
+    title?: string;
+    subtitle?: string;
+    items?: PromotionItem[];
+}
+
+interface TrustFeaturesSectionProps {
+    promotions?: PromotionsData;
+}
+
+// Icon mapping from string names to React components
+const ICON_MAP: Record<string, any> = {
+    'shield-check': FaShieldHalved,
+    'badge-check': FaCertificate,
+    'thumbs-up': FaMedal,
+    'truck': FaTruckFast,
+};
+
+const DEFAULT_FEATURES = [
     {
         icon: FaShieldHalved,
         title: "آمن ومضمون",
@@ -37,7 +63,19 @@ const PARTNERS = [
     { name: "Aramex", src: "/assets/images/partners/aramex_gen.svg" },
 ];
 
-export default function TrustFeaturesSection() {
+export default function TrustFeaturesSection({ promotions }: TrustFeaturesSectionProps) {
+    // Build features from API promotions data or use defaults
+    const features = promotions?.items && promotions.items.length > 0
+        ? promotions.items.map((item: PromotionItem, idx: number) => ({
+            icon: ICON_MAP[item.icon || ''] || DEFAULT_FEATURES[idx]?.icon || FaShieldHalved,
+            title: item.title,
+            subtitle: item.description || null,
+        }))
+        : DEFAULT_FEATURES;
+
+    const sectionTitle = promotions?.title || "فروعنا في المملكة لأكثر من 30 عام";
+    const sectionSubtitle = promotions?.subtitle || "نفخر بخدمة أكثر من مليون عميل";
+
     return (
         <div className="w-full flex flex-col items-center px-4 my-8 md:my-16 gap-8">
 
@@ -48,10 +86,10 @@ export default function TrustFeaturesSection() {
                 {/* Headings */}
                 <div className="flex flex-col gap-4">
                     <h2 className="text-white text-3xl md:text-5xl lg:text-6xl font-bold">
-                        فروعنا في المملكة لأكثر من 30 عام
+                        {sectionTitle}
                     </h2>
                     <p className="text-gray-400 text-lg md:text-2xl lg:text-3xl font-normal">
-                        نفخر بخدمة أكثر من مليون عميل
+                        {sectionSubtitle}
                     </p>
                 </div>
 
@@ -60,7 +98,7 @@ export default function TrustFeaturesSection() {
                     className="w-full flex flex-col md:flex-row flex-wrap items-center justify-center gap-8 md:gap-0"
                     dir="rtl"
                 >
-                    {FEATURES.map((feature, index) => (
+                    {features.map((feature: any, index: number) => (
                         <div key={index} className="flex items-center">
                             {/* Feature Item */}
                             <div className="flex flex-col items-center gap-4 px-8 lg:px-16">
@@ -80,7 +118,7 @@ export default function TrustFeaturesSection() {
                             </div>
 
                             {/* Separator - Only between items (not after the last one) */}
-                            {index < FEATURES.length - 1 && (
+                            {index < features.length - 1 && (
                                 <div className="hidden md:block w-px h-24 bg-white/20" />
                             )}
                         </div>
