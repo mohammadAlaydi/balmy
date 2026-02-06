@@ -197,7 +197,7 @@ export default function ProductInfoBalmy({
                     {/* Brand Name with Verified Badge */}
                     <div className="flex items-center gap-2">
                         <span className="text-lg font-semibold text-[var(--color-black)] font-cairo">
-                            {product.brand || "جورجيو أرماني"}
+                            {product.brand || product.name}
                         </span>
                         <CheckCircle className="w-4 h-4 text-[var(--color-blue-3)] fill-current" />
                     </div>
@@ -254,13 +254,13 @@ export default function ProductInfoBalmy({
             <div className="flex flex-col gap-4">
                 <div className="flex items-center gap-2">
                     <StarRating
-                        rating={normalizedReviews.average_rating || 3.7}
+                        rating={normalizedReviews.average_rating ?? 0}
                         edit={false}
                         inline={true}
                         dir="ltr"
                     />
                     <span className="text-sm text-[var(--color-medium-gray)] font-cairo">
-                        ({normalizedReviews.total || 225})
+                        ({normalizedReviews.total ?? 0})
                     </span>
                 </div>
 
@@ -350,24 +350,20 @@ export default function ProductInfoBalmy({
                         {t("product-description") || "وصف المنتج"}
                     </AccordionTrigger>
                     <AccordionContent className="text-sm text-[var(--color-medium-gray)] font-cairo pb-4 leading-relaxed">
-                        {product.description || product.short_description ||
-                            "عطر فاخر من أرماني يجمع بين الأناقة والقوة. رائحة منعشة وجذابة تدوم طوال اليوم. مثالي للمناسبات الخاصة والاستخدام اليومي."}
+                        {(product.description || product.short_description) ? (
+                            <div
+                                dangerouslySetInnerHTML={{ __html: product.description || product.short_description || '' }}
+                                className="prose prose-sm max-w-none [&_p]:mb-4 [&_br]:leading-6"
+                            />
+                        ) : (
+                            <span className="text-[var(--color-light-gray-5)]">
+                                لا يوجد وصف متاح
+                            </span>
+                        )}
                     </AccordionContent>
                 </AccordionItem>
 
-                {/* Contents */}
-                <AccordionItem value="contents" className="border-b border-[var(--color-light-gray-2)]">
-                    <AccordionTrigger className="text-base font-semibold text-[var(--color-black)] font-cairo py-4 hover:no-underline">
-                        {t("contents") || "محتويات"}
-                    </AccordionTrigger>
-                    <AccordionContent className="text-sm text-[var(--color-medium-gray)] font-cairo pb-4">
-                        <ul className="list-disc list-inside space-y-1">
-                            <li>زجاجة عطر 100 مل</li>
-                            <li>علبة فاخرة أصلية</li>
-                            <li>كتيب المنتج</li>
-                        </ul>
-                    </AccordionContent>
-                </AccordionItem>
+
             </Accordion>
 
             {/* Stock Status */}

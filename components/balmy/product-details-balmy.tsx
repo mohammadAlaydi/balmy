@@ -158,6 +158,7 @@ export default function ProductDetailsBalmy({
                 {/* Reviews Section */}
                 <ReviewsSectionBalmy
                     reviews={reviews}
+                    reviewArray={(product as any).reviewArray}
                     productId={product.id}
                 />
             </PageWrapper>

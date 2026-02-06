@@ -13,25 +13,64 @@ interface ReviewsSectionBalmyProps {
         total_rating?: number;
         average_rating?: number | null;
     };
+    reviewArray?: {
+        "5": number;
+        "4": number;
+        "3": number;
+        "2": number;
+        "1": number;
+    };
     productId: number;
     className?: string;
 }
 
 export default function ReviewsSectionBalmy({
     reviews,
+    reviewArray,
     productId,
     className,
 }: ReviewsSectionBalmyProps) {
     const t = useTranslations("product-details");
 
-    // Calculate rating distribution
-    const ratingDistribution = [
-        { stars: 5, count: Math.floor(reviews.total * 0.45), percentage: 45 },
-        { stars: 4, count: Math.floor(reviews.total * 0.20), percentage: 20 },
-        { stars: 3, count: Math.floor(reviews.total * 0.10), percentage: 10 },
-        { stars: 2, count: Math.floor(reviews.total * 0.05), percentage: 5 },
-        { stars: 1, count: Math.floor(reviews.total * 0.02), percentage: 2 },
-    ];
+    // Calculate total reviews and average rating from reviewArray
+    const calculateRatingStats = () => {
+        if (!reviewArray) {
+            return {
+                total: reviews.total || 0,
+                average: reviews.average_rating || 0,
+                distribution: [
+                    { stars: 5, count: 0, percentage: 0 },
+                    { stars: 4, count: 0, percentage: 0 },
+                    { stars: 3, count: 0, percentage: 0 },
+                    { stars: 2, count: 0, percentage: 0 },
+                    { stars: 1, count: 0, percentage: 0 },
+                ]
+            };
+        }
+
+        const counts = {
+            5: reviewArray["5"] || 0,
+            4: reviewArray["4"] || 0,
+            3: reviewArray["3"] || 0,
+            2: reviewArray["2"] || 0,
+            1: reviewArray["1"] || 0,
+        };
+
+        const total = counts[5] + counts[4] + counts[3] + counts[2] + counts[1];
+        const weightedSum = (counts[5] * 5) + (counts[4] * 4) + (counts[3] * 3) + (counts[2] * 2) + (counts[1] * 1);
+        const average = total > 0 ? weightedSum / total : 0;
+
+        const distribution = [5, 4, 3, 2, 1].map(stars => ({
+            stars,
+            count: counts[stars as keyof typeof counts],
+            percentage: total > 0 ? Math.round((counts[stars as keyof typeof counts] / total) * 100) : 0
+        }));
+
+        return { total, average, distribution };
+    };
+
+    const ratingStats = calculateRatingStats();
+    const ratingDistribution = ratingStats.distribution;
 
     // Mock data for reviews since the previous implementation also used mock data for the list
     // In a real app, this would come from an API based on productId
@@ -68,11 +107,11 @@ export default function ReviewsSectionBalmy({
                         {/* Overall Rating Score */}
                         <div className="flex flex-col items-center justify-center min-w-[150px]">
                             <span className="text-6xl font-medium text-gray-900 dark:text-white mb-2 font-cairo">
-                                {reviews.average_rating?.toFixed(1) || "3.8"}
+                                {ratingStats.average.toFixed(1)}
                             </span>
                             <div className="mb-2">
-                                <StarRating 
-                                    rating={reviews.average_rating || 3.8}
+                                <StarRating
+                                    rating={ratingStats.average}
                                     edit={false}
                                     inline={true}
                                     dir="ltr"
@@ -80,7 +119,7 @@ export default function ReviewsSectionBalmy({
                                 />
                             </div>
                             <span className="text-sm text-gray-500 dark:text-gray-400 font-cairo">
-                                عدد التقييمات {reviews.total || 225}
+                                عدد التقييمات {ratingStats.total}
                             </span>
                         </div>
 
@@ -145,7 +184,7 @@ export default function ReviewsSectionBalmy({
                                 {/* Review Content */}
                                 <div className="flex-1 flex flex-col items-start text-right">
                                     <div className="flex items-center text-sm mb-2 gap-2">
-                                        <StarRating 
+                                        <StarRating
                                             rating={review.rating}
                                             edit={false}
                                             inline={true}
