@@ -7,11 +7,12 @@ export default async function handler(
 ) {
     const {
         storeId = config.store.id,
-        currency = config.store.currency,
-        locale = config.store.locale
+        currency = 'EGP',
+        locale = 'en'
     } = req.query;
 
-    const url = `${config.api.baseUrl}/catalog/getCategorylist?storeId=${storeId}&currency=${currency}&locale=${locale}`;
+    // Markatty uses /catalog/categories (not getCategorylist)
+    const url = `${config.api.baseUrl}/catalog/categories?storeId=${storeId}&currency=${currency}&locale=${locale}`;
 
     const apiToken = config.api.token;
     const headers: HeadersInit = {

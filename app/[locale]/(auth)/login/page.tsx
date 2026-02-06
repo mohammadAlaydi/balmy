@@ -1,8 +1,8 @@
-import LoginPageClient from "@/features/auth/login/login-page-client";
+import LoginPageBalmy from "@/components/balmy/login-page-balmy";
 import { getTranslations } from "next-intl/server";
 
 export async function generateMetadata() {
-  
+
   const t = await getTranslations("auth");
 
   return {
@@ -11,5 +11,5 @@ export async function generateMetadata() {
 }
 
 export default function Page() {
-  return <LoginPageClient />;
+  return <LoginPageBalmy />;
 }

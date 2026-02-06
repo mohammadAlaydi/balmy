@@ -16,7 +16,7 @@
 // ============================================================================
 // 🔧 TOGGLE THIS FLAG TO ENABLE/DISABLE BACKEND FETCHES
 // ============================================================================
-export const DISABLE_BACKEND_FETCH = true;
+export const DISABLE_BACKEND_FETCH = false;
 
 // ============================================================================
 // 📦 MOCK DATA FOR DEVELOPMENT

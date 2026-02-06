@@ -5,7 +5,7 @@ export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse
 ) {
-    const { storeId = config.store.id, locale = config.store.locale, page = 1, limit = 20 } = req.query;
+    const { storeId = config.store.id, locale = 'en', page = 1, limit = 20 } = req.query;
     const apiToken = config.api.token;
     const headers: HeadersInit = {
         'api-token': apiToken || '',

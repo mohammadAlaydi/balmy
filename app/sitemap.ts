@@ -1,70 +1,20 @@
 import { MetadataRoute } from "next";
-import { DISABLE_BACKEND_FETCH, MOCK_PRODUCTS } from "@/lib/dev-config";
 
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
-const apiUrl = process.env.NEXT_PUBLIC_API_URL ;
+const baseUrl = process.env.NEXT_PUBLIC_COMPANY_URL || "http://localhost:3000";
 
-// ✅ Fetch products safely
-async function getProducts() {
-  // DEV MODE: Return mock data when backend is disabled
-  if (DISABLE_BACKEND_FETCH) {
-    console.log("🚧 [DEV] Sitemap getProducts bypassed - using mock data");
-    return MOCK_PRODUCTS.data;
-  }
-
-  try {
-    const res = await fetch(`${apiUrl}/v1/categorysearch`, {
-      headers: { accept: "application/json" },
-      next: { revalidate: 60 * 60 },
-    });
-
-    if (!res.ok) throw new Error("Failed to fetch products");
-
-    const data = await res.json();
-    return Array.isArray(data.data) ? data.data : [];
-  } catch (error) {
-    console.error("❌ Error fetching products:", error);
-    return [];
-  }
-}
-
-// ✅ Fetch CMS pages safely
-async function getCMSPages() {
-  // DEV MODE: Return empty array when backend is disabled
-  if (DISABLE_BACKEND_FETCH) {
-    console.log("🚧 [DEV] Sitemap getCMSPages bypassed");
-    return [];
-  }
-
-  try {
-    const res = await fetch(`${apiUrl}/v1/home`, {
-      headers: { accept: "application/json" },
-      next: { revalidate: 60 * 60 },
-    });
-
-    if (!res.ok) throw new Error("Failed to fetch CMS pages");
-    const data = await res.json();
-    return Array.isArray(data?.cms_pages) ? data?.cms_pages : [];
-  } catch (error) {
-    console.error("❌ Error fetching CMS pages:", error);
-    return [];
-  }
-}
-
-// ✅ Sitemap generator with locales
+// ✅ Simplified sitemap with static pages only
+// Dynamic product pages will be handled by search engines via crawling
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const locales = ["en", "ar"];
   const staticPages = [
     "/home",
     "/cart",
     "/contact-us",
-    "/favourite",
+    "/favourites",
     "/search",
     "/user-profile",
+    "/about-us",
   ];
-
-  const products = await getProducts();
-  const cmsPages = await getCMSPages();
 
   const sitemapEntries: MetadataRoute.Sitemap = [];
 
@@ -74,28 +24,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       ...staticPages.map((path) => ({
         url: `${baseUrl}/${locale}${path}`,
         lastModified: new Date().toISOString(),
-      }))
-    );
-
-    // Product pages
-    sitemapEntries.push(
-      ...products.map((product: any) => ({
-        url: `${baseUrl}/${locale}/product/${product.id}`,
-        lastModified: new Date().toISOString(),
-      }))
-    );
-
-    // CMS pages
-    sitemapEntries.push(
-      ...cmsPages.map((page: any) => ({
-        url: `${baseUrl}/${locale}/cms/${page.url_key}`,
-        lastModified: page.updated_at
-          ? new Date(page.updated_at).toISOString()
-          : new Date().toISOString(),
+        changeFrequency: 'weekly' as const,
+        priority: path === '/home' ? 1.0 : 0.8,
       }))
     );
   }
 
   return sitemapEntries;
 }
-

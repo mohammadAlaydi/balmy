@@ -31,7 +31,7 @@ const nextConfig: NextConfig = {
           },
           {
             key: 'Content-Security-Policy',
-            value: process.env.NODE_ENV === 'production' 
+            value: process.env.NODE_ENV === 'production'
               ? "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https://envaglo-erp.envaglo.net;"
               : "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https: http:; font-src 'self' data:; connect-src 'self' https: http:;"
           },
@@ -41,6 +41,26 @@ const nextConfig: NextConfig = {
   },
   images: {
     remotePatterns: [
+      // Markatty CDN for product images
+      {
+        protocol: "https",
+        hostname: "cdn2.markatty.com",
+        port: "",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "*.markatty.com",
+        port: "",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "flowerscosmetics.markatty.com",
+        port: "",
+        pathname: "/**",
+      },
+      // Legacy Envaglo hosts
       {
         protocol: "https",
         hostname: "erpv2.envaglo.net",

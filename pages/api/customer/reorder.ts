@@ -9,7 +9,7 @@ export default async function handler(
         return res.status(405).json({ success: false, message: 'Method not allowed' });
     }
 
-    const { storeId = config.store.id, locale = config.store.locale } = req.query;
+    const { storeId = config.store.id, locale = 'en' } = req.query;
     const apiToken = config.api.token;
 
     const headers: HeadersInit = {

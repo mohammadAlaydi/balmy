@@ -7,7 +7,7 @@ export default async function handler(
 ) {
     const {
         storeId = config.store.id,
-        locale = config.store.locale,
+        locale = 'en',
         categoryId,
         page = 1,
         limit = 20,

@@ -5,7 +5,7 @@ export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse
 ) {
-    const { storeId = config.store.id, locale = config.store.locale, productId } = req.query;
+    const { storeId = config.store.id, locale = 'en', productId } = req.query;
 
     if (!productId) {
         return res.status(400).json({ success: false, message: 'Product ID is required' });

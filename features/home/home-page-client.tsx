@@ -1,109 +1,82 @@
 "use client";
 
-import { HeroBalmy, ProductsSectionBalmy, PaymentInstallmentBanner, BrandsShowcaseSection, PromotionalBannerSection, TrustFeaturesSection } from "@/components/balmy";
+import HeroSlider from "@/components/balmy/hero-slider";
+import { ProductsSectionBalmy, PaymentInstallmentBanner, BrandsShowcaseSection, PromotionalBannerSection, TrustFeaturesSection } from "@/components/balmy";
 
-import BannerCarousel from "@/features/home/banner-carousel";
-import ProductsCarousel from "@/features/home/products-carousel";
 import Loading from "@/components/loading";
 import PageWrapper from "@/components/page-wrapper";
 import useHome from "@/hooks/use-home";
-import { useLocale } from "next-intl";
 
 export default function HomePageClient() {
   const { t, loading, data } = useHome();
-  const locale = useLocale();
 
   if (loading) {
     return <Loading fullScreen variant="spinner" size="xl" />;
   }
 
+  // Get bannerImages directly from raw data or transformed sliders
+  const bannerImages = data?._raw?.bannerImages || data?.sliders || [];
+  const featuredCategories = data?.featuredCategories || [];
+
   return (
     <>
-      {/* Hero Section with new Balmy styling */}
-      <HeroBalmy sliders={data?.sliders} />
+      {/* Hero Slider Section with dynamic banners */}
+      <HeroSlider banners={bannerImages} />
 
       <PageWrapper yPadding="py-2.5">
-        <div className="my-8 flex flex-col gap-16 relative">
-          {/* Featured Products Section */}
-          {data?.featured_products && data.featured_products.length > 0 && (
+        <div className="my-8 flex flex-col gap-10 relative">
+
+          {/* Featured Categories with Products - Start immediately with products */}
+          {featuredCategories.map((category: any) => (
+            category.products && category.products.length > 0 && (
+              <ProductsSectionBalmy
+                key={category.id}
+                title={category.name}
+                products={category.products}
+                categoryId={category.id}
+                maxProducts={8}
+              />
+            )
+          ))}
+
+          {/* Fallback: Show featured_products if no featured categories */}
+          {featuredCategories.length === 0 && data?.featured_products && data.featured_products.length > 0 && (
             <ProductsSectionBalmy
-              title="العـــــــروض"
-              products={data.featured_products.slice(0, 4)}
+              title="منتجات مميزة"
+              products={data.featured_products}
+              maxProducts={8}
+              showViewAll={false}
             />
           )}
 
           {/* Best Sellers Section */}
           {data?.best_sellers && data.best_sellers.length > 0 && (
             <ProductsSectionBalmy
-              title="الأكثـــر مبيعــــــــــــاً"
-              products={data.best_sellers.slice(0, 4)}
+              title="الأكثر مبيعاً"
+              products={data.best_sellers}
+              maxProducts={8}
+              showViewAll={false}
             />
           )}
 
           {/* Payment Installment Banner */}
           <PaymentInstallmentBanner />
 
-          {/* Exclusive Section */}
-          {data?.exclusive_products && data.exclusive_products.length > 0 && (
+          {/* New Products Section */}
+          {data?.new_products && data.new_products.length > 0 && (
             <ProductsSectionBalmy
-              title="حصـــــــــــري"
-              products={data.exclusive_products.slice(0, 4)}
+              title="وصل حديثاً"
+              products={data.new_products}
+              maxProducts={8}
+              showViewAll={false}
             />
           )}
 
           {/* Brands Showcase Section */}
           <BrandsShowcaseSection />
 
-          {/* Sets and Collections Section */}
-          {data?.sets_products && data.sets_products.length > 0 && (
-            <ProductsSectionBalmy
-              title="اطقم ومجموعات"
-              products={data.sets_products.slice(0, 4)}
-            />
-          )}
-
           {/* Promotional Banner Section */}
           <PromotionalBannerSection />
-
-          {/* Niche Section */}
-          {data?.niche_products && data.niche_products.length > 0 && (
-            <ProductsSectionBalmy
-              title="نيــــــــــــش"
-              products={data.niche_products.slice(0, 4)}
-            />
-          )}
-
-          {/* Men Section */}
-          {data?.men_products && data.men_products.length > 0 && (
-            <ProductsSectionBalmy
-              title="رجــــــــــــالي"
-              products={data.men_products.slice(0, 4)}
-            />
-          )}
-
-          {/* Women Section */}
-          {data?.women_products && data.women_products.length > 0 && (
-            <ProductsSectionBalmy
-              title="نســــــــــــائي"
-              products={data.women_products.slice(0, 4)}
-            />
-          )}
-
-          {/* Unisex Section */}
-          {data?.unisex_products && data.unisex_products.length > 0 && (
-            <ProductsSectionBalmy
-              title="للجنســــــــــــين"
-              products={data.unisex_products.slice(0, 4)}
-            />
-          )}
-
-          {/* Brands Section */}
-          {data?.brands_products && data.brands_products.length > 0 && (
-            <ProductsSectionBalmy
-              title="الماركــــــــــــات"
-              products={data.brands_products.slice(0, 4)}
-            />
-          )}
 
           {/* Trust Features & Partners Section */}
           <TrustFeaturesSection />

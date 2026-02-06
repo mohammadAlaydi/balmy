@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { DISABLE_BACKEND_FETCH, MOCK_HOME_DATA, mockDelay } from "@/lib/dev-config";
+import { transformHomepageData } from "@/lib/markatty-transformer";
 
 export const getHomeData = createAsyncThunk(
   "home/getHomeData",
@@ -25,8 +26,11 @@ export const getHomeData = createAsyncThunk(
         return rejectWithValue(data.message || "Failed to fetch home data");
       }
 
+      // Transform Markatty API response to frontend format
+      const transformedData = transformHomepageData(data);
+
       // ✅ Attach locale info to the payload
-      return { ...data, locale };
+      return { ...transformedData, locale };
     } catch (error: any) {
       console.error("Home data fetch error:", error);
       return rejectWithValue(error.message || "Network error occurred");

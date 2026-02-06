@@ -72,21 +72,25 @@ export async function generateMetadata({
 
   try {
     if (!API_URL) {
-      throw new Error("NEXT_PUBLIC_API_URL is not set");
+      console.warn("⚠️ NEXT_PUBLIC_API_URL is not set - using default metadata");
+      return DEFAULT_METADATA;
     }
 
-    const response = await fetch(`${API_URL}/v1/home?locale=${locale}`, {
+    // Markatty uses /catalog/homepage format
+    const response = await fetch(`${API_URL}/catalog/homepage?storeId=1&currency=EGP&locale=${locale}`, {
       headers: { "Content-Type": "application/json" },
       next: { revalidate: 3600 },
     });
 
     if (!response.ok) {
-      throw new Error(`Failed to fetch SEO data: ${response.statusText}`);
+      console.warn(`SEO fetch failed: ${response.statusText}`);
+      return DEFAULT_METADATA;
     }
 
     const data = await response.json();
-    const seo = data?.seo_settings?.channel?.meta_data;
-    const logo = toAbsoluteUrl(data?.seo_settings?.channel?.logo);
+    // Markatty uses homeSEO format
+    const seo = data?.homeSEO || {};
+    const logo = toAbsoluteUrl(data?.logo_url);
 
     return {
       title: seo?.meta_title || "My Store",

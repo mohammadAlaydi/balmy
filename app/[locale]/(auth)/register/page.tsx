@@ -1,8 +1,8 @@
-import RegisterPageClient from "@/features/auth/register/register-page-client";
+import RegisterPageBalmy from "@/components/balmy/register-page-balmy";
 import { getTranslations } from "next-intl/server";
 
 export async function generateMetadata() {
-  
+
   const t = await getTranslations("auth");
 
   return {
@@ -11,5 +11,5 @@ export async function generateMetadata() {
 }
 
 export default function Page() {
-  return <RegisterPageClient />;
+  return <RegisterPageBalmy />;
 }

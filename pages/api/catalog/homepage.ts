@@ -7,8 +7,8 @@ export default async function handler(
 ) {
     const {
         storeId = config.store.id,
-        currency = config.store.currency,
-        locale = config.store.locale,
+        currency = 'EGP',
+        locale = 'en',
         width = '1000',
         mFactor = '2.5'
     } = req.query;

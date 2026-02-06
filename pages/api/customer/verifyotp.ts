@@ -10,16 +10,16 @@ export default async function handler(
     }
 
     const { storeId = config.store.id } = req.query;
-    const { email, password } = req.body;
+    const { phone, otp, type = 'login' } = req.body;
 
-    if (!email || !password) {
+    if (!phone || !otp) {
         return res.status(400).json({
             success: false,
-            message: 'يرجى إدخال البريد الإلكتروني وكلمة المرور'
+            message: 'يرجى إدخال رقم الجوال ورمز التحقق'
         });
     }
 
-    const url = `${config.api.baseUrl}/customer/login?storeId=${storeId}`;
+    const url = `${config.api.baseUrl}/customer/verifyotp?storeId=${storeId}`;
 
     const apiToken = config.api.token;
     const headers: HeadersInit = {
@@ -27,11 +27,18 @@ export default async function handler(
         'Content-Type': 'application/json'
     };
 
+    // Format phone number
+    const formattedPhone = phone.startsWith('+966') ? phone : `+966${phone}`;
+
     try {
         const response = await fetch(url, {
             method: 'POST',
             headers,
-            body: JSON.stringify({ email, password })
+            body: JSON.stringify({
+                mobile: formattedPhone,
+                otp,
+                type
+            })
         });
 
         let data;
@@ -40,7 +47,6 @@ export default async function handler(
         if (contentType && contentType.includes('application/json')) {
             data = await response.json();
         } else {
-            // Non-JSON response - likely an HTML error page
             const text = await response.text();
             console.error('Non-JSON response from Markatty:', text.substring(0, 500));
             return res.status(500).json({
@@ -50,21 +56,10 @@ export default async function handler(
         }
 
         if (!response.ok) {
-            // Handle specific error cases
-            const errorMessage = data?.message || data?.error || 'فشل في تسجيل الدخول';
+            let errorMessage = data?.message || 'رمز التحقق غير صحيح';
 
-            if (response.status === 401 || response.status === 403) {
-                return res.status(401).json({
-                    success: false,
-                    message: 'البريد الإلكتروني أو كلمة المرور غير صحيحة'
-                });
-            }
-
-            if (response.status === 404) {
-                return res.status(404).json({
-                    success: false,
-                    message: 'الحساب غير موجود. يرجى التحقق من البريد الإلكتروني'
-                });
+            if (response.status === 401 || response.status === 400) {
+                errorMessage = 'رمز التحقق غير صحيح أو منتهي الصلاحية';
             }
 
             return res.status(response.status).json({
@@ -73,23 +68,26 @@ export default async function handler(
             });
         }
 
-        // Success - data should contain the JWT (token)
-        res.status(200).json({ success: true, ...data });
-    } catch (error: any) {
-        console.error('Login API Error:', error?.message || error);
+        // Check for success: false in response body
+        if (data.success === false) {
+            return res.status(400).json({
+                success: false,
+                message: data.message || 'رمز التحقق غير صحيح'
+            });
+        }
 
-        // More specific error messages
+        res.status(200).json({
+            success: true,
+            message: data.message || 'تم التحقق بنجاح',
+            ...data
+        });
+    } catch (error: any) {
+        console.error('Verify OTP API Error:', error?.message || error);
+
         if (error?.code === 'ECONNREFUSED' || error?.code === 'ENOTFOUND') {
             return res.status(503).json({
                 success: false,
                 message: 'تعذر الاتصال بالخادم. يرجى المحاولة لاحقاً'
-            });
-        }
-
-        if (error?.name === 'AbortError' || error?.code === 'ETIMEDOUT') {
-            return res.status(504).json({
-                success: false,
-                message: 'انتهت مهلة الاتصال. يرجى المحاولة مرة أخرى'
             });
         }
 
