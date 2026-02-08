@@ -6,6 +6,7 @@ export const config = {
   company: {
     id: process.env.NEXT_PUBLIC_COMPANY_ID || '9031',
     url: process.env.NEXT_PUBLIC_COMPANY_URL || 'https://flowerscosmatics.shop/',
+    markattyCompanyId: process.env.NEXT_PUBLIC_MARKATTY_COMPANY_ID || '8271',
   },
   store: {
     id: process.env.NEXT_PUBLIC_STORE_ID || '8993',

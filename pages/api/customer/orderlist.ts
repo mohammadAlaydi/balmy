@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { config } from '@/lib/config';
+import { addAuthHeader } from '@/lib/auth-cookies';
 
 export default async function handler(
     req: NextApiRequest,
@@ -12,14 +13,23 @@ export default async function handler(
         'Content-Type': 'application/json'
     };
 
-    if (req.headers.authorization) {
-        headers['Authorization'] = req.headers.authorization;
-    }
+    addAuthHeader(req, headers);
 
     const url = `${config.api.baseUrl}/customer/orderlist?storeId=${storeId}&locale=${locale}&pageNumber=${page}&limit=${limit}`;
 
     try {
         const response = await fetch(url, { headers });
+
+        const contentType = response.headers.get('content-type');
+        if (!contentType || !contentType.includes('application/json')) {
+            const text = await response.text();
+            console.error('Non-JSON response from Markatty orderlist:', text.substring(0, 300));
+            return res.status(response.status || 500).json({
+                success: false,
+                message: 'Unexpected response from order service'
+            });
+        }
+
         const data = await response.json();
 
         if (!response.ok) {

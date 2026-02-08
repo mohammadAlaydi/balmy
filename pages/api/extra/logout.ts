@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { config } from '@/lib/config';
+import { addAuthHeader, clearAuthCookie } from '@/lib/auth-cookies';
 
 export default async function handler(
     req: NextApiRequest,
@@ -23,9 +24,7 @@ export default async function handler(
         'Content-Type': 'application/json'
     };
 
-    if (req.headers.authorization) {
-        headers['Authorization'] = req.headers.authorization;
-    }
+    addAuthHeader(req, headers);
 
     try {
         // Attempt upstream logout
@@ -36,6 +35,9 @@ export default async function handler(
 
         // Regardless of upstream success, we return success to client to clear local state
         const data = await response.json().catch(() => ({}));
+
+        // Clear the auth cookie
+        clearAuthCookie(res);
 
         res.status(200).json({ success: true, message: "Logged out successfully", data });
     } catch (error) {

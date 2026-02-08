@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { config } from '@/lib/config';
+import { setAuthCookie } from '@/lib/auth-cookies';
 
 export default async function handler(
     req: NextApiRequest,
@@ -15,28 +16,31 @@ export default async function handler(
     // Map camelCase to snake_case for Markatty API
     const { firstName, lastName, email, password, confirmPassword, phone } = req.body;
 
-    const requestBody = {
-        first_name: firstName,
-        last_name: lastName,
-        email,
-        password,
-        password_confirmation: confirmPassword,
-        phone: phone || ''
-    };
+    // Markatty API expects data as query parameters, not JSON body
+    const params = new URLSearchParams({
+        firstName: firstName || '',
+        lastName: lastName || '',
+        email: email || '',
+        password: password || '',
+        is_subscribed: 'true',
+        token: '0',
+        company_id: config.company.markattyCompanyId,
+        storeId: String(storeId),
+        currency: config.store.currency || 'SAR',
+        locale: config.store.locale || 'ar',
+    });
 
-    const url = `${config.api.baseUrl}/customer/createaccount?storeId=${storeId}`;
+    const url = `${config.api.baseUrl}/customer/createaccount?${params.toString()}`;
 
     const apiToken = config.api.token;
     const headers: HeadersInit = {
         'api-token': apiToken || '',
-        'Content-Type': 'application/json'
     };
 
     try {
         const response = await fetch(url, {
             method: 'POST',
             headers,
-            body: JSON.stringify(requestBody)
         });
 
         let data;
@@ -90,7 +94,22 @@ export default async function handler(
             });
         }
 
-        res.status(200).json({ success: true, ...data });
+        // Store JWT in httpOnly cookie
+        if (data.token) {
+            setAuthCookie(res, data.token);
+        }
+
+        res.status(200).json({
+            success: true,
+            message: data.message || 'تم إنشاء الحساب بنجاح',
+            data: {
+                firstName: data.customerName?.split(' ')[0] || firstName || '',
+                lastName: data.customerName?.split(' ').slice(1).join(' ') || lastName || '',
+                email: data.customerEmail || email,
+                phone: data.customerMobile || '',
+                cartCount: data.cartCount || 0,
+            }
+        });
     } catch (error: any) {
         console.error('Registration API Error:', error?.message || error);
 

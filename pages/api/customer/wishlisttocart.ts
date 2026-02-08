@@ -11,33 +11,28 @@ export default async function handler(
     }
 
     const storeId = (req.query.storeId as string) || config.store.id;
-    const currency = config.store.currency || 'EGP';
     const locale = config.store.locale || 'ar';
     const apiToken = config.api.token;
 
-    // Incoming request body: { productId, qty }
-    const { productId, qty } = req.body;
-    const cookieToken = getAuthToken(req);
+    const { itemId, productId, qty = 1 } = req.body;
+    const cookieToken = getAuthToken(req) || req.body?.token;
 
-    // Markatty expects ALL params as query string (not form body)
+    // Markatty: customer/wishlisttocart?token=X&storeId=X&itemId=X&qty=1&productId=X&locale=X
     const params = new URLSearchParams();
     params.append('storeId', storeId);
-    params.append('quoteId', '0');
-    params.append('currency', currency);
     params.append('locale', locale);
+    if (itemId) params.append('itemId', String(itemId));
     if (productId) params.append('productId', String(productId));
-    if (qty) params.append('qty', String(qty));
+    params.append('qty', String(qty));
     if (cookieToken) params.append('token', cookieToken);
 
-    const url = `${config.api.baseUrl}/checkout/addtocart?${params.toString()}`;
+    const url = `${config.api.baseUrl}/customer/wishlisttocart?${params.toString()}`;
 
-    // Markatty uses api-token header + token query param (NOT Authorization: Bearer)
     const headers: HeadersInit = {
         'api-token': apiToken || '',
     };
 
-    console.log('[AddToCart] URL:', url);
-    console.log('[AddToCart] Headers:', JSON.stringify(headers));
+    console.log('[WishlistToCart] URL:', url);
 
     try {
         const response = await fetch(url, {
@@ -45,16 +40,13 @@ export default async function handler(
             headers,
         });
 
-        console.log('[AddToCart] Markatty response status:', response.status);
-
         const contentType = response.headers.get('content-type');
         if (!contentType || !contentType.includes('application/json')) {
             const text = await response.text();
-            console.error('[AddToCart] Non-JSON response from Markatty (status ' + response.status + '):', text.substring(0, 500));
+            console.error('[WishlistToCart] Non-JSON response (status ' + response.status + '):', text.substring(0, 300));
             return res.status(response.status || 500).json({
                 success: false,
-                message: 'Unexpected response from cart service',
-                markattyStatus: response.status,
+                message: 'Unexpected response from wishlist service'
             });
         }
 
@@ -66,7 +58,7 @@ export default async function handler(
 
         res.status(200).json(data);
     } catch (error) {
-        console.error('Add to Cart API Error:', error);
+        console.error('WishlistToCart API Error:', error);
         res.status(500).json({ success: false, message: "Internal Server Error" });
     }
 }

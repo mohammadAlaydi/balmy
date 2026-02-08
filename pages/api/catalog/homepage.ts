@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { config } from '@/lib/config';
+import { addAuthHeader } from '@/lib/auth-cookies';
 
 export default async function handler(
     req: NextApiRequest,
@@ -23,10 +24,7 @@ export default async function handler(
         'Content-Type': 'application/json'
     };
 
-    // Add JWT token if present in request headers
-    if (req.headers.authorization) {
-        headers['Authorization'] = req.headers.authorization;
-    }
+    addAuthHeader(req, headers);
 
     try {
         const response = await fetch(url, { headers });
@@ -47,7 +45,7 @@ export default async function handler(
         const singleAd = ads.length > 0 ? ads[0] : null;
 
         // Build homeSections array with proper order:
-        // Category 1 -> Category 2 -> PaymentInstallment (frontend) -> Partners -> Ad -> Category 3 -> Category 4 -> Promotions
+        // Cat1 -> Cat2 -> PaymentInstallment -> Cat3 -> Partners -> Cat4 -> Ad -> Promotions
         const homeSections: any[] = [];
 
         // Category 1
@@ -79,10 +77,19 @@ export default async function handler(
             }
         });
 
+        // Category 3
+        if (limitedCategories[2]) {
+            homeSections.push({
+                type: 'category',
+                position: 4,
+                data: limitedCategories[2]
+            });
+        }
+
         // Partners section with data from backend
         homeSections.push({
             type: 'partners',
-            position: 4,
+            position: 5,
             data: {
                 title: localeStr === 'ar' ? 'وجهتك الأولى للعطور العالمية الأصلية' : 'Your First Destination for Original International Perfumes',
                 subtitle: localeStr === 'ar' ? 'الماركات العالمية الأخر مبيعاً في السعودية' : 'Top selling international brands in Saudi Arabia',
@@ -96,37 +103,28 @@ export default async function handler(
             }
         });
 
-        // Single Ad from backend
-        if (singleAd) {
-            homeSections.push({
-                type: 'ad',
-                position: 5,
-                data: singleAd
-            });
-        }
-
-        // Category 3
-        if (limitedCategories[2]) {
-            homeSections.push({
-                type: 'category',
-                position: 6,
-                data: limitedCategories[2]
-            });
-        }
-
         // Category 4
         if (limitedCategories[3]) {
             homeSections.push({
                 type: 'category',
-                position: 7,
+                position: 6,
                 data: limitedCategories[3]
+            });
+        }
+
+        // Single Ad from backend
+        if (singleAd) {
+            homeSections.push({
+                type: 'ad',
+                position: 7,
+                data: singleAd
             });
         }
 
         // Promotions section with data from backend
         homeSections.push({
             type: 'promotions',
-            position: 7,
+            position: 8,
             data: {
                 title: localeStr === 'ar' ? 'فروعنا في المملكة لأكثر من 30 عام' : 'Our branches in the Kingdom for over 30 years',
                 subtitle: localeStr === 'ar' ? 'نخدم بخدمة أكثر من مليون عميل' : 'Serving over a million customers',

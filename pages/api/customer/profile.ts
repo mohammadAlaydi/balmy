@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { config } from '@/lib/config';
+import { addAuthHeader } from '@/lib/auth-cookies';
 
 export default async function handler(
     req: NextApiRequest,
@@ -19,9 +20,7 @@ export default async function handler(
         'Content-Type': 'application/json'
     };
 
-    if (req.headers.authorization) {
-        headers['Authorization'] = req.headers.authorization;
-    }
+    addAuthHeader(req, headers);
 
     try {
         const response = await fetch(url, {
@@ -30,7 +29,16 @@ export default async function handler(
             body: JSON.stringify(req.body)
         });
 
-        // Pass through status
+        const contentType = response.headers.get('content-type');
+        if (!contentType || !contentType.includes('application/json')) {
+            const text = await response.text();
+            console.error('Non-JSON response from Markatty profile:', text.substring(0, 300));
+            return res.status(response.status || 500).json({
+                success: false,
+                message: 'Unexpected response from profile service'
+            });
+        }
+
         const data = await response.json();
         if (!response.ok) {
             return res.status(response.status).json(data);

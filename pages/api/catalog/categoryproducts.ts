@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { config } from '@/lib/config';
+import { addAuthHeader } from '@/lib/auth-cookies';
 
 export default async function handler(
     req: NextApiRequest,
@@ -7,36 +8,36 @@ export default async function handler(
 ) {
     const {
         storeId = config.store.id,
-        locale = 'en',
         categoryId,
         page = 1,
-        limit = 20,
-        sort,
-        filter
+        quoteId = 0,
+        width = 1080,
+        mFactor = 2.625,
     } = req.query;
 
     if (!categoryId) {
         return res.status(400).json({ success: false, message: 'Category ID is required' });
     }
 
-    // Construct query parameters
+    // Markatty uses /catalog/categoryPageData (not categoryproducts)
     const queryParams = new URLSearchParams({
         storeId: storeId as string,
-        locale: locale as string,
         categoryId: categoryId as string,
         page: page as string,
-        limit: limit as string
+        quoteId: quoteId as string,
+        width: width as string,
+        mFactor: mFactor as string,
     });
 
-    if (sort) queryParams.append('sort', sort as string);
-    // Add other filters as needed
-
-    const url = `${config.api.baseUrl}/catalog/categoryproducts?${queryParams.toString()}`;
+    const url = `${config.api.baseUrl}/catalog/categoryPageData?${queryParams.toString()}`;
     const apiToken = config.api.token;
     const headers: HeadersInit = {
         'api-token': apiToken || '',
         'Content-Type': 'application/json'
     };
+
+    // Forward auth token from cookie
+    addAuthHeader(req, headers);
 
     try {
         const response = await fetch(url, { headers });

@@ -1,8 +1,6 @@
 "use client";
 
 import React, { useState } from "react";
-import { BreadcrumbBalmy } from "@/components/balmy";
-import { Separator } from "@/components/ui/separator";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Filter } from "lucide-react";
@@ -12,7 +10,7 @@ import FilterPrice from "./filter-price";
 import FilterBrands from "./filter-brands";
 
 interface SideFilterProps {
-    breadcrumbItems?: { label: string; href?: string }[];
+    activeCategoryId?: string | number;
     selectedCategories?: string[];
     selectedRatings?: number[];
     selectedPriceRanges?: string[];
@@ -24,7 +22,7 @@ interface SideFilterProps {
 }
 
 export default function SideFilter({
-    breadcrumbItems,
+    activeCategoryId,
     selectedCategories = [],
     selectedRatings = [],
     selectedPriceRanges = [],
@@ -37,45 +35,33 @@ export default function SideFilter({
     const [isOpen, setIsOpen] = useState(false);
 
     const FilterContent = () => (
-        <div className="space-y-6 w-full">
-            {/* Filter Categories */}
-            <div className="w-full">
-                <FilterCategories
-                    selectedCategories={selectedCategories}
-                    onCategoryChange={onCategoryChange}
-                    useRadio={false}
-                />
-            </div>
+        <div className="space-y-8 w-full" dir="rtl">
+            {/* Filter Categories - navigation links from API */}
+            <FilterCategories activeCategoryId={activeCategoryId} />
 
-            <Separator className="bg-light-gray-2 w-full" />
+            <div className="border-t border-gray-200" />
 
             {/* Filter by Rating */}
-            <div className="w-full">
-                <FilterRating
-                    selectedRatings={selectedRatings}
-                    onRatingChange={onRatingChange}
-                />
-            </div>
+            <FilterRating
+                selectedRatings={selectedRatings}
+                onRatingChange={onRatingChange}
+            />
 
-            <Separator className="bg-light-gray-2 w-full" />
+            <div className="border-t border-gray-200" />
 
             {/* Filter by Price */}
-            <div className="w-full">
-                <FilterPrice
-                    selectedRanges={selectedPriceRanges}
-                    onPriceChange={onPriceChange}
-                />
-            </div>
+            <FilterPrice
+                selectedRanges={selectedPriceRanges}
+                onPriceChange={onPriceChange}
+            />
 
-            <Separator className="bg-light-gray-2 w-full" />
+            <div className="border-t border-gray-200" />
 
             {/* Filter by Brands */}
-            <div className="w-full">
-                <FilterBrands
-                    selectedBrands={selectedBrands}
-                    onBrandChange={onBrandChange}
-                />
-            </div>
+            <FilterBrands
+                selectedBrands={selectedBrands}
+                onBrandChange={onBrandChange}
+            />
         </div>
     );
 
@@ -85,14 +71,14 @@ export default function SideFilter({
             <div className="lg:hidden mb-4">
                 <Sheet open={isOpen} onOpenChange={setIsOpen}>
                     <SheetTrigger asChild>
-                        <Button variant="outline" className="w-full flex items-center justify-center gap-2">
+                        <Button variant="outline" className="w-full flex items-center justify-center gap-2 border-gray-300">
                             <Filter className="h-4 w-4" />
                             <span>الفلاتر</span>
                         </Button>
                     </SheetTrigger>
-                    <SheetContent side="right" className="w-[300px] sm:w-[400px] overflow-y-auto">
+                    <SheetContent side="right" className="w-[300px] sm:w-[380px] overflow-y-auto">
                         <SheetHeader>
-                            <SheetTitle>الفلاتر</SheetTitle>
+                            <SheetTitle className="text-right">الفلاتر</SheetTitle>
                         </SheetHeader>
                         <div className="mt-6">
                             <FilterContent />
@@ -102,10 +88,8 @@ export default function SideFilter({
             </div>
 
             {/* Desktop Sidebar */}
-            <div className="hidden lg:block bg-transparent p-6 sticky top-6">
-                <div className="max-w-xs mx-auto">
-                    <FilterContent />
-                </div>
+            <div className="hidden lg:block">
+                <FilterContent />
             </div>
         </>
     );

@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { config } from '@/lib/config';
+import { getAuthToken } from '@/lib/auth-cookies';
 
 export default async function handler(
     req: NextApiRequest,
@@ -9,34 +10,47 @@ export default async function handler(
         return res.status(405).json({ success: false, message: 'Method not allowed' });
     }
 
-    const { storeId = config.store.id, locale = 'en' } = req.query;
+    const storeId = (req.query.storeId as string) || config.store.id;
+    const currency = config.store.currency || 'EGP';
+    const locale = config.store.locale || 'ar';
     const apiToken = config.api.token;
 
     const headers: HeadersInit = {
         'api-token': apiToken || '',
-        'Content-Type': 'application/x-www-form-urlencoded'
     };
 
-    if (req.headers.authorization) {
-        headers['Authorization'] = req.headers.authorization;
-    }
 
-    const url = `${config.api.baseUrl}/checkout/removefromcart`;
+    const { itemId } = req.body;
+    const cookieToken = getAuthToken(req);
 
-    // Body parsing: itemId
-    const { itemId, token } = req.body;
+    // Markatty expects ALL params as query string (matching Postman: checkout/removecartitem)
+    const params = new URLSearchParams();
+    params.append('storeId', storeId);
+    params.append('quoteId', '0');
+    params.append('currency', currency);
+    params.append('locale', locale);
+    if (itemId) params.append('itemId', String(itemId));
+    if (cookieToken) params.append('token', cookieToken);
 
-    const bodyParams = new URLSearchParams();
-    bodyParams.append('storeId', storeId as string);
-    if (itemId) bodyParams.append('itemId', itemId.toString());
-    if (token) bodyParams.append('token', token);
+    const url = `${config.api.baseUrl}/checkout/removecartitem?${params.toString()}`;
+
+    console.log('[RemoveFromCart] URL:', url);
 
     try {
         const response = await fetch(url, {
-            method: 'POST', // Usually removals are POST in many e-com APIs, or DELETE. Using POST as per common patterns unless specified otherwise.
+            method: 'POST',
             headers,
-            body: bodyParams
         });
+
+        const contentType = response.headers.get('content-type');
+        if (!contentType || !contentType.includes('application/json')) {
+            const text = await response.text();
+            console.error('Non-JSON response from Markatty removefromcart:', text.substring(0, 300));
+            return res.status(response.status || 500).json({
+                success: false,
+                message: 'Unexpected response from cart service'
+            });
+        }
 
         const data = await response.json();
 

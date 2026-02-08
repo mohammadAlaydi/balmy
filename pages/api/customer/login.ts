@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { config } from '@/lib/config';
+import { setAuthCookie } from '@/lib/auth-cookies';
 
 export default async function handler(
     req: NextApiRequest,
@@ -19,19 +20,26 @@ export default async function handler(
         });
     }
 
-    const url = `${config.api.baseUrl}/customer/login?storeId=${storeId}`;
+    // Markatty login requires: username (not email), password, company_id
+    const params = new URLSearchParams({
+        username: email,
+        password,
+        company_id: config.company.markattyCompanyId,
+    });
+
+    console.log('[Login] Request URL:', `${config.api.baseUrl}/customer/login?username=${email}&password=***&company_id=${config.company.markattyCompanyId}`);
+
+    const url = `${config.api.baseUrl}/customer/login?${params.toString()}`;
 
     const apiToken = config.api.token;
     const headers: HeadersInit = {
         'api-token': apiToken || '',
-        'Content-Type': 'application/json'
     };
 
     try {
         const response = await fetch(url, {
             method: 'POST',
             headers,
-            body: JSON.stringify({ email, password })
         });
 
         let data;
@@ -39,6 +47,7 @@ export default async function handler(
 
         if (contentType && contentType.includes('application/json')) {
             data = await response.json();
+            console.log('[Login] Markatty response status:', response.status, 'data:', JSON.stringify(data).substring(0, 500));
         } else {
             // Non-JSON response - likely an HTML error page
             const text = await response.text();
@@ -73,8 +82,30 @@ export default async function handler(
             });
         }
 
-        // Success - data should contain the JWT (token)
-        res.status(200).json({ success: true, ...data });
+        // Check for success: false in the response body (Markatty returns 200 with success: false for invalid credentials)
+        if (data.success === false) {
+            return res.status(401).json({
+                success: false,
+                message: data.message || 'البريد الإلكتروني أو كلمة المرور غير صحيحة'
+            });
+        }
+
+        // Success - store JWT in httpOnly cookie
+        if (data.token) {
+            setAuthCookie(res, data.token);
+        }
+
+        res.status(200).json({
+            success: true,
+            message: data.message || 'تم تسجيل الدخول بنجاح',
+            data: {
+                firstName: data.customerName?.split(' ')[0] || '',
+                lastName: data.customerName?.split(' ').slice(1).join(' ') || '',
+                email: data.customerEmail || email,
+                phone: data.customerMobile || '',
+                cartCount: data.cartCount || 0,
+            }
+        });
     } catch (error: any) {
         console.error('Login API Error:', error?.message || error);
 

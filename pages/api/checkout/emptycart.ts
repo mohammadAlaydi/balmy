@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { config } from '@/lib/config';
+import { getAuthToken } from '@/lib/auth-cookies';
 
 export default async function handler(
     req: NextApiRequest,
@@ -9,25 +10,44 @@ export default async function handler(
         return res.status(405).json({ success: false, message: 'Method not allowed' });
     }
 
-    const { storeId = config.store.id, locale = 'en' } = req.query;
+    const storeId = (req.query.storeId as string) || config.store.id;
+    const currency = config.store.currency || 'EGP';
+    const locale = config.store.locale || 'ar';
     const apiToken = config.api.token;
 
     const headers: HeadersInit = {
         'api-token': apiToken || '',
-        'Content-Type': 'application/json'
     };
 
-    if (req.headers.authorization) {
-        headers['Authorization'] = req.headers.authorization;
-    }
 
-    const url = `${config.api.baseUrl}/checkout/emptycart?storeId=${storeId}`;
+    const token = getAuthToken(req);
+    const params = new URLSearchParams({
+        storeId,
+        quoteId: '0',
+        currency,
+        locale,
+    });
+    if (token) params.append('token', token);
+
+    const url = `${config.api.baseUrl}/checkout/emptycart?${params.toString()}`;
+
+    console.log('[EmptyCart] URL:', url);
 
     try {
         const response = await fetch(url, {
-            method: 'POST', // Assuming POST for empty cart action
+            method: 'POST',
             headers
         });
+
+        const contentType = response.headers.get('content-type');
+        if (!contentType || !contentType.includes('application/json')) {
+            const text = await response.text();
+            console.error('Non-JSON response from Markatty emptycart:', text.substring(0, 300));
+            return res.status(response.status || 500).json({
+                success: false,
+                message: 'Unexpected response from cart service'
+            });
+        }
 
         const data = await response.json();
 

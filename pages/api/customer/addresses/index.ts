@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { config } from '@/lib/config';
+import { addAuthHeader } from '@/lib/auth-cookies';
 
 export default async function handler(
     req: NextApiRequest,
@@ -12,9 +13,7 @@ export default async function handler(
         'Content-Type': 'application/json'
     };
 
-    if (req.headers.authorization) {
-        headers['Authorization'] = req.headers.authorization;
-    }
+    addAuthHeader(req, headers);
 
     if (req.method === 'POST') {
         // Create address

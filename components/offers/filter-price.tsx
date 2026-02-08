@@ -1,14 +1,12 @@
 "use client";
 
 import React from "react";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Label } from "@/components/ui/label";
 
 interface PriceRange {
     id: string;
     label: string;
     min: number;
-    max: number | null; // null means no upper limit
+    max: number | null;
 }
 
 interface FilterPriceProps {
@@ -21,55 +19,53 @@ export default function FilterPrice({
     onPriceChange,
 }: FilterPriceProps) {
     const priceRanges: PriceRange[] = [
-        { id: "under-200", label: "أقل من 200 ريال", min: 0, max: 200 },
-        { id: "200-400", label: "200 - 400 ريال", min: 200, max: 400 },
-        { id: "400-600", label: "400 - 600 ريال", min: 400, max: 600 },
-        { id: "600-800", label: "600 - 800 ريال", min: 600, max: 800 },
-        { id: "800-1000", label: "800 - 1000 ريال", min: 800, max: 1000 },
-        { id: "over-1000", label: "أكثر من 1000 ريال", min: 1000, max: null },
+        { id: "under-200", label: "أقل من 200", min: 0, max: 200 },
+        { id: "200-400", label: "200 : 400", min: 200, max: 400 },
+        { id: "400-600", label: "400 : 600", min: 400, max: 600 },
+        { id: "over-600", label: "أكثر من600", min: 600, max: null },
     ];
 
-    const handlePriceChange = (value: string) => {
+    const handlePriceClick = (rangeId: string) => {
         if (!onPriceChange) return;
-        // Toggle: if same as current selection, clear; otherwise set
-        if (selectedRanges[0] === value) {
+        if (selectedRanges[0] === rangeId) {
             onPriceChange([]);
         } else {
-            onPriceChange([value]);
+            onPriceChange([rangeId]);
         }
     };
 
     return (
         <div className="space-y-4">
-            <h3 className="text-lg font-bold text-black text-right">حسب السعر</h3>
-            <RadioGroup
-                value={selectedRanges[0] || ""}
-                onValueChange={handlePriceChange}
-                className="space-y-3"
-            >
-                {priceRanges.map((range) => (
-                    <div
-                        key={range.id}
-                        className="flex items-center justify-end gap-3"
-                        onClick={() => {
-                            if (selectedRanges[0] === range.id) {
-                                onPriceChange?.([]);
-                            }
-                        }}
-                    >
-                        <Label
-                            htmlFor={range.id}
-                            className="text-sm font-normal cursor-pointer text-medium-gray hover:text-black transition-colors"
-                        >
-                            {range.label}
-                        </Label>
-                        <RadioGroupItem
-                            id={range.id}
-                            value={range.id}
-                        />
-                    </div>
-                ))}
-            </RadioGroup>
+            <h3 className="text-xl font-bold text-center text-black">حسب السعر</h3>
+            <div className="flex justify-center">
+                <div className="inline-flex flex-col space-y-3">
+                    {priceRanges.map((range) => {
+                        const isSelected = selectedRanges[0] === range.id;
+                        return (
+                            <div
+                                key={range.id}
+                                className="flex items-center gap-3 cursor-pointer group"
+                                onClick={() => handlePriceClick(range.id)}
+                            >
+                                <span
+                                    className={`inline-block w-3.5 h-3.5 rounded-full border-2 flex-shrink-0 transition-colors duration-200 ${isSelected
+                                        ? "border-black bg-black"
+                                        : "border-gray-400 bg-white group-hover:border-gray-600"
+                                        }`}
+                                />
+                                <span
+                                    className={`text-base transition-colors duration-200 ${isSelected
+                                        ? "font-bold text-black"
+                                        : "text-gray-600 group-hover:text-black"
+                                        }`}
+                                >
+                                    {range.label}
+                                </span>
+                            </div>
+                        );
+                    })}
+                </div>
+            </div>
         </div>
     );
 }

@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { config } from '@/lib/config';
+import { getAuthToken } from '@/lib/auth-cookies';
 
 export default async function handler(
     req: NextApiRequest,
@@ -9,35 +10,49 @@ export default async function handler(
         return res.status(405).json({ success: false, message: 'Method not allowed' });
     }
 
-    const { storeId = config.store.id, locale = 'en' } = req.query;
+    const storeId = (req.query.storeId as string) || config.store.id;
+    const currency = config.store.currency || 'EGP';
+    const locale = config.store.locale || 'ar';
     const apiToken = config.api.token;
 
     const headers: HeadersInit = {
         'api-token': apiToken || '',
-        'Content-Type': 'application/x-www-form-urlencoded'
     };
 
-    if (req.headers.authorization) {
-        headers['Authorization'] = req.headers.authorization;
-    }
 
-    const url = `${config.api.baseUrl}/checkout/updatecart`;
+    const { itemIds, itemQtys, cart_id } = req.body;
+    const cookieToken = getAuthToken(req);
 
-    // Body parsing: itemId, qty
-    const { itemId, qty, token } = req.body;
+    // Markatty expects ALL params as query string (matching Postman: checkout/updatecart)
+    const params = new URLSearchParams();
+    params.append('storeId', storeId);
+    params.append('quoteId', '0');
+    params.append('currency', currency);
+    params.append('locale', locale);
+    if (itemIds) params.append('itemIds', typeof itemIds === 'string' ? itemIds : JSON.stringify(itemIds));
+    if (itemQtys) params.append('itemQtys', typeof itemQtys === 'string' ? itemQtys : JSON.stringify(itemQtys));
+    if (cart_id) params.append('cart_id', String(cart_id));
+    if (cookieToken) params.append('token', cookieToken);
 
-    const bodyParams = new URLSearchParams();
-    bodyParams.append('storeId', storeId as string);
-    if (itemId) bodyParams.append('itemId', itemId.toString());
-    if (qty) bodyParams.append('qty', qty.toString());
-    if (token) bodyParams.append('token', token);
+    const url = `${config.api.baseUrl}/checkout/updatecart?${params.toString()}`;
+
+    console.log('[UpdateCart] URL:', url);
 
     try {
         const response = await fetch(url, {
             method: 'POST',
             headers,
-            body: bodyParams
         });
+
+        const contentType = response.headers.get('content-type');
+        if (!contentType || !contentType.includes('application/json')) {
+            const text = await response.text();
+            console.error('Non-JSON response from Markatty updatecart:', text.substring(0, 300));
+            return res.status(response.status || 500).json({
+                success: false,
+                message: 'Unexpected response from cart service'
+            });
+        }
 
         const data = await response.json();
 

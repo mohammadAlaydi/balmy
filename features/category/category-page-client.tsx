@@ -24,7 +24,7 @@ export default function CategoryPageClient({ categoryId }: Props) {
   const [selectedPriceRanges, setSelectedPriceRanges] = useState<string[]>([]);
   const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
   const [sortBy, setSortBy] = useState("suggestions");
-  const [visibleCount, setVisibleCount] = useState(9); // Initial visible count
+  const [visibleCount, setVisibleCount] = useState(9);
 
   const products = categoryProducts?.data || [];
 
@@ -40,14 +40,19 @@ export default function CategoryPageClient({ categoryId }: Props) {
         if (!matchesRating) return false;
       }
 
-      // Brand filter (if you have brand data)
-      // if (selectedBrands.length > 0 && !selectedBrands.includes(product.brand)) {
-      //     return false;
-      // }
+      // Price filter
+      if (selectedPriceRanges.length > 0) {
+        const price = Number(product.price) || 0;
+        const range = selectedPriceRanges[0];
+        if (range === "under-200" && price >= 200) return false;
+        if (range === "200-400" && (price < 200 || price >= 400)) return false;
+        if (range === "400-600" && (price < 400 || price >= 600)) return false;
+        if (range === "over-600" && price < 600) return false;
+      }
 
       return true;
     });
-  }, [products, selectedRatings, selectedBrands]);
+  }, [products, selectedRatings, selectedPriceRanges, selectedBrands]);
 
   // Reset visible count when filters change
   useEffect(() => {
@@ -103,32 +108,34 @@ export default function CategoryPageClient({ categoryId }: Props) {
 
   return (
     <div className="min-h-screen bg-white" dir="rtl">
-      <div className="container mx-auto px-4 py-40 ">
-        {/* Breadcrumb and Filter Button */}
-        <div className="mb-6 flex items-center justify-between">
-          <div className="flex-1">
-            <BreadcrumbBalmy items={breadcrumbItems} className="justify-start" />
-          </div>
-          <div className="lg:hidden">
-            <SideFilter
-              selectedCategories={selectedCategories}
-              selectedRatings={selectedRatings}
-              selectedPriceRanges={selectedPriceRanges}
-              selectedBrands={selectedBrands}
-              onCategoryChange={setSelectedCategories}
-              onRatingChange={setSelectedRatings}
-              onPriceChange={setSelectedPriceRanges}
-              onBrandChange={setSelectedBrands}
-            />
-          </div>
+      <div className="container mx-auto px-4 pt-32 pb-12">
+        {/* Breadcrumb */}
+        <div className="mb-8">
+          <BreadcrumbBalmy items={breadcrumbItems} className="justify-start" />
+        </div>
+
+        {/* Mobile Filter Button - visible only on small screens */}
+        <div className="lg:hidden mb-4">
+          <SideFilter
+            activeCategoryId={categoryId}
+            selectedCategories={selectedCategories}
+            selectedRatings={selectedRatings}
+            selectedPriceRanges={selectedPriceRanges}
+            selectedBrands={selectedBrands}
+            onCategoryChange={setSelectedCategories}
+            onRatingChange={setSelectedRatings}
+            onPriceChange={setSelectedPriceRanges}
+            onBrandChange={setSelectedBrands}
+          />
         </div>
 
         {/* 2-Column Layout */}
-        <div className="flex flex-col lg:flex-row gap-8 relative">
-          {/* Right Column - Sidebar (25%) */}
-          <aside className="hidden lg:block lg:w-1/4">
-            <div className="sticky top-6">
+        <div className="flex flex-col lg:flex-row gap-10">
+          {/* Right Column - Sidebar (22%) */}
+          <aside className="hidden lg:block lg:w-[22%] flex-shrink-0">
+            <div className="sticky top-28">
               <SideFilter
+                activeCategoryId={categoryId}
                 selectedCategories={selectedCategories}
                 selectedRatings={selectedRatings}
                 selectedPriceRanges={selectedPriceRanges}
@@ -140,20 +147,19 @@ export default function CategoryPageClient({ categoryId }: Props) {
               />
             </div>
           </aside>
-          {/* Vertical separator line - only visible on desktop */}
-          <div className="hidden lg:block absolute top-0 bottom-0 w-px bg-gray-300" style={{ right: "calc(25% - 1rem)" }}></div>
 
-          {/* Left Column - Main Content (75%) */}
-          <main className="lg:w-3/4 w-full">
-            {/* Top Bar */}
-            <div className="mb-6 flex flex-col md:flex-row justify-end items-start md:items-center gap-4">
-              {/* Removed Breadcrumb from here */}
+          {/* Vertical divider line */}
+          <div className="hidden lg:block w-px bg-gray-200 self-stretch" />
 
-              {/* Left: Sort Select */}
-              <div className="order-2 flex items-center gap-3">
-                <span className="text-sm font-medium text-black">ترتيب:</span>
+          {/* Left Column - Main Content */}
+          <main className="flex-1 min-w-0">
+            {/* Top Bar - Sort + Count */}
+            <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
+              {/* Sort Select */}
+              <div className="flex items-center gap-3">
+                <span className="text-sm font-medium text-black whitespace-nowrap">ترتيب:</span>
                 <Select value={sortBy} onValueChange={setSortBy}>
-                  <SelectTrigger className="w-[200px]">
+                  <SelectTrigger className="w-[180px] border-gray-300">
                     <SelectValue placeholder="اختر الترتيب" />
                   </SelectTrigger>
                   <SelectContent>
@@ -169,11 +175,9 @@ export default function CategoryPageClient({ categoryId }: Props) {
                   </SelectContent>
                 </Select>
               </div>
-            </div>
 
-            {/* Products Count */}
-            <div className="mb-6">
-              <p className="text-sm text-medium-gray">
+              {/* Products Count */}
+              <p className="text-sm text-gray-500">
                 عرض {sortedProducts.length} من المنتجات
               </p>
             </div>
@@ -181,9 +185,9 @@ export default function CategoryPageClient({ categoryId }: Props) {
             {/* Product Grid - 3 products per row on desktop */}
             {visibleProducts.length > 0 ? (
               <>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                   {visibleProducts.map((product: any) => (
-                    <div key={product.id} className="w-full max-w-sm mx-auto">
+                    <div key={product.id} className="w-full">
                       <ProductCard product={product} />
                     </div>
                   ))}
@@ -191,9 +195,9 @@ export default function CategoryPageClient({ categoryId }: Props) {
 
                 {/* Load More Button */}
                 {visibleCount < sortedProducts.length && (
-                  <div className="flex justify-center mt-8">
+                  <div className="flex justify-center mt-10">
                     <button
-                      className="bg-black text-white px-12 py-3 rounded-lg font-medium hover:bg-dark-gray-3 transition-colors duration-300"
+                      className="bg-black text-white px-16 py-3 rounded-lg font-medium hover:bg-gray-800 transition-colors duration-300 text-sm"
                       onClick={handleLoadMore}
                     >
                       تحميل المزيد
@@ -203,13 +207,13 @@ export default function CategoryPageClient({ categoryId }: Props) {
               </>
             ) : (
               /* Empty State */
-              <div className="flex flex-col items-center justify-center py-16 text-center min-h-[65vh]">
+              <div className="flex flex-col items-center justify-center py-20 text-center min-h-[50vh]">
                 <div className="text-6xl mb-4">🔍</div>
                 <h3 className="text-xl font-bold text-black mb-2">
                   لا توجد نتائج
                 </h3>
-                <p className="text-medium-gray">
-                  {selectedRatings.length > 0 || selectedBrands.length > 0
+                <p className="text-gray-500">
+                  {selectedRatings.length > 0 || selectedBrands.length > 0 || selectedPriceRanges.length > 0
                     ? "حاول تغيير الفلاتر أو البحث عن منتجات أخرى"
                     : t("no-products-found") || "لا توجد منتجات في هذا التصنيف"}
                 </p>

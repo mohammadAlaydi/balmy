@@ -1,6 +1,14 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { config } from '@/lib/config';
+import { addAuthHeader } from '@/lib/auth-cookies';
 
+/**
+ * GET /api/catalog/getCategorylist
+ * 
+ * Markatty does NOT have a standalone /catalog/categories endpoint.
+ * Categories come from the homepage endpoint (/catalog/homepage).
+ * This proxy fetches the homepage and extracts the categories array.
+ */
 export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse
@@ -8,11 +16,13 @@ export default async function handler(
     const {
         storeId = config.store.id,
         currency = 'EGP',
-        locale = 'en'
+        locale = 'en',
+        width = '1080',
+        mFactor = '2.625'
     } = req.query;
 
-    // Markatty uses /catalog/categories (not getCategorylist)
-    const url = `${config.api.baseUrl}/catalog/categories?storeId=${storeId}&currency=${currency}&locale=${locale}`;
+    // Fetch homepage to get categories (Markatty doesn't have a standalone categories endpoint)
+    const url = `${config.api.baseUrl}/catalog/homepage?storeId=${storeId}&currency=${currency}&locale=${locale}&width=${width}&mFactor=${mFactor}`;
 
     const apiToken = config.api.token;
     const headers: HeadersInit = {
@@ -20,9 +30,7 @@ export default async function handler(
         'Content-Type': 'application/json'
     };
 
-    if (req.headers.authorization) {
-        headers['Authorization'] = req.headers.authorization;
-    }
+    addAuthHeader(req, headers);
 
     try {
         const response = await fetch(url, { headers });
@@ -33,7 +41,14 @@ export default async function handler(
         }
 
         const data = await response.json();
-        res.status(200).json(data);
+
+        // Extract categories from homepage data
+        const categories = data.categories || [];
+
+        res.status(200).json({
+            success: true,
+            categories,
+        });
     } catch (error) {
         console.error('Categories API Error:', error);
         res.status(500).json({ success: false, message: "Internal Server Error" });

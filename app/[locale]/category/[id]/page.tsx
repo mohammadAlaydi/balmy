@@ -7,20 +7,22 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL;
 export async function generateMetadata({
   params,
 }: {
-  params: { id: string; locale?: string };
+  params: Promise<{ id: string; locale?: string }>;
 }): Promise<Metadata> {
+  const { id, locale } = await params;
+
   // DEV MODE: Return mock metadata when backend is disabled
   if (DISABLE_BACKEND_FETCH) {
-    const mockCategory = MOCK_CATEGORIES.find(c => c.id.toString() === params.id) || MOCK_CATEGORIES[0];
+    const mockCategory = MOCK_CATEGORIES.find(c => c.id.toString() === id) || MOCK_CATEGORIES[0];
     return {
       title: mockCategory?.name || "Category (Dev Mode)",
     };
   }
 
   try {
-    const locale = params.locale || "en";
+    const loc = locale || "en";
 
-    const res = await fetch(`${API_URL}/v1/categories?locale=${locale}`, {
+    const res = await fetch(`${API_URL}/v1/categories?locale=${loc}`, {
       headers: { accept: "application/json" },
       next: { revalidate: 3600 },
     });
@@ -29,14 +31,13 @@ export async function generateMetadata({
 
     const data = await res.json();
 
-    // Find category by id (cast to string to match params.id)
+    // Find category by id
     const category = data?.categories?.find(
-      (cat: any) => cat?.id.toString() === params.id.toString()
+      (cat: any) => cat?.id.toString() === id.toString()
     );
 
-
     return {
-      title: category?.name,
+      title: category?.name || "Category",
     };
   } catch (error) {
     console.error("Failed to fetch category metadata:", error);
@@ -46,11 +47,11 @@ export async function generateMetadata({
   }
 }
 
-export default function Page({
+export default async function Page({
   params,
 }: {
-  params: { id: string; locale?: string };
+  params: Promise<{ id: string; locale?: string }>;
 }) {
-  return <CategoryPageClient categoryId={params.id} />;
+  const { id } = await params;
+  return <CategoryPageClient categoryId={id} />;
 }
-

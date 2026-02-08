@@ -1,158 +1,142 @@
 "use client";
 
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useTranslations } from "next-intl";
+import { usePathname } from "next/navigation";
 import toast from "react-hot-toast";
-
 import type { AppDispatch, RootState } from "@/store/store";
-import type { Product } from "@/types/types";
-
 import {
-  addToFavourites,
-  removeFromFavourites,
-  fetchFavourites,
-  clearFavourites,
-  toggleFavourite,
-  clearError,
-  moveToCart,
-  syncWithBackend,
-} from "@/store/slices/favourite-slice";
+  getWishlist,
+  addToWishlist,
+  removeFromWishlist,
+  moveWishlistToCart,
+} from "@/store/slices/wishlist-slice";
 
-export const useFavourites = () => {
+export function useFavourites() {
   const dispatch = useDispatch<AppDispatch>();
   const t = useTranslations("favourites");
-  const hasFetchedRef = useRef(false);
+  const pathname = usePathname();
+  const locale = pathname?.split("/")[1] || "ar";
 
-  const { items, loading, error } = useSelector(
-    (state: RootState) => state.favourites
+  const { items: favourites, isLoading, error } = useSelector(
+    (state: RootState) => state.wishlist
   );
-  const { user } = useSelector((state: RootState) => state.auth);
-  const isAuthenticated = !!user;
 
-  // ------------------------- Actions -------------------------
+  /** Fetch favourites from the API */
+  const fetchFavourites = useCallback(() => {
+    dispatch(getWishlist());
+  }, [dispatch]);
 
-  const addToFavouritesHandler = useCallback(
-    async (product: Product) => {
-      const result = await dispatch(addToFavourites(product));
-      if (addToFavourites.rejected.match(result)) {
-        throw (result.payload as string) || t("errorAddingProduct");
-      }
-      return result;
+  /** Check whether a product is in the favourites list */
+  const isFavourite = useCallback(
+    (productId: number): boolean => {
+      return favourites.some(
+        (item: any) =>
+          item?.id === productId ||
+          item?.product_id === productId ||
+          item?.product?.id === productId
+      );
     },
-    [dispatch, t]
+    [favourites]
   );
 
-  const removeFromFavouritesHandler = useCallback(
-    async (productId: number) => {
-      const result = await dispatch(removeFromFavourites(productId));
-      if (removeFromFavourites.rejected.match(result)) {
-        throw (result.payload as string) || t("errorRemovingProduct");
-      }
-      return result;
+  /** Add a product to favourites */
+  const addToFavourites = useCallback(
+    async (product: any) => {
+      const id = product?.id || product?.product_id;
+      if (!id) return;
+      await dispatch(addToWishlist(Number(id))).unwrap();
     },
-    [dispatch, t]
-  );
-
-  const fetchFavouritesHandler = useCallback(async () => {
-    if (!isAuthenticated) return;
-    await dispatch(fetchFavourites());
-  }, [dispatch, isAuthenticated]);
-
-  const clearFavouritesHandler = useCallback(async () => {
-    const result = await dispatch(clearFavourites());
-    if (clearFavourites.rejected.match(result)) {
-      throw (result.payload as string) || t("errorClearingAll");
-    }
-    return result;
-  }, [dispatch, t]);
-
-  const moveToCartHandler = useCallback(
-    async (wishlistId: number) => {
-      const result = await dispatch(moveToCart(wishlistId));
-      if (moveToCart.rejected.match(result)) {
-        throw new Error((result.payload as string) || t("errorMovingToCart"));
-      }
-      return result;
-    },
-    [dispatch, t]
-  );
-
-  const toggleFavouriteHandler = useCallback(
-    (product: Product) => dispatch(toggleFavourite(product)),
     [dispatch]
   );
 
-  const clearErrorHandler = useCallback(() => dispatch(clearError()), [dispatch]);
-  const syncWithBackendHandler = useCallback(() => dispatch(syncWithBackend()), [dispatch]);
-
-  // ----------------------- Computed -------------------------
-
-  const isFavourite = useCallback(
-    (productId: number) => items.some((item) => item.id === productId),
-    [items]
+  /** Remove a product from favourites */
+  const removeFromFavourites = useCallback(
+    async (productId: number) => {
+      await dispatch(removeFromWishlist(productId)).unwrap();
+    },
+    [dispatch]
   );
 
-  const getFavouritesCount = useCallback(() => items.length, [items]);
-
-  // ------------------------ Effects -------------------------
-
-  useEffect(() => {
-    // Only fetch if authenticated, not already loading, and haven't fetched yet
-    if (isAuthenticated && !loading && !hasFetchedRef.current) {
-      hasFetchedRef.current = true;
-      fetchFavouritesHandler();
-      syncWithBackendHandler();
-    }
-    
-    // Reset the ref if user logs out
-    if (!isAuthenticated) {
-      hasFetchedRef.current = false;
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isAuthenticated]); // Only depend on isAuthenticated to avoid infinite loops
-
-  // ------------------------ Helpers -------------------------
-
+  /** Handler that removes and shows a toast (used by the page) */
   const handleRemoveFromFavourites = useCallback(
     async (productId: number) => {
       try {
-        await removeFromFavouritesHandler(productId);
+        await removeFromFavourites(productId);
         toast.success(t("productRemoved"));
       } catch {
-        toast.error(t("errorRemovingProduct"));
+        toast.error(t("errorTitle"));
       }
     },
-    [removeFromFavouritesHandler, t]
+    [removeFromFavourites, t]
   );
 
+  /** Clear all favourites */
   const handleClearAll = useCallback(async () => {
     try {
-      await clearFavouritesHandler();
+      // Remove each item individually since there is no bulk-clear endpoint
+      await Promise.all(
+        favourites.map((item: any) => {
+          const id = item?.id || item?.product_id;
+          return id ? dispatch(removeFromWishlist(Number(id))).unwrap() : null;
+        })
+      );
       toast.success(t("allCleared"));
     } catch {
-      toast.error(t("errorClearingAll"));
+      toast.error(t("errorTitle"));
     }
-  }, [clearFavouritesHandler, t]);
+  }, [favourites, dispatch, t]);
 
-  return {
-    t,
-    favourites: items,
-    isLoading: loading,
-    error,
-    isAuthenticated,
-    locale: "ar",
-    addToFavourites: addToFavouritesHandler,
-    removeFromFavourites: removeFromFavouritesHandler,
-    fetchFavourites: fetchFavouritesHandler,
-    clearFavourites: clearFavouritesHandler,
-    moveToCart: moveToCartHandler,
-    toggleFavourite: toggleFavouriteHandler,
-    clearError: clearErrorHandler,
-    syncWithBackend: syncWithBackendHandler,
-    isFavourite,
-    getFavouritesCount,
-    handleRemoveFromFavourites,
-    handleClearAll,
-  };
-};
+  /** Get the count of favourites */
+  const getFavouritesCount = useCallback((): number => {
+    return favourites?.length ?? 0;
+  }, [favourites]);
+
+  /** Move an item from favourites (wishlist) to cart using the dedicated Markatty endpoint */
+  const moveToCart = useCallback(
+    async (wishlistItemId: string | number) => {
+      // Find the wishlist item to get both itemId and productId
+      const item = favourites.find(
+        (f: any) => f?.id === Number(wishlistItemId) || f?.product_id === Number(wishlistItemId)
+      );
+      const itemId = item?.id || Number(wishlistItemId);
+      const productId = item?.product_id || item?.product?.id || Number(wishlistItemId);
+      await dispatch(moveWishlistToCart({ itemId, productId, qty: 1 })).unwrap();
+    },
+    [dispatch, favourites]
+  );
+
+  return useMemo(
+    () => ({
+      favourites,
+      isLoading,
+      error,
+      t,
+      locale,
+      isFavourite,
+      addToFavourites,
+      removeFromFavourites,
+      handleRemoveFromFavourites,
+      handleClearAll,
+      getFavouritesCount,
+      fetchFavourites,
+      moveToCart,
+    }),
+    [
+      favourites,
+      isLoading,
+      error,
+      t,
+      locale,
+      isFavourite,
+      addToFavourites,
+      removeFromFavourites,
+      handleRemoveFromFavourites,
+      handleClearAll,
+      getFavouritesCount,
+      fetchFavourites,
+      moveToCart,
+    ]
+  );
+}

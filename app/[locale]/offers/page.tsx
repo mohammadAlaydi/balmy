@@ -1,219 +1,109 @@
 "use client";
 
-import React, { useState, useMemo, useEffect } from "react";
-import ProductCard from "@/components/ProductCard";
-import SideFilter from "@/components/offers/side-filter";
+import React, { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { usePathname } from "next/navigation";
+import Link from "next/link";
+import Image from "next/image";
 import { BreadcrumbBalmy } from "@/components/balmy";
 import Loading from "@/components/loading";
-import useHome from "@/hooks/use-home";
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select";
+import type { RootState, AppDispatch } from "@/store/store";
+import { getHomeData } from "@/store/slices/home-slice";
 
 export default function OffersPage() {
-    // Use the home hook to get homepage data (includes all category products)
-    const { loading, data } = useHome();
+    const dispatch = useDispatch<AppDispatch>();
+    const pathname = usePathname();
+    const locale = pathname?.split("/")[1] || "ar";
 
-    const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-    const [selectedRatings, setSelectedRatings] = useState<number[]>([]);
-    const [selectedPriceRanges, setSelectedPriceRanges] = useState<string[]>([]);
-    const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
-    const [sortBy, setSortBy] = useState("suggestions");
-    const [visibleCount, setVisibleCount] = useState(9);
+    const { data: homeData, loading } = useSelector(
+        (state: RootState) => state.home
+    );
 
-    // Get offers products from homeSections - filter by category name "Offers"
-    const products = useMemo(() => {
-        const homeSections = data?._raw?.homeSections || data?.homeSections || [];
-        const offersSection = homeSections.find(
-            (section: any) =>
-                section.type === 'category' &&
-                (section.data?.categoryName?.toLowerCase() === 'offers' ||
-                    section.data?.categoryName === 'Offers')
-        );
-        return offersSection?.data?.productList || [];
-    }, [data]);
-
-    // Filter products
-    const filteredProducts = useMemo(() => {
-        return products.filter((product: any) => {
-            // Rating filter
-            if (selectedRatings.length > 0) {
-                const productRating = product.reviews?.average_rating || 0;
-                const matchesRating = selectedRatings.some(
-                    (rating) => Math.floor(productRating) === rating
-                );
-                if (!matchesRating) return false;
-            }
-
-            // Brand filter
-            if (selectedBrands.length > 0 && product.brand && !selectedBrands.includes(product.brand)) {
-                return false;
-            }
-
-            return true;
-        });
-    }, [products, selectedRatings, selectedBrands]);
-
-    // Reset visible count when filters change
+    // Fetch home data if not loaded (categories come from homepage)
     useEffect(() => {
-        setVisibleCount(9);
-    }, [selectedCategories, selectedRatings, selectedPriceRanges, selectedBrands, sortBy]);
-
-    // Sort products
-    const sortedProducts = useMemo(() => {
-        const sorted = [...filteredProducts];
-
-        switch (sortBy) {
-            case "price-low-high":
-                return sorted.sort((a, b) => (a.special_price || a.price) - (b.special_price || b.price));
-            case "price-high-low":
-                return sorted.sort((a, b) => (b.special_price || b.price) - (a.special_price || a.price));
-            case "rating":
-                return sorted.sort((a, b) => {
-                    const ratingA = a.reviews?.average_rating || 0;
-                    const ratingB = b.reviews?.average_rating || 0;
-                    return ratingB - ratingA;
-                });
-            case "newest":
-                return sorted.sort((a, b) => (b.new ? 1 : 0) - (a.new ? 1 : 0));
-            default:
-                return sorted;
+        if (!homeData || homeData.locale !== locale) {
+            dispatch(getHomeData(locale));
         }
-    }, [filteredProducts, sortBy]);
+    }, [dispatch, locale]);
 
-    if (loading) {
+    // Categories from homepage data
+    const categories: any[] = homeData?.categories || [];
+    const filteredCategories = categories.filter((cat: any) => cat?.name !== "Root");
+
+    if (loading && filteredCategories.length === 0) {
         return <Loading fullScreen variant="spinner" size="xl" />;
     }
 
     const breadcrumbItems = [
         { label: "الرئيسية", href: "/" },
-        { label: "العروض", href: "/offers" },
+        { label: "التصنيفات", href: "/offers" },
     ];
-
-    const visibleProducts = sortedProducts.slice(0, visibleCount);
-
-    const handleLoadMore = () => {
-        setVisibleCount((prev) => prev + 9);
-    };
 
     return (
         <div className="min-h-screen bg-white" dir="rtl">
             <div className="container mx-auto px-4 py-40">
-                {/* Breadcrumb and Filter Button */}
-                <div className="mb-6 flex items-center justify-between">
-                    <div className="flex-1">
-                        <BreadcrumbBalmy items={breadcrumbItems} className="justify-start" />
-                    </div>
-                    <div className="lg:hidden">
-                        <SideFilter
-                            selectedCategories={selectedCategories}
-                            selectedRatings={selectedRatings}
-                            selectedPriceRanges={selectedPriceRanges}
-                            selectedBrands={selectedBrands}
-                            onCategoryChange={setSelectedCategories}
-                            onRatingChange={setSelectedRatings}
-                            onPriceChange={setSelectedPriceRanges}
-                            onBrandChange={setSelectedBrands}
-                        />
-                    </div>
+                {/* Breadcrumb */}
+                <div className="mb-8">
+                    <BreadcrumbBalmy items={breadcrumbItems} className="justify-start" />
                 </div>
 
-                {/* 2-Column Layout */}
-                <div className="flex flex-col lg:flex-row gap-8 relative">
-                    {/* Right Column - Sidebar (25%) */}
-                    <aside className="hidden lg:block lg:w-1/4">
-                        <div className="sticky top-6">
-                            <SideFilter
-                                selectedCategories={selectedCategories}
-                                selectedRatings={selectedRatings}
-                                selectedPriceRanges={selectedPriceRanges}
-                                selectedBrands={selectedBrands}
-                                onCategoryChange={setSelectedCategories}
-                                onRatingChange={setSelectedRatings}
-                                onPriceChange={setSelectedPriceRanges}
-                                onBrandChange={setSelectedBrands}
-                            />
-                        </div>
-                    </aside>
-                    {/* Vertical separator line - only visible on desktop */}
-                    <div className="hidden lg:block absolute top-0 bottom-0 w-px bg-gray-300" style={{ right: "calc(25% - 1rem)" }}></div>
+                {/* Page Title */}
+                <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-black mb-10 text-right">
+                    تسوق حسب الفئة
+                </h1>
 
-                    {/* Left Column - Main Content (75%) */}
-                    <main className="lg:w-3/4 w-full">
-                        {/* Top Bar */}
-                        <div className="mb-6 flex flex-col md:flex-row justify-end items-start md:items-center gap-4">
-                            {/* Left: Sort Select */}
-                            <div className="order-2 flex items-center gap-3">
-                                <span className="text-sm font-medium text-black">ترتيب:</span>
-                                <Select value={sortBy} onValueChange={setSortBy}>
-                                    <SelectTrigger className="w-[200px]">
-                                        <SelectValue placeholder="اختر الترتيب" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem value="suggestions">الاقتراحات</SelectItem>
-                                        <SelectItem value="price-low-high">
-                                            السعر: من الأقل للأعلى
-                                        </SelectItem>
-                                        <SelectItem value="price-high-low">
-                                            السعر: من الأعلى للأقل
-                                        </SelectItem>
-                                        <SelectItem value="rating">الأعلى تقييماً</SelectItem>
-                                        <SelectItem value="newest">الأحدث</SelectItem>
-                                    </SelectContent>
-                                </Select>
-                            </div>
-                        </div>
-
-                        {/* Products Count */}
-                        <div className="mb-6">
-                            <p className="text-sm text-medium-gray">
-                                عرض {sortedProducts.length} من العروض
-                            </p>
-                        </div>
-
-                        {/* Product Grid - 3 products per row on desktop */}
-                        {visibleProducts.length > 0 ? (
-                            <>
-                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
-                                    {visibleProducts.map((product: any) => (
-                                        <div key={product.id} className="w-full max-w-sm mx-auto">
-                                            <ProductCard product={product} />
+                {/* Categories Grid */}
+                {filteredCategories.length > 0 ? (
+                    <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 gap-6 md:gap-8">
+                        {filteredCategories.map((category: any) => (
+                            <Link
+                                key={category.id}
+                                href={`/${locale}/category/${category.id}`}
+                                className="group flex flex-col items-center gap-3 transition-transform duration-300 hover:scale-105"
+                            >
+                                {/* Category Image Circle */}
+                                <div
+                                    className="relative w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 lg:w-32 lg:h-32 rounded-full overflow-hidden shadow-md group-hover:shadow-xl transition-shadow duration-300"
+                                    style={{ backgroundColor: "#f5f5f5" }}
+                                >
+                                    {category.image || category.banner_url ? (
+                                        <Image
+                                            src={category.image || category.banner_url}
+                                            alt={category.name}
+                                            fill
+                                            className="object-cover"
+                                            sizes="(max-width: 640px) 80px, (max-width: 768px) 96px, (max-width: 1024px) 112px, 128px"
+                                        />
+                                    ) : (
+                                        <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200">
+                                            <span className="text-2xl md:text-3xl font-bold text-gray-400">
+                                                {category.name?.charAt(0)}
+                                            </span>
                                         </div>
-                                    ))}
+                                    )}
+                                    {/* Hover overlay */}
+                                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
                                 </div>
 
-                                {/* Load More Button */}
-                                {visibleCount < sortedProducts.length && (
-                                    <div className="flex justify-center mt-8">
-                                        <button
-                                            className="bg-black text-white px-12 py-3 rounded-lg font-medium hover:bg-dark-gray-3 transition-colors duration-300"
-                                            onClick={handleLoadMore}
-                                        >
-                                            تحميل المزيد
-                                        </button>
-                                    </div>
-                                )}
-                            </>
-                        ) : (
-                            /* Empty State */
-                            <div className="flex flex-col items-center justify-center py-16 text-center min-h-[65vh]">
-                                <div className="text-6xl mb-4">🔍</div>
-                                <h3 className="text-xl font-bold text-black mb-2">
-                                    لا توجد عروض
-                                </h3>
-                                <p className="text-medium-gray">
-                                    {selectedRatings.length > 0 || selectedBrands.length > 0
-                                        ? "حاول تغيير الفلاتر أو البحث عن منتجات أخرى"
-                                        : "لا توجد عروض متاحة حالياً"}
+                                {/* Category Name */}
+                                <p className="text-xs sm:text-sm md:text-base text-center text-gray-700 group-hover:text-black transition-colors duration-300 line-clamp-2 font-medium">
+                                    {category.name}
                                 </p>
-                            </div>
-                        )}
-                    </main>
-                </div>
+                            </Link>
+                        ))}
+                    </div>
+                ) : (
+                    /* Empty State */
+                    <div className="flex flex-col items-center justify-center py-16 text-center min-h-[50vh]">
+                        <div className="text-6xl mb-4">📂</div>
+                        <h3 className="text-xl font-bold text-black mb-2">
+                            لا توجد تصنيفات
+                        </h3>
+                        <p className="text-medium-gray">
+                            لا توجد تصنيفات متاحة حالياً
+                        </p>
+                    </div>
+                )}
             </div>
         </div>
     );

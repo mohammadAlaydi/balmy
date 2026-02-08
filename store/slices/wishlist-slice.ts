@@ -86,6 +86,31 @@ export const removeFromWishlist = createAsyncThunk(
     }
 );
 
+// 🔄 Move Wishlist Item to Cart
+export const moveWishlistToCart = createAsyncThunk(
+    "wishlist/moveToCart",
+    async ({ itemId, productId, qty = 1 }: { itemId: number; productId: number; qty?: number }, { rejectWithValue, dispatch }) => {
+        try {
+            if (DISABLE_BACKEND_FETCH) {
+                await mockDelay();
+                dispatch(getWishlist());
+                return { success: true, message: "Moved to cart (mock)" };
+            }
+            const res = await authenticatedFetch("/api/customer/wishlisttocart", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ itemId, productId, qty }),
+            });
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.message || "Failed to move to cart");
+            dispatch(getWishlist());
+            return data;
+        } catch (err: any) {
+            return rejectWithValue(err.message);
+        }
+    }
+);
+
 const wishlistSlice = createSlice({
     name: "wishlist",
     initialState,

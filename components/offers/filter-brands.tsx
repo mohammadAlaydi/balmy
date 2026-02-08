@@ -1,8 +1,6 @@
 "use client";
 
 import React from "react";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Label } from "@/components/ui/label";
 
 interface Brand {
     id: string;
@@ -19,59 +17,59 @@ export default function FilterBrands({
     selectedBrands = [],
     onBrandChange,
 }: FilterBrandsProps) {
-    // Sample brands with product counts
     const brands: Brand[] = [
         { id: "dior", name: "ديور", count: 23 },
-        { id: "gucci", name: "غوتشي", count: 18 },
-        { id: "chanel", name: "شانيل", count: 31 },
-        { id: "ysl", name: "سان لوران", count: 15 },
-        { id: "versace", name: "فيرزاتشي", count: 12 },
-        { id: "armani", name: "أرماني", count: 27 },
-        { id: "burberry", name: "بربري", count: 9 },
-        { id: "prada", name: "برادا", count: 14 },
+        { id: "dolce", name: "دولشي", count: 12 },
+        { id: "dolce-gabbana", name: "دولشي جابانا", count: 74 },
+        { id: "chanel", name: "شانيل", count: 34 },
+        { id: "exclusive", name: "حصريات", count: 32 },
+        { id: "giorgio-armani", name: "جورجيو اماني", count: 65 },
+        { id: "ysl", name: "اف سان لوران", count: 8 },
+        { id: "givenchy", name: "جفنشي", count: 23 },
+        { id: "versace", name: "فيرزاتشي", count: 19 },
+        { id: "guerlain", name: "جيرلان", count: 54 },
+        { id: "jean-paul", name: "جان بول", count: 11 },
+        { id: "gucci", name: "غوتشي", count: 84 },
     ];
 
-    const handleBrandChange = (value: string) => {
+    const handleBrandChange = (brandId: string) => {
         if (!onBrandChange) return;
-        // Toggle: clear if already selected
-        if (selectedBrands[0] === value) {
+        if (selectedBrands[0] === brandId) {
             onBrandChange([]);
         } else {
-            onBrandChange([value]);
+            onBrandChange([brandId]);
         }
     };
 
     return (
         <div className="space-y-4">
-            <h3 className="text-lg font-bold text-black text-right">حسب الماركة</h3>
-            <RadioGroup
-                value={selectedBrands[0] || ""}
-                onValueChange={handleBrandChange}
-                className="space-y-3"
-            >
-                {brands.map((brand) => (
-                    <div
-                        key={brand.id}
-                        className="flex items-center justify-end gap-3"
-                        onClick={() => {
-                            if (selectedBrands[0] === brand.id) {
-                                onBrandChange?.([]);
-                            }
-                        }}
-                    >
-                        <Label
-                            htmlFor={brand.id}
-                            className="text-sm font-normal cursor-pointer text-medium-gray hover:text-black transition-colors"
-                        >
-                            {brand.name}
-                        </Label>
-                        <RadioGroupItem
-                            id={brand.id}
-                            value={brand.id}
-                        />
-                    </div>
-                ))}
-            </RadioGroup>
+            <h3 className="text-xl font-bold text-center text-black">حسب الماركة</h3>
+            <div className="flex justify-center">
+                <div className="inline-flex flex-col space-y-2.5">
+                    {brands.map((brand) => {
+                        const isSelected = selectedBrands[0] === brand.id;
+                        return (
+                            <div
+                                key={brand.id}
+                                className="flex items-center gap-3 cursor-pointer group"
+                                onClick={() => handleBrandChange(brand.id)}
+                            >
+                                <span className="text-base text-gray-400 font-medium min-w-[24px] text-center">
+                                    {brand.count}
+                                </span>
+                                <span
+                                    className={`text-base transition-colors duration-200 ${isSelected
+                                        ? "font-bold text-black"
+                                        : "text-gray-600 group-hover:text-black"
+                                        }`}
+                                >
+                                    {brand.name}
+                                </span>
+                            </div>
+                        );
+                    })}
+                </div>
+            </div>
         </div>
     );
 }
