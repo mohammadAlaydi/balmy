@@ -11,13 +11,41 @@ export default async function handler(
     }
 
     const { storeId = config.store.id } = req.query;
+    const currency = config.store.currency;
+    const locale = config.store.locale;
 
-    const url = `${config.api.baseUrl}/customer/profile?storeId=${storeId}`;
+    // Extract token from Authorization header or request body
+    const authToken = req.headers.authorization?.replace('Bearer ', '') || req.body?.token;
+
+    // Build query params for Markatty saveaccountinfo endpoint
+    const params = new URLSearchParams();
+
+    // Profile fields
+    if (req.body.firstName || req.body.first_name) params.append('first_name', req.body.firstName || req.body.first_name);
+    if (req.body.lastName || req.body.last_name) params.append('last_name', req.body.lastName || req.body.last_name);
+    if (req.body.email) params.append('email', req.body.email);
+    if (req.body.phone || req.body.mobile) params.append('mobile', req.body.phone || req.body.mobile);
+    if (req.body.gender !== undefined) params.append('gender', req.body.gender === 'female' ? '1' : '0');
+    if (req.body.dob) params.append('dob', req.body.dob);
+
+    // Password change fields (default: no change)
+    params.append('doChangeEmail', req.body.doChangeEmail || '0');
+    params.append('doChangePassword', req.body.doChangePassword || '0');
+    if (req.body.oldpassword) params.append('oldpassword', req.body.oldpassword);
+    if (req.body.password) params.append('password', req.body.password);
+    if (req.body.password_confirmation) params.append('password_confirmation', req.body.password_confirmation);
+
+    // Auth and store params
+    if (authToken) params.append('token', authToken);
+    params.append('storeId', storeId as string);
+    params.append('currency', currency);
+    params.append('locale', locale);
+
+    const url = `${config.api.baseUrl}/customer/saveaccountinfo?${params.toString()}`;
 
     const apiToken = config.api.token;
     const headers: HeadersInit = {
         'api-token': apiToken || '',
-        'Content-Type': 'application/json'
     };
 
     addAuthHeader(req, headers);
@@ -26,7 +54,6 @@ export default async function handler(
         const response = await fetch(url, {
             method: 'POST',
             headers,
-            body: JSON.stringify(req.body)
         });
 
         const contentType = response.headers.get('content-type');

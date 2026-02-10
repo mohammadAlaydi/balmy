@@ -16,7 +16,7 @@ export default async function handler(
     const {
         storeId = config.store.id,
         currency = 'EGP',
-        locale = 'en',
+        locale = 'ar',
         width = '1080',
         mFactor = '2.625'
     } = req.query;

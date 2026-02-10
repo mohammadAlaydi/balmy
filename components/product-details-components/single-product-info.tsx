@@ -16,6 +16,7 @@ import AuthModal from "../auth/auth-modal";
 import toast from "react-hot-toast";
 import UseProductInfo from "@/hooks/use-product-info";
 import { ProductDetailsApiResponse } from "@/types/types";
+import RiyalSymbol from "@/components/RiyalSymbol";
 
 interface SingleProductInfoProps {
   product: ProductDetailsApiResponse["data"];
@@ -86,14 +87,14 @@ export default function SingleProductInfo({
       {/* Price Section */}
       <div className="border-y border-gray-200 py-4">
         <div className="flex items-center gap-3 flex-wrap">
-          <div className="text-2xl font-bold text-red-500 font-cairo">
+          <div className="text-2xl font-bold text-red-500 font-cairo flex items-center gap-1">
             {(hasDiscount ? effectiveSpecial! : effectivePrice).toFixed(2)}{" "}
-            <i className="icon-rial"></i>
+            <RiyalSymbol className="w-4 h-4" />
           </div>
           {hasDiscount && (
             <>
-              <div className="text-lg text-gray-500 line-through font-cairo">
-                {effectivePrice.toFixed(2)} <i className="icon-rial"></i>
+              <div className="text-lg text-gray-500 line-through font-cairo flex items-center gap-1">
+                {effectivePrice.toFixed(2)} <RiyalSymbol className="w-3 h-3" />
               </div>
               <Badge className="bg-red-500 text-white text-xs px-2 py-1 rounded">
                 {t("discount")}

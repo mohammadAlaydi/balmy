@@ -28,6 +28,7 @@ import ProductIncementOrDecrement from "./product-increment-or-decrement";
 import { MdOutlineShoppingCart } from "react-icons/md";
 import StarRating from "./react-stars";
 import { Rating, RatingButton } from "./ui/rating";
+import RiyalSymbol from "./RiyalSymbol";
 
 /* ---------------- Helper Functions ---------------- */
 const calculateProductPrice = (product: any): number => {
@@ -42,6 +43,18 @@ const calculateProductPrice = (product: any): number => {
     .filter((n: any) => typeof n === "number") as number[];
 
   return basePrice ?? (variantPrices.length ? Math.min(...variantPrices) : 0);
+};
+
+const calculateOldPrice = (product: any): number | null => {
+  const specialPrice = product?.special_price ? Number(product.special_price) : null;
+  const originalPrice = product?.original_price ? Number(product.original_price) : null;
+  const regularPrice = product?.price_regular?.value ? Number(product.price_regular.value) : null;
+  const basePrice = Number.isFinite(Number(product?.price)) ? Number(product.price) : null;
+
+  if (originalPrice && originalPrice > 0) return originalPrice;
+  if (specialPrice && specialPrice > 0 && basePrice && basePrice > specialPrice) return basePrice;
+  if (regularPrice && regularPrice > 0) return regularPrice;
+  return null;
 };
 
 const findCartItem = (cartData: any, productId: number) => {
@@ -111,6 +124,7 @@ export default function ProductCard({
   const hoverImageUrl = getHoverImage(product, selectedVariantIndex ?? 0);
   const isInStock = product?.in_stock ?? product?.inStock ?? false;
   const productPrice = calculateProductPrice(product);
+  const oldPrice = calculateOldPrice(product);
 
   const productId = resolveProductId(product, chosenVariantId);
   const isInCart = productId ? isProductInCart(cartData, productId) : false;
@@ -394,9 +408,14 @@ export default function ProductCard({
 
         {/* Price + Rating */}
         <div className="flex items-center justify-between">
-          <p className="font-bold text-sm sm:text-base">
-            {productPrice.toFixed(2)} <i className="icon-rial"></i>
+          <p className="font-bold text-sm sm:text-base flex items-center gap-1">
+            {productPrice.toFixed(2)} <RiyalSymbol className="w-3 h-3" />
           </p>
+          {oldPrice && oldPrice > productPrice && (
+            <p className="text-xs sm:text-sm text-gray-400 line-through flex items-center gap-1">
+              {oldPrice.toFixed(2)} <RiyalSymbol className="w-2.5 h-2.5" />
+            </p>
+          )}
           <div className="hidden sm:flex items-center gap-1 bg-gray-100 px-2 rounded-full w-fit shadow-sm">
             <Rating readOnly value={Math.floor(Number((product?.reviews as any)?.average_rating || 4.5))} max={5}>
               {Array.from({ length: 5 }).map((_, i) => (

@@ -15,6 +15,7 @@ import { ApiProduct } from "@/types/types";
 import LoadingSpinner from "./ui/loading-spinner";
 import toast from "react-hot-toast";
 import AuthModal from "./auth/auth-modal";
+import RiyalSymbol from "./RiyalSymbol";
 
 interface QuickProductDetailsProps {
   product: ApiProduct;
@@ -132,8 +133,8 @@ export default function QuickProductDetails({
       >
         {product.in_stock ? t("in-stock") : t("out-of-stock")}
       </p>
-      <p className="text-gray-700 font-semibold text-sm md:text-base">
-        {product.price || 0.0} <i className="icon-rial"></i>
+      <p className="text-gray-700 font-semibold text-sm md:text-base flex items-center gap-1">
+        {product.price || 0.0} <RiyalSymbol className="w-3 h-3" />
       </p>
     </div>
   );

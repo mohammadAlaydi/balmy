@@ -52,6 +52,7 @@ export default function ProductDetailsBalmy({
     className,
 }: ProductDetailsBalmyProps) {
     const t = useTranslations("product-details");
+    const tNav = useTranslations("navigation");
 
     // Helper function to get image URL from various formats
     const getImageUrl = (img: any): string => {
@@ -96,15 +97,15 @@ export default function ProductDetailsBalmy({
     const getCategoryBreadcrumb = () => {
         // Import categories from dev-config
         const categories = [
-            { id: 1, name: "الماركــــــات", slug: "brands" },
-            { id: 2, name: "العــــــروض", slug: "offers" },
-            { id: 3, name: "الأكثــر مبيعـــاً", slug: "best-sellers" },
-            { id: 4, name: "رجـــالي", slug: "men" },
-            { id: 5, name: "نســائي", slug: "women" },
-            { id: 6, name: "للجنســين", slug: "unisex" },
-            { id: 7, name: "نيــــش", slug: "niche" },
-            { id: 8, name: "حصــــري", slug: "exclusive" },
-            { id: 9, name: "اطقم ومجموعات", slug: "sets-collections" },
+            { id: 1, name: tNav("brands"), slug: "brands" },
+            { id: 2, name: tNav("offers"), slug: "offers" },
+            { id: 3, name: tNav("best-sellers"), slug: "best-sellers" },
+            { id: 4, name: tNav("men"), slug: "men" },
+            { id: 5, name: tNav("women"), slug: "women" },
+            { id: 6, name: tNav("unisex"), slug: "unisex" },
+            { id: 7, name: tNav("niche"), slug: "niche" },
+            { id: 8, name: tNav("exclusive"), slug: "exclusive" },
+            { id: 9, name: tNav("sets-collections"), slug: "sets-collections" },
         ];
 
         // Get the first category ID from the product
@@ -113,12 +114,12 @@ export default function ProductDetailsBalmy({
 
         return category
             ? { label: category.name, href: `/${locale}/${category.slug}` }
-            : { label: t("products") || "المنتجات", href: `/${locale}/category` };
+            : { label: t("products"), href: `/${locale}/category` };
     };
 
     // Breadcrumb items
     const breadcrumbItems = [
-        { label: t("home") || "الرئيسية", href: `/${locale}` },
+        { label: tNav("home"), href: `/${locale}` },
         getCategoryBreadcrumb(),
         { label: product.name },
     ];

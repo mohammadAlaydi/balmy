@@ -4,7 +4,7 @@ import { transformProduct } from "@/lib/markatty-transformer";
 
 export const getCategoryProducts = createAsyncThunk(
   "categories/products",
-  async ({ id, page = 1 }: { id: string | number; page?: number }, { rejectWithValue }) => {
+  async ({ id, page = 1, locale = 'ar' }: { id: string | number; page?: number; locale?: string }, { rejectWithValue }) => {
     try {
       // DEV MODE: Return mock data when backend is disabled
       if (DISABLE_BACKEND_FETCH) {
@@ -13,7 +13,7 @@ export const getCategoryProducts = createAsyncThunk(
         return MOCK_CATEGORY_PRODUCTS(id);
       }
 
-      const response = await fetch(`/api/catalog/categoryproducts?categoryId=${id}&page=${page}`, {
+      const response = await fetch(`/api/catalog/categoryproducts?categoryId=${id}&page=${page}&locale=${locale}`, {
         method: "GET",
         credentials: "include",
       });

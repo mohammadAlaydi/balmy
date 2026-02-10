@@ -12,6 +12,7 @@ import { FavouriteButton } from "./favourite-button";
 import { useRouter } from "next/navigation";
 import ProductIncementOrDecrement from "./product-increment-or-decrement";
 import { Badge } from "./ui/badge";
+import RiyalSymbol from "./RiyalSymbol";
 
 interface CartProductProps {
   product: any;
@@ -60,8 +61,8 @@ export default function CartProduct({
           </div>
 
           <div className="flex flex-col gap-2">
-            <p className="text-xs sm:text-sm md:text-base text-gray-color">
-              {product?.price} <i className="icon-rial"></i>
+            <p className="text-xs sm:text-sm md:text-base text-gray-color flex items-center gap-1">
+              {product?.price} <RiyalSymbol className="w-3 h-3" />
             </p>
             <div className="scale-[0.85] sm:scale-100">
               <div className="flex items-center gap-1 bg-gray-100 px-2 rounded-full w-fit shadow-sm">

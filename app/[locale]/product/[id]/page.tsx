@@ -95,13 +95,13 @@ export async function generateMetadata({
 export default async function ProductDetailsPage({
   params,
 }: ProductDetailsPageProps) {
-  const { id } = await params;
+  const { id, locale } = await params;
   const productId = parseInt(id);
   if (isNaN(productId)) notFound();
 
   return (
     <PageWrapper>
-      <ProductPageStatus productId={productId} />
+      <ProductPageStatus productId={productId} locale={locale} />
     </PageWrapper>
   );
 }

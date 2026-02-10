@@ -119,7 +119,7 @@ export default function ReviewsSectionBalmy({
                                 />
                             </div>
                             <span className="text-sm text-gray-500 dark:text-gray-400 font-cairo">
-                                عدد التقييمات {ratingStats.total}
+                                {t("number-of-reviews")} {ratingStats.total}
                             </span>
                         </div>
 
@@ -147,10 +147,10 @@ export default function ReviewsSectionBalmy({
                         {/* Write Review Button */}
                         <div className="flex flex-col items-center">
                             <button className="bg-gray-900 hover:bg-gray-800 dark:bg-white dark:text-gray-900 dark:hover:bg-gray-200 text-white px-10 py-3 rounded-full font-bold mb-3 transition-colors shadow-lg font-cairo">
-                                سجل تقييمك
+                                {t("write-review-button")}
                             </button>
                             <span className="text-xs text-gray-400 font-cairo">
-                                الشروط والأحكام الخاصة بالنشر
+                                {t("terms-and-conditions")}
                             </span>
                         </div>
                     </div>
@@ -199,7 +199,7 @@ export default function ReviewsSectionBalmy({
                                         {review.content}
                                     </p>
                                     <a className="text-blue-600 dark:text-blue-400 text-sm font-semibold hover:underline font-cairo" href="#">
-                                        موصي به
+                                        {t("recommended")}
                                     </a>
                                 </div>
 

@@ -17,6 +17,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { resetStatus } from "@/store/slices/cart-slice";
 import { useEffect, useState } from "react";
 import Checkout from "./checkout";
+import RiyalSymbol from "@/components/RiyalSymbol";
 
 interface CouponFormData {
   coupon: string;
@@ -143,9 +144,9 @@ export default function OrderSummary({ data }: { data: any }) {
           </Badge>
           <Badge
             variant="outline"
-            className="text-sm bg-transparent text-gray-color border-gray-200 bg-gray-50"
+            className="text-sm bg-transparent text-gray-color border-gray-200 bg-gray-50 flex items-center gap-1"
           >
-            {subtotal.toFixed(2)} <i className="icon-rial"></i>
+            {subtotal.toFixed(2)} <RiyalSymbol className="w-2.5 h-2.5" />
           </Badge>
         </div>
         {/* TAX */}
@@ -157,9 +158,9 @@ export default function OrderSummary({ data }: { data: any }) {
           </Badge>
           <Badge
             variant="outline"
-            className="text-sm bg-transparent text-gray-color border-gray-200 bg-gray-50"
+            className="text-sm bg-transparent text-gray-color border-gray-200 bg-gray-50 flex items-center gap-1"
           >
-            {tax.toFixed(2)} <i className="icon-rial"></i>
+            {tax.toFixed(2)} <RiyalSymbol className="w-2.5 h-2.5" />
           </Badge>
         </div>
         <hr className="border-gray-200" />
@@ -173,9 +174,9 @@ export default function OrderSummary({ data }: { data: any }) {
           </Badge>
           <Badge
             variant="outline"
-            className="text-sm font-bold bg-transparent text-gray-color border-gray-200 bg-gray-50"
+            className="text-sm font-bold bg-transparent text-gray-color border-gray-200 bg-gray-50 flex items-center gap-1"
           >
-            {total.toFixed(2)} <i className="icon-rial"></i>
+            {total.toFixed(2)} <RiyalSymbol className="w-2.5 h-2.5" />
           </Badge>
         </div>
       </div>

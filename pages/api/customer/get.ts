@@ -79,7 +79,7 @@ export default async function handler(
 
         res.status(200).json(userData);
     } catch (error) {
-        console.error('Customer Profile API Error:', error);
+        console.error('[GET] Customer API Error:', error);
         res.status(500).json({ success: false, message: "Internal Server Error" });
     }
 }

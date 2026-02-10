@@ -77,8 +77,13 @@ export async function generateMetadata({
     }
 
     // Markatty uses /catalog/homepage format
-    const response = await fetch(`${API_URL}/catalog/homepage?storeId=1&currency=EGP&locale=${locale}`, {
-      headers: { "Content-Type": "application/json" },
+    const storeId = process.env.NEXT_PUBLIC_STORE_ID || '8993';
+    const apiToken = process.env.NEXT_PUBLIC_MOBIKUL_API_TOKEN || 'a197869e3439f6afbcc17c87152466f7';
+    const response = await fetch(`${API_URL}/catalog/homepage?storeId=${storeId}&currency=EGP&locale=${locale}`, {
+      headers: { 
+        "Content-Type": "application/json",
+        "api-token": apiToken,
+      },
       next: { revalidate: 3600 },
     });
 
