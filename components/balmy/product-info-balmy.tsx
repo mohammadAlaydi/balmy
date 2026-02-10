@@ -16,7 +16,7 @@ import RatingBalmy from "@/components/balmy/rating-balmy";
 import StarRating from "@/components/react-stars";
 import SizeSelectorBalmy from "@/components/balmy/size-selector-balmy";
 import DeliveryInfoBalmy from "@/components/balmy/delivery-info-balmy";
-import { FavouriteButton } from "@/components/favourite-button";
+
 import AuthModal from "@/components/auth/auth-modal";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
@@ -24,6 +24,7 @@ import { useAppDispatch } from "@/store/hooks";
 import { addToCart, setCartOpen } from "@/store/slices/cart-slice";
 import { useRouter } from "next/navigation";
 import { BeatLoader } from "react-spinners";
+import FavouriteButton from "@/components/favourite-button";
 
 interface ProductInfoBalmyProps {
     product: {
@@ -215,12 +216,6 @@ export default function ProductInfoBalmy({
                     )}
                 </div>
 
-                {/* Wishlist Heart Icon */}
-                <FavouriteButton
-                    product={product}
-                    size="lg"
-                    className="cursor-pointer"
-                />
             </div>
 
             {/* Pricing Section */}
@@ -300,6 +295,19 @@ export default function ProductInfoBalmy({
 
             {/* Action Buttons */}
             <div className="flex flex-row gap-3 w-full items-center">
+                {/* Favourite Button */}
+                <FavouriteButton
+                    product={{
+                        id: productId,
+                        name: product.name,
+                        imageUrl: "",
+                        price: currentPrice,
+                        brand: product.brand || product.name,
+                        inStock: isInStock,
+                    }}
+                    size={24}
+                    className="w-[45px] h-[45px] rounded-lg bg-[#000000] hover:bg-[#333333] border-none shadow-none"
+                />
                 {/* Share Button */}
                 <Button
                     onClick={handleShare}

@@ -2,7 +2,7 @@
 
 import React from "react";
 import { addToCart } from "@/store/slices/cart-slice";
-import { FavouriteButton } from "@/components/favourite-button";
+
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
@@ -199,11 +199,7 @@ export default function SingleProductInfo({
         </Button>
 
         <div className="flex gap-3">
-          <FavouriteButton
-            product={product}
-            size="lg"
-            className="flex-1 h-12 px-4 flex justify-center items-center cursor-pointer"
-          />
+
           <Button
             variant="outline"
             size="lg"

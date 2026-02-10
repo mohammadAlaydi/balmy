@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect } from "react";
-import { User } from "lucide-react";
+import { useEffect, useState } from "react";
+import { User, Heart } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
@@ -31,7 +31,7 @@ import {
 import SearchComponent from "@/components/search-component";
 import QuickCart from "@/components/quick-cart";
 import UserMenu from "@/components/layout/header/user-menu";
-import { useFavourites } from "@/hooks/use-favourites";
+
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/store/store";
 import { getCartProducts, setCartOpen } from "@/store/slices/cart-slice";
@@ -69,6 +69,46 @@ export type HeaderBalmyProps = {
     sticky?: boolean;
 };
 
+// Favourites Header Icon with live count badge
+const FavouritesHeaderIcon = ({ currentLocale }: { currentLocale: string }) => {
+    const [count, setCount] = useState(0);
+
+    useEffect(() => {
+        const readCount = () => {
+            try {
+                const raw = localStorage.getItem("favourites");
+                const items = raw ? JSON.parse(raw) : [];
+                setCount(Array.isArray(items) ? items.length : 0);
+            } catch {
+                setCount(0);
+            }
+        };
+
+        readCount();
+        window.addEventListener("favourites-updated", readCount);
+        window.addEventListener("storage", readCount);
+        return () => {
+            window.removeEventListener("favourites-updated", readCount);
+            window.removeEventListener("storage", readCount);
+        };
+    }, []);
+
+    return (
+        <Link
+            href={`/${currentLocale}/favourites`}
+            className="relative flex h-10 w-10 items-center justify-center rounded-full bg-gray-100 transition-colors hover:bg-gray-200"
+            aria-label="Favourites"
+        >
+            <Heart className="w-5 h-5 text-gray-700" />
+            {count > 0 && (
+                <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-[var(--color-red)] text-[10px] font-bold text-white">
+                    {count}
+                </span>
+            )}
+        </Link>
+    );
+};
+
 // Action Icons Component
 const ActionIcons = ({
     languageItems,
@@ -77,8 +117,7 @@ const ActionIcons = ({
     languageItems: { title: string; onClick: () => void; className: string }[];
     currentLocale: string;
 }) => {
-    const { getFavouritesCount, fetchFavourites } = useFavourites();
-    const favouritesCount = getFavouritesCount();
+
     const t = useTranslations("navigation");
     const tSearch = useTranslations("search");
     const dispatch = useDispatch();
@@ -95,16 +134,11 @@ const ActionIcons = ({
 
     useEffect(() => {
         if (isAuthenticated && user) {
-            if (favouritesCount === 0) {
-                fetchFavourites();
-            }
             if (cartCount === 0) {
                 dispatch(getCartProducts() as any);
             }
         }
     }, [
-        fetchFavourites,
-        favouritesCount,
         cartCount,
         isAuthenticated,
         user,
@@ -139,27 +173,11 @@ const ActionIcons = ({
                 </DialogContent>
             </Dialog>
 
+            {/* Favourites Heart Icon */}
+            <FavouritesHeaderIcon currentLocale={currentLocale} />
+
             {/* User Profile Icon */}
             <UserMenu />
-
-            {/* Favourites */}
-            <Link
-                href={`/${currentLocale}/favourites`}
-                className="relative hidden lg:flex h-10 w-10 items-center justify-center rounded-full bg-gray-100 transition-colors hover:bg-gray-200"
-                prefetch={true}
-            >
-                <Image
-                    src="/assets/images/heart.svg"
-                    alt="heart"
-                    width={20}
-                    height={20}
-                />
-                {favouritesCount > 0 && (
-                    <Badge className="absolute -top-1 -right-1 h-4 w-4 p-0 text-[10px] flex items-center justify-center bg-[var(--color-red)] text-white rounded-full">
-                        {favouritesCount}
-                    </Badge>
-                )}
-            </Link>
 
             {/* Cart Button with Balance and Badge */}
             <DrawerComponent
@@ -347,8 +365,7 @@ const MobileMenu = ({
     currentLocale: string;
 }) => {
     const t = useTranslations("navigation");
-    const { getFavouritesCount } = useFavourites();
-    const favouritesCount = getFavouritesCount();
+
     const cartData = useSelector((state: RootState) => state.cart.data);
     const cartCount = cartData?.data?.items?.length || 0;
 
@@ -431,20 +448,10 @@ const MobileMenu = ({
                         <UserMenu isMobile={true} />
                         <Link
                             href={`/${currentLocale}/favourites`}
-                            prefetch={true}
                             className="relative"
+                            aria-label="Favourites"
                         >
-                            <Image
-                                src="/assets/images/heart.svg"
-                                alt="heart"
-                                width={24}
-                                height={24}
-                            />
-                            {favouritesCount > 0 && (
-                                <span className="absolute -top-2 -right-2 h-5 w-5 p-0 text-xs flex items-center justify-center bg-[var(--color-red)] text-white rounded-full">
-                                    {favouritesCount}
-                                </span>
-                            )}
+                            <Heart className="w-6 h-6 text-gray-700" />
                         </Link>
                         <div className="relative">
                             <DrawerComponent

@@ -69,18 +69,6 @@ export default function ProductsSectionBalmy({
                     <div className="flex items-center gap-2">
                         {/* Left arrow - go to previous */}
                         <button
-                            onClick={() => api?.scrollPrev()}
-                            disabled={!canScrollPrev}
-                            className={`w-9 h-9 md:w-10 md:h-10 rounded-full flex items-center justify-center border-2 transition-all shadow-sm ${canScrollPrev
-                                ? "border-rose-500 bg-white hover:bg-rose-500 text-rose-500 hover:text-white cursor-pointer"
-                                : "border-gray-200 bg-gray-50 text-gray-300 cursor-not-allowed"
-                                }`}
-                            aria-label="Previous"
-                        >
-                            <ChevronLeft className="w-5 h-5" />
-                        </button>
-                        {/* Right arrow - go to next */}
-                        <button
                             onClick={() => api?.scrollNext()}
                             disabled={!canScrollNext}
                             className={`w-9 h-9 md:w-10 md:h-10 rounded-full flex items-center justify-center border-2 transition-all shadow-sm ${canScrollNext
@@ -90,6 +78,18 @@ export default function ProductsSectionBalmy({
                             aria-label="Next"
                         >
                             <ChevronRight className="w-5 h-5" />
+                        </button>
+                        {/* Left arrow - go to previous */}
+                        <button
+                            onClick={() => api?.scrollPrev()}
+                            disabled={!canScrollPrev}
+                            className={`w-9 h-9 md:w-10 md:h-10 rounded-full flex items-center justify-center border-2 transition-all shadow-sm ${canScrollPrev
+                                ? "border-rose-500 bg-white hover:bg-rose-500 text-rose-500 hover:text-white cursor-pointer"
+                                : "border-gray-200 bg-gray-50 text-gray-300 cursor-not-allowed"
+                                }`}
+                            aria-label="Previous"
+                        >
+                            <ChevronLeft className="w-5 h-5" />
                         </button>
                     </div>
 

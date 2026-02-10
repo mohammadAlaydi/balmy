@@ -654,7 +654,13 @@
     "login-to-move-to-cart": "Please login to move items to cart",
     "authentication-required": "Authentication Required: Please login to access your favourites.",
     "remove-from-favourites": "Remove from favourites",
-    "no-data-found": "No data found"
+    "no-data-found": "No data found",
+    "addToFavourites": "Add to favourites",
+    "removeFromFavourites": "Remove from favourites",
+    "confirmClearAll": "Are you sure you want to clear all favourites?",
+    "addedToFavourites": "Added to favourites",
+    "removedFromFavourites": "Removed from favourites",
+    "browseFavourites": "Browse favourites"
   },
   "order": {
     "order-number": "Order Number",

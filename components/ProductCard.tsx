@@ -10,16 +10,15 @@ import toast from "react-hot-toast";
 import StarRating from "./react-stars";
 import AddToCartBtn from "./AddToCartBtn";
 import RiyalSymbol from "./RiyalSymbol";
-import { FavouriteButton } from "./favourite-button";
+
 import AuthModal from "./auth/auth-modal";
 import { useAppDispatch } from "@/store/hooks";
 import { addToCart, setCartOpen } from "@/store/slices/cart-slice";
+import FavouriteButton from "./favourite-button";
 
 interface ProductCardProps {
   product?: any;
   cardColSpan?: string;
-  wishlistId?: string | number;
-  wishlistProductId?: string | number;
   brandName?: string;
   productName?: string;
   price?: number;
@@ -30,7 +29,7 @@ interface ProductCardProps {
   rating?: number;
   isVerified?: boolean;
   onAddToCart?: () => void;
-  onToggleFavorite?: () => void;
+
 }
 
 /* Helper Functions */
@@ -50,8 +49,6 @@ const resolveProductId = (
 export default function ProductCard({
   product,
   cardColSpan,
-  wishlistId,
-  wishlistProductId,
   brandName: initialBrandName,
   productName: initialProductName,
   price: initialPrice,
@@ -62,7 +59,7 @@ export default function ProductCard({
   rating: initialRating,
   isVerified: initialIsVerified = true,
   onAddToCart,
-  onToggleFavorite,
+
 }: ProductCardProps) {
   const [isAdding, setIsAdding] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
@@ -132,14 +129,6 @@ export default function ProductCard({
 
   return (
     <div className={`relative w-full ${cardColSpan?.includes('search') ? 'max-w-none' : 'max-w-sm'} bg-white rounded-2xl overflow-visible hover:shadow-lg transition-shadow font-[family-name:var(--font-cairo)]`} dir="rtl">
-      {/* Wishlist Icon - Top Left (Absolute) */}
-      <div className="absolute top-3 left-3 z-10">
-        <FavouriteButton
-          product={product || { id: productId, name: productName, price, images: [{ url: imageUrl }] }}
-          size="lg"
-          className="cursor-pointer"
-        />
-      </div>
 
       {/* Product Image Link */}
       <Link href={`/${locale}/product/${productId}`}>
@@ -159,6 +148,24 @@ export default function ProductCard({
           )}
         </div>
       </Link>
+
+      {/* Favourite Heart Button — top-right corner */}
+      <div className="absolute top-2 right-2 z-10">
+        <FavouriteButton
+          product={{
+            id: productId || 0,
+            name: productName,
+            imageUrl: imageUrl,
+            price: price,
+            brand: brandName,
+            oldPrice: oldPrice,
+            discount: discount,
+            rating: rating,
+            inStock: isInStock,
+          }}
+          size={18}
+        />
+      </div>
 
       {/* Card Content - Split Layout */}
       <div className="p-4">

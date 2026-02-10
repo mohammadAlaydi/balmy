@@ -8,7 +8,7 @@ import { Rating, RatingButton } from "./ui/rating";
 import toast from "react-hot-toast";
 import { useState } from "react";
 import { useTranslations } from "next-intl";
-import { FavouriteButton } from "./favourite-button";
+
 import { useRouter } from "next/navigation";
 import ProductIncementOrDecrement from "./product-increment-or-decrement";
 import { Badge } from "./ui/badge";
@@ -98,17 +98,7 @@ export default function CartProduct({
             height={100}
             className="rounded-md object-cover w-[110px] md:w-[140px] aspect-square border border-gray-200 cursor-pointer"
           />
-          {/* Hover overlay with Favorite button */}
-          <div
-            onClick={() => router.push(`/product/${product?.id}`)}
-            className="absolute inset-0 flex items-center justify-center invisible opacity-0 transition-all duration-200 group-hover:visible group-hover:opacity-100 cursor-pointer"
-          >
-            <FavouriteButton
-              product={product}
-              FaRegHeartColor="text-black"
-              className="absolute right-2 top-2 rounded-none"
-            />
-          </div>
+
         </div>
       </div>
 

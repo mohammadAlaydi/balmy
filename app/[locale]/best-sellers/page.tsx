@@ -226,7 +226,6 @@ export default function BestSellersPage() {
                                             category={product.category}
                                             rating={product.rating}
                                             onAddToCart={() => console.log("Add to cart", product.id)}
-                                            onToggleFavorite={() => console.log("Toggle favorite", product.id)}
                                         />
                                     </div>
                                 );

@@ -14,14 +14,14 @@ import { Button } from "./ui/button";
 import DrawerComponent from "./layout/drawer/drawer-component";
 import QuickProductDetails from "./quick-product-details";
 import ZeroQuantity from "./zero-quantity";
-import { FavouriteButton } from "./favourite-button";
+
 import AuthModal from "./auth/auth-modal";
 import { useAppDispatch } from "@/store/hooks";
 import { addToCart } from "@/store/slices/cart-slice";
 import { getProductDetails } from "@/store/slices/product-details-slice";
 import { ProductCardProps } from "@/types/types";
 import { getCurrentMainImage, getHoverImage } from "@/static-data/static-data";
-import { useFavourites } from "@/hooks/use-favourites";
+
 import { FaPlus } from "react-icons/fa6";
 import { GrView } from "react-icons/gr";
 import ProductIncementOrDecrement from "./product-increment-or-decrement";
@@ -76,16 +76,14 @@ const resolveProductId = (
 /* ---------------- Component ---------------- */
 export default function ProductCard({
   product,
-  wishlistProductId,
   cardColSpan,
-  wishlistId,
 }: ProductCardProps) {
   const [selectedVariantIndex, setSelectedVariantIndex] = useState<
     number | null
   >(null);
   const [isHovered, setIsHovered] = useState(false);
   const [isAdding, setIsAdding] = useState(false);
-  const [isMovingToCart, setIsMovingToCart] = useState(false);
+
   const [chosenVariantId, setChosenVariantId] = useState<
     number | string | null
   >(null);
@@ -99,7 +97,7 @@ export default function ProductCard({
   const dispatch = useAppDispatch();
   const router = useRouter();
   const locale = useLocale();
-  const { moveToCart } = useFavourites();
+
   const t = useTranslations("products");
   const td = useTranslations("product-details");
 
@@ -165,18 +163,7 @@ export default function ProductCard({
     }
   };
 
-  const handleMoveToCart = async () => {
-    if (!wishlistId) return;
-    try {
-      setIsMovingToCart(true);
-      await moveToCart(wishlistId);
-      toast.success(t("moved-to-cart"));
-    } catch {
-      toast.error("Failed to move to cart");
-    } finally {
-      setIsMovingToCart(false);
-    }
-  };
+
 
   /* ---------------- Cart Button Variants ---------------- */
   const motionVariants = {
@@ -191,7 +178,7 @@ export default function ProductCard({
       className={`relative product-card shadow-none hover:shadow-[0px_10px_30px_rgba(149,157,165,0.1)] py-0 h-fit rounded-lg gap-3 ${cardColSpan || "col-span-6 xl:col-span-2"
         } border border-gray-200 hover:border-red-color`}
     >
-      {!isInStock && <ZeroQuantity product={product} wishlistProductId={wishlistProductId} />}
+      {!isInStock && <ZeroQuantity product={product} />}
 
       <CardHeader className="p-0 relative overflow-hidden rounded-t-lg group">
         {/* Hover Actions */}
@@ -201,7 +188,7 @@ export default function ProductCard({
           transition={{ duration: 0.3 }}
           className="absolute top-2 rtl:left-2 ltr:right-2 z-10 flex flex-col gap-3"
         >
-          <FavouriteButton product={product} className="cursor-pointer" />
+
           <DrawerComponent
             trigger={
               <GrView
@@ -233,7 +220,7 @@ export default function ProductCard({
             className="object-cover transition-transform duration-500 transform group-hover:scale-105 cursor-pointer"
             onClick={() =>
               router.push(
-                `/${locale}/product/${wishlistProductId || product?.product_id}`
+                `/${locale}/product/${product?.product_id}`
               )
             }
             priority
@@ -250,7 +237,7 @@ export default function ProductCard({
               className="object-cover transition-transform duration-500 transform group-hover:scale-105 opacity-0 group-hover:opacity-100 cursor-pointer"
               onClick={() =>
                 router.push(
-                  `/${locale}/product/${wishlistProductId || product?.product_id}`
+                  `/${locale}/product/${product?.product_id}`
                 )
               }
             />
@@ -302,11 +289,11 @@ export default function ProductCard({
                 transition={{ duration: 0.2 }}
               >
                 <Button
-                  onClick={wishlistId ? handleMoveToCart : handleAddToCart}
-                  disabled={isAdding || isMovingToCart || !isInStock}
+                  onClick={handleAddToCart}
+                  disabled={isAdding || !isInStock}
                   className="bg-black hover:bg-black/85 text-white w-[35px] h-[35px] flex items-center justify-center shadow-md mb-2 rounded-full"
                 >
-                  {isAdding || isMovingToCart ? (
+                  {isAdding ? (
                     <BeatLoader color="#fff" size={3} />
                   ) : (
                     <FaPlus size={10} />

@@ -7,8 +7,7 @@ import { categoryProductsSliceReducer } from "./slices/category-products-slice";
 import { categoriesSliceReducer } from "./slices/categories-slice";
 import { homeSliceReducer } from "./slices/home-slice";
 import { productApi } from "./slices/products-slice";
-import favouritesReducer from "./slices/favourite-slice";
-import { wishlistReducer } from "./slices/wishlist-slice";
+
 import { ordersReducer } from "./slices/orders-slice";
 import { checkoutReducer } from "./slices/checkout-slice";
 import { reviewsReducer } from "./slices/reviews-slice";
@@ -22,8 +21,7 @@ export const store = configureStore({
     productDetails: productDetailsReducer,
     categories: categoriesSliceReducer,
     categoryProducts: categoryProductsSliceReducer,
-    favourites: favouritesReducer,
-    wishlist: wishlistReducer,
+
     orders: ordersReducer,
     checkout: checkoutReducer,
     reviews: reviewsReducer,

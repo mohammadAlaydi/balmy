@@ -668,7 +668,13 @@
     "login-to-move-to-cart": "يرجى تسجيل الدخول لنقل العناصر إلى السلة",
     "authentication-required": "مطلوب تسجيل الدخول: يرجى تسجيل الدخول للوصول إلى مفضلاتك.",
     "remove-from-favourites": "إزالة من المفضلة",
-    "no-data-found": "لم يتم العثور على بيانات"
+    "no-data-found": "لم يتم العثور على بيانات",
+    "addToFavourites": "أضف إلى المفضلة",
+    "removeFromFavourites": "إزالة من المفضلة",
+    "confirmClearAll": "هل أنت متأكد من مسح جميع المفضلات؟",
+    "addedToFavourites": "تمت الإضافة إلى المفضلة",
+    "removedFromFavourites": "تمت الإزالة من المفضلة",
+    "browseFavourites": "تصفح المفضلة"
   },
   "order": {
     "order-number": "رقم الطلب",

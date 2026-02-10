@@ -143,6 +143,12 @@ svg {
   stroke: currentColor !important;
 }
 
+/* Allow favourite heart to override the global fill:none rule */
+.lucide[data-favourite-active="true"] {
+  fill: #ef4444 !important;
+  stroke: #ef4444 !important;
+}
+
 /* Ensure icons are visible */
 .react-icons {
   color: inherit !important;

@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Breadcrumb, { BreadcrumbItem } from "./Breadcrumb";
-import { Bell, Package, ShoppingCart, Heart, User, LogOut } from "lucide-react";
+import { Bell, Package, ShoppingCart, User, LogOut } from "lucide-react";
 
 interface MenuItem {
   id: string;
@@ -47,12 +47,7 @@ export default function AccountSettings() {
       icon: <ShoppingCart className="w-5 h-5" />,
       href: "/pending-payment",
     },
-    {
-      id: "wishlist",
-      label: "المفضلة",
-      icon: <Heart className="w-5 h-5" />,
-      href: "/favourites",
-    },
+
     {
       id: "account",
       label: "حسابي",
@@ -100,10 +95,9 @@ export default function AccountSettings() {
                     href={item.href || "#"}
                     className={`
                       flex items-center gap-3 px-4 py-3 rounded-lg border border-[#707070] transition-colors
-                      ${
-                        item.isActive
-                          ? "bg-black text-white"
-                          : "text-gray-700 hover:bg-gray-100"
+                      ${item.isActive
+                        ? "bg-black text-white"
+                        : "text-gray-700 hover:bg-gray-100"
                       }
                     `}
                   >
@@ -138,7 +132,7 @@ export default function AccountSettings() {
                         placeholder="MOHAMED"
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent outline-none transition-all"
                       />
-                    </div>                    
+                    </div>
                     <div>
                       <label
                         htmlFor="firstName"
@@ -176,7 +170,7 @@ export default function AccountSettings() {
                         placeholder="اختر تاريخ الميلاد"
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent outline-none transition-all"
                       />
-                    </div>                    
+                    </div>
                     <div>
                       <label
                         htmlFor="gender"
@@ -217,7 +211,7 @@ export default function AccountSettings() {
 
                   {/* Row 3: Mobile Number, Email */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                     <div>
+                    <div>
                       <label
                         htmlFor="email"
                         className="block text-sm font-medium text-gray-700 mb-2"
@@ -233,7 +227,7 @@ export default function AccountSettings() {
                         placeholder="TAHADESIGN82@GMAIL.COM"
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent outline-none transition-all"
                       />
-                    </div>                   
+                    </div>
                     <div>
                       <label
                         htmlFor="phoneNumber"
@@ -250,7 +244,7 @@ export default function AccountSettings() {
                           onChange={handleInputChange}
                           placeholder="552661693"
                           className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent outline-none transition-all"
-                        />                        
+                        />
                         <input
                           type="text"
                           id="countryCode"

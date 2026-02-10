@@ -29,7 +29,7 @@ const IMAGE_SIZES = {
 export default function QuickProductDetails({
   product,
 }: QuickProductDetailsProps) {
-  
+
   const t = useTranslations("products");
   const dispatch = useAppDispatch();
 
@@ -124,11 +124,10 @@ export default function QuickProductDetails({
   const renderStockAndPrice = () => (
     <div className="flex justify-between gap-2 w-full flex-wrap">
       <p
-        className={`text-sm px-3 py-1 rounded ${
-          product.in_stock
+        className={`text-sm px-3 py-1 rounded ${product.in_stock
             ? "bg-green-100 text-green-800 border-green-200"
             : "bg-red-100 text-red-800 border-red-200"
-        }`}
+          }`}
       >
         {product.in_stock ? t("in-stock") : t("out-of-stock")}
       </p>
@@ -157,11 +156,10 @@ export default function QuickProductDetails({
                   variant.base_image?.original_image_url || IMAGE_SIZES.fallback
                 }
                 alt={`${product.name} variant ${index + 1}`}
-                className={`cursor-pointer transition-all duration-200 rounded-full h-[32px] w-[32px] ${
-                  selectedVariantIndex === index
+                className={`cursor-pointer transition-all duration-200 rounded-full h-[32px] w-[32px] ${selectedVariantIndex === index
                     ? "ring-2 ring-gray-200 scale-110"
                     : "hover:scale-105 ring-1 ring-gray-200"
-                }`}
+                  }`}
                 onClick={() => handleVariantSelect(index)}
               />
             </div>
@@ -187,13 +185,6 @@ export default function QuickProductDetails({
         >
           {cartLoading ? <LoadingSpinner size="sm" /> : t("add-to-cart")}
         </Button>
-        <Link
-          prefetch={true}
-          href="/favourites"
-          className="text-nowrap text-xs md:text-sm bg-black text-white px-4 py-2 rounded-md hover:bg-black/85 transition-all duration-300 text-center"
-        >
-          {t("go-to-favourites")}
-        </Link>
       </div>
       <Link
         href="/cart"

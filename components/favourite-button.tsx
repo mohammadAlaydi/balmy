@@ -1,123 +1,79 @@
-"use client"
+"use client";
 
-import { FaHeart, FaRegHeart } from "react-icons/fa";
-import { useFavourites } from "@/hooks/use-favourites";
-import { cn } from "@/lib/utils";
+import React from "react";
+import { Heart } from "lucide-react";
 import toast from "react-hot-toast";
-import { useSelector } from "react-redux";
-import { RootState } from "@/store/store";
-import { useState } from "react";
-import AuthModal from "@/components/auth/auth-modal";
 import { useTranslations } from "next-intl";
+import useFavourites, {
+    type FavouriteProduct,
+} from "@/hooks/use-favourites";
 
 interface FavouriteButtonProps {
-    product: any;
-    size?: "sm" | "default" | "lg";
+    product: FavouriteProduct;
+    /** Icon size in px (default 20) */
+    size?: number;
+    /** Extra classes applied to the wrapper button */
     className?: string;
-    showText?: boolean;
-    FaRegHeartColor?: string;
 }
 
-export function FavouriteButton({
+export default function FavouriteButton({
     product,
-    size = "default",
-    className,
-    showText = false,
-    FaRegHeartColor,
+    size = 20,
+    className = "",
 }: FavouriteButtonProps) {
-    const { isFavourite, addToFavourites, removeFromFavourites } =
-        useFavourites();
-    const targetId = (product?.id ?? product?.product_id) as number;
-    const normalizedProduct = product?.id
-        ? product
-        : { ...product, id: targetId };
-    const isFav = isFavourite(targetId);
-    const { isAuthenticated } = useSelector((state: RootState) => state.auth);
-    const [authModalOpen, setAuthModalOpen] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
-    const tFav = useTranslations("favourites");
-    const tPD = useTranslations("product-details");
-    const tProducts = useTranslations("products");
-    const tButtons = useTranslations("buttons");
+    const { isFavourite, toggleFavourite } = useFavourites();
+    const t = useTranslations("favourites");
 
-    const handleToggle = async (e: React.MouseEvent) => {
-        e.preventDefault();
+    const active = isFavourite(product.id);
+
+    const handleClick = (e: React.MouseEvent) => {
         e.stopPropagation();
+        e.preventDefault();
 
-        if (!isAuthenticated) {
-            setAuthModalOpen(true);
-            return;
+        const nowFav = toggleFavourite(product);
+
+        if (nowFav) {
+            toast.success(t("addedToFavourites") || "تمت الإضافة إلى المفضلة");
+        } else {
+            toast(t("removedFromFavourites") || "تمت الإزالة من المفضلة", {
+                icon: "💔",
+            });
         }
-
-        try {
-            setIsLoading(true);
-            if (isFav) {
-                await removeFromFavourites(targetId);
-                toast.success(tFav("productRemoved"));
-            } else {
-                await addToFavourites(normalizedProduct as any);
-                toast.success(tProducts("added-to-favorites"));
-            }
-        } catch {
-            toast.error(tButtons("error"));
-        } finally {
-            setIsLoading(false);
-        }
-    };
-
-    const iconSizes = {
-        sm: "h-4 w-4",
-        default: "h-5 w-5",
-        lg: "h-6 w-6",
     };
 
     return (
-        <>
-            <div
-                onClick={handleToggle}
-                className={cn(
-                    "transition-all duration-200 flex items-center justify-center cursor-pointer",
-                    className
-                )}
-            >
-                {isLoading || isFav ? (
-                    <FaHeart
-                        className={cn(
-                            iconSizes[size],
-                            "text-red-500 transition-all duration-200",
-                            isLoading && "animate-pulse"
-                        )}
-                    />
-                ) : (
-                    <FaRegHeart
-                        className={cn(
-                            iconSizes[size],
-                            FaRegHeartColor || "text-black",
-                            "hover:text-red-500 transition-all duration-200"
-                        )}
-                    />
-                )}
-
-                {showText && (
-                    <span className="ml-2">
-                        {isFav ? tPD("remove-from-favorites") : tPD("add-to-favorites")}
-                    </span>
-                )}
-            </div>
-
-            <AuthModal
-                isOpen={authModalOpen}
-                onOpenChange={setAuthModalOpen}
-                onAuthenticated={async () => {
-                    try {
-                        setIsLoading(true);
-                        await addToFavourites(normalizedProduct as any);
-                        toast.success(tProducts("added-to-favorites"));
-                    } finally {
-                        setIsLoading(false);
-                    }
+        <button
+            type="button"
+            onClick={handleClick}
+            aria-label={
+                active
+                    ? t("removeFromFavourites") || "إزالة من المفضلة"
+                    : t("addToFavourites") || "أضف إلى المفضلة"
+            }
+            className={`
+        group relative flex items-center justify-center
+        w-9 h-9 rounded-full bg-white/80 backdrop-blur-sm
+        shadow-sm border border-gray-100
+        transition-all duration-200 ease-out
+        hover:scale-110 hover:shadow-md
+        active:scale-95
+        ${className}
+      `}
+        >
+            <Heart
+                size={size}
+                data-favourite-active={active ? "true" : undefined}
+                className="transition-all duration-300 ease-out"
+                style={{
+                    transform: active ? "scale(1.1)" : "scale(1)",
                 }}
+                strokeWidth={active ? 1.5 : 2}
             />
-        </>
+
+            {/* Pulse animation on toggle */}
+            {active && (
+                <span className="absolute inset-0 rounded-full animate-ping bg-red-400/20 pointer-events-none" />
+            )}
+        </button>
     );
 }

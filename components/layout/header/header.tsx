@@ -29,7 +29,7 @@ import {
 import SearchComponent from "@/components/search-component";
 import QuickCart from "@/components/quick-cart";
 import UserMenu from "./user-menu";
-import { useFavourites } from "@/hooks/use-favourites";
+
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/store/store";
 import { getCartProducts } from "@/store/slices/cart-slice";
@@ -84,8 +84,7 @@ const ActionIcons = ({
   languageItems: { title: string; onClick: () => void; className: string }[];
   currentLocale: string;
 }) => {
-  const { getFavouritesCount, fetchFavourites } = useFavourites();
-  const favouritesCount = getFavouritesCount();
+
   const t = useTranslations("navigation");
   const tSearch = useTranslations("search");
   const dispatch = useDispatch();
@@ -99,19 +98,13 @@ const ActionIcons = ({
     (state: RootState) => state.auth
   );
 
-  // Auto-fetch favourites and cart when authenticated (Redux-driven only)
   useEffect(() => {
     if (isAuthenticated && user) {
-      if (favouritesCount === 0) {
-        fetchFavourites();
-      }
       if (cartCount === 0) {
         dispatch(getCartProducts() as any);
       }
     }
   }, [
-    fetchFavourites,
-    favouritesCount,
     cartCount,
     isAuthenticated,
     user,
@@ -142,24 +135,6 @@ const ActionIcons = ({
           </DialogContent>
         </Dialog>
         <UserMenu />
-        <Link
-          href={`/${currentLocale}/favourites`}
-          className="relative hidden lg:block"
-          prefetch={true}
-        >
-          <Image
-            src="/assets/images/heart.svg"
-            alt="heart"
-            width={24}
-            height={24}
-            className="cursor-pointer text-black"
-          />
-          {favouritesCount > 0 && (
-            <Badge className="absolute -top-2 -right-2 h-5 w-5 p-0 text-xs flex items-center justify-center bg-red-500 text-white">
-              {favouritesCount}
-            </Badge>
-          )}
-        </Link>
         <DrawerComponent
           trigger={
             <div className="relative hidden lg:block">
@@ -428,28 +403,6 @@ const MobileMenu = ({
               />
             </Link>
             <UserMenu isMobile={true} />
-            <Link
-              href={`/${currentLocale}/favourites`}
-              prefetch={true}
-              className="relative"
-            >
-              <Image
-                src="/assets/images/heart.svg"
-                alt="heart"
-                width={24}
-                height={24}
-                className="cursor-pointer text-gray-600 hover:text-gray-900"
-              />
-              {(() => {
-                const { getFavouritesCount } = useFavourites();
-                const favouritesCount = getFavouritesCount();
-                return favouritesCount > 0 ? (
-                  <span className="absolute -top-2 -right-2 h-5 w-5 p-0 text-xs flex items-center justify-center bg-red-500 text-white rounded-full">
-                    {favouritesCount}
-                  </span>
-                ) : null;
-              })()}
-            </Link>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Image

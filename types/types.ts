@@ -231,7 +231,6 @@ export interface Product {
   reviews: number;
   description?: string;
   specifications?: Record<string, string>;
-  wishlistId?: number;
   createdAt?: string;
   updatedAt?: string;
 }
@@ -324,7 +323,6 @@ export interface ProductVariant {
   parent_id?: number | null;
   total_quantity?: number;
   is_cart?: boolean;
-  is_wishlist?: boolean;
 }
 
 export interface VariantSelection {
@@ -380,7 +378,6 @@ export interface ProductDetailsApiResponse {
     parent_id: number | null;
     total_quantity?: number;
     is_cart?: boolean;
-    is_wishlist?: boolean;
     variants?: ProductVariant[];
     variants_labels?: {
       variants: Array<{
@@ -397,13 +394,6 @@ export interface ProductDetailsApiResponse {
 
 // Type alias for backward compatibility
 export type ProductDetailsResponse = ProductDetailsApiResponse;
-
-// Favourite state type
-export interface FavouriteState {
-  items: Product[];
-  loading: boolean;
-  error: string | null;
-}
 
 // Image URLs type
 export interface ImageUrls {
@@ -436,10 +426,8 @@ export interface ApiProduct {
 }
 
 export interface ProductCardProps {
-  wishlistId?: number;
   product: ApiProduct;
   cardColSpan?: string;
-  wishlistProductId?: number;
 }
 
 export interface OrderData {

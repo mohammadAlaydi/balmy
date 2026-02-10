@@ -117,25 +117,7 @@ export default function UserMenu({ isMobile = false }: { isMobile?: boolean }) {
               <span>{t("profile")}</span>
             </Link>
           </DropdownMenuItem>
-          <DropdownMenuItem
-            className={`cursor-pointer flex gap-2 items-center ${isRTL ? "flex-row-reverse" : ""
-              }`}
-          >
-            <Link
-              href={`/${locale}/favourites`}
-              className={`flex items-center ${isRTL ? "flex-row-reverse" : ""}`}
-              prefetch={true}
-            >
-              <Image
-                src="/assets/images/heart.svg"
-                alt="heart"
-                width={22}
-                height={22}
-                className={`${isRTL ? "ml-2" : "mr-2"}`}
-              />
-              <span>{t("wishlist")}</span>
-            </Link>
-          </DropdownMenuItem>
+
           <DropdownMenuItem
             className={`cursor-pointer flex gap-2 items-center ${isRTL ? "flex-row-reverse" : ""
               }`}
@@ -210,25 +192,7 @@ export default function UserMenu({ isMobile = false }: { isMobile?: boolean }) {
             <span>{t("profile")}</span>
           </Link>
         </DropdownMenuItem>
-        <DropdownMenuItem
-          className={`cursor-pointer flex gap-2 items-center ${isRTL ? "flex-row-reverse" : ""
-            }`}
-        >
-          <Link
-            href={`/${locale}/favourites`}
-            className={`flex items-center ${isRTL ? "flex-row-reverse" : ""}`}
-            prefetch={true}
-          >
-            <Image
-              src="/assets/images/heart.svg"
-              alt="heart"
-              width={22}
-              height={22}
-              className={`${isRTL ? "ml-2" : "mr-2"}`}
-            />
-            <span>{t("wishlist")}</span>
-          </Link>
-        </DropdownMenuItem>
+
         <DropdownMenuItem
           className={`cursor-pointer flex gap-2 items-center ${isRTL ? "flex-row-reverse" : ""
             }`}

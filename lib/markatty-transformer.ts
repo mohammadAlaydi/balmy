@@ -50,8 +50,6 @@ export function transformProduct(product: any) {
         description: product.shortDescription || '',
         variants: product.configurableData || [],
         typeId: product.typeId,
-        isInWishlist: product.isInWishlist,
-        wishlistItemId: product.wishlistItemId,
     };
 }
 
@@ -142,7 +140,6 @@ export function transformHomepageData(data: any) {
             cmsPages: [],
             storeName: '',
             storeDescription: '',
-            wishlistEnabled: false,
             cartCount: 0,
             defaultCurrency: 'EGP',
         };
@@ -198,7 +195,6 @@ export function transformHomepageData(data: any) {
         storeDescription: data.homeSEO?.meta_description || '',
 
         // Additional config
-        wishlistEnabled: data.wishlistEnable,
         cartCount: data.cartCount || 0,
         defaultCurrency: data.defaultCurrency || 'EGP',
 

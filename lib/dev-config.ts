@@ -896,10 +896,6 @@ export const MOCK_CART = {
   },
 };
 
-export const MOCK_WISHLIST = {
-  data: [],
-};
-
 export const MOCK_PRODUCT_DETAILS = (id: number) => {
   const product = MOCK_PRODUCTS.data.find(p => p.id === id);
   return {

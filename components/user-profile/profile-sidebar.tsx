@@ -8,7 +8,6 @@ import {
     Bell,
     Package,
     ShoppingCart,
-    Heart,
     User,
     LogOut,
     ChevronLeft,
@@ -30,11 +29,7 @@ const sidebarItems = [
         icon: ShoppingCart,
         label: "pending-orders",
     },
-    {
-        href: "/favourites",
-        icon: Heart,
-        label: "wishlist",
-    },
+
     {
         href: "/user-profile",
         icon: User,
@@ -71,7 +66,7 @@ export default function ProfileSidebar() {
                                 {item.label === "notifications" && "الإشعارات"}
                                 {item.label === "my-orders" && "طلباتي"}
                                 {item.label === "pending-orders" && "طلبات بانتظار الدفع"}
-                                {item.label === "wishlist" && "امنياتي"}
+
                                 {item.label === "my-account" && "حسابي"}
                             </span>
                             <div className="w-6 h-6 flex items-center justify-center">
