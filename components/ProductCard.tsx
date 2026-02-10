@@ -82,6 +82,10 @@ export default function ProductCard({
   const price = specialPrice && specialPrice > 0 ? specialPrice : rawPrice;
   const oldPrice = initialOldPrice ?? (product?.original_price ? Number(product.original_price) : (specialPrice && specialPrice > 0 ? rawPrice : (product?.price_regular?.value ? Number(product.price_regular.value) : null)));
   const discount = initialDiscount ?? product?.discount_percent ?? (oldPrice && oldPrice > price ? Math.round(((oldPrice - price) / oldPrice) * 100) : 0);
+
+  // Use backend-formatted price strings when available
+  const formattedPrice = product?.formatted_price || `${price}`;
+  const formattedOldPrice = product?.formatted_original_price || (oldPrice ? `${oldPrice}` : null);
   const imageUrl = initialImageUrl ?? (product?.thumbNail || product?.images?.[0]?.url || product?.image || product?.base_image?.url || "/images/card-image.png");
   const category = initialCategory ?? (typeof product?.category === "string" ? product?.category : product?.category?.name) ?? "نسائي";
   const rating = initialRating ?? (product?.rating !== undefined ? Number(product.rating) : (product?.reviews?.average_rating ?? 0));
@@ -160,7 +164,7 @@ export default function ProductCard({
             imageUrl: imageUrl,
             price: price,
             brand: brandName,
-            oldPrice: oldPrice,
+            oldPrice: oldPrice ?? undefined,
             discount: discount,
             rating: rating,
             inStock: isInStock,
@@ -201,16 +205,14 @@ export default function ProductCard({
               {/* Price Section */}
               <div className="flex items-baseline gap-2 pt-1">
                 {/* Current Price */}
-                <span className="text-xl font-bold text-gray-900 flex items-center gap-1">
-                  {price}
-                  <RiyalSymbol className="w-3 h-3" />
+                <span className="text-xl font-bold text-gray-900">
+                  {formattedPrice}
                 </span>
 
                 {/* Old Price */}
-                {oldPrice && oldPrice > price && (
-                  <span className="text-sm text-gray-400 line-through flex items-center gap-1">
-                    {oldPrice}
-                    <RiyalSymbol className="w-2.5 h-2.5" />
+                {formattedOldPrice && oldPrice && oldPrice > price && (
+                  <span className="text-sm text-gray-400 line-through">
+                    {formattedOldPrice}
                   </span>
                 )}
               </div>
@@ -234,7 +236,7 @@ export default function ProductCard({
 
               {/* Discount Badge - Under Rating */}
               {discount && (
-                
+
                 <div className="px-2.5 py-0.5 flex items-center bg-red rounded-full">
                   <span className="text-xs font-bold text-white">
                     {discount}%-fsddfsfds

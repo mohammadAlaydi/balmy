@@ -423,6 +423,12 @@ export interface ApiProduct {
   };
   new?: boolean;
   featured?: boolean;
+  // Formatted price strings from the Markatty transformer
+  original_price?: number | string | null;
+  special_price?: number | string | null;
+  formatted_price?: string | null;
+  formatted_original_price?: string | null;
+  discount_percent?: number;
 }
 
 export interface ProductCardProps {

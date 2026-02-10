@@ -96,10 +96,18 @@ export default function ProductInfoBalmy({
             : product.special_price)
         : null;
 
-    const currentPrice = specialPrice || price;
-    const originalPrice = specialPrice ? price : price * 1.3; // Mock original if no discount
-    const hasDiscount = specialPrice !== null || true; // Always show discount for demo
-    const discountPercent = Math.round(((originalPrice - currentPrice) / originalPrice) * 100);
+    const currentPrice = specialPrice && specialPrice > 0 ? specialPrice : price;
+    const originalPrice = (product as any)?.original_price
+        ? Number((product as any).original_price)
+        : (specialPrice && specialPrice > 0 ? price : null);
+    const hasDiscount = originalPrice !== null && originalPrice > currentPrice;
+    const discountPercent = hasDiscount
+        ? Math.round(((originalPrice - currentPrice) / originalPrice) * 100)
+        : ((product as any)?.discount_percent ?? 0);
+
+    // Use backend-formatted price strings when available
+    const formattedPrice = (product as any)?.formatted_price || `${currentPrice}`;
+    const formattedOriginalPrice = (product as any)?.formatted_original_price || (originalPrice ? `${originalPrice}` : null);
 
     // Get rating from API - check rating, ratingData, or reviews
     const rawProduct = product as any;
@@ -222,14 +230,14 @@ export default function ProductInfoBalmy({
             {/* Pricing Section */}
             <div className="flex items-center gap-3 flex-wrap">
                 {/* Current Price */}
-                <span className="text-2xl font-bold text-[var(--color-red-4)] font-cairo flex items-center gap-2">
-                    {currentPrice.toFixed(0)} <RiyalSymbol className="w-5 h-5" />
+                <span className="text-2xl font-bold text-[var(--color-red-4)] font-cairo">
+                    {formattedPrice}
                 </span>
 
                 {/* Original Price */}
-                {originalPrice > currentPrice && (
-                    <span className="text-lg text-[var(--color-light-gray-5)] line-through font-cairo flex items-center gap-1">
-                        {originalPrice.toFixed(0)} <RiyalSymbol className="w-4 h-4" />
+                {hasDiscount && formattedOriginalPrice && (
+                    <span className="text-lg text-[var(--color-light-gray-5)] line-through font-cairo">
+                        {formattedOriginalPrice}
                     </span>
                 )}
 

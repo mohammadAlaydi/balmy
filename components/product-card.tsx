@@ -124,6 +124,10 @@ export default function ProductCard({
   const productPrice = calculateProductPrice(product);
   const oldPrice = calculateOldPrice(product);
 
+  // Use backend-formatted price strings when available
+  const formattedPrice = product?.formatted_price || `${productPrice.toFixed(2)}`;
+  const formattedOldPrice = product?.formatted_original_price || (oldPrice ? `${oldPrice.toFixed(2)}` : null);
+
   const productId = resolveProductId(product, chosenVariantId);
   const isInCart = productId ? isProductInCart(cartData, productId) : false;
   const cartQuantity = productId
@@ -395,12 +399,12 @@ export default function ProductCard({
 
         {/* Price + Rating */}
         <div className="flex items-center justify-between">
-          <p className="font-bold text-sm sm:text-base flex items-center gap-1">
-            {productPrice.toFixed(2)} <RiyalSymbol className="w-3 h-3" />
+          <p className="font-bold text-sm sm:text-base">
+            {formattedPrice}
           </p>
-          {oldPrice && oldPrice > productPrice && (
-            <p className="text-xs sm:text-sm text-gray-400 line-through flex items-center gap-1">
-              {oldPrice.toFixed(2)} <RiyalSymbol className="w-2.5 h-2.5" />
+          {formattedOldPrice && oldPrice && oldPrice > productPrice && (
+            <p className="text-xs sm:text-sm text-gray-400 line-through">
+              {formattedOldPrice}
             </p>
           )}
           <div className="hidden sm:flex items-center gap-1 bg-gray-100 px-2 rounded-full w-fit shadow-sm">
