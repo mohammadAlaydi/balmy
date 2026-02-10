@@ -75,11 +75,13 @@ export default function ProductCard({
   const { isAuthenticated } = useSelector((state: any) => state.auth);
 
   // Extract from product object if provided
-  const brandName = initialBrandName ?? product?.brand?.name ?? product?.brand_name ?? "توم فورد";
-  const productName = initialProductName ?? product?.name ?? product?.description ?? "أومبري ليذر أو دو برفيوم";
-  const price = initialPrice ?? Number(product?.price) ?? 749;
-  const oldPrice = initialOldPrice ?? (product?.original_price || product?.price_regular?.value) ?? (price > 0 ? price * 1.3 : 480);
-  const discount = initialDiscount ?? product?.discount_percent ?? (oldPrice > price ? Math.round(((oldPrice - price) / oldPrice) * 100) : 0);
+  const brandName = initialBrandName ?? product?.brand?.name ?? product?.brand_name ?? "";
+  const productName = initialProductName ?? product?.name ?? product?.description ?? "";
+  const specialPrice = product?.special_price ? Number(product.special_price) : null;
+  const rawPrice = initialPrice ?? Number(product?.price) ?? 0;
+  const price = specialPrice && specialPrice > 0 ? specialPrice : rawPrice;
+  const oldPrice = initialOldPrice ?? (product?.original_price ? Number(product.original_price) : (specialPrice && specialPrice > 0 ? rawPrice : (product?.price_regular?.value ? Number(product.price_regular.value) : null)));
+  const discount = initialDiscount ?? product?.discount_percent ?? (oldPrice && oldPrice > price ? Math.round(((oldPrice - price) / oldPrice) * 100) : 0);
   const imageUrl = initialImageUrl ?? (product?.thumbNail || product?.images?.[0]?.url || product?.image || product?.base_image?.url || "/images/card-image.png");
   const category = initialCategory ?? (typeof product?.category === "string" ? product?.category : product?.category?.name) ?? "نسائي";
   const rating = initialRating ?? (product?.rating !== undefined ? Number(product.rating) : (product?.reviews?.average_rating ?? 0));
@@ -174,21 +176,26 @@ export default function ProductCard({
           <div className="flex items-start justify-between gap-3 mb-4 cursor-pointer">
             {/* Right Side - Primary Info */}
             <div className="flex-1 space-y-2">
-              {/* Brand Name with Checkmark */}
-              <div className="flex items-center gap-1.5">
-                <h3 className="text-base font-bold text-gray-900">
-                  {brandName}
-                </h3>
-                {isVerified && (
-                  <Image src="/assets/verified-badge.svg" alt="verified" width={16} height={16} className="w-4 h-4" />
-                )}
-              </div>
+              {/* Brand Name with Checkmark (only show if brand exists) */}
+              {brandName && (
+                <div className="flex items-center gap-1.5">
+                  <h3 className="text-base font-bold text-gray-900">
+                    {brandName}
+                  </h3>
+                  {isVerified && (
+                    <Image src="/assets/verified-badge.svg" alt="verified" width={16} height={16} className="w-4 h-4" />
+                  )}
+                </div>
+              )}
 
-              {/* Product Name */}
+              {/* Product Name - Show prominently if no brand, otherwise as subtitle */}
               <div className="flex items-center gap-2">
-                <p className="text-sm text-gray-500 line-clamp-2 leading-snug">
+                <p className={`${brandName ? 'text-sm text-gray-500' : 'text-base font-bold text-gray-900'} line-clamp-2 leading-snug`}>
                   {productName}
                 </p>
+                {!brandName && isVerified && (
+                  <Image src="/assets/verified-badge.svg" alt="verified" width={16} height={16} className="w-4 h-4" />
+                )}
               </div>
 
               {/* Price Section */}
@@ -200,7 +207,7 @@ export default function ProductCard({
                 </span>
 
                 {/* Old Price */}
-                {oldPrice && (
+                {oldPrice && oldPrice > price && (
                   <span className="text-sm text-gray-400 line-through flex items-center gap-1">
                     {oldPrice}
                     <RiyalSymbol className="w-2.5 h-2.5" />
@@ -227,9 +234,10 @@ export default function ProductCard({
 
               {/* Discount Badge - Under Rating */}
               {discount && (
+                
                 <div className="px-2.5 py-0.5 flex items-center bg-red rounded-full">
                   <span className="text-xs font-bold text-white">
-                    {discount}%-
+                    {discount}%-fsddfsfds
                   </span>
                 </div>
               )}

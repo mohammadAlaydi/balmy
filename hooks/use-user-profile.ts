@@ -28,7 +28,7 @@ type AddressesFormData = z.infer<typeof addressesSchema>;
 export function useUserProfile() {
   const t = useTranslations("profile");
   const dispatch = useDispatch<AppDispatch>();
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated, accessToken } = useAuth();
 
   // =============================
   // 🔄 Fetch current user
@@ -110,11 +110,16 @@ export function useUserProfile() {
       }
 
       const { addresses, ...payload } = data as any;
+      const headers: Record<string, string> = {
+        "Content-Type": "application/json",
+      };
+      if (accessToken && accessToken !== "stored-in-cookie") {
+        headers["Authorization"] = `Bearer ${accessToken}`;
+      }
+
       const response = await fetch("/api/customer/profile", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers,
         body: JSON.stringify(payload),
       });
 

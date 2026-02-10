@@ -6,7 +6,7 @@ export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse
 ) {
-    const { storeId = config.store.id, locale = 'en', currency = 'EGP' } = req.query;
+    const { storeId = config.store.id, locale = 'ar', currency = 'EGP' } = req.query;
     const apiToken = config.api.token;
     const headers: HeadersInit = {
         'api-token': apiToken || '',

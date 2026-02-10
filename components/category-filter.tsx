@@ -23,6 +23,7 @@ import {
 import { useTranslations } from "next-intl";
 import { usePathname } from "next/navigation";
 import { FaFilter, FaTimes } from "react-icons/fa";
+import RiyalSymbol from "./RiyalSymbol";
 
 interface FilterOptions {
   priceRange: [number, number];
@@ -223,14 +224,14 @@ export default function CategoryFilter({
                   />
                   <div className="flex justify-between items-center">
                     <div className="flex items-center gap-2 bg-blue-50 px-3 py-1 rounded-full">
-                      <span className="text-xs md:text-sm md:font-medium text-blue-700 text-nowrap">
-                        {filters.priceRange[0]} <i className="icon-rial"></i>
+                      <span className="text-xs md:text-sm md:font-medium text-blue-700 text-nowrap flex items-center gap-1">
+                        {filters.priceRange[0]} <RiyalSymbol className="w-2.5 h-2.5" />
                       </span>
                     </div>
                     <div className="w-8 h-px bg-gray-300"></div>
                     <div className="flex items-center gap-2 bg-green-50 px-3 py-1 rounded-full">
-                      <span className="text-xs md:text-sm md:font-medium text-green-700 text-nowrap">
-                        {filters.priceRange[1]} <i className="icon-rial"></i>
+                      <span className="text-xs md:text-sm md:font-medium text-green-700 text-nowrap flex items-center gap-1">
+                        {filters.priceRange[1]} <RiyalSymbol className="w-2.5 h-2.5" />
                       </span>
                     </div>
                   </div>

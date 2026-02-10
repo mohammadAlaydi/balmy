@@ -38,6 +38,7 @@ export const login = createAsyncThunk(
 
       return {
         user: data.data,
+        token: data.token || data.data?.token,
         message: data.message,
       };
     } catch (error) {
@@ -77,6 +78,7 @@ export const register = createAsyncThunk(
 
       return {
         user: data.data,
+        token: data.token || data.data?.token,
         message: data.message,
       };
     } catch (error) {
@@ -112,7 +114,7 @@ export const logout = createAsyncThunk(
 // Get current user action - now uses internal API route
 export const getCurrentUser = createAsyncThunk(
   "auth/getCurrentUser",
-  async (_, { rejectWithValue }) => {
+  async (_, { rejectWithValue, getState }) => {
     try {
       // DEV MODE: Return mock user when backend is disabled
       if (DISABLE_BACKEND_FETCH) {
@@ -121,8 +123,18 @@ export const getCurrentUser = createAsyncThunk(
         return MOCK_USER;
       }
 
+      // Get the stored token from auth state
+      const state = getState() as { auth: AuthState };
+      const token = state.auth.accessToken;
+
+      const headers: Record<string, string> = {};
+      if (token && token !== "stored-in-cookie") {
+        headers["Authorization"] = `Bearer ${token}`;
+      }
+
       const response = await fetch("/api/customer/get", {
         method: "GET",
+        headers,
       });
 
       const data = await response.json();
@@ -131,7 +143,10 @@ export const getCurrentUser = createAsyncThunk(
         return rejectWithValue(data.message || "Failed to get user info");
       }
 
-      return data.data;
+      return {
+        user: data.data,
+        token: data.token || data.data?.token,
+      };
     } catch (error) {
       return rejectWithValue("Network error occurred");
     }
@@ -199,7 +214,7 @@ const authSlice = createSlice({
     builder.addCase(login.fulfilled, (state, action) => {
       state.isLoading = false;
       state.user = action.payload.user;
-      state.accessToken = "stored-in-cookie"; // Placeholder to indicate auth
+      state.accessToken = action.payload.token || action.payload.message || "stored-in-cookie";
       state.refreshToken = null;
       state.isAuthenticated = true;
       state.error = null;
@@ -218,7 +233,7 @@ const authSlice = createSlice({
     builder.addCase(register.fulfilled, (state, action) => {
       state.isLoading = false;
       state.user = action.payload.user;
-      state.accessToken = "stored-in-cookie"; // Placeholder to indicate auth
+      state.accessToken = action.payload.token || "stored-in-cookie";
       state.refreshToken = null;
       state.isAuthenticated = true;
       state.error = null;
@@ -252,17 +267,24 @@ const authSlice = createSlice({
     });
     builder.addCase(getCurrentUser.fulfilled, (state, action) => {
       state.isLoading = false;
-      state.user = action.payload;
-      state.accessToken = "stored-in-cookie";
+      const payload = action.payload as any;
+      state.user = payload.user || payload;
+      if (payload.token) {
+        state.accessToken = payload.token;
+      } else if (!state.accessToken || state.accessToken === 'stored-in-cookie') {
+        state.accessToken = "stored-in-cookie";
+      }
       state.isAuthenticated = true;
       state.error = null;
     });
     builder.addCase(getCurrentUser.rejected, (state, action) => {
       state.isLoading = false;
-      state.user = null;
-      state.accessToken = null;
-      state.refreshToken = null;
-      state.isAuthenticated = false;
+      // IMPORTANT: Only clear auth state if user was NOT already authenticated.
+      // If user has existing auth data (from login), preserve it even if getCurrentUser fails.
+      // This prevents the user being logged out just because a refresh call failed.
+      if (!state.user && !state.accessToken) {
+        state.isAuthenticated = false;
+      }
       // Don't set error for getCurrentUser failures to avoid showing error on initial load
     });
 

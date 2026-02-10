@@ -25,6 +25,7 @@ import { addToCart, setCartOpen } from "@/store/slices/cart-slice";
 import { useRouter } from "next/navigation";
 import { BeatLoader } from "react-spinners";
 import FavouriteButton from "@/components/favourite-button";
+import RiyalSymbol from "@/components/RiyalSymbol";
 
 interface ProductInfoBalmyProps {
     product: {
@@ -221,19 +222,19 @@ export default function ProductInfoBalmy({
             {/* Pricing Section */}
             <div className="flex items-center gap-3 flex-wrap">
                 {/* Current Price */}
-                <span className="text-2xl font-bold text-[var(--color-red-4)] font-cairo">
-                    {currentPrice.toFixed(0)} ج.م
+                <span className="text-2xl font-bold text-[var(--color-red-4)] font-cairo flex items-center gap-2">
+                    {currentPrice.toFixed(0)} <RiyalSymbol className="w-5 h-5" />
                 </span>
 
                 {/* Original Price */}
-                {hasDiscount && originalPrice > currentPrice && (
-                    <span className="text-lg text-[var(--color-light-gray-5)] line-through font-cairo">
-                        {originalPrice.toFixed(0)} ج.م
+                {originalPrice > currentPrice && (
+                    <span className="text-lg text-[var(--color-light-gray-5)] line-through font-cairo flex items-center gap-1">
+                        {originalPrice.toFixed(0)} <RiyalSymbol className="w-4 h-4" />
                     </span>
                 )}
 
                 {/* Discount Badge */}
-                {hasDiscount && discountPercent > 0 && (
+                {discountPercent > 0 && (
                     <Badge className="bg-[var(--color-red-4)] text-white text-xs px-2 py-1 rounded">
                         -{discountPercent}%
                     </Badge>
@@ -242,7 +243,7 @@ export default function ProductInfoBalmy({
 
             {/* Tax Note */}
             <div className="text-[14px] leading-[26px] text-[#AEAEAE] font-cairo text-right mt-1">
-                جميع أسعارنا تشمل الضريبة
+                {t("prices-include-tax")}
             </div>
 
             {/* Rating & Free Shipping */}
@@ -347,7 +348,8 @@ export default function ProductInfoBalmy({
             {/* Delivery Info */}
             <DeliveryInfoBalmy
                 estimatedDays="3-5"
-                deliveryNotice={t("delivery-notice") || "توصيــل سريــــع في نجــــــران خــــلال 3 ساعـــــات"}
+                deliveryNotice={t("delivery-notice")}
+                productPrice={currentPrice}
             />
 
             {/* Expandable Sections */}

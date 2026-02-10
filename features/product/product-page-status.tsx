@@ -8,13 +8,14 @@ import ProductDetailsBalmy from "@/components/balmy/product-details-balmy";
 
 interface ProductPageStatusProps {
   productId: number;
+  locale: string;
 }
 
-export default function ProductPageStatus({ productId }: ProductPageStatusProps) {
+export default function ProductPageStatus({ productId, locale }: ProductPageStatusProps) {
 
   const t = useTranslations("product-details");
 
-  const { data, isLoading, error, refetch } = useGetProductDetailsQuery(productId);
+  const { data, isLoading, error, refetch } = useGetProductDetailsQuery({ id: productId, locale });
 
   if (isLoading) {
     return <Loading fullScreen variant="spinner" size="xl" />;

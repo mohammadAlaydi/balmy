@@ -239,17 +239,17 @@ export const productApi = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: "" }),
   tagTypes: ["Product"],
   endpoints: (builder) => ({
-    getProductDetails: builder.query<ProductDetailsApiResponse, number>({
-      queryFn: async (id, _queryApi, _extraOptions, baseQuery) => {
+    getProductDetails: builder.query<ProductDetailsApiResponse, { id: number; locale: string }>({
+      queryFn: async ({ id, locale }, _queryApi, _extraOptions, baseQuery) => {
         if (DISABLE_BACKEND_FETCH) {
           await mockDelay();
           console.log(`🚧 [DEV] Product Details ${id} fetch bypassed - using mock data`);
           // Ensure we return the data structure expected by the frontend
           return { data: MOCK_PRODUCT_DETAILS(id) };
         }
-        return baseQuery(`/api/catalog/productdetails?productId=${id}`) as any;
+        return baseQuery(`/api/catalog/productdetails?productId=${id}&locale=${locale}`) as any;
       },
-      providesTags: (result, error, id) => [{ type: "Product", id }],
+      providesTags: (result, error, { id }) => [{ type: "Product", id }],
     }),
   }),
 });

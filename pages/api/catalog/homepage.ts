@@ -9,7 +9,7 @@ export default async function handler(
     const {
         storeId = config.store.id,
         currency = 'EGP',
-        locale = 'en',
+        locale = 'ar',
         width = '1000',
         mFactor = '2.5'
     } = req.query;

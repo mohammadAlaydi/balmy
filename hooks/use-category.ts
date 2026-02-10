@@ -14,9 +14,10 @@ import type { AppDispatch, RootState } from "@/store/store";
  */
 export default function useCategory(categoryId?: string | number) {
     
-  const params = useParams<{ id: string }>();
+  const params = useParams<{ id: string; locale: string }>();
   // Use provided categoryId or fall back to URL params
   const id = categoryId?.toString() || params?.id;
+  const locale = params?.locale || 'ar';
   
   const t = useTranslations("category");
   const dispatch = useDispatch<AppDispatch>();
@@ -30,9 +31,9 @@ export default function useCategory(categoryId?: string | number) {
   // ✅ Fetch category products when ID changes
   useEffect(() => {
     if (id) {
-      dispatch(getCategoryProducts({ id }));
+      dispatch(getCategoryProducts({ id, locale }));
     }
-  }, [dispatch, id]);
+  }, [dispatch, id, locale]);
 
   // ✅ Sync filtered products when data updates
   useEffect(() => {
